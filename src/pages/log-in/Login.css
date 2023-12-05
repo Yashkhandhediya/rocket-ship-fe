@@ -1,0 +1,14 @@
+.login-container {
+  .login-title {
+    margin-bottom: 2rem;
+  }
+
+  .dashed-divider {
+    border: 1px dashed grey;
+    display: inline-block;
+  }
+
+  .login-btn {
+    background: mediumslateblue;
+  }
+}
