@@ -13,7 +13,7 @@ const Field = ({
   inputClassNames = '',
 }) => {
   return (
-    <div className="mb-3 w-full">
+    <div className="w-full">
       {label && (
         <label
           htmlFor={id}

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './SignUp.css';
 import { Field } from '../../common/components';
 
 const SignUp = () => {
