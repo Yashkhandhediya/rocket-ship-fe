@@ -3,6 +3,7 @@ import { Field, Checkbox } from '../../../../common/components';
 import { downArrow } from '../../../../common/icons';
 import { BuyerAddressFields } from '../buyer-address-fields';
 import { BuyersInfoFields } from '../buyers-info-fields';
+import axios from 'axios';
 
 const DomesticOrder = () => {
   const [isSameBilingAddress, setIsSameBilingAddress] = useState(true);
@@ -134,7 +135,8 @@ const DomesticOrder = () => {
           <button
             type="button"
             className="rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-900"
-            onClick={() => {}}>
+            onClick={() => {
+            }}>
             Next
           </button>
         </div>

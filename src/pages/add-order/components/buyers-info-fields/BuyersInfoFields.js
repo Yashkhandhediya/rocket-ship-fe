@@ -1,6 +1,22 @@
 import { Field } from '../../../../common/components';
+import { useState } from 'react';
 
 const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
+  const [phone, setPhone] = useState();
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+
+  function handleChangePhone($event){
+    setPhone(event.target.value)
+  }
+
+  function handleChangeFullName($event){
+    setFullName(event.target.value)
+  }
+
+  function handleChangeEmail($event){
+    setEmail(event.target.value)
+  }
   return (
     <div>
       <div className="mb-3 text-sm font-medium">
@@ -17,8 +33,8 @@ const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
             labelClassNames={'text-xs'}
             placeHolder={"Enter buyer's phone number"}
             required={true}
-            value={''}
-            onChange={onChange}
+            value={phone}
+            onChange={handleChangePhone}
           />
         </div>
         <div className="px-2 pb-2 md:pb-0 md:w-4/12">
@@ -29,8 +45,8 @@ const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
             inputClassNames={'text-xs'}
             placeHolder={'Enter Full Name'}
             required={true}
-            value={''}
-            onChange={onChange}
+            value={fullName}
+            onChange={handleChangeFullName}
           />
         </div>
         <div className="px-2 pb-2 md:pb-0 md:w-4/12">
@@ -43,8 +59,8 @@ const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
             labelClassNames={'text-xs'}
             placeHolder={'i.e abc@gmail.com'}
             required={true}
-            value={''}
-            onChange={onChange}
+            value={email}
+            onChange={handleChangeEmail}
           />
         </div>
       </div>

@@ -1,6 +1,14 @@
 import { Field } from '../../../../common/components';
+import { useState } from 'react';
 
 const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
+  const [completeAdress, setCompleteAddress] = useState('');
+  const [landmark, setLandmark] = useState('');
+  const [pincode, setPincode] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [country, setCountry] = useState('');
+
   return (
     <div>
       <div className="mb-3 text-sm font-medium">
@@ -17,8 +25,10 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               inputClassNames={'text-xs'}
               placeHolder={'House/Floor No. Building Name or Street, Locality'}
               required={true}
-              value={''}
-              onChange={onChange}
+              value={completeAdress}
+              onChange={($event)=>{
+                setCompleteAddress(event.target.value);
+              }}
             />
           </div>
           <div className="px-2 pb-2 md:pb-0 md:w-6/12">
@@ -30,8 +40,10 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               labelClassNames={'text-xs'}
               placeHolder={'Any nearby post office, market, Hospital as the landmark'}
               required={true}
-              value={''}
-              onChange={onChange}
+              value={landmark}
+              onChange={($event)=>{
+                setLandmark(event.target.value);
+              }}
             />
           </div>
         </div>
@@ -45,8 +57,10 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               labelClassNames={'text-xs'}
               placeHolder={"Enter Buyer's Pincode"}
               required={true}
-              value={''}
-              onChange={onChange}
+              value={pincode}
+              onChange={($event)=>{
+                setPincode(event.target.value);
+              }}
             />
           </div>
           <div className="px-2 pb-2 md:pb-0 md:w-3/12">
@@ -57,8 +71,10 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               inputClassNames={'text-xs'}
               placeHolder={"Enter Buyer's City"}
               required={true}
-              value={''}
-              onChange={onChange}
+              value={city}
+              onChange={($event)=>{
+                setCity(event.target.value);
+              }}
             />
           </div>
           <div className="px-2 pb-2 md:pb-0 md:w-3/12">
@@ -70,8 +86,10 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               labelClassNames={'text-xs'}
               placeHolder={'Please Select State'}
               required={true}
-              value={''}
-              onChange={onChange}
+              value={state}
+              onChange={($event)=>{
+                setState(event.target.value);
+              }}
             />
           </div>
           <div className="px-2 pb-2 md:pb-0 md:w-3/12">
@@ -82,8 +100,10 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               inputClassNames={'text-xs'}
               placeHolder={"Enter Buyer's country"}
               required={true}
-              value={''}
-              onChange={onChange}
+              value={country}
+              onChange={($event)=>{
+                setCountry(event.target.value);
+              }}
             />
           </div>
         </div>
