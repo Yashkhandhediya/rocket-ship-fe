@@ -5,7 +5,7 @@ import { store } from './redux';
 
 function App() {
   return (
-    <div className="App" style={{width: '100vw', height: '100vh'}}>
+    <div className="App h-screen max-h-screen w-screen overflow-hidden">
       <Provider store={store}>
         <RouterProvider router={routes} />
       </Provider>
