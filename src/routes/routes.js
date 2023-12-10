@@ -1,25 +1,27 @@
-import {
-  createBrowserRouter,
-} from "react-router-dom";
-import { LogIn, Orders, SignUp, Dashboard } from '../pages';
+import { createBrowserRouter } from 'react-router-dom';
+import { LogIn, Orders, SignUp, Dashboard, AddOrder } from '../pages';
 
 const routes = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Dashboard />,
   },
   {
-    path: "/login",
+    path: '/login',
     element: <LogIn />,
   },
   {
-    path: "/signup",
+    path: '/signup',
     element: <SignUp />,
   },
   {
-    path: "/orders",
+    path: '/orders',
     element: <Orders />,
+  },
+  {
+    path: '/add-order',
+    element: <AddOrder />,
   },
 ]);
 
-export default routes
+export default routes;

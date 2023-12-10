@@ -1,0 +1,24 @@
+.custom-tabs {
+  border-bottom: 1px solid #dee2e6;
+  margin-bottom: 2.25rem;
+  .nav-item {
+    background: transparent;
+    margin-right: 20px;
+  }
+
+  .nav-link {
+    color: #7f7f7f;
+    background: transparent;
+  }
+
+  .nav-link.active,
+  .show > .nav-link {
+    color: #745be7;
+    background: transparent;
+    border-bottom: 5px solid #745be7;
+  }
+}
+
+.custom-tab-panel {
+  padding-inline: 0px; /* temporary */
+}

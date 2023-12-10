@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './SignUp.css';
+import { Field } from '../../common/components';
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [loginInput, setLoginInput] = useState({
+  const [signupInput, setSignupInput] = useState({
     firstName: '',
     lastName: '',
     email: '',
@@ -13,8 +14,8 @@ const SignUp = () => {
 
   const handleChangeInput = (e) => {
     const { id, value } = e.target;
-    setLoginInput({
-      ...loginInput,
+    setSignupInput({
+      ...signupInput,
       [id]: value,
     });
   };
@@ -24,92 +25,75 @@ const SignUp = () => {
   };
 
   return (
-    <div className="signup-container d-flex flex-column justify-content-evenly align-items-center p-4">
-      <div className="row w-100 h-100 place-content-center">
-        <div className="signup-title text-center mb-3">
-          <h1>RocketShip</h1>
+    <div className="flex h-full w-full flex-col items-center justify-center">
+      <div className="mb-8 text-center text-4xl font-bold">
+        <h1>ShipRocket</h1>
+      </div>
+      <div className="bg-body mb-3 w-8/12 rounded-2xl bg-white px-12 py-6 shadow md:w-5/12">
+        <div className="mb-2 text-center">
+          <h3 className="m-0 text-xl font-medium">Get Started with a free account</h3>
         </div>
-        <div className="bg-white p-4 shadow bg-body col-11 col-md-10 col-lg-6 rounded-16px">
-          <div className="text-center mb-2">
-            <h3 className="m-0">Get Started with a free account</h3>
+        <span className="my-2 inline-flex w-full border border-dashed border-gray-400"></span>
+        <form>
+          <div className="flex w-full gap-2">
+            <Field
+              type={'text'}
+              id={'firstName'}
+              label={'First Name'}
+              placeHolder={'First name'}
+              required={true}
+              value={signupInput['firstName']}
+              onChange={handleChangeInput}
+            />
+            <Field
+              type={'text'}
+              id={'lastName'}
+              label={'Last Name'}
+              placeHolder={'Last name'}
+              required={true}
+              value={signupInput['lastName']}
+              onChange={handleChangeInput}
+            />
           </div>
-          <span className="dashed-divider w-100 my-2"></span>
-          <form>
-            <div className=" d-flex gap-4 ">
-              <div className="mb-3 w-50">
-                <label htmlFor="firstName" className="form-label fw-bold">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  id="firstName"
-                  className="form-control rounded-10px"
-                  placeholder="First name"
-                  value={loginInput['firstName']}
-                  onChange={handleChangeInput}
-                />
-              </div>
-              <div className="mb-3 w-50">
-                <label htmlFor="lastName" className="form-label fw-bold">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  id="lastName"
-                  className="form-control rounded-10px"
-                  placeholder="Last Name"
-                  value={loginInput['lastName']}
-                  onChange={handleChangeInput}
-                />
-              </div>
-            </div>
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label fw-bold">
-                Email ID
-              </label>
-              <input
-                type="email"
-                id="email"
-                className="form-control rounded-10px"
-                placeholder="Enter your email ID"
-                value={loginInput['email']}
-                onChange={handleChangeInput}
-              />
-            </div>
-            <div className="mb-2">
-              <label htmlFor="password" className="form-label fw-bold">
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                className="form-control rounded-10px"
-                placeholder="Enter password"
-                value={loginInput['password']}
-                onChange={handleChangeInput}
-              />
-            </div>
-            <div className="mb-3 font-14px">
-              {`By clicking Sign up for Free, you agree to Shiprocket's `}
-              <Link to={'/login'} className="text-decoration-none">
-                {'Terms Of Service and Privacy Policy.'}
+          <Field
+            type={'email'}
+            id={'email'}
+            label={'Email ID'}
+            placeHolder={'Enter your email ID'}
+            required={true}
+            value={signupInput['email']}
+            onChange={handleChangeInput}
+          />
+          <Field
+            type={'password'}
+            id={'password'}
+            label={'Password'}
+            placeHolder={'Enter password'}
+            required={true}
+            value={signupInput['password']}
+            onChange={handleChangeInput}
+          />
+          <div className="mb-3 text-sm">
+            {`By clicking Sign up for Free, you agree to Shiprocket's `}
+            <Link to={'/login'} className="text-decoration-none text-blue-700">
+              {'Terms Of Service and Privacy Policy.'}
+            </Link>
+          </div>
+          <button
+            type="button"
+            className="mb-2 w-full rounded-lg bg-purple-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
+            onClick={handleSubmit}>
+            Sign up for Free
+          </button>
+          <div className="text-center">
+            <p className="text-sm">
+              Already have an account?{' '}
+              <Link to={'/login'} className="text-decoration-none text-blue-700">
+                Login
               </Link>
-            </div>
-            <button
-              className="signup-btn btn btn-primary w-100 mb-3"
-              onClick={handleSubmit}>
-              Sign up for Free
-            </button>
-            <div className="text-center">
-              <p className="font-14px">
-                Already have an account?{' '}
-                <Link to={'/login'} className="text-decoration-none">
-                  Login
-                </Link>
-              </p>
-            </div>
-          </form>
-        </div>
+            </p>
+          </div>
+        </form>
       </div>
     </div>
   );
