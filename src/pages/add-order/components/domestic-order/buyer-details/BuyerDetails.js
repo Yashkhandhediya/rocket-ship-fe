@@ -24,13 +24,13 @@ export default function BuyerDetails() {
                     id="accordion-flush"
                     className="my-4 cursor-pointer bg-transparent"
                     data-active-classes="bg-white"
-                    data-accordion="collapse">
+                    data-accordion="open">
                     <div
                         className="flex items-center bg-transparent pb-4 text-xs text-blue-700"
                         data-accordion-target="#alternate-buyer-details"
                         aria-controls="alternate-buyer-details">
                         <span className="text-blue-700">
-                            {" + Add Alternate Mobile Number, Buyer's Company Name, Buyer's GSTIN "}
+                            {" + Add Alternate Mobile Number, Buyer's Company Name, Buyer's GSTIN"}
                         </span>
                         <img
                             className="accordion-icon shrink-0 text-indigo-700"
