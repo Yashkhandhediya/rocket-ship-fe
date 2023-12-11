@@ -7,7 +7,10 @@ const Field = ({
   id,
   value,
   onChange,
+  onBlur,
   required,
+  maxLength,
+  minLength,
   showOptional = false,
   labelClassNames = '',
   inputClassNames = '',
@@ -33,6 +36,9 @@ const Field = ({
         className={`block min-h-[36px] w-full rounded-md border border-gray-300 bg-white px-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 ${inputClassNames}`}
         placeholder={placeHolder}
         required={required}
+        onBlur={onBlur}
+        maxLength={maxLength}
+        minLength={minLength}
       />
       {note && <span className="text-gray-400 text-[10px]">{note}</span>}
     </div>

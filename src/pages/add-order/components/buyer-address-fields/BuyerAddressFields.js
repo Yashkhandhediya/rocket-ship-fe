@@ -5,6 +5,7 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
   const [completeAdress, setCompleteAddress] = useState('');
   const [landmark, setLandmark] = useState('');
   const [pincode, setPincode] = useState('');
+  const [isValidPinCode, setIsValidPincode] = useState(true)
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [country, setCountry] = useState('');
@@ -58,10 +59,14 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               placeHolder={"Enter Buyer's Pincode"}
               required={true}
               value={pincode}
-              onChange={($event)=>{
-                setPincode(event.target.value);
+              onChange={(e)=>{
+                setPincode(e.target.value);
+              }}
+              onBlur={()=>{
+                setIsValidPincode(/^\d{6}$/.test(pincode));
               }}
             />
+            {!isValidPinCode && <p style={{ color: 'red', fontSize:'small' }}>Please enter a valid Pincode.</p>}
           </div>
           <div className="px-2 pb-2 md:pb-0 md:w-3/12">
             <Field

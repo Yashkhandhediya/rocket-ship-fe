@@ -51,7 +51,7 @@ export default function BuyerDetails() {
                                     label={'Alternate Mobile Number'}
                                     inputClassNames={'text-xs'}
                                     labelClassNames={'text-xs'}
-                                    placeHolder={"Enter buyer's phone number"}
+                                    placeHolder={"Enter Alternate Mobile Number"}
                                     required={true}
                                     value={''}
                                     onChange={() => { }}

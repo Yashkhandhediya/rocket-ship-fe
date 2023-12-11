@@ -2,20 +2,22 @@ import { Field } from '../../../../common/components';
 import { useState } from 'react';
 
 const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
-  const [phone, setPhone] = useState();
+  const [phone, setPhone] = useState(0);
+  const[isValidPhone, setIsValidPhone] = useState(true);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
+  const [isValidEmail, setIsValidEmail] = useState(true);
 
-  function handleChangePhone($event){
-    setPhone(event.target.value)
+  function handleChangePhone(e){
+    setPhone(e.target.value)
   }
 
-  function handleChangeFullName($event){
-    setFullName(event.target.value)
+  function handleChangeFullName(e){
+    setFullName(e.target.value)
   }
 
-  function handleChangeEmail($event){
-    setEmail(event.target.value)
+  function handleChangeEmail(e){
+    setEmail(e.target.value)
   }
   return (
     <div>
@@ -35,8 +37,11 @@ const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
             required={true}
             value={phone}
             onChange={handleChangePhone}
+            onBlur={()=>{setIsValidPhone(/^\d{10}$/.test(phone));}}
           />
+          {!isValidPhone && <p style={{ color: 'red', fontSize:'small' }}>Please enter a valid 10-digit number.</p>}
         </div>
+        
         <div className="px-2 pb-2 md:pb-0 md:w-4/12">
           <Field
             id={`${id}-fullName`}
@@ -61,7 +66,11 @@ const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
             required={true}
             value={email}
             onChange={handleChangeEmail}
+            onBlur={()=>{
+              setIsValidEmail(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+            }}
           />
+          {!isValidEmail && <p style={{ color: 'red', fontSize:'small' }}>Please enter a valid email.</p>}
         </div>
       </div>
     </div>
