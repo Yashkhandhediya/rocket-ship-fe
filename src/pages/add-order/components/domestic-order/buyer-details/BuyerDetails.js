@@ -7,6 +7,16 @@ import { useState } from 'react';
 
 export default function BuyerDetails() {
     const [isSameBilingAddress, setIsSameBilingAddress] = useState(true);
+    const [formData, setFormData] = useState(null);
+
+    const handleFormData = (event) => {
+        const { id, value } = event.target;
+        setFormData({
+            ...formData,
+            [id]: value,
+        })
+    };
+    console.log('formData-----', formData);
     return (
         <div>
             <div className="mb-6 text-xl font-bold"> {"Add Buyer's Details"} </div>
@@ -16,8 +26,8 @@ export default function BuyerDetails() {
                         id="buyer"
                         heading={'To whom is the order being delivered?'}
                         alternateText={"(Buyer's Info)"}
-                        values={{}}
-                        onChange={() => { }}
+                        values={formData}
+                        onChange={handleFormData}
                     />
                 </div>
                 <div
@@ -53,21 +63,21 @@ export default function BuyerDetails() {
                                     labelClassNames={'text-xs'}
                                     placeHolder={"Enter buyer's phone number"}
                                     required={true}
-                                    value={''}
-                                    onChange={() => { }}
+                                    value={formData?.number}
+                                    onChange={handleFormData}
                                 />
                             </div>
                             <div className="px-2 pb-2 md:pb-0 w-full md:w-4/12">
                                 <Field
-                                    id={'compnyName'}
+                                    id={'companyName'}
                                     label={"Buyer's Company Name"}
                                     inputClassNames={'text-xs'}
                                     labelClassNames={'text-xs'}
                                     placeHolder={"Enter Buyer's Company Name"}
                                     note={"Note: If you're Shipping B2B, Please Enter the Company's name"}
                                     required={true}
-                                    value={''}
-                                    onChange={() => { }}
+                                    value={formData?.companyName}
+                                    onChange={handleFormData}
                                 />
                             </div>
                             <div className="px-2 pb-2 md:pb-0 w-full md:w-4/12">
@@ -78,8 +88,8 @@ export default function BuyerDetails() {
                                     labelClassNames={'text-xs'}
                                     placeHolder={"Enter Buyer's GSTIN"}
                                     required={true}
-                                    value={''}
-                                    onChange={() => { }}
+                                    value={formData?.gstin}
+                                    onChange={handleFormData}
                                 />
                             </div>
                         </div>
@@ -89,8 +99,8 @@ export default function BuyerDetails() {
                     <BuyerAddressFields
                         id="buyer"
                         heading={'Where is the order being delivered to?'}
-                        values={{}}
-                        onChange={() => { }}
+                        values={formData}
+                        onChange={handleFormData}
                     />
                 </div>
                 <div className="mt-5">

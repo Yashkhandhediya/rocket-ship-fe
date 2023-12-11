@@ -1,22 +1,22 @@
 import { Field } from '../../../../common/components';
 import { useState } from 'react';
 
-const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
-  const [phone, setPhone] = useState();
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
+const BuyersInfoFields = ({ id, heading, alternateText, values, onChange }) => {
+  // const [phone, setPhone] = useState();
+  // const [fullName, setFullName] = useState('');
+  // const [email, setEmail] = useState('');
 
-  function handleChangePhone($event){
-    setPhone(event.target.value)
-  }
+  // function handleChangePhone($event) {
+  //   setPhone(event.target.value)
+  // }
 
-  function handleChangeFullName($event){
-    setFullName(event.target.value)
-  }
+  // function handleChangeFullName($event) {
+  //   setFullName(event.target.value)
+  // }
 
-  function handleChangeEmail($event){
-    setEmail(event.target.value)
-  }
+  // function handleChangeEmail($event) {
+  //   setEmail(event.target.value)
+  // }
   return (
     <div>
       <div className="mb-3 text-sm font-medium">
@@ -33,8 +33,8 @@ const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
             labelClassNames={'text-xs'}
             placeHolder={"Enter buyer's phone number"}
             required={true}
-            value={phone}
-            onChange={handleChangePhone}
+            value={values?.[`${id}-mobile`]}
+            onChange={onChange}
           />
         </div>
         <div className="px-2 pb-2 md:pb-0 md:w-4/12">
@@ -45,8 +45,8 @@ const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
             inputClassNames={'text-xs'}
             placeHolder={'Enter Full Name'}
             required={true}
-            value={fullName}
-            onChange={handleChangeFullName}
+            value={values?.[`${id}-fullName`]}
+            onChange={onChange}
           />
         </div>
         <div className="px-2 pb-2 md:pb-0 md:w-4/12">
@@ -59,8 +59,8 @@ const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
             labelClassNames={'text-xs'}
             placeHolder={'i.e abc@gmail.com'}
             required={true}
-            value={email}
-            onChange={handleChangeEmail}
+            value={values?.[`${id}-email`]}
+            onChange={onChange}
           />
         </div>
       </div>
