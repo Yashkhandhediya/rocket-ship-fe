@@ -6,14 +6,23 @@ import PickupDetails from './pickup-details/PickupDetails';
 
 const DomesticOrder = () => {
   const [state, setState] = useState(0);
+  const [formData, setFormData] = useState(null);
   const steps = {
-    0: <BuyerDetails />,
-    1: <PickupDetails />,
-    2: <OrderDetails />,
-    3: <PackageDetails />,
+    0: <BuyerDetails handleFormData={handleFormData} formData={formData} />,
+    1: <PickupDetails handleFormData={handleFormData} formData={formData} />,
+    2: <OrderDetails handleFormData={handleFormData} formData={formData} />,
+    3: <PackageDetails handleFormData={handleFormData} formData={formData} />,
   };
   const stepsCount = Object.keys(steps).length;
 
+  function handleFormData(event) {
+    const { id, value } = event.target;
+    setFormData({
+      ...formData,
+      [id]: value,
+    })
+  }
+  console.log('formData----', formData);
   return (
     <div className="mb-8 pt-8 md:flex">
       <div className="form-step px-6">

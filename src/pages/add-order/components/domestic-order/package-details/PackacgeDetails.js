@@ -1,6 +1,6 @@
 import { Field } from '../../../../../common/components';
 
-export default function PackageDetails() {
+export default function PackageDetails({ handleFormData, formData }) {
   return (
     <div>
       <div className="mb-6 text-xl font-bold"> {'Package Details'} </div>
@@ -17,8 +17,8 @@ export default function PackageDetails() {
                 '(Max. 3 digits after decimal place) \nNote: The minimum chargeable weight is 0.50 Kg'
               }
               required={true}
-              value={''}
-              onChange={() => {}}
+              value={formData?.deadWeight}
+              onChange={handleFormData}
             />
           </div>
         </div>
@@ -39,8 +39,8 @@ export default function PackageDetails() {
                       inputClassNames={'text-xs'}
                       placeHolder={'0.00'}
                       required={true}
-                      value={''}
-                      onChange={() => {}}
+                      value={formData?.length}
+                      onChange={handleFormData}
                     />
                   </div>
                   <div className="sm:w-/12 pb-2 md:pb-0">
@@ -50,8 +50,8 @@ export default function PackageDetails() {
                       inputClassNames={'text-xs'}
                       placeHolder={'0.00'}
                       required={true}
-                      value={''}
-                      onChange={() => {}}
+                      value={formData?.breadth}
+                      onChange={handleFormData}
                     />
                   </div>
                   <div className="sm:w-/12 pb-2 md:pb-0">
@@ -61,8 +61,8 @@ export default function PackageDetails() {
                       inputClassNames={'text-xs'}
                       placeHolder={'0.00'}
                       required={true}
-                      value={''}
-                      onChange={() => {}}
+                      value={formData?.height}
+                      onChange={handleFormData}
                     />
                   </div>
                 </div>
@@ -85,7 +85,7 @@ export default function PackageDetails() {
                   placeHolder={'Select Package'}
                   required={true}
                   value={''}
-                  onChange={() => {}}
+                  onChange={() => { }}
                 />
               </div>
             </div>
