@@ -1,14 +1,9 @@
 import { Field } from '../../../../common/components';
 import { useState } from 'react';
 
-const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
-  const [completeAdress, setCompleteAddress] = useState('');
-  const [landmark, setLandmark] = useState('');
-  const [pincode, setPincode] = useState('');
+const BuyerAdressFields = ({ id, heading, alternateText, values, onChange }) => {
   const [isValidPinCode, setIsValidPincode] = useState(true);
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [country, setCountry] = useState('');
+
 
   return (
     <div>
@@ -26,10 +21,8 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               inputClassNames={'text-xs'}
               placeHolder={'House/Floor No. Building Name or Street, Locality'}
               required={true}
-              value={completeAdress}
-              onChange={($event) => {
-                setCompleteAddress(event.target.value);
-              }}
+              value={values?.[`${id}-completeAdress`]}
+              onChange={onChange}
             />
           </div>
           <div className="px-2 pb-2 md:w-6/12 md:pb-0">
@@ -41,10 +34,8 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               labelClassNames={'text-xs'}
               placeHolder={'Any nearby post office, market, Hospital as the landmark'}
               required={true}
-              value={landmark}
-              onChange={($event) => {
-                setLandmark(event.target.value);
-              }}
+              value={values?.[`${id}-landmark`]}
+              onChange={onChange}
             />
           </div>
         </div>
@@ -58,13 +49,8 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               labelClassNames={'text-xs'}
               placeHolder={"Enter Buyer's Pincode"}
               required={true}
-              value={pincode}
-              onChange={(e) => {
-                setPincode(e.target.value);
-              }}
-              onBlur={() => {
-                setIsValidPincode(/^\d{6}$/.test(pincode));
-              }}
+              value={values?.[`${id}-pincode`]}
+              onChange={onChange}
             />
             {!isValidPinCode && (
               <p style={{ color: 'red', fontSize: 'small' }}>
@@ -80,10 +66,8 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               inputClassNames={'text-xs'}
               placeHolder={"Enter Buyer's City"}
               required={true}
-              value={city}
-              onChange={($event) => {
-                setCity(event.target.value);
-              }}
+              value={values?.[`${id}-city`]}
+              onChange={onChange}
             />
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
@@ -95,10 +79,8 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               labelClassNames={'text-xs'}
               placeHolder={'Please Select State'}
               required={true}
-              value={state}
-              onChange={($event) => {
-                setState(event.target.value);
-              }}
+              value={values?.[`${id}-state`]}
+              onChange={onChange}
             />
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
@@ -109,10 +91,8 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               inputClassNames={'text-xs'}
               placeHolder={"Enter Buyer's country"}
               required={true}
-              value={country}
-              onChange={($event) => {
-                setCountry(event.target.value);
-              }}
+              value={values?.[`${id}-country`]}
+              onChange={onChange}
             />
           </div>
         </div>

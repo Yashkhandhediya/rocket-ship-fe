@@ -12,11 +12,10 @@ const Tabs = ({ tabs }) => {
           return (
             <li className="me-2 flex" key={tab.id}>
               <button
-                className={`inline-flex items-center rounded-t-lg border-b-4 p-2 font-normal ${
-                  i === activeTab
-                    ? 'border-indigo-600 text-indigo-600'
-                    : 'border-transparent'
-                }`}
+                className={`inline-flex items-center rounded-t-lg border-b-4 p-2 font-normal ${i === activeTab
+                  ? 'border-indigo-600 text-indigo-600'
+                  : 'border-transparent'
+                  }`}
                 id={`${tab.id}-tab`}
                 type="button"
                 onClick={() => setActiveTab(i)}>

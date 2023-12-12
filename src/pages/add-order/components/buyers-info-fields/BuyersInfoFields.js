@@ -1,24 +1,10 @@
 import { Field } from '../../../../common/components';
 import { useState } from 'react';
 
-const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
-  const [phone, setPhone] = useState(0);
+const BuyersInfoFields = ({ id, heading, alternateText, values, onChange }) => {
   const [isValidPhone, setIsValidPhone] = useState(true);
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(true);
 
-  function handleChangePhone(e) {
-    setPhone(e.target.value);
-  }
-
-  function handleChangeFullName(e) {
-    setFullName(e.target.value);
-  }
-
-  function handleChangeEmail(e) {
-    setEmail(e.target.value);
-  }
   return (
     <div>
       <div className="mb-3 text-sm font-medium">
@@ -35,11 +21,8 @@ const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
             labelClassNames={'text-xs'}
             placeHolder={"Enter buyer's phone number"}
             required={true}
-            value={phone}
-            onChange={handleChangePhone}
-            onBlur={() => {
-              setIsValidPhone(/^\d{10}$/.test(phone));
-            }}
+            value={values?.[`${id}-mobile`]}
+            onChange={onChange}
           />
           {!isValidPhone && (
             <p style={{ color: 'red', fontSize: 'small' }}>
@@ -56,8 +39,8 @@ const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
             inputClassNames={'text-xs'}
             placeHolder={'Enter Full Name'}
             required={true}
-            value={fullName}
-            onChange={handleChangeFullName}
+            value={values?.[`${id}-fullName`]}
+            onChange={onChange}
           />
         </div>
         <div className="px-2 pb-2 md:w-4/12 md:pb-0">
@@ -70,11 +53,8 @@ const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
             labelClassNames={'text-xs'}
             placeHolder={'i.e abc@gmail.com'}
             required={true}
-            value={email}
-            onChange={handleChangeEmail}
-            onBlur={() => {
-              setIsValidEmail(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
-            }}
+            value={values?.[`${id}-email`]}
+            onChange={onChange}
           />
           {!isValidEmail && (
             <p style={{ color: 'red', fontSize: 'small' }}>Please enter a valid email.</p>
