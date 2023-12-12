@@ -4,7 +4,7 @@ const initialState = {
 
 const orders = (state = initialState, action) => {
   switch (action.type) {
-    case "SET_ORDERS": {
+    case 'SET_ORDERS': {
       return { ...state, orderList: action.payload };
     }
     default:

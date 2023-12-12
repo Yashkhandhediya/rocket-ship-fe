@@ -1,8 +1,8 @@
-import React from "react";
-import { BuyersInfoFields } from "../../buyers-info-fields";
-import { BuyerAddressFields } from "../../buyer-address-fields";
-import { Checkbox, Field } from "../../../../../common/components";
-import { downArrow } from "../../../../../common/icons";
+import React from 'react';
+import { BuyersInfoFields } from '../../buyers-info-fields';
+import { BuyerAddressFields } from '../../buyer-address-fields';
+import { Checkbox, Field, FieldAccordion } from '../../../../../common/components';
+import { downArrow } from '../../../../../common/icons';
 import { useState } from 'react';
 
 export default function BuyerDetails() {
@@ -16,7 +16,7 @@ export default function BuyerDetails() {
             [id]: value,
         })
     };
-    console.log('formData-----', formData);
+
     return (
         <div>
             <div className="mb-6 text-xl font-bold"> {"Add Buyer's Details"} </div>
@@ -132,5 +132,5 @@ export default function BuyerDetails() {
                 </div>
             </div>
         </div>
-    )
+    );
 }

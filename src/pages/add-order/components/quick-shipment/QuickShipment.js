@@ -1,9 +1,5 @@
-
-
 const QuickShipment = () => {
-  return (
-    <div>QuickShipment</div>
-  )
-}
+  return <div>QuickShipment</div>;
+};
 
-export default QuickShipment
+export default QuickShipment;

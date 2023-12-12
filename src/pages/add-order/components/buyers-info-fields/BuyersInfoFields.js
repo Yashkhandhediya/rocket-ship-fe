@@ -2,21 +2,7 @@ import { Field } from '../../../../common/components';
 import { useState } from 'react';
 
 const BuyersInfoFields = ({ id, heading, alternateText, values, onChange }) => {
-  // const [phone, setPhone] = useState();
-  // const [fullName, setFullName] = useState('');
-  // const [email, setEmail] = useState('');
 
-  // function handleChangePhone($event) {
-  //   setPhone(event.target.value)
-  // }
-
-  // function handleChangeFullName($event) {
-  //   setFullName(event.target.value)
-  // }
-
-  // function handleChangeEmail($event) {
-  //   setEmail(event.target.value)
-  // }
   return (
     <div>
       <div className="mb-3 text-sm font-medium">
@@ -24,7 +10,7 @@ const BuyersInfoFields = ({ id, heading, alternateText, values, onChange }) => {
         {alternateText && <span className="pl-1 text-gray-400">{alternateText}</span>}
       </div>
       <div className="md:flex">
-        <div className="px-2 pb-2 md:pb-0 md:w-4/12">
+        <div className="px-2 pb-2 md:w-4/12 md:pb-0">
           <Field
             type={'number'}
             id={`${id}-mobile`}
@@ -36,8 +22,14 @@ const BuyersInfoFields = ({ id, heading, alternateText, values, onChange }) => {
             value={values?.[`${id}-mobile`]}
             onChange={onChange}
           />
+          {!isValidPhone && (
+            <p style={{ color: 'red', fontSize: 'small' }}>
+              Please enter a valid 10-digit number.
+            </p>
+          )}
         </div>
-        <div className="px-2 pb-2 md:pb-0 md:w-4/12">
+
+        <div className="px-2 pb-2 md:w-4/12 md:pb-0">
           <Field
             id={`${id}-fullName`}
             label={'Full Name'}
@@ -49,7 +41,7 @@ const BuyersInfoFields = ({ id, heading, alternateText, values, onChange }) => {
             onChange={onChange}
           />
         </div>
-        <div className="px-2 pb-2 md:pb-0 md:w-4/12">
+        <div className="px-2 pb-2 md:w-4/12 md:pb-0">
           <Field
             type={'email'}
             id={`${id}-email`}
@@ -62,6 +54,9 @@ const BuyersInfoFields = ({ id, heading, alternateText, values, onChange }) => {
             value={values?.[`${id}-email`]}
             onChange={onChange}
           />
+          {!isValidEmail && (
+            <p style={{ color: 'red', fontSize: 'small' }}>Please enter a valid email.</p>
+          )}
         </div>
       </div>
     </div>

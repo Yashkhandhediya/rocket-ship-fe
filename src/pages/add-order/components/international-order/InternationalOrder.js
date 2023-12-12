@@ -1,9 +1,5 @@
-
-
 const InternationalOrder = () => {
-  return (
-    <div>InternationalOrder</div>
-  )
-}
+  return <div>InternationalOrder</div>;
+};
 
-export default InternationalOrder
+export default InternationalOrder;

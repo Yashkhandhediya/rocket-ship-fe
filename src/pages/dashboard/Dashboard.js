@@ -8,9 +8,7 @@ const Dashboard = () => {
   useEffect(() => {
     // temporary checking redux.
     dispatch(
-      setOrders([
-        { name: 'letter', weight: '10gm', from: 'surat', to: 'mumbai' },
-      ]),
+      setOrders([{ name: 'letter', weight: '10gm', from: 'surat', to: 'mumbai' }]),
     );
   }, [dispatch]);
 

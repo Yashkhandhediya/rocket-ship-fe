@@ -1,9 +1,5 @@
-
-
 const BulkOrder = () => {
-  return (
-    <div>BulkOrder</div>
-  )
-}
+  return <div>BulkOrder</div>;
+};
 
-export default BulkOrder
+export default BulkOrder;
