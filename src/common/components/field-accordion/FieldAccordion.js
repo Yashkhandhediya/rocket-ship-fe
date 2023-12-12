@@ -1,16 +1,21 @@
+import { useState } from 'react';
 import { downArrow } from '../../icons';
 
 const FieldAccordion = ({ id, children, label, showOptional }) => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div
       id={id + 'accordion-flush'}
       className="cursor-pointer bg-transparent"
       data-active-classes="bg-white"
-      data-accordion="open">
+      data-accordion="open"
+    >
       <div
         className="flex items-center bg-transparent pb-4 text-xs text-blue-700"
         data-accordion-target={`#${id}-accordion`}
-        aria-controls={`${id}-accordion`}>
+        aria-controls={`${id}-accordion`}
+        onClick={() => setIsOpen(!isOpen)}
+      >
         <span className="text-blue-700">{label}</span>
         <img
           className="accordion-icon shrink-0 text-indigo-700"
@@ -23,9 +28,10 @@ const FieldAccordion = ({ id, children, label, showOptional }) => {
       </div>
       <div
         id={`${id}-accordion`}
-        // className="hidden" .. temporry showing it open
+        className={isOpen ? 'visible' : 'hidden'}
         aria-labelledby="accordion-flush-heading-1"
-        aria-expanded={true}>
+        aria-expanded={true}
+      >
         {children}
       </div>
     </div>

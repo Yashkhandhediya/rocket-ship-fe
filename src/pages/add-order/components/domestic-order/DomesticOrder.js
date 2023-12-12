@@ -7,15 +7,15 @@ import PickupDetails from './pickup-details/PickupDetails';
 const DomesticOrder = () => {
   const [state, setState] = useState(0);
   const steps = {
-    0: <BuyerDetails/>,
-    1: <PickupDetails/>,
-    2: <OrderDetails/>,
-    3: <PackageDetails/>
-  }
+    0: <BuyerDetails />,
+    1: <PickupDetails />,
+    2: <OrderDetails />,
+    3: <PackageDetails />,
+  };
   const stepsCount = Object.keys(steps).length;
-  console.log('len', stepsCount);
+
   return (
-    <div className="md:flex pt-8 mb-8">
+    <div className="mb-8 pt-8 md:flex">
       <div className="form-step px-6">
         <ol>
           <li>Buyers Details</li>
@@ -31,8 +31,9 @@ const DomesticOrder = () => {
             type="button"
             className="rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-900"
             onClick={() => {
-              setState(prev=>(prev+1)%stepsCount);
-            }}>
+              setState((prev) => (prev + 1) % stepsCount);
+            }}
+          >
             Next
           </button>
         </div>

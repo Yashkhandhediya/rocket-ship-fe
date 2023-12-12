@@ -1,6 +1,4 @@
-import React from 'react';
 import { Field, FieldAccordion } from '../../../../../common/components';
-import { downArrow } from '../../../../../common/icons';
 
 export default function OrderDetails() {
   return (
@@ -51,8 +49,9 @@ export default function OrderDetails() {
           <FieldAccordion
             id={'order-details'}
             label={"+ Add Order Tag, Reseller's Name"}
-            showOptional>
-            <div className="mb-3 w-full md:flex">
+            showOptional
+          >
+            <div className="mb-5 w-full md:flex">
               <div className="px-2 pb-2 md:w-6/12 md:pb-0">
                 <Field
                   id={'orderTag'}
@@ -81,7 +80,7 @@ export default function OrderDetails() {
             </div>
           </FieldAccordion>
         </div>
-        <div className="my-6 w-full border border-gray-200" />
+        <div className="mb-6 mt-4 w-full border border-gray-200" />
         <div>
           <div className="mb-3 text-sm font-medium">{'Product Details'}</div>
           <div className="mb-4 border-b border-gray-200">
@@ -142,7 +141,8 @@ export default function OrderDetails() {
               <FieldAccordion
                 id={'product-details'}
                 label={'+ Add HSN Code, SKU, Tax Rate and Discount'}
-                showOptional>
+                showOptional
+              >
                 <div className="mb-3 w-full pr-[200px] md:flex">
                   <div className="w-full px-2 pb-2 lg:w-3/12">
                     <Field
@@ -198,7 +198,8 @@ export default function OrderDetails() {
           <div>
             <button
               className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-xs text-indigo-700'}
-              onClick={() => {}}>
+              onClick={() => {}}
+            >
               + Add Another Product
             </button>
           </div>
@@ -219,7 +220,8 @@ export default function OrderDetails() {
                 />
                 <label
                   htmlFor="prepaidRadio"
-                  className="mb-2 text-xs font-medium text-gray-900 dark:text-white">
+                  className="mb-2 text-xs font-medium text-gray-900 dark:text-white"
+                >
                   Prepaid
                 </label>
               </div>
@@ -233,7 +235,8 @@ export default function OrderDetails() {
                 />
                 <label
                   htmlFor="codRadio"
-                  className="mb-2 text-xs font-medium text-gray-900 dark:text-white">
+                  className="mb-2 text-xs font-medium text-gray-900 dark:text-white"
+                >
                   Cash On Delivery
                 </label>
               </div>
@@ -242,7 +245,8 @@ export default function OrderDetails() {
               <FieldAccordion
                 id={'product-details'}
                 label={'+ Add Shipping Charges, Giftwrap, Transaction fee'}
-                showOptional>
+                showOptional
+              >
                 <div className="mb-3 w-full md:flex">
                   <div className="w-full px-2 pb-2 md:w-4/12 lg:w-3/12 xl:w-2/12">
                     <Field
@@ -295,16 +299,16 @@ export default function OrderDetails() {
                 </div>
               </FieldAccordion>
             </div>
-            <div className="my-5 bg-[#ecf2fe99] p-5 text-sm rounded-md">
-              <div className="flex justify-between mb-1">
+            <div className="my-5 rounded-md bg-[#ecf2fe99] p-5 text-sm">
+              <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Sub-total for Product'}</p>
                 <p className="w-6/12 text-end">{'Rs. ' + '0'}</p>
               </div>
-              <div className="flex justify-between mb-1">
+              <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Other Charges'}</p>
                 <p className="w-6/12 text-end">{'Rs. ' + '0'}</p>
               </div>
-              <div className="flex justify-between mt-4">
+              <div className="mt-4 flex justify-between">
                 <p className="w-6/12 font-medium">{'Total Order Value'}</p>
                 <p className="w-6/12 text-end">{'Rs. ' + '0'}</p>
               </div>

@@ -5,7 +5,7 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
   const [completeAdress, setCompleteAddress] = useState('');
   const [landmark, setLandmark] = useState('');
   const [pincode, setPincode] = useState('');
-  const [isValidPinCode, setIsValidPincode] = useState(true)
+  const [isValidPinCode, setIsValidPincode] = useState(true);
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [country, setCountry] = useState('');
@@ -18,7 +18,7 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
       </div>
       <div className="w-full">
         <div className="mb-3 w-full md:flex">
-          <div className="px-2 pb-2 md:pb-0 md:w-6/12">
+          <div className="px-2 pb-2 md:w-6/12 md:pb-0">
             <Field
               id={`${id}-completeAdress`}
               label={'Complete Address'}
@@ -27,12 +27,12 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               placeHolder={'House/Floor No. Building Name or Street, Locality'}
               required={true}
               value={completeAdress}
-              onChange={($event)=>{
+              onChange={($event) => {
                 setCompleteAddress(event.target.value);
               }}
             />
           </div>
-          <div className="px-2 pb-2 md:pb-0 md:w-6/12">
+          <div className="px-2 pb-2 md:w-6/12 md:pb-0">
             <Field
               id={`${id}-landmark`}
               label={'Landmark'}
@@ -42,14 +42,14 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               placeHolder={'Any nearby post office, market, Hospital as the landmark'}
               required={true}
               value={landmark}
-              onChange={($event)=>{
+              onChange={($event) => {
                 setLandmark(event.target.value);
               }}
             />
           </div>
         </div>
         <div className="w-full md:flex">
-          <div className="px-2 pb-2 md:pb-0 md:w-3/12">
+          <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
               type={'number'}
               id={`${id}-pincode`}
@@ -59,16 +59,20 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               placeHolder={"Enter Buyer's Pincode"}
               required={true}
               value={pincode}
-              onChange={(e)=>{
+              onChange={(e) => {
                 setPincode(e.target.value);
               }}
-              onBlur={()=>{
+              onBlur={() => {
                 setIsValidPincode(/^\d{6}$/.test(pincode));
               }}
             />
-            {!isValidPinCode && <p style={{ color: 'red', fontSize:'small' }}>Please enter a valid Pincode.</p>}
+            {!isValidPinCode && (
+              <p style={{ color: 'red', fontSize: 'small' }}>
+                Please enter a valid Pincode.
+              </p>
+            )}
           </div>
-          <div className="px-2 pb-2 md:pb-0 md:w-3/12">
+          <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
               id={`${id}-city`}
               label={'City'}
@@ -77,12 +81,12 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               placeHolder={"Enter Buyer's City"}
               required={true}
               value={city}
-              onChange={($event)=>{
+              onChange={($event) => {
                 setCity(event.target.value);
               }}
             />
           </div>
-          <div className="px-2 pb-2 md:pb-0 md:w-3/12">
+          <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
               type={'select'}
               id={`${id}-state`}
@@ -92,12 +96,12 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               placeHolder={'Please Select State'}
               required={true}
               value={state}
-              onChange={($event)=>{
+              onChange={($event) => {
                 setState(event.target.value);
               }}
             />
           </div>
-          <div className="px-2 pb-2 md:pb-0 md:w-3/12">
+          <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
               id={`${id}-country`}
               label={'Country'}
@@ -106,7 +110,7 @@ const BuyerAdressFields = ({ id, heading, alternateText, onChange }) => {
               placeHolder={"Enter Buyer's country"}
               required={true}
               value={country}
-              onChange={($event)=>{
+              onChange={($event) => {
                 setCountry(event.target.value);
               }}
             />

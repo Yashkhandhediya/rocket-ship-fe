@@ -7,7 +7,8 @@ const Tabs = ({ tabs }) => {
     <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
       <ul
         className="-mb-px flex flex-wrap text-center text-sm font-medium"
-        id="default-tab">
+        id="default-tab"
+      >
         {tabs.map((tab, i) => {
           return (
             <li className="me-2 flex" key={tab.id}>
@@ -19,7 +20,8 @@ const Tabs = ({ tabs }) => {
                 }`}
                 id={`${tab.id}-tab`}
                 type="button"
-                onClick={() => setActiveTab(i)}>
+                onClick={() => setActiveTab(i)}
+              >
                 {tab.title}
                 <img className="ms-2" src={infoIcon} />
               </button>
@@ -35,7 +37,8 @@ const Tabs = ({ tabs }) => {
               className={`rounded-lg bg-gray-50  dark:bg-gray-800 ${
                 i !== activeTab ? 'hidden' : ''
               }`}
-              id={`${tab.id}-panel`}>
+              id={`${tab.id}-panel`}
+            >
               {tab.panel}
             </div>
           );

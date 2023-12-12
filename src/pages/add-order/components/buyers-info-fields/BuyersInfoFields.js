@@ -3,21 +3,21 @@ import { useState } from 'react';
 
 const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
   const [phone, setPhone] = useState(0);
-  const[isValidPhone, setIsValidPhone] = useState(true);
+  const [isValidPhone, setIsValidPhone] = useState(true);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [isValidEmail, setIsValidEmail] = useState(true);
 
-  function handleChangePhone(e){
-    setPhone(e.target.value)
+  function handleChangePhone(e) {
+    setPhone(e.target.value);
   }
 
-  function handleChangeFullName(e){
-    setFullName(e.target.value)
+  function handleChangeFullName(e) {
+    setFullName(e.target.value);
   }
 
-  function handleChangeEmail(e){
-    setEmail(e.target.value)
+  function handleChangeEmail(e) {
+    setEmail(e.target.value);
   }
   return (
     <div>
@@ -26,7 +26,7 @@ const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
         {alternateText && <span className="pl-1 text-gray-400">{alternateText}</span>}
       </div>
       <div className="md:flex">
-        <div className="px-2 pb-2 md:pb-0 md:w-4/12">
+        <div className="px-2 pb-2 md:w-4/12 md:pb-0">
           <Field
             type={'number'}
             id={`${id}-mobile`}
@@ -37,12 +37,18 @@ const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
             required={true}
             value={phone}
             onChange={handleChangePhone}
-            onBlur={()=>{setIsValidPhone(/^\d{10}$/.test(phone));}}
+            onBlur={() => {
+              setIsValidPhone(/^\d{10}$/.test(phone));
+            }}
           />
-          {!isValidPhone && <p style={{ color: 'red', fontSize:'small' }}>Please enter a valid 10-digit number.</p>}
+          {!isValidPhone && (
+            <p style={{ color: 'red', fontSize: 'small' }}>
+              Please enter a valid 10-digit number.
+            </p>
+          )}
         </div>
-        
-        <div className="px-2 pb-2 md:pb-0 md:w-4/12">
+
+        <div className="px-2 pb-2 md:w-4/12 md:pb-0">
           <Field
             id={`${id}-fullName`}
             label={'Full Name'}
@@ -54,7 +60,7 @@ const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
             onChange={handleChangeFullName}
           />
         </div>
-        <div className="px-2 pb-2 md:pb-0 md:w-4/12">
+        <div className="px-2 pb-2 md:w-4/12 md:pb-0">
           <Field
             type={'email'}
             id={`${id}-email`}
@@ -66,11 +72,13 @@ const BuyersInfoFields = ({ id, heading, alternateText, onChange }) => {
             required={true}
             value={email}
             onChange={handleChangeEmail}
-            onBlur={()=>{
+            onBlur={() => {
               setIsValidEmail(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
             }}
           />
-          {!isValidEmail && <p style={{ color: 'red', fontSize:'small' }}>Please enter a valid email.</p>}
+          {!isValidEmail && (
+            <p style={{ color: 'red', fontSize: 'small' }}>Please enter a valid email.</p>
+          )}
         </div>
       </div>
     </div>

@@ -20,7 +20,8 @@ const Field = ({
       {label && (
         <label
           htmlFor={id}
-          className={`mb-2 block text-sm font-medium text-gray-900 dark:text-white ${labelClassNames}`}>
+          className={`mb-2 block text-sm font-medium text-gray-600 dark:text-white ${labelClassNames}`}
+        >
           {label}
           {showOptional && (
             <span className="pl-1 text-[10px] text-gray-400">{'(Optional)'}</span>
@@ -40,7 +41,11 @@ const Field = ({
         maxLength={maxLength}
         minLength={minLength}
       />
-      {note && <span className="text-gray-400 text-[10px]">{note}</span>}
+      {note && (
+        <p className="mt-1 whitespace-pre-wrap text-[10px] leading-4 text-gray-400">
+          {note}
+        </p>
+      )}
     </div>
   );
 };
