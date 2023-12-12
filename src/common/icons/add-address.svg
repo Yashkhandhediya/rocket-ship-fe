@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30.925" height="34.109" viewBox="0 0 30.925 34.109">
+  <defs>
+    <style>
+            .cls-1{fill:none;stroke:#735ae5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-width:1.5px}
+    </style>
+  </defs>
+  <g id="_7769226_location_add_position_plus_icon" data-name="7769226_location_add_position_plus_icon" transform="translate(-1.75 .25)">
+    <ellipse id="Ellipse_747" data-name="Ellipse 747" class="cls-1" cx="5.313" cy="4.904" rx="5.313" ry="4.904" transform="translate(21.299 23.301)"/>
+    <path id="Line_404" data-name="Line 404" class="cls-1" transform="translate(26.676 26.362)" d="M0 0v3.373"/>
+    <path id="Line_405" data-name="Line 405" class="cls-1" transform="translate(24.989 28.049)" d="M0 0h3.373"/>
+    <circle id="Ellipse_748" data-name="Ellipse 748" class="cls-1" cx="2.861" cy="2.861" r="2.861" transform="translate(14.76 3.684)"/>
+    <path id="Path_23847" data-name="Path 23847" class="cls-1" d="M24.118 7.809c0 4.037-7.309 15.18-7.309 15.18S9.5 11.846 9.5 7.809a7.309 7.309 0 0 1 14.618 0z" transform="translate(.871)"/>
+    <path id="Path_23848" data-name="Path 23848" class="cls-1" d="M19.367 28.745H2.5L7 17.5h6.747" transform="translate(0 2.116)"/>
+    <path id="Path_23849" data-name="Path 23849" class="cls-1" d="M19.5 17.5h6.747l.9 2.249" transform="translate(2.116 2.116)"/>
+  </g>
+</svg>

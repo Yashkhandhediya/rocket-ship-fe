@@ -4,11 +4,10 @@ import { infoIcon } from '../../icons';
 const Tabs = ({ tabs }) => {
   const [activeTab, setActiveTab] = useState(0);
   return (
-    <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
+    <div className="mb-4">
       <ul
-        className="-mb-px flex flex-wrap text-center text-sm font-medium"
-        id="default-tab"
-      >
+        className="-mb-px flex flex-wrap border-b-2 border-gray-200 text-center text-sm font-medium dark:border-gray-700"
+        id="default-tab">
         {tabs.map((tab, i) => {
           return (
             <li className="me-2 flex" key={tab.id}>
@@ -19,8 +18,7 @@ const Tabs = ({ tabs }) => {
                   }`}
                 id={`${tab.id}-tab`}
                 type="button"
-                onClick={() => setActiveTab(i)}
-              >
+                onClick={() => setActiveTab(i)}>
                 {tab.title}
                 <img className="ms-2" src={infoIcon} />
               </button>
@@ -33,10 +31,10 @@ const Tabs = ({ tabs }) => {
           return (
             <div
               key={tab.id}
-              className={`rounded-lg bg-gray-50  dark:bg-gray-800 ${i !== activeTab ? 'hidden' : ''
-                }`}
-              id={`${tab.id}-panel`}
-            >
+              className={`rounded-lg bg-gray-50  dark:bg-gray-800 ${
+                i !== activeTab ? 'hidden' : ''
+              }`}
+              id={`${tab.id}-panel`}>
               {tab.panel}
             </div>
           );
