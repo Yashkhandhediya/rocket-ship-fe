@@ -2,6 +2,8 @@ import { Field } from '../../../../common/components';
 import { useState } from 'react';
 
 const BuyersInfoFields = ({ id, heading, alternateText, values, onChange }) => {
+  const [isValidPhone, setIsValidPhone] = useState(true);
+  const [isValidEmail, setIsValidEmail] = useState(true);
 
   return (
     <div>

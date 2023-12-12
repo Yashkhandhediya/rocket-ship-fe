@@ -2,6 +2,8 @@ import { Field } from '../../../../common/components';
 import { useState } from 'react';
 
 const BuyerAdressFields = ({ id, heading, alternateText, values, onChange }) => {
+  const [isValidPinCode, setIsValidPincode] = useState(true);
+
 
   return (
     <div>
