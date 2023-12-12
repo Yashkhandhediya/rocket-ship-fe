@@ -1,8 +1,12 @@
+import { useState } from 'react';
 import { AddressVerifiedTag } from '../../../../../common/address-verified-tag';
 import { Field } from '../../../../../common/components';
+import { RightDrawer } from '../../../../../common/components/right-drawer';
 import { addAdressIcon, editIcon } from '../../../../../common/icons';
+import AddAddressDrawer from '../../add-address-drawer/AddAddressDrawer';
 
 export default function PickupDetails() {
+  const [addressDrawerOpen, setAddressDrawerOpen] = useState(false);
   return (
     <div>
       <div className="mb-6 text-xl font-bold"> {'Pickup Address'} </div>
@@ -30,9 +34,7 @@ export default function PickupDetails() {
           <div className="block md:flex">
             <div
               className="md:w-/12 mb-3 px-2 lg:w-3/12"
-              onClick={() => {
-                //need to open drawer
-              }}>
+              onClick={() => setAddressDrawerOpen(true)}>
               <div className="h-[11.5rem] w-full cursor-pointer rounded-2xl border border-dashed border-indigo-700 bg-white px-6 py-14 text-center">
                 <img src={addAdressIcon} className="m-auto align-middle" />
                 <p className="mb-0.5 mt-3 text-xs text-indigo-700">
@@ -79,6 +81,10 @@ export default function PickupDetails() {
           </div>
         </div>
       </div>
+      <AddAddressDrawer
+        isOpen={addressDrawerOpen}
+        onClose={() => setAddressDrawerOpen(false)}
+      />
     </div>
   );
 }
