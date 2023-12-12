@@ -7,6 +7,23 @@ import { useState } from 'react';
 
 export default function BuyerDetails() {
   const [isSameBilingAddress, setIsSameBilingAddress] = useState(true);
+  const [altPhone, setAltPhone] = useState(0);
+  const [isValidAltPhone, setIsValidAltPhone] = useState(true);
+  const [buyersCompanyName, setBuyersCompanyName] = useState('');
+  const [buyersGSTIN, setBuyersGSTIN] = useState('');
+
+  function handleChangeAltPhone(e) {
+    setAltPhone(e.target.value);
+  }
+
+  function handleChangeBuyersCompanyName(e) {
+    setBuyersCompanyName(e.target.value);
+  }
+
+  function handleChangeBuyersGSTIN(e) {
+    setBuyersGSTIN(e.target.value);
+  }
+
   return (
     <div>
       <div className="mb-6 text-xl font-bold"> {"Add Buyer's Details"} </div>
@@ -36,9 +53,17 @@ export default function BuyerDetails() {
                   labelClassNames={'text-xs'}
                   placeHolder={'Enter Alternate Mobile Number'}
                   required={true}
-                  value={''}
-                  onChange={() => {}}
+                  value={altPhone}
+                  onChange={handleChangeAltPhone}
+                  onBlur={() => {
+                    setIsValidAltPhone(/^\d{10}$/.test(altPhone));
+                  }}
                 />
+                {!isValidAltPhone && (
+                  <p style={{ color: 'red', fontSize: 'small' }}>
+                    Please enter a valid 10-digit number.
+                  </p>
+                )}
               </div>
               <div className="w-full px-2 pb-2 md:w-4/12 md:pb-0">
                 <Field
@@ -49,8 +74,8 @@ export default function BuyerDetails() {
                   placeHolder={"Enter Buyer's Company Name"}
                   note={"Note: If you're Shipping B2B, Please Enter the Company's name"}
                   required={true}
-                  value={''}
-                  onChange={() => {}}
+                  value={buyersCompanyName}
+                  onChange={handleChangeBuyersCompanyName}
                 />
               </div>
               <div className="w-full px-2 pb-2 md:w-4/12 md:pb-0">
@@ -61,8 +86,8 @@ export default function BuyerDetails() {
                   labelClassNames={'text-xs'}
                   placeHolder={"Enter Buyer's GSTIN"}
                   required={true}
-                  value={''}
-                  onChange={() => {}}
+                  value={buyersGSTIN}
+                  onChange={handleChangeBuyersGSTIN}
                 />
               </div>
             </div>

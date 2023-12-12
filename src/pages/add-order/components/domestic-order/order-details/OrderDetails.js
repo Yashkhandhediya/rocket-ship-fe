@@ -1,6 +1,39 @@
 import { Field, FieldAccordion } from '../../../../../common/components';
+import { useState } from 'react';
 
 export default function OrderDetails() {
+
+  const [orderID, setOrderID] = useState(0);
+  const [orderDate, setOrderDate] = useState(new Date());
+  const [orderChannel, setOrderChannel] = useState('');
+  const [orderTag, setOrderTag] = useState('');
+  const [resellerName, setResellerName] = useState('');
+  const [productName, setProductName] = useState('');
+
+  function handleChangeOrderID(e) {
+    setOrderID(e.target.value);
+  }
+
+  function handleChangeOrderDate(e) {
+    setOrderDate(e.target.value);
+  }
+
+  function handleChangeOrderChannel(e) {
+    setOrderChannel(e.target.value);
+  }
+
+  function handleChangeOrderTag(e) {
+    setOrderTag(e.target.value);
+  }
+
+  function handleChangeResellerName(e) {
+    setResellerName(e.target.value);
+  }
+
+  function handleChangeProductName(e) {
+    setProductName(e.target.value);
+  }
+
   return (
     <div>
       <div className="mb-6 text-xl font-bold"> {'Order Details'} </div>
@@ -12,10 +45,10 @@ export default function OrderDetails() {
               label={'Order ID'}
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
-              placeHolder={'0000001'}
+              placeHolder={'Enter Order ID'}
               required={true}
-              value={''}
-              onChange={() => {}}
+              value={orderID}
+              onChange={handleChangeOrderID}
             />
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
@@ -25,10 +58,10 @@ export default function OrderDetails() {
               label={'Order Date'}
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
-              placeHolder={''}
+              placeHolder={'Enter Order Date'}
               required={true}
-              value={''}
-              onChange={() => {}}
+              value={orderDate}
+              onChange={handleChangeOrderDate}
             />
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
@@ -38,10 +71,10 @@ export default function OrderDetails() {
               label={'Order Channel'}
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
-              placeHolder={''}
+              placeHolder={'Enter Order Channel'}
               required={true}
-              value={''}
-              onChange={() => {}}
+              value={orderChannel}
+              onChange={handleChangeOrderChannel}
             />
           </div>
         </div>
@@ -58,10 +91,10 @@ export default function OrderDetails() {
                   label={'Order tag'}
                   inputClassNames={'text-xs'}
                   labelClassNames={'text-xs'}
-                  placeHolder={''}
+                  placeHolder={'Enter Order Tag'}
                   required={true}
-                  value={''}
-                  onChange={() => {}}
+                  value={orderTag}
+                  onChange={handleChangeOrderTag}
                 />
               </div>
               <div className="px-2 pb-2 md:w-4/12 md:pb-0 xl:w-3/12">
@@ -73,8 +106,8 @@ export default function OrderDetails() {
                   labelClassNames={'text-xs'}
                   placeHolder={"Reseller's Name"}
                   required={true}
-                  value={''}
-                  onChange={() => {}}
+                  value={resellerName}
+                  onChange={handleChangeResellerName}
                 />
               </div>
             </div>
@@ -93,8 +126,8 @@ export default function OrderDetails() {
                   labelClassNames={'text-xs'}
                   placeHolder={'Enter or search your product name'}
                   required={true}
-                  value={''}
-                  onChange={() => {}}
+                  value={productName}
+                  onChange={handleChangeProductName}
                 />
               </div>
               <div className="w-full px-2 pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
