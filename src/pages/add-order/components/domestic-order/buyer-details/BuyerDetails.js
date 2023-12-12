@@ -4,18 +4,11 @@ import { BuyerAddressFields } from '../../buyer-address-fields';
 import { Checkbox, Field, FieldAccordion } from '../../../../../common/components';
 import { downArrow } from '../../../../../common/icons';
 import { useState } from 'react';
+import { useEffect } from 'react';
+import axios from 'axios';
 
-export default function BuyerDetails() {
+export default function BuyerDetails({ handleFormData, formData }) {
     const [isSameBilingAddress, setIsSameBilingAddress] = useState(true);
-    const [formData, setFormData] = useState(null);
-
-    const handleFormData = (event) => {
-        const { id, value } = event.target;
-        setFormData({
-            ...formData,
-            [id]: value,
-        })
-    };
 
     return (
         <div>
@@ -118,15 +111,15 @@ export default function BuyerDetails() {
                         <BuyersInfoFields
                             id="billing"
                             heading={"Buyer's Details"}
-                            values={{}}
-                            onChange={() => { }}
+                            values={formData}
+                            onChange={handleFormData}
                         />
                         <div className="my-6 w-full border border-gray-200" />
                         <BuyerAddressFields
                             id="billing"
                             heading={"Buyer's Address"}
-                            values={{}}
-                            onChange={() => { }}
+                            values={formData}
+                            onChange={handleFormData}
                         />
                     </div>}
                 </div>

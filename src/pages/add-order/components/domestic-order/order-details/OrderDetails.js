@@ -1,38 +1,7 @@
 import { Field, FieldAccordion } from '../../../../../common/components';
 import { useState } from 'react';
 
-export default function OrderDetails() {
-
-  const [orderID, setOrderID] = useState(0);
-  const [orderDate, setOrderDate] = useState(new Date());
-  const [orderChannel, setOrderChannel] = useState('');
-  const [orderTag, setOrderTag] = useState('');
-  const [resellerName, setResellerName] = useState('');
-  const [productName, setProductName] = useState('');
-
-  function handleChangeOrderID(e) {
-    setOrderID(e.target.value);
-  }
-
-  function handleChangeOrderDate(e) {
-    setOrderDate(e.target.value);
-  }
-
-  function handleChangeOrderChannel(e) {
-    setOrderChannel(e.target.value);
-  }
-
-  function handleChangeOrderTag(e) {
-    setOrderTag(e.target.value);
-  }
-
-  function handleChangeResellerName(e) {
-    setResellerName(e.target.value);
-  }
-
-  function handleChangeProductName(e) {
-    setProductName(e.target.value);
-  }
+export default function OrderDetails({ handleFormData, formData }) {
 
   return (
     <div>
@@ -47,8 +16,8 @@ export default function OrderDetails() {
               labelClassNames={'text-xs'}
               placeHolder={'Enter Order ID'}
               required={true}
-              value={orderID}
-              onChange={handleChangeOrderID}
+              value={formData?.orderId}
+              onChange={handleFormData}
             />
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
@@ -60,8 +29,8 @@ export default function OrderDetails() {
               labelClassNames={'text-xs'}
               placeHolder={'Enter Order Date'}
               required={true}
-              value={orderDate}
-              onChange={handleChangeOrderDate}
+              value={formData?.orderDate}
+              onChange={handleFormData}
             />
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
@@ -73,8 +42,8 @@ export default function OrderDetails() {
               labelClassNames={'text-xs'}
               placeHolder={'Enter Order Channel'}
               required={true}
-              value={orderChannel}
-              onChange={handleChangeOrderChannel}
+              value={formData?.orderChannel}
+              onChange={handleFormData}
             />
           </div>
         </div>
@@ -93,8 +62,8 @@ export default function OrderDetails() {
                   labelClassNames={'text-xs'}
                   placeHolder={'Enter Order Tag'}
                   required={true}
-                  value={orderTag}
-                  onChange={handleChangeOrderTag}
+                  value={formData?.orderTag}
+                  onChange={handleFormData}
                 />
               </div>
               <div className="px-2 pb-2 md:w-4/12 md:pb-0 xl:w-3/12">
@@ -106,8 +75,8 @@ export default function OrderDetails() {
                   labelClassNames={'text-xs'}
                   placeHolder={"Reseller's Name"}
                   required={true}
-                  value={resellerName}
-                  onChange={handleChangeResellerName}
+                  value={formData?.resellerName}
+                  onChange={handleFormData}
                 />
               </div>
             </div>
@@ -126,8 +95,8 @@ export default function OrderDetails() {
                   labelClassNames={'text-xs'}
                   placeHolder={'Enter or search your product name'}
                   required={true}
-                  value={productName}
-                  onChange={handleChangeProductName}
+                  value={formData?.product1Name}
+                  onChange={handleFormData}
                 />
               </div>
               <div className="w-full px-2 pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
@@ -139,8 +108,8 @@ export default function OrderDetails() {
                   labelClassNames={'text-xs'}
                   placeHolder={'0.00'}
                   required={true}
-                  value={''}
-                  onChange={() => {}}
+                  value={formData?.unitPrice}
+                  onChange={handleFormData}
                 />
               </div>
               <div className="w-full px-2  pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
@@ -152,8 +121,8 @@ export default function OrderDetails() {
                   labelClassNames={'text-xs'}
                   placeHolder={'0'}
                   required={true}
-                  value={''}
-                  onChange={() => {}}
+                  value={formData?.quantity}
+                  onChange={handleFormData}
                 />
               </div>
               <div className="w-10/12 px-2 pb-2 md:w-4/12 md:pb-0 xl:w-3/12">
@@ -165,8 +134,8 @@ export default function OrderDetails() {
                   labelClassNames={'text-xs'}
                   placeHolder={'Edit Product Category'}
                   required={true}
-                  value={''}
-                  onChange={() => {}}
+                  value={formData?.productCategory}
+                  onChange={handleFormData}
                 />
               </div>
             </div>
@@ -185,8 +154,8 @@ export default function OrderDetails() {
                       inputClassNames={'text-xs'}
                       labelClassNames={'text-xs'}
                       placeHolder={'Enter your product HSN code'}
-                      value={''}
-                      onChange={() => {}}
+                      value={formData?.hsnCode}
+                      onChange={handleFormData}
                     />
                   </div>
                   <div className="w-full px-2 pb-2 lg:w-4/12">
@@ -196,8 +165,8 @@ export default function OrderDetails() {
                       inputClassNames={'text-xs'}
                       labelClassNames={'text-xs'}
                       placeHolder={'Enter Product SKU'}
-                      value={''}
-                      onChange={() => {}}
+                      value={formData?.sku}
+                      onChange={handleFormData}
                     />
                   </div>
                   <div className="w-full px-2 pb-2 lg:w-2/12">
@@ -208,8 +177,8 @@ export default function OrderDetails() {
                       inputClassNames={'text-xs'}
                       labelClassNames={'text-xs'}
                       placeHolder={'0'}
-                      value={''}
-                      onChange={() => {}}
+                      value={formData?.taxRate}
+                      onChange={handleFormData}
                     />
                   </div>
                   <div className="w-full px-2 pb-2 lg:w-3/12">
@@ -220,8 +189,8 @@ export default function OrderDetails() {
                       inputClassNames={'text-xs'}
                       labelClassNames={'text-xs'}
                       placeHolder={'0.00'}
-                      value={''}
-                      onChange={() => {}}
+                      value={formData?.taxRate}
+                      onChange={handleFormData}
                     />
                   </div>
                 </div>
@@ -231,7 +200,7 @@ export default function OrderDetails() {
           <div>
             <button
               className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-xs text-indigo-700'}
-              onClick={() => {}}
+              onClick={() => { }}
             >
               + Add Another Product
             </button>
@@ -289,8 +258,8 @@ export default function OrderDetails() {
                       inputClassNames={'text-xs'}
                       labelClassNames={'text-xs'}
                       placeHolder={'0.00'}
-                      value={''}
-                      onChange={() => {}}
+                      value={formData?.shippingCharges}
+                      onChange={handleFormData}
                     />
                   </div>
                   <div className="w-full px-2 pb-2 md:w-4/12 lg:w-3/12 xl:w-2/12">
@@ -301,8 +270,8 @@ export default function OrderDetails() {
                       inputClassNames={'text-xs'}
                       labelClassNames={'text-xs'}
                       placeHolder={'0.00'}
-                      value={''}
-                      onChange={() => {}}
+                      value={formData?.giftWrap}
+                      onChange={handleFormData}
                     />
                   </div>
                   <div className="w-full px-2 pb-2 md:w-4/12 lg:w-3/12 xl:w-2/12">
@@ -313,8 +282,8 @@ export default function OrderDetails() {
                       inputClassNames={'text-xs'}
                       labelClassNames={'text-xs'}
                       placeHolder={'0.00'}
-                      value={''}
-                      onChange={() => {}}
+                      value={formData?.transactionFee}
+                      onChange={handleFormData}
                     />
                   </div>
                   <div className="w-full px-2 pb-2 md:w-4/12 lg:w-3/12 xl:w-2/12">
@@ -325,8 +294,8 @@ export default function OrderDetails() {
                       inputClassNames={'text-xs'}
                       labelClassNames={'text-xs'}
                       placeHolder={'0'}
-                      value={''}
-                      onChange={() => {}}
+                      value={formData?.discounts}
+                      onChange={handleFormData}
                     />
                   </div>
                 </div>
