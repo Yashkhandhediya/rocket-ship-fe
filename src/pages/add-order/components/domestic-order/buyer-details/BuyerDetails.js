@@ -99,6 +99,7 @@ export default function BuyerDetails({ handleFormData, formData }) {
                 <div className="mt-5">
                     <div>
                         <Checkbox
+                            id={"sameBillingAdress"}
                             checked={isSameBilingAddress}
                             label={'Billing address is same as the shipping address'}
                             onChange={(e) => setIsSameBilingAddress(e.target.checked)}

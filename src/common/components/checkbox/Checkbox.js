@@ -1,16 +1,16 @@
-const Checkbox = ({ label, checked, onChange }) => {
+const Checkbox = ({ id, label, checked, onChange }) => {
   return (
     <div className="relative flex">
       <input
         type="checkbox"
         className="peer hidden"
-        id="sameBillingAdress"
+        id={id}
         checked={checked}
         onChange={onChange}
       />
 
       <label
-        htmlFor="sameBillingAdress"
+        htmlFor={id}
         className="mb-2 cursor-pointer px-6 text-xs font-medium text-gray-900 dark:text-white"
       >
         <span className="absolute left-0 top-0 h-[18px] w-[18px] rounded border border-gray-300 bg-transparent">
