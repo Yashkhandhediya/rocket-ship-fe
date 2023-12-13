@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { AddressVerifiedTag } from '../../../../../common/address-verified-tag';
 import { Field } from '../../../../../common/components';
-import { RightDrawer } from '../../../../../common/components/right-drawer';
 import { addAdressIcon, editIcon } from '../../../../../common/icons';
 import AddAddressDrawer from '../../add-address-drawer/AddAddressDrawer';
 

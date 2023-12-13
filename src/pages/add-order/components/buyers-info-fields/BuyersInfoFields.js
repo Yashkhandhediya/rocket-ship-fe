@@ -15,13 +15,13 @@ const BuyersInfoFields = ({ id, heading, alternateText, values, onChange }) => {
         <div className="px-2 pb-2 md:w-4/12 md:pb-0">
           <Field
             type={'number'}
-            id={`${id}-mobile`}
+            id={`contact_info`}
             label={'Mobile Number'}
             inputClassNames={'text-xs'}
             labelClassNames={'text-xs'}
             placeHolder={"Enter buyer's phone number"}
             required={true}
-            value={values?.[`${id}-mobile`]}
+            value={values?.[`contact_info`]}
             onChange={onChange}
           />
           {!isValidPhone && (
@@ -33,27 +33,27 @@ const BuyersInfoFields = ({ id, heading, alternateText, values, onChange }) => {
 
         <div className="px-2 pb-2 md:w-4/12 md:pb-0">
           <Field
-            id={`${id}-fullName`}
+            id={`first_name`}
             label={'Full Name'}
             labelClassNames={'text-xs'}
             inputClassNames={'text-xs'}
             placeHolder={'Enter Full Name'}
             required={true}
-            value={values?.[`${id}-fullName`]}
+            value={values?.[`first_name`]}
             onChange={onChange}
           />
         </div>
         <div className="px-2 pb-2 md:w-4/12 md:pb-0">
           <Field
             type={'email'}
-            id={`${id}-email`}
+            id={`email_address`}
             label={'Email ID'}
             inputClassNames={'text-xs'}
             showOptional
             labelClassNames={'text-xs'}
             placeHolder={'i.e abc@gmail.com'}
             required={true}
-            value={values?.[`${id}-email`]}
+            value={values?.[`email_address`]}
             onChange={onChange}
           />
           {!isValidEmail && (

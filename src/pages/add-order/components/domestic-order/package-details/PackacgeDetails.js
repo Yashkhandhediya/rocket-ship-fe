@@ -1,6 +1,36 @@
+import { useEffect, useMemo } from 'react';
 import { Field } from '../../../../../common/components';
 
 export default function PackageDetails({ handleFormData, formData }) {
+  const { length, width, height, dead_weight } = formData;
+  const volumatricWeight = useMemo(
+    () => (parseInt(length) * parseInt(width) * parseInt(height)) / 5000,
+    [length, width, height],
+  );
+  const applicableWeight = useMemo(
+    () =>
+      parseInt(volumatricWeight) > parseInt(dead_weight)
+        ? parseInt(volumatricWeight)
+        : parseInt(dead_weight),
+    [volumatricWeight, dead_weight],
+  );
+
+  const setDirectKeysInForm = (event) => {
+    const { id, value } = event.target;
+    handleFormData({
+      ...formData,
+      [id]: value,
+    });
+  };
+
+  useEffect(() => {
+    handleFormData({
+      ...formData,
+      volumatric_weight: volumatricWeight,
+      applicable1_weight: applicableWeight,
+    });
+  }, [volumatricWeight, applicableWeight]);
+
   return (
     <div>
       <div className="mb-6 text-xl font-bold"> {'Package Details'} </div>
@@ -9,7 +39,7 @@ export default function PackageDetails({ handleFormData, formData }) {
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
               type={'number'}
-              id={'deadWeight'}
+              id={'dead_weight'}
               label={'Dead Weight'}
               inputClassNames={'text-xs'}
               placeHolder={'0.00'}
@@ -17,8 +47,8 @@ export default function PackageDetails({ handleFormData, formData }) {
                 '(Max. 3 digits after decimal place) \nNote: The minimum chargeable weight is 0.50 Kg'
               }
               required={true}
-              value={formData?.deadWeight}
-              onChange={handleFormData}
+              value={formData?.dead_weight}
+              onChange={setDirectKeysInForm}
             />
           </div>
         </div>
@@ -28,7 +58,7 @@ export default function PackageDetails({ handleFormData, formData }) {
           <div>
             <div className="w-full md:flex">
               <div className="pb-2 md:pb-0 lg:w-5/12">
-                <label className="mb-3 block text-xs font-medium text-gray-600 dark:text-white">
+                <label className="dark:text-white mb-3 block text-xs font-medium text-gray-600">
                   {'Enter packages dimensions to calculate Volumetric Weight'}
                 </label>
                 <div className="w-full gap-4 md:flex">
@@ -40,18 +70,18 @@ export default function PackageDetails({ handleFormData, formData }) {
                       placeHolder={'0.00'}
                       required={true}
                       value={formData?.length}
-                      onChange={handleFormData}
+                      onChange={setDirectKeysInForm}
                     />
                   </div>
                   <div className="sm:w-/12 pb-2 md:pb-0">
                     <Field
                       type={'number'}
-                      id={'breadth'}
+                      id={'width'}
                       inputClassNames={'text-xs'}
                       placeHolder={'0.00'}
                       required={true}
-                      value={formData?.breadth}
-                      onChange={handleFormData}
+                      value={formData?.width}
+                      onChange={setDirectKeysInForm}
                     />
                   </div>
                   <div className="sm:w-/12 pb-2 md:pb-0">
@@ -62,7 +92,7 @@ export default function PackageDetails({ handleFormData, formData }) {
                       placeHolder={'0.00'}
                       required={true}
                       value={formData?.height}
-                      onChange={handleFormData}
+                      onChange={setDirectKeysInForm}
                     />
                   </div>
                 </div>
@@ -78,21 +108,21 @@ export default function PackageDetails({ handleFormData, formData }) {
               <div className="pb-2 md:pb-0 lg:w-5/12">
                 <Field
                   type={'select'}
-                  id={'deadWeight'}
+                  id={'savedPackagesDimensions'}
                   label={'Select from your saved packages to autofill package dimensions'}
                   labelClassNames={'text-xs'}
                   inputClassNames={'text-xs w-3/4'}
                   placeHolder={'Select Package'}
                   required={true}
                   value={''}
-                  onChange={() => { }}
+                  onChange={() => {}}
                 />
               </div>
             </div>
             <div className="my-5 rounded-md bg-[#ecf2fe99] p-5 text-sm font-medium text-gray-900">
               <div className="mb-1 flex">
                 <p>{'Volumetric Weight'}</p>
-                <p className="ml-9">{'0.00 ' + 'kg.'}</p>
+                <p className="ml-9">{volumatricWeight + 'kg.'}</p>
               </div>
             </div>
             <div className="my-5">
@@ -100,7 +130,7 @@ export default function PackageDetails({ handleFormData, formData }) {
               <div className="rounded-md border-t border-gray-200 bg-[#ecfefd99] p-5 pt-6 text-gray-900">
                 <div className="mb-1 flex text-sm font-bold">
                   <p>{'Applicable Weight'}</p>
-                  <p className="ml-9">{'5.00 ' + 'kg.'}</p>
+                  <p className="ml-9">{applicableWeight + 'kg.'}</p>
                 </div>
                 <div className="my-3">
                   <p className="text-xs text-gray-400 ">

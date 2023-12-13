@@ -15,14 +15,15 @@ const DomesticOrder = () => {
   };
   const stepsCount = Object.keys(steps).length;
 
-  function handleFormData(event) {
-    const { id, value } = event.target;
+  function handleFormData(formValues) {
     setFormData({
       ...formData,
-      [id]: value,
-    })
+      ...formValues,
+      order_type: 'domestic',
+    });
   }
-  console.log('formData----', formData);
+  console.log('--=-=-=-=-=-=formData-=-=-=-=-=-', formData);
+
   return (
     <div className="mb-8 pt-8 md:flex">
       <div className="form-step px-6">
@@ -38,11 +39,10 @@ const DomesticOrder = () => {
         <div className="text-end">
           <button
             type="button"
-            className="rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-900"
+            className="dark:focus:ring-purple-900 rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
             onClick={() => {
               setState((prev) => (prev + 1) % stepsCount);
-            }}
-          >
+            }}>
             Next
           </button>
         </div>

@@ -1,7 +1,7 @@
 import { Field } from '../../../../common/components';
 import { useState } from 'react';
 
-const BuyerAdressFields = ({ id, heading, alternateText, values, onChange }) => {
+const BuyerAdressFields = ({heading, alternateText, values, onChange }) => {
   const [isValidPinCode, setIsValidPincode] = useState(true);
 
 
@@ -15,26 +15,26 @@ const BuyerAdressFields = ({ id, heading, alternateText, values, onChange }) => 
         <div className="mb-3 w-full md:flex">
           <div className="px-2 pb-2 md:w-6/12 md:pb-0">
             <Field
-              id={`${id}-completeAdress`}
+              id={`complete_address`}
               label={'Complete Address'}
               labelClassNames={'text-xs'}
               inputClassNames={'text-xs'}
               placeHolder={'House/Floor No. Building Name or Street, Locality'}
               required={true}
-              value={values?.[`${id}-completeAdress`]}
+              value={values?.[`complete_address`]}
               onChange={onChange}
             />
           </div>
           <div className="px-2 pb-2 md:w-6/12 md:pb-0">
             <Field
-              id={`${id}-landmark`}
+              id={`landmark`}
               label={'Landmark'}
               showOptional
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
               placeHolder={'Any nearby post office, market, Hospital as the landmark'}
               required={true}
-              value={values?.[`${id}-landmark`]}
+              value={values?.[`landmark`]}
               onChange={onChange}
             />
           </div>
@@ -43,13 +43,13 @@ const BuyerAdressFields = ({ id, heading, alternateText, values, onChange }) => 
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
               type={'number'}
-              id={`${id}-pincode`}
+              id={`pincode`}
               label={'Pincode'}
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
               placeHolder={"Enter Buyer's Pincode"}
               required={true}
-              value={values?.[`${id}-pincode`]}
+              value={values?.[`pincode`]}
               onChange={onChange}
             />
             {!isValidPinCode && (
@@ -60,38 +60,38 @@ const BuyerAdressFields = ({ id, heading, alternateText, values, onChange }) => 
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
-              id={`${id}-city`}
+              id={`city`}
               label={'City'}
               labelClassNames={'text-xs'}
               inputClassNames={'text-xs'}
               placeHolder={"Enter Buyer's City"}
               required={true}
-              value={values?.[`${id}-city`]}
+              value={values?.[`city`]}
               onChange={onChange}
             />
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
               type={'select'}
-              id={`${id}-state`}
+              id={`state`}
               label={'State'}
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
               placeHolder={'Please Select State'}
               required={true}
-              value={values?.[`${id}-state`]}
+              value={values?.[`state`]}
               onChange={onChange}
             />
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
-              id={`${id}-country`}
+              id={`country`}
               label={'Country'}
               labelClassNames={'text-xs'}
               inputClassNames={'text-xs'}
               placeHolder={"Enter Buyer's country"}
               required={true}
-              value={values?.[`${id}-country`]}
+              value={values?.[`country`]}
               onChange={onChange}
             />
           </div>
