@@ -87,9 +87,12 @@ export default function OrderDetails({ handleFormData, formData }) {
 
   const setDirectKeysInForm = (event) => {
     const { id, value } = event.target;
+    let date = value.split('-');
+    let newDate = new Date( date[2], date[1], date[0]);
+    console.log('new date ', newDate);
     handleFormData({
       ...formData,
-      [id]: value,
+      [id]: newDate,
     });
   };
 

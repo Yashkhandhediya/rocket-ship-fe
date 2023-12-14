@@ -3,6 +3,7 @@ import BuyerDetails from './buyer-details/BuyerDetails';
 import OrderDetails from './order-details/OrderDetails';
 import PackageDetails from './package-details/PackacgeDetails';
 import PickupDetails from './pickup-details/PickupDetails';
+import axios from 'axios';
 
 const DomesticOrder = () => {
   const [state, setState] = useState(0);
@@ -42,6 +43,11 @@ const DomesticOrder = () => {
             className="dark:focus:ring-purple-900 rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
             onClick={() => {
               setState((prev) => (prev + 1) % stepsCount);
+              if (state == 3){
+                console.log('hitting api', formData);
+                let resp = axios.post('http://43.252.197.60:8030/order',formData);
+                console.log('api response',resp);
+              }
             }}>
             Next
           </button>
