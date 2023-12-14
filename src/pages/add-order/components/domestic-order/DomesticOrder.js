@@ -66,10 +66,25 @@ const DomesticOrder = () => {
     if (isNext) {
       setTriggerValidations(true);
     }
-    if (state == 3){
+
+    if (state == 2) {
+      const isValidProducts = formData?.product_info?.every((product) => {
+        return product.name && product.unit_price > 0 && product.quantity > 0;
+      });
+      if (
+        !formData?.product_info.length ||
+        !isValidProducts ||
+        !formData?.orderId ||
+        !formData.channel
+      ) {
+        return;
+      }
+    }
+
+    if (state == 3) {
       console.log('hitting api', formData);
-      let resp = axios.post('http://43.252.197.60:8030/order',formData);
-      console.log('api response',resp);
+      let resp = axios.post('http://43.252.197.60:8030/order', formData);
+      console.log('api response', resp);
     }
     setState((prev) => (isNext ? prev + 1 : prev - 1) % stepsCount);
   };
