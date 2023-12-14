@@ -3,6 +3,7 @@ import BuyerDetails from './buyer-details/BuyerDetails';
 import OrderDetails from './order-details/OrderDetails';
 import PackageDetails from './package-details/PackacgeDetails';
 import PickupDetails from './pickup-details/PickupDetails';
+import axios from 'axios';
 
 const DomesticOrder = () => {
   const [state, setState] = useState(0);
@@ -64,6 +65,11 @@ const DomesticOrder = () => {
     const isNext = changeType === 'NEXT';
     if (isNext) {
       setTriggerValidations(true);
+    }
+    if (state == 3){
+      console.log('hitting api', formData);
+      let resp = axios.post('http://43.252.197.60:8030/order',formData);
+      console.log('api response',resp);
     }
     setState((prev) => (isNext ? prev + 1 : prev - 1) % stepsCount);
   };
