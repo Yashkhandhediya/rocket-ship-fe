@@ -130,7 +130,7 @@ const DomesticOrder = () => {
             type="button"
             className="dark:focus:ring-purple-900 rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
             onClick={() => handleChangeStep('NEXT')}>
-            Next
+            {state==3?'Place Order':'Next'}
           </button>
         </div>
       </div>
