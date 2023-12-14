@@ -3,10 +3,27 @@ import { Checkbox, Field, FieldAccordion } from '../../../../common/components';
 import { RightDrawer } from '../../../../common/components/right-drawer';
 import { locationPin } from '../../../../common/icons';
 import { BuyerAddressFields } from '../buyer-address-fields';
+import { useDispatch } from 'react-redux';
+import { setAddress } from '../../../../redux/actions/addAddressAction';
 
-const AddAddressDrawer = ({ isOpen, onClose }) => {
+const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
   const [isAddSupplier, setIsAddSupplier] = useState(false);
   const [isAddRTOAddress, setIsAddRTOAddress] = useState(false);
+  const [addressInfo, setAddressInfo] = useState(formValues);
+
+  const dispatch = useDispatch();
+
+  const handleSetAddressInfo = (event) => {
+    const { id, value } = event.target;
+    setAddressInfo({
+      ...addressInfo,
+      [id]: value,
+    });
+  };
+
+  const handleSaveAddressInRedux = () => {
+    dispatch(setAddress(addressInfo));
+  };
 
   return (
     <RightDrawer isOpen={isOpen} heading={'Add New Pick Up Address'} onClose={onClose}>
@@ -45,40 +62,40 @@ const AddAddressDrawer = ({ isOpen, onClose }) => {
         <div className="md:flex">
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
-              id={`contactPerson`}
+              id={`first_name`}
               label={'Contact Person'}
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
               placeHolder={'Name of the person to be contacted'}
               required={true}
-              value={''}
-              onChange={() => {}}
+              value={addressInfo?.first_name}
+              onChange={handleSetAddressInfo}
             />
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
-              type={'number'}
+              type={'contact_no'}
               id={`contactNumber`}
               label={'Contact Number'}
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
               placeHolder={'Enter 10 digit mobile number'}
               required={true}
-              value={''}
-              onChange={() => {}}
+              value={addressInfo?.contact_no}
+              onChange={handleSetAddressInfo}
             />
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
               type={'email'}
-              id={`emailAddress`}
+              id={`email_address`}
               label={'Email Address'}
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
               placeHolder={'i.e acd@gmail.com'}
               required={true}
-              value={''}
-              onChange={() => {}}
+              value={addressInfo?.email_address}
+              onChange={handleSetAddressInfo}
             />
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
@@ -100,10 +117,9 @@ const AddAddressDrawer = ({ isOpen, onClose }) => {
       <div className="mb-4 mt-5 w-full border border-gray-100" />
       <div>
         <BuyerAddressFields
-          id={'delivery-address'}
           heading={'How can the delivery person reach the address?'}
-          onChange={() => {}}
-          values={{}}
+          onChange={handleSetAddressInfo}
+          values={addressInfo}
         />
       </div>
       <div className="mb-4 mt-5 w-full border border-gray-100" />
@@ -193,9 +209,17 @@ const AddAddressDrawer = ({ isOpen, onClose }) => {
           </div>
         </div>
       </FieldAccordion>
-      <div className='flex justify-end my-6 gap-5'>
-          <button className='border border-indigo-700 text-indigo-700 text-sm' onClick={onClose} >Cancle</button>
-          <button className='bg-indigo-700 text-white text-sm' onClick={() => {}} >Verify And Save Address</button>
+      <div className="my-6 flex justify-end gap-5">
+        <button
+          className="rounded border border-indigo-700 px-4 py-1.5 text-sm text-indigo-700"
+          onClick={onClose}>
+          Cancle
+        </button>
+        <button
+          className="rounded bg-indigo-700 px-4 py-1.5 text-sm text-white"
+          onClick={handleSaveAddressInRedux}>
+          Verify And Save Address
+        </button>
       </div>
     </RightDrawer>
   );

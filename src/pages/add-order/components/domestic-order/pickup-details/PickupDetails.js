@@ -1,11 +1,26 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AddressVerifiedTag } from '../../../../../common/address-verified-tag';
 import { Field } from '../../../../../common/components';
 import { addAdressIcon, editIcon } from '../../../../../common/icons';
 import AddAddressDrawer from '../../add-address-drawer/AddAddressDrawer';
+import { useSelector } from 'react-redux';
 
-export default function PickupDetails() {
+export default function PickupDetails({ handleFormData, formData }) {
   const [addressDrawerOpen, setAddressDrawerOpen] = useState(false);
+  const addressList = useSelector((state) => state.addressList) || [];
+  const [selectedAddress, setSelectedAddress] = useState(
+    addressList.length ? addressList[0] : null,
+  );
+
+  useEffect(() => {
+    if (selectedAddress) {
+      handleFormData({
+        ...formData,
+        pickup_address: selectedAddress,
+      });
+    }
+  }, [selectedAddress]);
+
   return (
     <div>
       <div className="mb-6 text-xl font-bold"> {'Pickup Address'} </div>
@@ -42,47 +57,52 @@ export default function PickupDetails() {
               </div>
             </div>
             {/* card with Address */}
-            <div
-              className="md:w-/12 mb-3 px-2 lg:w-3/12"
-              onClick={() => {
-                // select Address logic
-              }}>
-              <div className="relative h-[11.5rem] w-full cursor-pointer rounded-2xl border border-[#afcfff] bg-[#f4f8ff] p-3">
-                <span className="rounded bg-gray-200 px-2 py-[3px] text-[8px] text-gray-900">
-                  {'Primary Address'}
-                </span>
-                <div>
-                  <div className="overflow-hidden align-middle text-xs font-medium leading-9">
-                    {'Nickname'}
+            {addressList?.map((address, index) => {
+              return (
+                <div
+                  key={index}
+                  className="md:w-/12 mb-3 px-2 lg:w-3/12"
+                  onClick={() => setSelectedAddress(address)}>
+                  <div className="relative h-[11.5rem] w-full cursor-pointer rounded-2xl border border-[#afcfff] bg-[#f4f8ff] p-3">
+                    <span className="rounded bg-gray-200 px-2 py-[3px] text-[8px] text-gray-900">
+                      {'Primary Address'}
+                    </span>
+                    <div>
+                      <div className="overflow-hidden align-middle text-xs font-medium leading-9">
+                        {address?.first_name}
+                      </div>
+                      <AddressVerifiedTag />
+                    </div>
+                    <div className="border-b  border-gray-200">
+                      <div className="mb-2 min-h-[30px] min-w-[30px] overflow-hidden align-middle text-[11px] font-medium leading-4 text-gray-500">
+                        {`${address?.complete_address}, ${address?.landmark}, ${address?.city}, ${address?.state}-${address?.pincode}`}
+                      </div>
+                      <div className="mb-1 text-[11px] font-medium leading-6 text-gray-500">
+                        {'Mobile : ' + address?.contact_no}
+                      </div>
+                    </div>
+                    <div className="py-auto w-full py-2.5">
+                      <button
+                        className="flex items-center text-xs leading-4 text-indigo-700"
+                        onClick={() => {
+                          setAddressDrawerOpen(true);
+                          setSelectedAddress(address);
+                        }}>
+                        <img src={editIcon} />
+                        <div>{'Edit Address'}</div>
+                      </button>
+                    </div>
                   </div>
-                  <AddressVerifiedTag />
                 </div>
-                <div className="border-b  border-gray-200">
-                  <div className="mb-2 min-h-[30px] min-w-[30px] overflow-hidden align-middle text-[11px] font-medium leading-4 text-gray-500">
-                    {'A-395 mock address, near some famous place, city, state pincode'}
-                  </div>
-                  <div className="mb-1 text-[11px] font-medium leading-6 text-gray-500">
-                    {'Mobile : ' + '0123456789'}
-                  </div>
-                </div>
-                <div className="py-auto w-full py-2.5">
-                  <button
-                    className="flex items-center text-xs leading-4 text-indigo-700"
-                    onClick={() => {
-                      // open edit address drawer
-                    }}>
-                    <img src={editIcon} />
-                    <div>{'Edit Address'}</div>
-                  </button>
-                </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
       </div>
       <AddAddressDrawer
         isOpen={addressDrawerOpen}
         onClose={() => setAddressDrawerOpen(false)}
+        formValues={selectedAddress}
       />
     </div>
   );
