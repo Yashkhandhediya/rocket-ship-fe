@@ -51,7 +51,11 @@ const BuyerAdressFields = ({heading, alternateText, values, onChange }) => {
               required={true}
               value={values?.[`pincode`]}
               onChange={onChange}
+              onBlur={()=>{
+                setIsValidPincode(/^\d{6}$/.test(values?.[`pincode`]));
+              }}
             />
+            
             {!isValidPinCode && (
               <p style={{ color: 'red', fontSize: 'small' }}>
                 Please enter a valid Pincode.

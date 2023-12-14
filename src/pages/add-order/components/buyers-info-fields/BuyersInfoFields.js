@@ -23,6 +23,7 @@ const BuyersInfoFields = ({ id, heading, alternateText, values, onChange }) => {
             required={true}
             value={values?.[`contact_info`]}
             onChange={onChange}
+            onBlur={()=>{setIsValidPhone(/^\d{10}$/.test(values?.[`contact_info`]));}}
           />
           {!isValidPhone && (
             <p style={{ color: 'red', fontSize: 'small' }}>
@@ -55,6 +56,9 @@ const BuyersInfoFields = ({ id, heading, alternateText, values, onChange }) => {
             required={true}
             value={values?.[`email_address`]}
             onChange={onChange}
+            onBlur={()=>{
+              setIsValidEmail(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values?.[`email_address`]));
+            }}
           />
           {!isValidEmail && (
             <p style={{ color: 'red', fontSize: 'small' }}>Please enter a valid email.</p>
