@@ -1,9 +1,15 @@
 import { Field } from '../../../../common/components';
 import { useState } from 'react';
 
-const BuyerAdressFields = ({heading, alternateText, values, onChange }) => {
+const BuyerAdressFields = ({
+  heading,
+  alternateText,
+  values,
+  onChange,
+  triggerValidation,
+}) => {
   const [isValidPinCode, setIsValidPincode] = useState(true);
-
+  const [isValidAddress, setIsValidAddress] = useState(true);
 
   return (
     <div>
@@ -23,7 +29,16 @@ const BuyerAdressFields = ({heading, alternateText, values, onChange }) => {
               required={true}
               value={values?.[`complete_address`]}
               onChange={onChange}
+              triggerValidation={triggerValidation}
+              onBlur={() => {
+                setIsValidAddress(Boolean(values?.complete_address?.length));
+              }}
             />
+            {!isValidAddress && (
+              <p style={{ color: 'red', fontSize: 'small' }}>
+                Address is required.
+              </p>
+            )}
           </div>
           <div className="px-2 pb-2 md:w-6/12 md:pb-0">
             <Field
@@ -51,11 +66,12 @@ const BuyerAdressFields = ({heading, alternateText, values, onChange }) => {
               required={true}
               value={values?.[`pincode`]}
               onChange={onChange}
-              onBlur={()=>{
+              triggerValidation={triggerValidation}
+              onBlur={() => {
                 setIsValidPincode(/^\d{6}$/.test(values?.[`pincode`]));
               }}
             />
-            
+
             {!isValidPinCode && (
               <p style={{ color: 'red', fontSize: 'small' }}>
                 Please enter a valid Pincode.

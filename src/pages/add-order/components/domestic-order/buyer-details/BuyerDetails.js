@@ -1,10 +1,9 @@
 import { BuyersInfoFields } from '../../buyers-info-fields';
 import { BuyerAddressFields } from '../../buyer-address-fields';
 import { Checkbox, Field, FieldAccordion } from '../../../../../common/components';
-import { downArrow } from '../../../../../common/icons';
 import { useEffect, useState } from 'react';
 
-export default function BuyerDetails({ handleFormData, formData }) {
+export default function BuyerDetails({ handleFormData, formData, triggerValidations }) {
   const [isSameBilingAddress, setIsSameBilingAddress] = useState(true);
 
   const [buyerInfo, setBuyerInfo] = useState({
@@ -77,6 +76,12 @@ export default function BuyerDetails({ handleFormData, formData }) {
     });
   }, [billingInfo, addressInfo, companyInfo, buyerInfo]);
 
+  useEffect(() => {
+    if (triggerValidations.trigger) {
+      triggerValidations.reset();
+    }
+  }, [triggerValidations.trigger]);
+
   return (
     <div>
       <div className="mb-6 text-xl font-bold"> {"Add Buyer's Details"} </div>
@@ -85,6 +90,7 @@ export default function BuyerDetails({ handleFormData, formData }) {
           <BuyersInfoFields
             heading={'To whom is the order being delivered?'}
             alternateText={"(Buyer's Info)"}
+            triggerValidation={triggerValidations.trigger}
             values={buyerInfo}
             onChange={handleSetBuyerInfo}
           />
@@ -140,6 +146,7 @@ export default function BuyerDetails({ handleFormData, formData }) {
             id="buyer"
             heading={'Where is the order being delivered to?'}
             values={addressInfo}
+            triggerValidation={triggerValidations.trigger}
             onChange={handleSetAddressinfo}
           />
         </div>

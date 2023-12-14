@@ -7,11 +7,48 @@ import PickupDetails from './pickup-details/PickupDetails';
 const DomesticOrder = () => {
   const [state, setState] = useState(0);
   const [formData, setFormData] = useState(null);
+  const [triggerValidations, setTriggerValidations] = useState(false);
   const steps = {
-    0: <BuyerDetails handleFormData={handleFormData} formData={formData} />,
-    1: <PickupDetails handleFormData={handleFormData} formData={formData} />,
-    2: <OrderDetails handleFormData={handleFormData} formData={formData} />,
-    3: <PackageDetails handleFormData={handleFormData} formData={formData} />,
+    0: (
+      <BuyerDetails
+        handleFormData={handleFormData}
+        formData={formData}
+        triggerValidations={{
+          trigger: triggerValidations,
+          reset: () => setTriggerValidations(false),
+        }}
+      />
+    ),
+    1: (
+      <PickupDetails
+        handleFormData={handleFormData}
+        formData={formData}
+        triggerValidations={{
+          trigger: triggerValidations,
+          reset: () => setTriggerValidations(false),
+        }}
+      />
+    ),
+    2: (
+      <OrderDetails
+        handleFormData={handleFormData}
+        formData={formData}
+        triggerValidations={{
+          trigger: triggerValidations,
+          reset: () => setTriggerValidations(false),
+        }}
+      />
+    ),
+    3: (
+      <PackageDetails
+        handleFormData={handleFormData}
+        formData={formData}
+        triggerValidations={{
+          trigger: triggerValidations,
+          reset: () => setTriggerValidations(false),
+        }}
+      />
+    ),
   };
   const stepsCount = Object.keys(steps).length;
 
@@ -22,6 +59,15 @@ const DomesticOrder = () => {
       order_type: 'domestic',
     });
   }
+
+  const handleChangeStep = (changeType) => {
+    const isNext = changeType === 'NEXT';
+    if (isNext) {
+      setTriggerValidations(true);
+    }
+    setState((prev) => (isNext ? prev + 1 : prev - 1) % stepsCount);
+  };
+
   console.log('--=-=-=-=-=-=formData-=-=-=-=-=-', formData);
 
   return (
@@ -36,13 +82,17 @@ const DomesticOrder = () => {
       </div>
       <div className="grow px-6">
         {steps[state]}
-        <div className="text-end">
+        <div className="flex justify-end gap-4">
+          <button
+            type="button"
+            className="dark:focus:ring-purple-900 rounded-lg border border-purple-600 px-8 py-2 text-sm font-medium text-purple-600 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-purple-300"
+            onClick={() => handleChangeStep('BACK')}>
+            Back
+          </button>
           <button
             type="button"
             className="dark:focus:ring-purple-900 rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
-            onClick={() => {
-              setState((prev) => (prev + 1) % stepsCount);
-            }}>
+            onClick={() => handleChangeStep('NEXT')}>
             Next
           </button>
         </div>

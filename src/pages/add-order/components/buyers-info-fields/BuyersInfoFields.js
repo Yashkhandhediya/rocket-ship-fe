@@ -1,9 +1,16 @@
 import { Field } from '../../../../common/components';
 import { useState } from 'react';
 
-const BuyersInfoFields = ({ id, heading, alternateText, values, onChange }) => {
+const BuyersInfoFields = ({
+  heading,
+  alternateText,
+  values,
+  onChange,
+  triggerValidation,
+}) => {
   const [isValidPhone, setIsValidPhone] = useState(true);
   const [isValidEmail, setIsValidEmail] = useState(true);
+  const [isValidFullName, setIsValidFullName] = useState(true);
 
   return (
     <div>
@@ -23,7 +30,10 @@ const BuyersInfoFields = ({ id, heading, alternateText, values, onChange }) => {
             required={true}
             value={values?.[`contact_info`]}
             onChange={onChange}
-            onBlur={()=>{setIsValidPhone(/^\d{10}$/.test(values?.[`contact_info`]));}}
+            triggerValidation={triggerValidation}
+            onBlur={() => {
+              setIsValidPhone(/^\d{10}$/.test(values?.[`contact_info`]));
+            }}
           />
           {!isValidPhone && (
             <p style={{ color: 'red', fontSize: 'small' }}>
@@ -42,7 +52,12 @@ const BuyersInfoFields = ({ id, heading, alternateText, values, onChange }) => {
             required={true}
             value={values?.[`first_name`]}
             onChange={onChange}
+            triggerValidation={triggerValidation}
+            onBlur={() => setIsValidFullName(Boolean(values?.[`first_name`]?.length))}
           />
+          {!isValidFullName && (
+            <p style={{ color: 'red', fontSize: 'small' }}>Full Name is required.</p>
+          )}
         </div>
         <div className="px-2 pb-2 md:w-4/12 md:pb-0">
           <Field
@@ -56,8 +71,11 @@ const BuyersInfoFields = ({ id, heading, alternateText, values, onChange }) => {
             required={true}
             value={values?.[`email_address`]}
             onChange={onChange}
-            onBlur={()=>{
-              setIsValidEmail(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values?.[`email_address`]));
+            triggerValidation={triggerValidation}
+            onBlur={() => {
+              setIsValidEmail(
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values?.[`email_address`]),
+              );
             }}
           />
           {!isValidEmail && (
