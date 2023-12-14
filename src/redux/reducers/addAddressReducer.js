@@ -1,13 +1,16 @@
-const initialState = [];
+const localAddresses = localStorage.getItem('savedAddresses');
+const initialState = localAddresses ? JSON.parse(localAddresses) : [];
 
 const addressList = (state = initialState, action) => {
-  switch (action.type && action?.payload) {
+  switch (action.type) {
     case 'SET_ADDRESS': {
-      return [...state, action?.payload];
+      const updatedAddresses = action?.payload ? [...state, action?.payload] : state;
+      localStorage.setItem('savedAddresses', JSON.stringify(updatedAddresses));
+      return updatedAddresses;
     }
     default:
       return state;
-  } 
+  }
 };
 
 export default addressList;

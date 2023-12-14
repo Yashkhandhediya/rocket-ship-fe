@@ -22,7 +22,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
   };
 
   const handleSaveAddressInRedux = () => {
-    dispatch(setAddress(addressInfo));
+    dispatch(setAddress(addressInfo, onClose));
   };
 
   return (
@@ -74,8 +74,8 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
-              type={'contact_no'}
-              id={`contactNumber`}
+              type={'number'}
+              id={`contact_no`}
               label={'Contact Number'}
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
