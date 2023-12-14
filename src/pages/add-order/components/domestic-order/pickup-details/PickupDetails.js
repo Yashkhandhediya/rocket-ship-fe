@@ -58,12 +58,26 @@ export default function PickupDetails({ handleFormData, formData }) {
             </div>
             {/* card with Address */}
             {addressList?.map((address, index) => {
+              const isSelectedAddress =
+                address?.first_name === selectedAddress?.first_name &&
+                address?.complete_address === selectedAddress?.complete_address &&
+                address?.contact_no === selectedAddress?.contact_no &&
+                address?.pincode === selectedAddress?.pincode &&
+                address?.city === selectedAddress?.city &&
+                address?.state === selectedAddress?.state &&
+                address?.country === selectedAddress?.country;
               return (
                 <div
                   key={index}
                   className="md:w-/12 mb-3 px-2 lg:w-3/12"
                   onClick={() => setSelectedAddress(address)}>
-                  <div className="relative h-[11.5rem] w-full cursor-pointer rounded-2xl border border-[#afcfff] bg-[#f4f8ff] p-3">
+                  <div
+                    className={`relative h-[11.5rem] w-full  cursor-pointer rounded-2xl border p-3 
+                    ${
+                      isSelectedAddress
+                        ? 'border-[#afcfff] bg-[#f4f8ff]'
+                        : 'border-gray-400 bg-transparent'
+                    }`}>
                     <span className="rounded bg-gray-200 px-2 py-[3px] text-[8px] text-gray-900">
                       {'Primary Address'}
                     </span>

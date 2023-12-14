@@ -1,3 +1,4 @@
-export const setAddress = (payload) => (dispatch) => {
+export const setAddress = (payload, callBack) => (dispatch) => {
   dispatch({ type: 'SET_ADDRESS', payload });
+  callBack();
 };
