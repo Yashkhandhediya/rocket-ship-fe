@@ -65,27 +65,28 @@ const DomesticOrder = () => {
     const isNext = changeType === 'NEXT';
     if (isNext) {
       setTriggerValidations(true);
-      if (state == 0){
-        if (formData?.contact_no == '' || formData.first_name == ''){
-          window.alert('Please enter all required fields');
-        }
-        else{
-          setState(prev => isNext? prev + 1 : prev-1);
-        }
-      }
+    }
 
-      if (state == 3){
-        if (formData?.dead_weight == '' || formData.length == '' || formData.width == '' || formData.height == ''){
-          window.alert('Please enter all required fields');
-        }
-        else{
-          setState(prev => isNext? prev: prev-1);
-          console.log('hitting api', formData);
-          let resp = axios.post('http://43.252.197.60:8030/order',formData);
-          console.log('api response',resp); 
-        }
+    if (state == 2) {
+      const isValidProducts = formData?.product_info?.every((product) => {
+        return product.name && product.unit_price > 0 && product.quantity > 0;
+      });
+      if (
+        !formData?.product_info.length ||
+        !isValidProducts ||
+        !formData?.orderId ||
+        !formData.channel
+      ) {
+        alert('Please enter all required fields')
       }
     }
+
+    if (state == 3) {
+      console.log('hitting api', formData);
+      let resp = axios.post('http://43.252.197.60:8030/order', formData);
+      console.log('api response', resp);
+    }
+    setState((prev) => (isNext ? prev + 1 : prev - 1) % stepsCount);
   };
 
   console.log('--=-=-=-=-=-=formData-=-=-=-=-=-', formData);
