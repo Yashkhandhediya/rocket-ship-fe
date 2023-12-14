@@ -77,7 +77,7 @@ const DomesticOrder = () => {
         !formData?.orderId ||
         !formData.channel
       ) {
-        return;
+        alert('Please enter all required fields')
       }
     }
 
