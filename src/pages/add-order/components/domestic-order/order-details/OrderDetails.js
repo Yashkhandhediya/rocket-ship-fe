@@ -87,13 +87,11 @@ export default function OrderDetails({ handleFormData, formData }) {
 
   const setDirectKeysInForm = (event) => {
     const { id, value } = event.target;
-    let date = value.split('-');
-    let newDate = new Date( date[2], date[1], date[0]);
-    console.log('new date ', newDate);
     handleFormData({
       ...formData,
-      [id]: newDate,
+      [id]: value,
     });
+
   };
 
   useEffect(() => {
@@ -126,8 +124,8 @@ export default function OrderDetails({ handleFormData, formData }) {
               labelClassNames={'text-xs'}
               placeHolder={'Enter Order ID'}
               required={true}
-              value={formData?.orderId}
-              onChange={setDirectKeysInForm}
+                // value={formData?.orderId}
+                // onChange={setDirectKeysInForm}
             />
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">

@@ -22,7 +22,7 @@ const BuyersInfoFields = ({
         <div className="px-2 pb-2 md:w-4/12 md:pb-0">
           <Field
             type={'number'}
-            id={`contact_info`}
+            id={`contact_no`}
             label={'Mobile Number'}
             inputClassNames={'text-xs'}
             labelClassNames={'text-xs'}
