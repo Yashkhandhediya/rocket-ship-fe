@@ -4,6 +4,7 @@ import OrderDetails from './order-details/OrderDetails';
 import PackageDetails from './package-details/PackageDetails';
 import PickupDetails from './pickup-details/PickupDetails';
 import axios from 'axios';
+import Stepper from '../stepper/Stepper';
 
 const DomesticOrder = () => {
   const defaultValidations = {
@@ -143,22 +144,19 @@ const DomesticOrder = () => {
   return (
     <div className="mb-8 pt-8 md:flex">
       <div className="form-step px-6">
-        <ol>
-          <li>Buyers Details</li>
-          <li>Pickup Details</li>
-          <li>Order Details</li>
-          <li>Package Details</li>
-        </ol>
+        <Stepper step={state}/>
       </div>
       <div className="grow px-6">
         {steps[state]}
         <div className="flex justify-end gap-4">
-          <button
-            type="button"
-            className="dark:focus:ring-purple-900 rounded-lg border border-purple-600 px-8 py-2 text-sm font-medium text-purple-600 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-purple-300"
-            onClick={() => handleChangeStep('BACK')}>
-            Back
-          </button>
+          {state !== 0 && (
+            <button
+              type="button"
+              className="dark:focus:ring-purple-900 rounded-lg border border-purple-600 px-8 py-2 text-sm font-medium text-purple-600 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-purple-300"
+              onClick={() => handleChangeStep('BACK')}>
+              Back
+            </button>
+          )}
           <button
             type="button"
             className="dark:focus:ring-purple-900 rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"

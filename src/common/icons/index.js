@@ -6,3 +6,4 @@ export { default as editIcon } from './edit.svg';
 export { default as varifiedTickmark } from './verified-tickmark.svg';
 export { default as locationPin } from './location-pin.svg';
 export { default as deleteIcon } from './trash.svg';
+export { default as stepperTickmark } from './stepper-tickmark.svg';
