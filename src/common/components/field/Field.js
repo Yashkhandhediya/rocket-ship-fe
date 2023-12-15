@@ -17,6 +17,7 @@ const Field = ({
   showOptional = false,
   labelClassNames = '',
   inputClassNames = '',
+  leftAddOn = '',
 }) => {
   useEffect(() => {
     if (triggerValidation && onBlur) {
@@ -36,19 +37,32 @@ const Field = ({
           )}
         </label>
       )}
-      <input
-        type={type}
-        name={name || id}
-        id={id}
-        value={value}
-        onChange={onChange}
-        className={`dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 block min-h-[36px] w-full rounded-md border border-gray-300 bg-white px-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 ${inputClassNames}`}
-        placeholder={placeHolder}
-        required={required}
-        onBlur={onBlur}
-        maxLength={maxLength}
-        minLength={minLength}
-      />
+      <div className="flex">
+        {leftAddOn && (
+          <button
+            id="dropdown-phone-button"
+            data-dropdown-toggle="dropdown-phone"
+            className="z-10 inline-flex flex-shrink-0 items-center rounded-s-md border border-r-0 border-gray-300 bg-[#f3f7fe] px-2.5 py-1.5 text-center text-sm font-medium text-gray-400"
+            type="button">
+            ₹
+          </button>
+        )}
+        <input
+          type={type}
+          name={name || id}
+          id={id}
+          value={value}
+          onChange={onChange}
+          className={`block min-h-[36px] w-full border ${
+            leftAddOn ? 'rounded-r-md' : 'rounded-md '
+          } border-gray-300 bg-white px-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 ${inputClassNames}`}
+          placeholder={placeHolder}
+          required={required}
+          onBlur={onBlur}
+          maxLength={maxLength}
+          minLength={minLength}
+        />
+      </div>
       {note && (
         <p className="mt-1 whitespace-pre-wrap text-[10px] leading-4 text-gray-400">
           {note}
