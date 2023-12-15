@@ -6,7 +6,7 @@ import PickupDetails from './pickup-details/PickupDetails';
 import axios from 'axios';
 
 const DomesticOrder = () => {
-  const [state, setState] = useState(2);
+  const [state, setState] = useState(0);
   const [formData, setFormData] = useState(null);
   const [triggerValidations, setTriggerValidations] = useState(false);
   const steps = {
