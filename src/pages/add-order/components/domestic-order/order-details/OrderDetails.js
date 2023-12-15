@@ -2,7 +2,7 @@ import { Field, FieldAccordion } from '../../../../../common/components';
 import { useEffect, useState } from 'react';
 import { deleteIcon } from '../../../../../common/icons';
 
-export default function OrderDetails({ handleFormData, formData }) {
+export default function OrderDetails({ handleFormData, formData, triggerValidations }) {
   const defaultProductField = {
     name: '',
     unit_price: '',
@@ -13,24 +13,26 @@ export default function OrderDetails({ handleFormData, formData }) {
     discount: '',
   };
 
+  const [productValidation, setProductValidation] = useState(false);
+
   const [productFields, setProductFields] = useState([
     {
-      name: formData.name,
-      unit_price: formData.unit_price,
-      quantity: formData.quantity,
-      category: formData.category,
-      hsn_code: formData.hsn_code,
-      sku: formData.sku,
-      discount: formData.discount,
+      name: formData?.name,
+      unit_price: formData?.unit_price,
+      quantity: formData?.quantity,
+      category: formData?.category,
+      hsn_code: formData?.hsn_code,
+      sku: formData?.sku,
+      discount: formData?.discount,
     },
   ]);
 
   const [paymentDetails, setPaymentDetails] = useState({
-    type: formData.type || 'cod',
-    shipping_charges: formData.shipping_charges,
-    gift_wrap: formData.gift_wrap,
-    transaction_fee: formData.transaction_fee,
-    discount: formData.discount || 0,
+    type: formData?.type || 'cod',
+    shipping_charges: formData?.shipping_charges,
+    gift_wrap: formData?.gift_wrap,
+    transaction_fee: formData?.transaction_fee,
+    discount: formData?.discount || 0,
   });
 
   const subProductTotal =
@@ -51,8 +53,43 @@ export default function OrderDetails({ handleFormData, formData }) {
       parseInt(paymentDetails?.discount || 0) -
       parseInt(otherCharges || 0) || 0;
 
+  const checkIsProductValid = () => {
+    const errors = {
+      isValidProductName: 'Please enter product name',
+      isValidProductUnitPrice: 'Product unit price should be greter than 0',
+      isValidProductQuantity: 'Product quantity should be greter than 0',
+    };
+    const isValidProductName = formData?.product_info?.every((product) => {
+      return product.name;
+    });
+    const isValidProductUnitPrice = formData?.product_info?.every((product) => {
+      return product.unit_price > 0;
+    });
+    const isValidProductQuantity = formData?.product_info?.every((product) => {
+      return product.unit_price > 0;
+    });
+    if (!formData?.product_info?.length) {
+      alert('Please add product name, unit price and quantity');
+    }
+    if (!isValidProductName) {
+      alert(errors[isValidProductName]);
+      return false;
+    }
+    if (!isValidProductUnitPrice) {
+      alert(errors[isValidProductUnitPrice]);
+      return false;
+    }
+    if (!isValidProductQuantity) {
+      alert(errors[isValidProductQuantity]);
+      return false;
+    }
+    return true;
+  };
+
   const handleAddProductField = () => {
-    setProductFields([...productFields, defaultProductField]);
+    if (!checkIsProductValid()) {
+      setProductFields([...productFields, defaultProductField]);
+    }
   };
 
   const handleDeleteProductField = (index) => {
@@ -65,10 +102,6 @@ export default function OrderDetails({ handleFormData, formData }) {
     const allFields = [...productFields];
     allFields[index][id] = value;
     setProductFields(allFields);
-    // setProductInfo({
-    //   ...productInfo,
-    //   [id]: value,
-    // });
   };
   const handleSetPaymentDetails = (event) => {
     const { id, value } = event.target;
@@ -91,12 +124,18 @@ export default function OrderDetails({ handleFormData, formData }) {
       ...formData,
       [id]: value,
     });
-
   };
 
   useEffect(() => {
+    if (triggerValidations.trigger) {
+      setProductValidation(true);
+      triggerValidations.reset();
+    }
+  }, [triggerValidations.trigger]);
+
+  useEffect(() => {
     handleFormData({
-      product_info: productFields, // currently single product sending; as dynamic field remaining
+      product_info: productFields,
       payment_details: paymentDetails,
     });
   }, [productFields, paymentDetails]);
@@ -124,8 +163,8 @@ export default function OrderDetails({ handleFormData, formData }) {
               labelClassNames={'text-xs'}
               placeHolder={'Enter Order ID'}
               required={true}
-                // value={formData?.orderId}
-                // onChange={setDirectKeysInForm}
+              // value={formData?.orderId}
+              // onChange={setDirectKeysInForm}
             />
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
@@ -207,6 +246,11 @@ export default function OrderDetails({ handleFormData, formData }) {
                       value={field?.name}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
+                    {!productValidation && !field?.name?.length && (
+                      <p style={{ color: 'red', fontSize: 'small' }}>
+                        Product Name is required.
+                      </p>
+                    )}
                   </div>
                   <div className="w-full px-2 pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
                     <Field
@@ -220,6 +264,12 @@ export default function OrderDetails({ handleFormData, formData }) {
                       value={field?.unit_price}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
+                    {!productValidation &&
+                      (!field?.unit_price || field?.unit_price < 1) && (
+                        <p style={{ color: 'red', fontSize: 'small' }}>
+                          Unit price should be greter than 0.
+                        </p>
+                      )}
                   </div>
                   <div className="w-full px-2  pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
                     <Field
@@ -233,6 +283,11 @@ export default function OrderDetails({ handleFormData, formData }) {
                       value={field?.quantity}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
+                    {!productValidation && (!field?.quantity || field?.quantity < 1) && (
+                      <p style={{ color: 'red', fontSize: 'small' }}>
+                        Quantity should be greter than 0.
+                      </p>
+                    )}
                   </div>
                   <div className="w-10/12 px-2 pb-2 md:w-4/12 md:pb-0 xl:w-3/12">
                     <Field
