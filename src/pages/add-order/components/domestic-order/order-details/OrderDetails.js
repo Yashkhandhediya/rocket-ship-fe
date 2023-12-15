@@ -246,7 +246,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       value={field?.name}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
-                    {!productValidation && !field?.name?.length && (
+                    {productValidation && !field?.name?.length && (
                       <p style={{ color: 'red', fontSize: 'small' }}>
                         Product Name is required.
                       </p>
@@ -264,7 +264,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       value={field?.unit_price}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
-                    {!productValidation &&
+                    {productValidation &&
                       (!field?.unit_price || field?.unit_price < 1) && (
                         <p style={{ color: 'red', fontSize: 'small' }}>
                           Unit price should be greter than 0.
@@ -283,7 +283,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       value={field?.quantity}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
-                    {!productValidation && (!field?.quantity || field?.quantity < 1) && (
+                    {productValidation && (!field?.quantity || field?.quantity < 1) && (
                       <p style={{ color: 'red', fontSize: 'small' }}>
                         Quantity should be greter than 0.
                       </p>
