@@ -165,8 +165,8 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
                   inputClassNames={'text-xs w-3/4'}
                   placeHolder={'Select Package'}
                   required={true}
-                  value={''}
-                  onChange={() => {}}
+                  // value={''}
+                  // onChange={() => {}}
                 />
               </div>
             </div>

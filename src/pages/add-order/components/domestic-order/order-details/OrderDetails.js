@@ -55,10 +55,10 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
 
   const checkIsProductValid = () => {
     const errors = {
-      isValidProductName: 'Please enter product name',
-      isValidProductUnitPrice: 'Product unit price should be greter than 0',
-      isValidProductQuantity: 'Product quantity should be greter than 0',
-    };
+      productName: 'Please enter product name',
+      unitPrice: 'Product unit price should be greter than 0',
+      quantity: 'Product quantity should be greter than 0',
+    }
     const isValidProductName = formData?.product_info?.every((product) => {
       return product.name;
     });
@@ -72,22 +72,22 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
       alert('Please add product name, unit price and quantity');
     }
     if (!isValidProductName) {
-      alert(errors[isValidProductName]);
+      alert(errors['productName']);
       return false;
     }
     if (!isValidProductUnitPrice) {
-      alert(errors[isValidProductUnitPrice]);
+      alert(errors['unitPrice']);
       return false;
     }
     if (!isValidProductQuantity) {
-      alert(errors[isValidProductQuantity]);
+      alert(errors['quantity']);
       return false;
     }
     return true;
   };
 
   const handleAddProductField = () => {
-    if (!checkIsProductValid()) {
+    if (checkIsProductValid()) {
       setProductFields([...productFields, defaultProductField]);
     }
   };

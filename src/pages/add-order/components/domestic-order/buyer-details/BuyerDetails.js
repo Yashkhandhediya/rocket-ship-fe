@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 
 export default function BuyerDetails({ handleFormData, formData, triggerValidations }) {
   const [isSameBilingAddress, setIsSameBilingAddress] = useState(true);
+  const [triggerBuyerValidations, setTriggerBuyerValidations] = useState(false);
+
 
   const [buyerInfo, setBuyerInfo] = useState({
     contact_no: '',
@@ -78,6 +80,7 @@ export default function BuyerDetails({ handleFormData, formData, triggerValidati
 
   useEffect(() => {
     if (triggerValidations.trigger) {
+      setTriggerBuyerValidations(true);
       triggerValidations.reset();
     }
   }, [triggerValidations.trigger]);
@@ -90,7 +93,7 @@ export default function BuyerDetails({ handleFormData, formData, triggerValidati
           <BuyersInfoFields
             heading={'To whom is the order being delivered?'}
             alternateText={"(Buyer's Info)"}
-            triggerValidation={triggerValidations.trigger}
+            triggerValidation={triggerBuyerValidations}
             values={buyerInfo}
             onChange={handleSetBuyerInfo}
           />
@@ -146,7 +149,7 @@ export default function BuyerDetails({ handleFormData, formData, triggerValidati
             id="buyer"
             heading={'Where is the order being delivered to?'}
             values={addressInfo}
-            triggerValidation={triggerValidations.trigger}
+            triggerValidation={triggerBuyerValidations}
             onChange={handleSetAddressinfo}
           />
         </div>
