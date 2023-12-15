@@ -179,6 +179,9 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
               value={formData?.date}
               onChange={setDirectKeysInForm}
             />
+            {productValidation && !formData?.date && (
+              <p style={{ color: 'red', fontSize: 'small' }}>Order date is required.</p>
+            )}
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
@@ -192,6 +195,9 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
               value={formData?.channel}
               onChange={setDirectKeysInForm}
             />
+            {productValidation && !formData?.channel && (
+              <p style={{ color: 'red', fontSize: 'small' }}>Order date is required.</p>
+            )}
           </div>
         </div>
         <div className="my-4">

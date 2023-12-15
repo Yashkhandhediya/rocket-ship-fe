@@ -1,18 +1,24 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Field } from '../../../../../common/components';
 
-export default function PackageDetails({ handleFormData, formData }) {
-  const { length, width, height, dead_weight } = formData;
-  const volumatricWeight = useMemo(
-    () => (parseInt(length) * parseInt(width) * parseInt(height)) / 5000,
-    [length, width, height],
-  );
+export default function PackageDetails({ handleFormData, formData, triggerValidations }) {
+  const [validationTriggered, setValidationTriggered] = useState(false);
+  const volumatricWeight =
+    useMemo(
+      () =>
+        (parseInt(formData?.length || 0) *
+          parseInt(formData?.width || 0) *
+          parseInt(formData?.height || 0)) /
+        5000,
+      [formData],
+    ) || 0;
+
   const applicableWeight = useMemo(
     () =>
-      parseInt(volumatricWeight) > parseInt(dead_weight)
+      parseInt(volumatricWeight) > parseInt(formData?.dead_weight || 0)
         ? parseInt(volumatricWeight)
-        : parseInt(dead_weight),
-    [volumatricWeight, dead_weight],
+        : parseInt(formData?.dead_weight || 0),
+    [volumatricWeight, formData?.dead_weight],
   );
 
   const setDirectKeysInForm = (event) => {
@@ -30,6 +36,13 @@ export default function PackageDetails({ handleFormData, formData }) {
       applicable1_weight: applicableWeight,
     });
   }, [volumatricWeight, applicableWeight]);
+
+  useEffect(() => {
+    if (triggerValidations.trigger) {
+      setValidationTriggered(true);
+      triggerValidations.reset();
+    }
+  }, [triggerValidations]);
 
   return (
     <div>
@@ -50,6 +63,14 @@ export default function PackageDetails({ handleFormData, formData }) {
               value={formData?.dead_weight}
               onChange={setDirectKeysInForm}
             />
+            {validationTriggered && !formData?.dead_weight && (
+              <p style={{ color: 'red', fontSize: 'small' }}>Weight is required</p>
+            )}
+            {validationTriggered && formData?.dead_weight < 0.5 && (
+              <p style={{ color: 'red', fontSize: 'small' }}>
+                Weight should be greter than 0
+              </p>
+            )}
           </div>
         </div>
         <div className="mb-6 mt-6 w-full border border-gray-200" />
@@ -72,6 +93,16 @@ export default function PackageDetails({ handleFormData, formData }) {
                       value={formData?.length}
                       onChange={setDirectKeysInForm}
                     />
+                    {validationTriggered && !formData?.length && (
+                      <p style={{ color: 'red', fontSize: 'small' }}>
+                        Length is required
+                      </p>
+                    )}
+                    {validationTriggered && formData?.length < 0.5 && (
+                      <p style={{ color: 'red', fontSize: 'small' }}>
+                        Weight should be greter than 0.5
+                      </p>
+                    )}
                   </div>
                   <div className="sm:w-/12 pb-2 md:pb-0">
                     <Field
@@ -83,6 +114,16 @@ export default function PackageDetails({ handleFormData, formData }) {
                       value={formData?.width}
                       onChange={setDirectKeysInForm}
                     />
+                    {validationTriggered && !formData?.width && (
+                      <p style={{ color: 'red', fontSize: 'small' }}>
+                        Breadth is required
+                      </p>
+                    )}
+                    {validationTriggered && formData?.width < 0.5 && (
+                      <p style={{ color: 'red', fontSize: 'small' }}>
+                        Breadth should be greter than 0.5
+                      </p>
+                    )}
                   </div>
                   <div className="sm:w-/12 pb-2 md:pb-0">
                     <Field
@@ -94,6 +135,16 @@ export default function PackageDetails({ handleFormData, formData }) {
                       value={formData?.height}
                       onChange={setDirectKeysInForm}
                     />
+                    {validationTriggered && !formData?.height && (
+                      <p style={{ color: 'red', fontSize: 'small' }}>
+                        Height is required
+                      </p>
+                    )}
+                    {validationTriggered && formData?.height < 0.5 && (
+                      <p style={{ color: 'red', fontSize: 'small' }}>
+                        Height should be greter than 0.5
+                      </p>
+                    )}
                   </div>
                 </div>
                 <p className="mt-1 whitespace-pre-wrap text-[10px] leading-4 text-gray-400">

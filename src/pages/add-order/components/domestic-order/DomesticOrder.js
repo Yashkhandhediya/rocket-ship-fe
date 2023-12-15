@@ -51,7 +51,6 @@ const DomesticOrder = () => {
       />
     ),
   };
-  const stepsCount = Object.keys(steps).length;
 
   function handleFormData(formValues) {
     setFormData({
@@ -62,23 +61,20 @@ const DomesticOrder = () => {
   }
 
   const handleChangeStep = async (changeType) => {
-    console.log('current state', state);
     const isNext = changeType === 'NEXT';
     if (isNext) {
       setTriggerValidations(true);
     }
-    console.log('current state', state, formData?.contact_no, formData.first_name);
     if (state == 0) {
       if (!formData?.buyer_info?.contact_no || !formData?.buyer_info?.first_name) {
         window.alert('Please enter all required fields');
-      }
-      else {
-        setState(prev => isNext ? prev + 1 : prev - 1);
+      } else {
+        setState((prev) => (isNext ? prev + 1 : prev - 1));
       }
     }
 
-    if (state == 1){
-      setState(prev => isNext ? prev + 1 : prev - 1);
+    if (state == 1) {
+      setState((prev) => (isNext ? prev + 1 : prev - 1));
     }
     if (state == 2) {
       const isValidProducts = formData?.product_info?.every((product) => {
@@ -87,36 +83,44 @@ const DomesticOrder = () => {
       if (
         !formData?.product_info?.length ||
         !isValidProducts ||
-        !formData.channel
+        !formData?.channel ||
+        !formData?.date
       ) {
-        alert('Please enter all required fields')
-      }
-      else {
-        setState(prev => isNext ? prev + 1 : prev - 1);
+        alert('Please enter all required fields');
+      } else {
+        setState((prev) => (isNext ? prev + 1 : prev - 1));
       }
     }
 
     if (state == 3) {
-      if (!formData?.dead_weight || 
-        !formData.length || 
-        !formData.width || !formData.height) {
+      if (
+        !formData?.dead_weight ||
+        formData?.dead_weight < 0.5 ||
+        !formData.length ||
+        formData?.length < 0.5 ||
+        !formData.width ||
+        formData?.width < 0.5 ||
+        !formData.height ||
+        formData?.height < 0.5
+      ) {
         window.alert('Please enter all required fields');
-      }
-      else {
-        setState(prev => isNext ? prev : prev - 1);
+      } else {
+        setState((prev) => (isNext ? prev : prev - 1));
         let date = formData?.date?.split('-');
-        let newDate = new Date( date[2], date[1], date[0]);
-        console.log('new date ', newDate);
-        console.log('hitting api', formData);
-        let resp = await axios.post('http://43.252.197.60:8030/order',{...formData,'date':newDate});
+        let newDate = new Date(date[2], date[1], date[0]);
+        let resp = await axios.post('http://43.252.197.60:8030/order', {
+          ...formData,
+          date: newDate,
+        });
         console.log('api response only', resp);
-        if (resp.status == 200){
-          window.alert("Order Placed Successfully");
+        if (resp.status == 200) {
+          window.alert('Order Placed Successfully');
           setState(0);
           setFormData({});
-        }
-        else{
-          window.alert("There is some error please check your network or contact support");
+        } else {
+          window.alert(
+            'There is some error please check your network or contact support',
+          );
         }
       }
     }
