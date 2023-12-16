@@ -38,27 +38,27 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
   const subProductTotal =
     formData?.product_info?.reduce((total, product) => {
       return (total += product
-        ? (parseInt(product?.unit_price || 0) - parseInt(product?.discount || 0)) *
-          parseInt(product?.quantity || 0)
+        ? (Number(product?.unit_price || 0) - Number(product?.discount || 0)) *
+          Number(product?.quantity || 0)
         : 0);
     }, 0) || 0;
 
   const otherCharges =
-    parseInt(paymentDetails?.gift_wrap || 0) +
-      parseInt(paymentDetails?.shipping_charges || 0) +
-      parseInt(paymentDetails?.transaction_fee || 0) || 0;
+    Number(paymentDetails?.gift_wrap || 0) +
+      Number(paymentDetails?.shipping_charges || 0) +
+      Number(paymentDetails?.transaction_fee || 0) || 0;
 
   const totalOrderValue =
-    parseInt(subProductTotal || 0) +
-      parseInt(paymentDetails?.discount || 0) -
-      parseInt(otherCharges || 0) || 0;
+    Number(subProductTotal || 0) +
+      Number(paymentDetails?.discount || 0) -
+      Number(otherCharges || 0) || 0;
 
   const checkIsProductValid = () => {
     const errors = {
       productName: 'Please enter product name',
       unitPrice: 'Product unit price should be greter than 0',
       quantity: 'Product quantity should be greter than 0',
-    }
+    };
     const isValidProductName = formData?.product_info?.every((product) => {
       return product.name;
     });
@@ -103,6 +103,13 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
     allFields[index][id] = value;
     setProductFields(allFields);
   };
+
+  const handleQuantityCounter = (value, index) => {
+    const allFields = [...productFields];
+    allFields[index]['quantity'] = value;
+    setProductFields(allFields);
+  }
+
   const handleSetPaymentDetails = (event) => {
     const { id, value } = event.target;
     setPaymentDetails({
@@ -266,6 +273,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       inputClassNames={'text-xs'}
                       labelClassNames={'text-xs'}
                       placeHolder={'0.00'}
+                      leftAddOn="₹"
                       required={true}
                       value={field?.unit_price}
                       onChange={(e) => handleSetProductFields(e, index)}
@@ -287,6 +295,9 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       placeHolder={'0'}
                       required={true}
                       value={field?.quantity}
+                      counterField={true}
+                      onIncrease={() => handleQuantityCounter(Number(field?.quantity || 0) +1 ,index)}
+                      onDecrease={() => handleQuantityCounter(Number(field?.quantity || 0) -1 ,index)}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
                     {productValidation && (!field?.quantity || field?.quantity < 1) && (
@@ -438,6 +449,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       inputClassNames={'text-xs'}
                       labelClassNames={'text-xs'}
                       placeHolder={'0.00'}
+                      leftAddOn="₹"
                       value={paymentDetails?.shipping_charges}
                       onChange={handleSetPaymentDetails}
                     />
@@ -450,6 +462,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       inputClassNames={'text-xs'}
                       labelClassNames={'text-xs'}
                       placeHolder={'0.00'}
+                      leftAddOn="₹"
                       value={paymentDetails?.gift_wrap}
                       onChange={handleSetPaymentDetails}
                     />
@@ -462,6 +475,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       inputClassNames={'text-xs'}
                       labelClassNames={'text-xs'}
                       placeHolder={'0.00'}
+                      leftAddOn="₹"
                       value={paymentDetails?.transaction_fee}
                       onChange={handleSetPaymentDetails}
                     />
@@ -474,6 +488,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       inputClassNames={'text-xs'}
                       labelClassNames={'text-xs'}
                       placeHolder={'0'}
+                      leftAddOn="₹"
                       value={paymentDetails?.discount}
                       onChange={handleSetPaymentDetails}
                     />
@@ -494,7 +509,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                 <p className="w-6/12 text-gray-600">{'Discounts'}</p>
                 <p className="w-6/12 text-end">
                   {'₹ ' +
-                    (paymentDetails.discount ? parseInt(paymentDetails.discount) : 0)}
+                    (paymentDetails.discount ? Number(paymentDetails.discount) : 0)}
                 </p>
               </div>
               <div className="mt-4 flex justify-between">

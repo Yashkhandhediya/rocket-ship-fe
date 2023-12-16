@@ -60,6 +60,7 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
                 '(Max. 3 digits after decimal place) \nNote: The minimum chargeable weight is 0.50 Kg'
               }
               required={true}
+              rightAddOn='Kg'
               value={formData?.dead_weight}
               onChange={setDirectKeysInForm}
             />
@@ -90,6 +91,7 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
                       inputClassNames={'text-xs'}
                       placeHolder={'0.00'}
                       required={true}
+                      rightAddOn='CM'
                       value={formData?.length}
                       onChange={setDirectKeysInForm}
                     />
@@ -111,6 +113,7 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
                       inputClassNames={'text-xs'}
                       placeHolder={'0.00'}
                       required={true}
+                      rightAddOn='CM'
                       value={formData?.width}
                       onChange={setDirectKeysInForm}
                     />
@@ -132,6 +135,7 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
                       inputClassNames={'text-xs'}
                       placeHolder={'0.00'}
                       required={true}
+                      rightAddOn='CM'
                       value={formData?.height}
                       onChange={setDirectKeysInForm}
                     />

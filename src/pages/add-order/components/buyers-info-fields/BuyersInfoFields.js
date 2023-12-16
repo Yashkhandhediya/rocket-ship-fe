@@ -28,6 +28,7 @@ const BuyersInfoFields = ({
             labelClassNames={'text-xs'}
             placeHolder={"Enter buyer's phone number"}
             required={true}
+            leftAddOn='+91'
             value={values?.[`contact_info`]}
             onChange={onChange}
             triggerValidation={triggerValidation}
@@ -71,7 +72,6 @@ const BuyersInfoFields = ({
             required={true}
             value={values?.[`email_address`]}
             onChange={onChange}
-            triggerValidation={triggerValidation}
             onBlur={() => {
               setIsValidEmail(
                 /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values?.[`email_address`]),
