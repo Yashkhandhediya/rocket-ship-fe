@@ -1,13 +1,7 @@
 import { Field } from '../../../../common/components';
 import { useState } from 'react';
 
-const BuyersInfoFields = ({
-  heading,
-  alternateText,
-  values,
-  onChange,
-  triggerValidation,
-}) => {
+const BuyersInfoFields = ({ heading, alternateText, values, onChange, triggerValidation }) => {
   const [isValidPhone, setIsValidPhone] = useState(true);
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [isValidFullName, setIsValidFullName] = useState(true);
@@ -28,18 +22,16 @@ const BuyersInfoFields = ({
             labelClassNames={'text-xs'}
             placeHolder={"Enter buyer's phone number"}
             required={true}
-            leftAddOn='+91'
-            value={values?.[`contact_info`]}
+            leftAddOn="+91"
+            value={values?.[`contact_no`]}
             onChange={onChange}
             triggerValidation={triggerValidation}
             onBlur={() => {
-              setIsValidPhone(/^\d{10}$/.test(values?.[`contact_info`]));
+              setIsValidPhone(/^\d{10}$/.test(values?.[`contact_no`]));
             }}
           />
           {!isValidPhone && (
-            <p style={{ color: 'red', fontSize: 'small' }}>
-              Please enter a valid 10-digit number.
-            </p>
+            <p style={{ color: 'red', fontSize: 'small' }}>Please enter a valid 10-digit number.</p>
           )}
         </div>
 
@@ -56,9 +48,7 @@ const BuyersInfoFields = ({
             triggerValidation={triggerValidation}
             onBlur={() => setIsValidFullName(Boolean(values?.[`first_name`]?.length))}
           />
-          {!isValidFullName && (
-            <p style={{ color: 'red', fontSize: 'small' }}>Full Name is required.</p>
-          )}
+          {!isValidFullName && <p style={{ color: 'red', fontSize: 'small' }}>Full Name is required.</p>}
         </div>
         <div className="px-2 pb-2 md:w-4/12 md:pb-0">
           <Field
@@ -73,14 +63,10 @@ const BuyersInfoFields = ({
             value={values?.[`email_address`]}
             onChange={onChange}
             onBlur={() => {
-              setIsValidEmail(
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values?.[`email_address`]),
-              );
+              setIsValidEmail(!values?.[`email_address`] || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values?.[`email_address`]));
             }}
           />
-          {!isValidEmail && (
-            <p style={{ color: 'red', fontSize: 'small' }}>Please enter a valid email.</p>
-          )}
+          {!isValidEmail && <p style={{ color: 'red', fontSize: 'small' }}>Please enter a valid email.</p>}
         </div>
       </div>
     </div>

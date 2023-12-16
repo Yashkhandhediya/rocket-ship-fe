@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { DomesticOrder } from './components';
 import { Tabs } from '../../common/components';
 import { blackLeftArrow } from '../../common/icons';
+import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 
 const AddOrder = () => {
   const tabData = [
@@ -27,24 +28,22 @@ const AddOrder = () => {
       title: 'Quick Shipment',
       id: 'quick-shipment',
       panel: <>{'Quick Shipment'}</>,
-      tooltip:
-        'Ship an order quickly by  adding buyer & package details and selecting courier all at once.',
+      tooltip: 'Ship an order quickly by  adding buyer & package details and selecting courier all at once.',
     },
   ];
 
   return (
-    <div className="h-full overflow-auto bg-[#f8f8f8]">
-      <div className="py-4">
-        <Link
-          to={'/orders'}
-          className="text-decoration-none flex items-center text-lg font-bold"
-        >
-          <img src={blackLeftArrow} className="mr-2 mt-1 h-4 w-4" />
-          <span>{'Add Order'}</span>
-        </Link>
-      </div>
-      <Tabs tabs={tabData} />
-    </div>
+    <PageWithSidebar>
+        <div className="h-full bg-[#f8f8f8]">
+          <div className="py-4">
+            <Link to={'/orders'} className="text-decoration-none flex items-center text-lg font-bold">
+              <img src={blackLeftArrow} className="mr-2 mt-1 h-4 w-4" />
+              <span>{'Add Order'}</span>
+            </Link>
+          </div>
+          <Tabs tabs={tabData} />
+        </div>
+    </PageWithSidebar>
   );
 };
 

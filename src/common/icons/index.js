@@ -7,3 +7,5 @@ export { default as varifiedTickmark } from './verified-tickmark.svg';
 export { default as locationPin } from './location-pin.svg';
 export { default as deleteIcon } from './trash.svg';
 export { default as stepperTickmark } from './stepper-tickmark.svg';
+export { default as shortShipRocket } from './short-ship-rocket.svg';
+export { default as shipRocket } from './ship-rocket.svg';

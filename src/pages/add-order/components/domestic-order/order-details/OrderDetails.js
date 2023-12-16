@@ -38,8 +38,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
   const subProductTotal =
     formData?.product_info?.reduce((total, product) => {
       return (total += product
-        ? (Number(product?.unit_price || 0) - Number(product?.discount || 0)) *
-          Number(product?.quantity || 0)
+        ? (Number(product?.unit_price || 0) - Number(product?.discount || 0)) * Number(product?.quantity || 0)
         : 0);
     }, 0) || 0;
 
@@ -49,9 +48,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
       Number(paymentDetails?.transaction_fee || 0) || 0;
 
   const totalOrderValue =
-    Number(subProductTotal || 0) +
-      Number(paymentDetails?.discount || 0) -
-      Number(otherCharges || 0) || 0;
+    Number(subProductTotal || 0) + Number(otherCharges || 0) || 0 - Number(paymentDetails?.discount || 0);
 
   const checkIsProductValid = () => {
     const errors = {
@@ -108,7 +105,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
     const allFields = [...productFields];
     allFields[index]['quantity'] = value;
     setProductFields(allFields);
-  }
+  };
 
   const handleSetPaymentDetails = (event) => {
     const { id, value } = event.target;
@@ -208,10 +205,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
           </div>
         </div>
         <div className="my-4">
-          <FieldAccordion
-            id={'order-details'}
-            label={"+ Add Order Tag, Reseller's Name"}
-            showOptional>
+          <FieldAccordion id={'order-details'} label={"+ Add Order Tag, Reseller's Name"} showOptional>
             <div className="mb-5 w-full md:flex">
               <div className="px-2 pb-2 md:w-6/12 md:pb-0">
                 <Field
@@ -260,9 +254,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
                     {productValidation && !field?.name?.length && (
-                      <p style={{ color: 'red', fontSize: 'small' }}>
-                        Product Name is required.
-                      </p>
+                      <p style={{ color: 'red', fontSize: 'small' }}>Product Name is required.</p>
                     )}
                   </div>
                   <div className="w-full px-2 pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
@@ -278,12 +270,9 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       value={field?.unit_price}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
-                    {productValidation &&
-                      (!field?.unit_price || field?.unit_price < 1) && (
-                        <p style={{ color: 'red', fontSize: 'small' }}>
-                          Unit price should be greter than 0.
-                        </p>
-                      )}
+                    {productValidation && (!field?.unit_price || field?.unit_price < 1) && (
+                      <p style={{ color: 'red', fontSize: 'small' }}>Unit price should be greter than 0.</p>
+                    )}
                   </div>
                   <div className="w-full px-2  pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
                     <Field
@@ -296,14 +285,12 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       required={true}
                       value={field?.quantity}
                       counterField={true}
-                      onIncrease={() => handleQuantityCounter(Number(field?.quantity || 0) +1 ,index)}
-                      onDecrease={() => handleQuantityCounter(Number(field?.quantity || 0) -1 ,index)}
+                      onIncrease={() => handleQuantityCounter(Number(field?.quantity || 0) + 1, index)}
+                      onDecrease={() => handleQuantityCounter(Number(field?.quantity || 0) - 1, index)}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
                     {productValidation && (!field?.quantity || field?.quantity < 1) && (
-                      <p style={{ color: 'red', fontSize: 'small' }}>
-                        Quantity should be greter than 0.
-                      </p>
+                      <p style={{ color: 'red', fontSize: 'small' }}>Quantity should be greter than 0.</p>
                     )}
                   </div>
                   <div className="w-10/12 px-2 pb-2 md:w-4/12 md:pb-0 xl:w-3/12">
@@ -428,9 +415,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                   checked={paymentDetails.type === 'cod'}
                   onChange={handleSetPaymentMode}
                 />
-                <label
-                  htmlFor="codRadio"
-                  className="dark:text-white mb-2 text-xs font-medium text-gray-900">
+                <label htmlFor="codRadio" className="dark:text-white mb-2 text-xs font-medium text-gray-900">
                   Cash On Delivery
                 </label>
               </div>
@@ -508,15 +493,12 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Discounts'}</p>
                 <p className="w-6/12 text-end">
-                  {'₹ ' +
-                    (paymentDetails.discount ? Number(paymentDetails.discount) : 0)}
+                  {'₹ ' + (paymentDetails.discount ? Number(paymentDetails.discount) : 0)}
                 </p>
               </div>
               <div className="mt-4 flex justify-between">
                 <p className="w-6/12 font-medium">{'Total Order Value'}</p>
-                <p className="w-6/12 text-end font-medium">
-                  {'₹ ' + totalOrderValue || 0}
-                </p>
+                <p className="w-6/12 text-end font-medium">{'₹ ' + totalOrderValue || 0}</p>
               </div>
             </div>
           </div>

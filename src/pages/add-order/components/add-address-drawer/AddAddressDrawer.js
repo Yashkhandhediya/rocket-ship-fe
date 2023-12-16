@@ -213,7 +213,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
         <button
           className="rounded border border-indigo-700 px-4 py-1.5 text-sm text-indigo-700"
           onClick={onClose}>
-          Cancle
+          Cancel
         </button>
         <button
           className="rounded bg-indigo-700 px-4 py-1.5 text-sm text-white"
