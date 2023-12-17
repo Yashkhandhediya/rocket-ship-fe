@@ -7,34 +7,33 @@ export default function BuyerDetails({ handleFormData, formData, triggerValidati
   const [isSameBilingAddress, setIsSameBilingAddress] = useState(true);
   const [triggerBuyerValidations, setTriggerBuyerValidations] = useState(false);
 
-
   const [buyerInfo, setBuyerInfo] = useState({
-    contact_no: '',
-    first_name: '',
-    email_address: '',
+    contact_no: formData?.buyer_info?.contact_no || '',
+    first_name: formData?.buyer_info?.first_name || '',
+    email_address: formData?.buyer_info?.email_address || '',
   });
   const [companyInfo, setCompanyInfo] = useState({
-    name: '',
-    gst: '',
+    name: formData?.company_info?.name || '',
+    gst: formData?.company_info?.gst || '',
   });
   const [addressInfo, setAddressInfo] = useState({
-    complete_address: '',
-    landmark: '',
-    pincode: '',
-    city: '',
-    state: '',
-    country: '',
+    complete_address: formData?.address_info?.complete_address || '',
+    landmark: formData?.address_info?.complete_address || '',
+    pincode: formData?.address_info?.pincode || '',
+    city: formData?.address_info?.city || '',
+    state: formData?.address_info?.state || '',
+    country: 'India',
   });
   const [billingInfo, setBillingInfo] = useState({
-    contact_no: '',
-    first_name: '',
-    email_address: '',
-    complete_address: '',
-    landmark: '',
-    pincode: '',
-    city: '',
-    state: '',
-    country: '',
+    contact_no: formData?.address_info?.contact_no || '',
+    first_name: formData?.address_info?.first_name || '',
+    email_address: formData?.address_info?.email_address || '',
+    complete_address: formData?.address_info?.complete_address || '',
+    landmark: formData?.address_info?.landmark || '',
+    pincode: formData?.address_info?.pincode || '',
+    city: formData?.address_info?.city || '',
+    state: formData?.address_info?.state || '',
+    country: formData?.address_info?.state || 'India',
   });
 
   const handleSetBuyerInfo = (event) => {
@@ -146,11 +145,13 @@ export default function BuyerDetails({ handleFormData, formData, triggerValidati
         </FieldAccordion>
         <div className="mb-3">
           <BuyerAddressFields
-            id="buyer"
             heading={'Where is the order being delivered to?'}
             values={addressInfo}
             triggerValidation={triggerBuyerValidations}
             onChange={handleSetAddressinfo}
+            disabledFields={{
+              country: true,
+            }}
           />
         </div>
         <div className="mt-5">

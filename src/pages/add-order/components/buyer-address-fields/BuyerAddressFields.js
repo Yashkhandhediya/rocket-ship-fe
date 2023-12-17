@@ -7,9 +7,13 @@ const BuyerAdressFields = ({
   values,
   onChange,
   triggerValidation,
+  disabledFields,
 }) => {
   const [isValidPinCode, setIsValidPincode] = useState(true);
   const [isValidAddress, setIsValidAddress] = useState(true);
+  const [isValidCity, setIsValidCity] = useState(true);
+  const [isValidState, setIsValidState] = useState(true);
+  const [isValidCountry, setIsValidCountry] = useState(true);
 
   return (
     <div>
@@ -27,6 +31,7 @@ const BuyerAdressFields = ({
               inputClassNames={'text-xs'}
               placeHolder={'House/Floor No. Building Name or Street, Locality'}
               required={true}
+              isDisabled={disabledFields?.complete_address}
               value={values?.[`complete_address`]}
               onChange={onChange}
               triggerValidation={triggerValidation}
@@ -34,11 +39,7 @@ const BuyerAdressFields = ({
                 setIsValidAddress(Boolean(values?.complete_address?.length));
               }}
             />
-            {!isValidAddress && (
-              <p style={{ color: 'red', fontSize: 'small' }}>
-                Address is required.
-              </p>
-            )}
+            {!isValidAddress && <p className="text-xs text-red-500 mt-1">Address is required.</p>}
           </div>
           <div className="px-2 pb-2 md:w-6/12 md:pb-0">
             <Field
@@ -49,6 +50,7 @@ const BuyerAdressFields = ({
               labelClassNames={'text-xs'}
               placeHolder={'Any nearby post office, market, Hospital as the landmark'}
               required={true}
+              isDisabled={disabledFields?.landmark}
               value={values?.[`landmark`]}
               onChange={onChange}
             />
@@ -64,6 +66,7 @@ const BuyerAdressFields = ({
               labelClassNames={'text-xs'}
               placeHolder={"Enter Buyer's Pincode"}
               required={true}
+              isDisabled={disabledFields?.pincode}
               value={values?.[`pincode`]}
               onChange={onChange}
               triggerValidation={triggerValidation}
@@ -71,11 +74,8 @@ const BuyerAdressFields = ({
                 setIsValidPincode(/^\d{6}$/.test(values?.[`pincode`]));
               }}
             />
-
             {!isValidPinCode && (
-              <p style={{ color: 'red', fontSize: 'small' }}>
-                Please enter a valid Pincode.
-              </p>
+              <p className="text-xs text-red-500 mt-1">Please enter a valid Pincode.</p>
             )}
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
@@ -83,37 +83,49 @@ const BuyerAdressFields = ({
               id={`city`}
               label={'City'}
               labelClassNames={'text-xs'}
-              inputClassNames={'text-xs'}
+              inputClassNames={'text-xs bg-[#f4f9fd]'}
               placeHolder={"Enter Buyer's City"}
               required={true}
               value={values?.[`city`]}
+              isDisabled={disabledFields?.city}
+              triggerValidation={triggerValidation}
+              onBlur={() => setIsValidCity(values?.city)}
               onChange={onChange}
             />
+            {!isValidCity && <p className="text-xs text-red-500 mt-1">City field is required.</p>}
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
               type={'select'}
               id={`state`}
               label={'State'}
-              inputClassNames={'text-xs'}
+              inputClassNames={'text-xs bg-[#f4f9fd]'}
               labelClassNames={'text-xs'}
               placeHolder={'Please Select State'}
               required={true}
               value={values?.[`state`]}
+              triggerValidation={triggerValidation}
+              onBlur={() => setIsValidState(values?.state)}
+              isDisabled={disabledFields?.state}
               onChange={onChange}
             />
+            {!isValidState && <p className="text-xs text-red-500 mt-1">State field is required.</p>}
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
               id={`country`}
               label={'Country'}
               labelClassNames={'text-xs'}
-              inputClassNames={'text-xs'}
+              inputClassNames={'text-xs bg-[#f4f9fd]'}
               placeHolder={"Enter Buyer's country"}
               required={true}
               value={values?.[`country`]}
+              triggerValidation={triggerValidation}
+              onBlur={() => setIsValidCountry(values?.country)}
+              isDisabled={disabledFields?.country}
               onChange={onChange}
             />
+            {!isValidCountry && <p className="text-xs text-red-500 mt-1">Country field is required.</p>}
           </div>
         </div>
       </div>

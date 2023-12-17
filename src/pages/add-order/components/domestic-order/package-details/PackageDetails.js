@@ -65,10 +65,10 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
               onChange={setDirectKeysInForm}
             />
             {validationTriggered && !formData?.dead_weight && (
-              <p style={{ color: 'red', fontSize: 'small' }}>Weight is required</p>
+              <p className="text-xs text-red-500 mt-1">Weight is required</p>
             )}
             {validationTriggered && formData?.dead_weight < 0.5 && (
-              <p style={{ color: 'red', fontSize: 'small' }}>
+              <p className="text-xs text-red-500 mt-1">
                 Weight should be greter than 0
               </p>
             )}
@@ -96,12 +96,12 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
                       onChange={setDirectKeysInForm}
                     />
                     {validationTriggered && !formData?.length && (
-                      <p style={{ color: 'red', fontSize: 'small' }}>
+                      <p className="text-xs text-red-500 mt-1">
                         Length is required
                       </p>
                     )}
                     {validationTriggered && formData?.length < 0.5 && (
-                      <p style={{ color: 'red', fontSize: 'small' }}>
+                      <p className="text-xs text-red-500 mt-1">
                         Weight should be greter than 0.5
                       </p>
                     )}
@@ -118,12 +118,12 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
                       onChange={setDirectKeysInForm}
                     />
                     {validationTriggered && !formData?.width && (
-                      <p style={{ color: 'red', fontSize: 'small' }}>
+                      <p className="text-xs text-red-500 mt-1">
                         Breadth is required
                       </p>
                     )}
                     {validationTriggered && formData?.width < 0.5 && (
-                      <p style={{ color: 'red', fontSize: 'small' }}>
+                      <p className="text-xs text-red-500 mt-1">
                         Breadth should be greter than 0.5
                       </p>
                     )}
@@ -140,12 +140,12 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
                       onChange={setDirectKeysInForm}
                     />
                     {validationTriggered && !formData?.height && (
-                      <p style={{ color: 'red', fontSize: 'small' }}>
+                      <p className="text-xs text-red-500 mt-1">
                         Height is required
                       </p>
                     )}
                     {validationTriggered && formData?.height < 0.5 && (
-                      <p style={{ color: 'red', fontSize: 'small' }}>
+                      <p className="text-xs text-red-500 mt-1">
                         Height should be greter than 0.5
                       </p>
                     )}

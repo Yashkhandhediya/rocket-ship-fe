@@ -12,11 +12,13 @@ const Field = ({
   onBlur,
   triggerValidation = false,
   required,
+  isDisabled,
   maxLength,
   minLength,
   showOptional = false,
   labelClassNames = '',
   inputClassNames = '',
+  lableAddOn = "",
   leftAddOn = '',
   rightAddOn = '',
   counterField,
@@ -34,9 +36,10 @@ const Field = ({
       {label && (
         <label
           htmlFor={id}
-          className={`dark:text-white mb-2 block text-sm font-medium text-gray-600 ${labelClassNames}`}>
+          className={`flex items-center mb-2  text-sm font-medium text-gray-600 ${labelClassNames}`}>
           {label}
           {showOptional && <span className="pl-1 text-[10px] text-gray-400">{'(Optional)'}</span>}
+          {Boolean(lableAddOn) && lableAddOn}
         </label>
       )}
       <div className="flex">
@@ -62,10 +65,11 @@ const Field = ({
           id={id}
           value={value}
           onChange={onChange}
+          disabled={isDisabled}
           className={`block min-h-[36px] w-full rounded-md border 
           ${leftAddOn && 'rounded-l-none rounded-r-md'} ${rightAddOn && 'rounded-l-md rounded-r-none'} ${
             counterField && 'rounded-none text-center'
-          }
+          } disabled:bg-neutral-300 
            border-gray-300 bg-white px-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 ${inputClassNames} ${
              type === 'number'
                ? '[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'

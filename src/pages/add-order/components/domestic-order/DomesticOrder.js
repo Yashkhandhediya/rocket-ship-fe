@@ -71,7 +71,15 @@ const DomesticOrder = () => {
     const isNext = changeType === 'NEXT';
     if (isNext) {
       if (state == 0) {
-        if (!formData?.buyer_info?.contact_no || !formData?.buyer_info?.first_name) {
+        if (
+          !formData?.buyer_info?.contact_no ||
+          !formData?.buyer_info?.first_name ||
+          !formData?.address_info?.complete_address ||
+          !formData?.address_info?.pincode ||
+          !formData?.address_info?.city ||
+          !formData?.address_info?.state ||
+          !formData?.address_info?.country
+        ) {
           setTriggerValidations({ ...defaultValidations, 0: true });
           window.alert('Please enter all required fields');
         } else {
@@ -87,12 +95,7 @@ const DomesticOrder = () => {
         const isValidProducts = formData?.product_info?.every((product) => {
           return product.name && product.unit_price > 0 && product.quantity > 0;
         });
-        if (
-          !formData?.product_info?.length ||
-          !isValidProducts ||
-          !formData?.channel ||
-          !formData?.date
-        ) {
+        if (!formData?.product_info?.length || !isValidProducts || !formData?.channel || !formData?.date) {
           setTriggerValidations({ ...defaultValidations, 2: true });
           alert('Please enter all required fields');
         } else {
@@ -128,9 +131,7 @@ const DomesticOrder = () => {
             setFormData({});
             setTriggerValidations(defaultValidations);
           } else {
-            window.alert(
-              'There is some error please check your network or contact support',
-            );
+            window.alert('There is some error please check your network or contact support');
           }
         }
       }
@@ -144,7 +145,7 @@ const DomesticOrder = () => {
   return (
     <div className="mb-8 pt-8 md:flex">
       <div className="form-step px-6">
-        <Stepper step={state}/>
+        <Stepper step={state} />
       </div>
       <div className="grow px-6">
         {steps[state]}

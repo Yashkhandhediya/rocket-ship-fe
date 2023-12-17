@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Checkbox, Field, FieldAccordion } from '../../../../common/components';
 import { RightDrawer } from '../../../../common/components/right-drawer';
-import { locationPin } from '../../../../common/icons';
+import { editIcon, locationPin } from '../../../../common/icons';
 import { BuyerAddressFields } from '../buyer-address-fields';
 import { useDispatch } from 'react-redux';
 import { setAddress } from '../../../../redux/actions/addAddressAction';
@@ -10,8 +10,21 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
   const [isAddSupplier, setIsAddSupplier] = useState(false);
   const [isAddRTOAddress, setIsAddRTOAddress] = useState(false);
   const [addressInfo, setAddressInfo] = useState(formValues);
+  const [addressTag, setAddressTag] = useState('Home');
+  const [contactDisabled, setContactDisabled] = useState(formValues ? true : false);
+
+  const [isValidFirstName, setIsValidFirstName] = useState(true);
+  const [isValidNumber, setIsValidNumber] = useState(true);
+  const [isValidEmailAddress, setIsValidEmailAddress] = useState(true);
+  const [triggerValidations, setTriggerValidations] = useState(false);
 
   const dispatch = useDispatch();
+
+  const tagClasses = (tag) => {
+    return tag === addressTag
+      ? 'text-indigo-700 border-indigo-700 bg-[#e5e0ff] mx-2.5 h-6 w-[92px] rounded-xl border text-center text-xs font-normal'
+      : 'text-gray-800 border-gray-300 bg-transparent mx-2.5 h-6 w-[92px] rounded-xl border text-center text-xs font-normal';
+  };
 
   const handleSetAddressInfo = (event) => {
     const { id, value } = event.target;
@@ -21,44 +34,96 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
     });
   };
 
+  const handleUpdateTag = (selectedTag) => {
+    setAddressInfo({
+      ...addressInfo,
+      tag: selectedTag,
+    });
+  };
+
+  const updateManualTag = (value) => {
+    setAddressInfo({
+      ...addressInfo,
+      tag: value,
+    });
+  };
+
   const handleSaveAddressInRedux = () => {
+    if (
+      !isValidFirstName ||
+      !isValidFirstName ||
+      !isValidEmailAddress ||
+      !addressInfo?.complete_address ||
+      !addressInfo?.pincode ||
+      !addressInfo?.city ||
+      !addressInfo?.state ||
+      !addressInfo?.country
+    ) {
+      setTriggerValidations(true);
+      return;
+    }
     dispatch(setAddress(addressInfo, onClose));
   };
 
   return (
     <RightDrawer isOpen={isOpen} heading={'Add New Pick Up Address'} onClose={onClose}>
       <div className="md:flex">
-        <div className="mb-2 px-2 text-sm font-medium lg:w-2/12">
-          {'Tag this address as '}
-        </div>
+        <div className="mb-2 px-2 text-sm font-medium lg:w-2/12">{'Tag this address as '}</div>
         <div className="mb-2 px-2 text-sm font-medium lg:w-9/12">
           <div className="flex w-full">
-            <button className="mx-2.5 h-6 w-[92px] rounded-xl border border-indigo-700 bg-[#e5e0ff] text-center text-xs font-normal text-indigo-700">
+            <button
+              className={tagClasses('Home')}
+              onClick={() => {
+                setAddressTag('Home');
+                handleUpdateTag('Home');
+              }}>
               Home
             </button>
-            <button className="mx-2.5 h-6 w-[92px] rounded-xl border border-gray-300 bg-transparent text-center text-xs font-normal text-gray-800">
+            <button
+              className={tagClasses('Work')}
+              onClick={() => {
+                setAddressTag('Work');
+                handleUpdateTag('Work');
+              }}>
               Work
             </button>
-            <button className="mx-2.5 h-6 w-[92px] rounded-xl border border-gray-300 bg-transparent text-center text-xs font-normal text-gray-800">
+            <button
+              className={tagClasses('WareHouse')}
+              onClick={() => {
+                setAddressTag('WareHouse');
+                handleUpdateTag('WareHouse');
+              }}>
               WareHouse
             </button>
-            <button className="mx-2.5 h-6 w-[92px] rounded-xl border border-gray-300 bg-transparent text-center text-xs font-normal text-gray-800">
+            <button
+              className={tagClasses('Other')}
+              onClick={() => {
+                setAddressTag('Other');
+                handleUpdateTag('Other');
+              }}>
               Other
             </button>
-            <input
-              type="text"
-              id={'addressTag'}
-              className="peer block appearance-none border-0 border-b-2 border-gray-200 bg-transparent py-1 ps-2 text-xs text-gray-900 focus:outline-none focus:ring-0"
-              placeholder="save address as"
-            />
+            {addressTag === 'Other' && (
+              <>
+                <input
+                  type="text"
+                  id={'addressTag'}
+                  className="peer block appearance-none border-0 border-b-2 border-gray-200 bg-transparent py-1 ps-2 text-xs text-gray-900 focus:outline-none focus:ring-0"
+                  placeholder="save address as"
+                  value={addressInfo?.tag || ''}
+                  onChange={(e) => updateManualTag(e.target.value)}
+                />
+                {triggerValidations && addressInfo?.tag && (
+                  <p className="mt-1 text-xs text-red-500">The name field is required.</p>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>
       <div className="mb-4 mt-5 w-full border border-gray-100" />
       <div>
-        <div className="mb-2 px-2 text-sm font-medium">
-          {'Contact information for this location'}
-        </div>
+        <div className="mb-2 px-2 text-sm font-medium">{'Contact information for this location'}</div>
         <div className="md:flex">
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
@@ -68,9 +133,13 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
               labelClassNames={'text-xs'}
               placeHolder={'Name of the person to be contacted'}
               required={true}
+              isDisabled={formValues}
               value={addressInfo?.first_name}
               onChange={handleSetAddressInfo}
+              onBlur={() => setIsValidFirstName(addressInfo?.first_name)}
+              triggerValidation={triggerValidations}
             />
+            {!isValidFirstName && <p className="mt-1 text-xs text-red-500">The name field is required.</p>}
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
@@ -79,11 +148,24 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
               label={'Contact Number'}
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
+              lableAddOn={
+                <img
+                  src={editIcon}
+                  className="ml-2 inline-flex cursor-pointer"
+                  onClick={() => setContactDisabled(!contactDisabled)}
+                />
+              }
               placeHolder={'Enter 10 digit mobile number'}
               required={true}
+              isDisabled={contactDisabled}
               value={addressInfo?.contact_no}
               onChange={handleSetAddressInfo}
+              onBlur={() => setIsValidNumber(/^\d{10}$/.test(addressInfo?.contact_no))}
+              triggerValidation={triggerValidations}
             />
+            {!isValidNumber && (
+              <p className="mt-1 text-xs text-red-500">Please enter valid 10 digit phone number.</p>
+            )}
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
@@ -94,9 +176,17 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
               labelClassNames={'text-xs'}
               placeHolder={'i.e acd@gmail.com'}
               required={true}
+              isDisabled={formValues}
               value={addressInfo?.email_address}
               onChange={handleSetAddressInfo}
+              onBlur={() =>
+                setIsValidEmailAddress(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(addressInfo?.email_address))
+              }
+              triggerValidation={triggerValidations}
             />
+            {!isValidEmailAddress && (
+              <p className="mt-1 text-xs text-red-500">Please enter valid email address.</p>
+            )}
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
@@ -120,6 +210,15 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
           heading={'How can the delivery person reach the address?'}
           onChange={handleSetAddressInfo}
           values={addressInfo}
+          triggerValidation={triggerValidations}
+          disabledFields={{
+            complete_address: true,
+            landmark: true,
+            pincode: true,
+            city: true,
+            state: true,
+            country: true,
+          }}
         />
       </div>
       <div className="mb-4 mt-5 w-full border border-gray-100" />
@@ -135,10 +234,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
         </div>
       </div>
       <div className="mb-4 mt-5 w-full border border-gray-100" />
-      <FieldAccordion
-        id={'supplierRtoAddress'}
-        label={'+ Add RTO Address and Supplier'}
-        showOptional>
+      <FieldAccordion id={'supplierRtoAddress'} label={'+ Add RTO Address and Supplier'} showOptional>
         <div className="cursor-auto bg-[#fafafa] p-5">
           <div className="items-center md:flex">
             <div className="mr-10 lg:w-4/12">
@@ -197,9 +293,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
                     placeHolder={'Select Address'}
                     inputClassNames={'text-xs'}
                     labelClassNames={'text-xs'}
-                    note={
-                      'Note: RTO address is only applicable for Xpressbees, Delhivery and Ecom express.'
-                    }
+                    note={'Note: RTO address is only applicable for Xpressbees, Delhivery and Ecom express.'}
                     value={''}
                     onChange={() => {}}
                   />

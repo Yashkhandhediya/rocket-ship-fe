@@ -48,7 +48,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
       Number(paymentDetails?.transaction_fee || 0) || 0;
 
   const totalOrderValue =
-    Number(subProductTotal || 0) + Number(otherCharges || 0) || 0 - Number(paymentDetails?.discount || 0);
+    Number(subProductTotal || 0) + Number(otherCharges || 0) - Number(paymentDetails?.discount || 0);
 
   const checkIsProductValid = () => {
     const errors = {
@@ -184,7 +184,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
               onChange={setDirectKeysInForm}
             />
             {productValidation && !formData?.date && (
-              <p style={{ color: 'red', fontSize: 'small' }}>Order date is required.</p>
+              <p className="mt-1 text-xs text-red-500">Order date is required.</p>
             )}
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
@@ -200,7 +200,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
               onChange={setDirectKeysInForm}
             />
             {productValidation && !formData?.channel && (
-              <p style={{ color: 'red', fontSize: 'small' }}>Order date is required.</p>
+              <p className="mt-1 text-xs text-red-500">Order date is required.</p>
             )}
           </div>
         </div>
@@ -254,7 +254,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
                     {productValidation && !field?.name?.length && (
-                      <p style={{ color: 'red', fontSize: 'small' }}>Product Name is required.</p>
+                      <p className="mt-1 text-xs text-red-500">Product Name is required.</p>
                     )}
                   </div>
                   <div className="w-full px-2 pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
@@ -271,7 +271,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
                     {productValidation && (!field?.unit_price || field?.unit_price < 1) && (
-                      <p style={{ color: 'red', fontSize: 'small' }}>Unit price should be greter than 0.</p>
+                      <p className="mt-1 text-xs text-red-500">Unit price should be greter than 0.</p>
                     )}
                   </div>
                   <div className="w-full px-2  pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
@@ -290,7 +290,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
                     {productValidation && (!field?.quantity || field?.quantity < 1) && (
-                      <p style={{ color: 'red', fontSize: 'small' }}>Quantity should be greter than 0.</p>
+                      <p className="mt-1 text-xs text-red-500">Quantity should be greter than 0.</p>
                     )}
                   </div>
                   <div className="w-10/12 px-2 pb-2 md:w-4/12 md:pb-0 xl:w-3/12">

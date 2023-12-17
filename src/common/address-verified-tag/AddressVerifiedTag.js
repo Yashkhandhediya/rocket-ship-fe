@@ -3,7 +3,7 @@ import { varifiedTickmark } from '../icons';
 const AddressVerifiedTag = () => {
   return (
     <>
-      <span className="absolute right-0 top-4 z-50 flex text-[8px] font-bold text-white ">
+      <span className="absolute right-0 top-4 z-10 flex text-[8px] font-bold text-white ">
         <img src={varifiedTickmark} className="pr-0.5" />
         {'Verified'}
       </span>
