@@ -41,7 +41,7 @@ const AddOrder = () => {
               <span>{'Add Order'}</span>
             </Link>
           </div>
-          <Tabs tabs={tabData} />
+          <Tabs tabs={tabData} tabClassNames={"font-normal"}/>
         </div>
     </PageWithSidebar>
   );

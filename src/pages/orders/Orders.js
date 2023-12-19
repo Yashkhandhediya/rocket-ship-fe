@@ -1,18 +1,23 @@
 import { useNavigate } from 'react-router-dom';
-import { Tooltip } from '../../common/components';
+import { Tabs } from '../../common/components/tabs';
+import { ordersTabs } from './duck'; 
 
 const Orders = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="h-full w-full bg-[#f8f8f8] text-center">
-      <h1>Orders</h1>
-
-      <button
-        className={'mt-8 rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-sm font-medium text-indigo-600'}
-        onClick={() => navigate('/add-order')}>
-        + Add Order
-      </button>
+    <div className="h-full w-full bg-[#f8f8f8] px-4 text-center">
+      <div className="flex items-center justify-between px-1.5 pb-3 pt-4">
+        <h1 className="text-xl font-bold">Orders</h1>
+        <button
+          className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-sm font-medium text-indigo-600'}
+          onClick={() => navigate('/add-order')}>
+          + Add Order
+        </button>
+      </div>
+      <div>
+        <Tabs tabs={ordersTabs} tabClassNames={"mr-6 px-3 py-3.5 text-[#7f7f7f] font-medium"}/>
+      </div>
     </div>
   );
 };
