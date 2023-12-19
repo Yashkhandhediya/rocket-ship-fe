@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { infoIcon } from '../../icons';
+import { Tooltip } from '../tooltip';
 
 const Tabs = ({ tabs, tabClassNames }) => {
   const [activeTab, setActiveTab] = useState(0);
@@ -19,7 +20,11 @@ const Tabs = ({ tabs, tabClassNames }) => {
                 type="button"
                 onClick={() => setActiveTab(i)}>
                 {tab.title}
-                {tab?.tooltip && <img className="ms-2" src={infoIcon} />}
+                {tab?.tooltip && (
+                  <Tooltip id={tab.id} text={tab.tooltip}>
+                    <img className="ms-2" src={infoIcon} />
+                  </Tooltip>
+                )}
               </button>
             </li>
           );

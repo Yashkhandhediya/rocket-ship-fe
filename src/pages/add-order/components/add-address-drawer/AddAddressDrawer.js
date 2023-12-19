@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Checkbox, Field, FieldAccordion } from '../../../../common/components';
+import { Checkbox, Field, FieldAccordion, Tooltip } from '../../../../common/components';
 import { RightDrawer } from '../../../../common/components/right-drawer';
-import { editIcon, locationPin } from '../../../../common/icons';
+import { editIcon, infoIcon, locationPin } from '../../../../common/icons';
 import { BuyerAddressFields } from '../buyer-address-fields';
 import { useDispatch } from 'react-redux';
 import { setAddress } from '../../../../redux/actions/addAddressAction';
@@ -132,6 +132,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
               placeHolder={'Name of the person to be contacted'}
+              tooltip={'Please include the phone number of the person who will be present at this location.'}
               required={true}
               isDisabled={formValues}
               value={addressInfo?.first_name}
@@ -193,6 +194,9 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
               type={'number'}
               id={`alternameMobileNo`}
               label={'Alternate Phone No. '}
+              tooltip={
+                'Please enter an alternate phone number where a pickup executive can call you if the above number is not reachable.'
+              }
               showOptional
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
@@ -244,6 +248,9 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
                 label={'Add this address as supplier/vendor address'}
                 checked={isAddSupplier}
                 onChange={(e) => setIsAddSupplier(e.target.checked)}
+                tooltip={
+                  "Enable this to ship orders directly from your vendor's location and generate customer invoice with vendor"
+                }
               />
             </div>
             <div className=" md:flex md:w-8/12 lg:w-6/12">
@@ -275,7 +282,15 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
           </div>
           <div className="mt-2 gap-10 md:flex">
             <div className="lg:w-4/12 ">
-              <div className="mb-2 text-xs font-medium"> {'Add RTO Address'}</div>
+              <div className="mb-2 text-xs font-medium">
+                {' '}
+                {'Add RTO Address'}{' '}
+                <Tooltip
+                  id="addRtoAddress"
+                  text="Your package will be returned to the address selected by you, incase it needs to be delivered back to the origin." wrapperClassNames={"inline-flex"}>
+                  <img src={infoIcon} className="ms-2" />
+                </Tooltip>
+              </div>
               <Checkbox
                 id={'addRtoAddress'}
                 label={'Use a different RTO Address'}

@@ -1,14 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Field } from '../../../../../common/components';
+import { Field, Tooltip } from '../../../../../common/components';
+import { infoIcon } from '../../../../../common/icons';
 
 export default function PackageDetails({ handleFormData, formData, triggerValidations }) {
   const [validationTriggered, setValidationTriggered] = useState(false);
   const volumatricWeight =
     useMemo(
       () =>
-        (parseInt(formData?.length || 0) *
-          parseInt(formData?.width || 0) *
-          parseInt(formData?.height || 0)) /
+        (parseInt(formData?.length || 0) * parseInt(formData?.width || 0) * parseInt(formData?.height || 0)) /
         5000,
       [formData],
     ) || 0;
@@ -56,27 +55,32 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
               label={'Dead Weight'}
               inputClassNames={'text-xs'}
               placeHolder={'0.00'}
-              note={
-                '(Max. 3 digits after decimal place) \nNote: The minimum chargeable weight is 0.50 Kg'
-              }
+              tooltip={'Dead Weight is the physical Weight.'}
+              note={'(Max. 3 digits after decimal place) \nNote: The minimum chargeable weight is 0.50 Kg'}
               required={true}
-              rightAddOn='Kg'
+              rightAddOn="Kg"
               value={formData?.dead_weight}
               onChange={setDirectKeysInForm}
             />
             {validationTriggered && !formData?.dead_weight && (
-              <p className="text-xs text-red-500 mt-1">Weight is required</p>
+              <p className="mt-1 text-xs text-red-500">Weight is required</p>
             )}
             {validationTriggered && formData?.dead_weight < 0.5 && (
-              <p className="text-xs text-red-500 mt-1">
-                Weight should be greter than 0
-              </p>
+              <p className="mt-1 text-xs text-red-500">Weight should be greter than 0</p>
             )}
           </div>
         </div>
         <div className="mb-6 mt-6 w-full border border-gray-200" />
         <div>
-          <div className="mb-3 text-sm font-medium">{'Product Details'}</div>
+          <div className="mb-3 text-sm font-medium">
+            {'Volumetric Weight'}
+            <Tooltip
+              id="volumetricWeigt"
+              text="It is weight calculated based on the dimensions (L, B, H) entered for the shipment. This weight is calculated using the formula(LxBxH)/5000 (for most of our courier partners) which measures the amount of space that the shipment will take in the carrier."
+              wrapperClassNames={'inline-flex'}>
+              <img src={infoIcon} className="ms-2" />
+            </Tooltip>
+          </div>
           <div>
             <div className="w-full md:flex">
               <div className="pb-2 md:pb-0 lg:w-5/12">
@@ -91,19 +95,15 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
                       inputClassNames={'text-xs'}
                       placeHolder={'0.00'}
                       required={true}
-                      rightAddOn='CM'
+                      rightAddOn="CM"
                       value={formData?.length}
                       onChange={setDirectKeysInForm}
                     />
                     {validationTriggered && !formData?.length && (
-                      <p className="text-xs text-red-500 mt-1">
-                        Length is required
-                      </p>
+                      <p className="mt-1 text-xs text-red-500">Length is required</p>
                     )}
                     {validationTriggered && formData?.length < 0.5 && (
-                      <p className="text-xs text-red-500 mt-1">
-                        Weight should be greter than 0.5
-                      </p>
+                      <p className="mt-1 text-xs text-red-500">Weight should be greter than 0.5</p>
                     )}
                   </div>
                   <div className="sm:w-/12 pb-2 md:pb-0">
@@ -113,19 +113,15 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
                       inputClassNames={'text-xs'}
                       placeHolder={'0.00'}
                       required={true}
-                      rightAddOn='CM'
+                      rightAddOn="CM"
                       value={formData?.width}
                       onChange={setDirectKeysInForm}
                     />
                     {validationTriggered && !formData?.width && (
-                      <p className="text-xs text-red-500 mt-1">
-                        Breadth is required
-                      </p>
+                      <p className="mt-1 text-xs text-red-500">Breadth is required</p>
                     )}
                     {validationTriggered && formData?.width < 0.5 && (
-                      <p className="text-xs text-red-500 mt-1">
-                        Breadth should be greter than 0.5
-                      </p>
+                      <p className="mt-1 text-xs text-red-500">Breadth should be greter than 0.5</p>
                     )}
                   </div>
                   <div className="sm:w-/12 pb-2 md:pb-0">
@@ -135,31 +131,23 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
                       inputClassNames={'text-xs'}
                       placeHolder={'0.00'}
                       required={true}
-                      rightAddOn='CM'
+                      rightAddOn="CM"
                       value={formData?.height}
                       onChange={setDirectKeysInForm}
                     />
                     {validationTriggered && !formData?.height && (
-                      <p className="text-xs text-red-500 mt-1">
-                        Height is required
-                      </p>
+                      <p className="mt-1 text-xs text-red-500">Height is required</p>
                     )}
                     {validationTriggered && formData?.height < 0.5 && (
-                      <p className="text-xs text-red-500 mt-1">
-                        Height should be greter than 0.5
-                      </p>
+                      <p className="mt-1 text-xs text-red-500">Height should be greter than 0.5</p>
                     )}
                   </div>
                 </div>
                 <p className="mt-1 whitespace-pre-wrap text-[10px] leading-4 text-gray-400">
-                  {
-                    'Note: Dimensions should be in centimeters only & values should be greater than 0.50 cm.'
-                  }
+                  {'Note: Dimensions should be in centimeters only & values should be greater than 0.50 cm.'}
                 </p>
               </div>
-              <div className="pb-2 text-center text-base font-medium md:pb-0 lg:mt-8 lg:w-1/12">
-                {'OR'}
-              </div>
+              <div className="pb-2 text-center text-base font-medium md:pb-0 lg:mt-8 lg:w-1/12">{'OR'}</div>
               <div className="pb-2 md:pb-0 lg:w-5/12">
                 <Field
                   type={'select'}

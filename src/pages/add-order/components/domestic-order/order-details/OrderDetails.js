@@ -1,6 +1,6 @@
-import { Field, FieldAccordion } from '../../../../../common/components';
+import { Field, FieldAccordion, Tooltip } from '../../../../../common/components';
 import { useEffect, useState } from 'react';
-import { deleteIcon } from '../../../../../common/icons';
+import { deleteIcon, infoIcon } from '../../../../../common/icons';
 
 export default function OrderDetails({ handleFormData, formData, triggerValidations }) {
   const defaultProductField = {
@@ -195,6 +195,9 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
               placeHolder={'Enter Order Channel'}
+              tooltip={
+                'can select your connected store (Shopify/WooCommerce etc.) or mark the order as "Custom" (used for adding manual orders)'
+              }
               required={true}
               value={formData?.channel}
               onChange={setDirectKeysInForm}
@@ -329,6 +332,9 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                           inputClassNames={'text-xs'}
                           labelClassNames={'text-xs'}
                           placeHolder={'Enter your product HSN code'}
+                          tooltip={
+                            'HSN code is a 6-digit uniform code that classifies 5000+ products and is accepted worldwide.'
+                          }
                           value={field?.hsn_code}
                           onChange={(e) => handleSetProductFields(e, index)}
                         />
@@ -340,6 +346,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                           inputClassNames={'text-xs'}
                           labelClassNames={'text-xs'}
                           placeHolder={'Enter Product SKU'}
+                          tooltip={'Stock Keeping Unit, used for inventory management.'}
                           value={field?.sku}
                           onChange={(e) => handleSetProductFields(e, index)}
                         />
@@ -365,6 +372,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                           inputClassNames={'text-xs'}
                           labelClassNames={'text-xs'}
                           placeHolder={'0.00'}
+                          tooltip={'Discount given to the buyer on this product'}
                           value={field?.discount}
                           onChange={(e) => handleSetProductFields(e, index)}
                         />
@@ -403,6 +411,12 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                   htmlFor="prepaidRadio"
                   className="dark:text-white mb-2 text-xs font-medium text-gray-900">
                   Prepaid
+                  <Tooltip
+                    id="prepaid"
+                    text="Payment already received from the buyer"
+                    wrapperClassNames={'inline-flex'}>
+                    <img src={infoIcon} className="ms-2" />
+                  </Tooltip>
                 </label>
               </div>
               <div className="lg:w-2/12">
@@ -417,6 +431,12 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                 />
                 <label htmlFor="codRadio" className="dark:text-white mb-2 text-xs font-medium text-gray-900">
                   Cash On Delivery
+                  <Tooltip
+                    id="prepaid"
+                    text="COD will be remitted to your account as per your selected payment cycle."
+                    wrapperClassNames={'inline-flex'}>
+                    <img src={infoIcon} className="ms-2" />
+                  </Tooltip>
                 </label>
               </div>
             </div>
@@ -460,6 +480,9 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       inputClassNames={'text-xs'}
                       labelClassNames={'text-xs'}
                       placeHolder={'0.00'}
+                      tooltip={
+                        'In case of online payment, transaction fee applied can be added here and will be shown in your total order amount.'
+                      }
                       leftAddOn="₹"
                       value={paymentDetails?.transaction_fee}
                       onChange={handleSetPaymentDetails}
@@ -473,6 +496,9 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       inputClassNames={'text-xs'}
                       labelClassNames={'text-xs'}
                       placeHolder={'0'}
+                      tooltip={
+                        'In case of discounts offered, the discount amount can be added here and will be deduced in your total order amount'
+                      }
                       leftAddOn="₹"
                       value={paymentDetails?.discount}
                       onChange={handleSetPaymentDetails}

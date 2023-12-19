@@ -8,9 +8,9 @@ const Tooltip = ({ children, id, text, wrapperClassNames, tooltipClassNames }) =
       className={wrapperClassNames}>
       {children}
       <div
-        id={id + 'tooltip'}
+        id={`${id}-${randomizeNumber}-tooltip`}
         role="tooltip"
-        className={`tooltip invisible absolute z-10 inline-block w-[250px] rounded-lg border border-gray-200 bg-white px-3 py-2 text-start text-xs text-gray-900 opacity-0 shadow-sm ${tooltipClassNames}`}>
+        className={`tooltip invisible absolute z-10 inline-block w-[250px] rounded-lg border border-gray-200 bg-white px-3 py-2 text-start text-xs font-normal text-gray-900 opacity-0 shadow-xl ${tooltipClassNames}`}>
         {text}
         <div className="tooltip-arrow shadow-sm" data-popper-arrow="" />
       </div>
