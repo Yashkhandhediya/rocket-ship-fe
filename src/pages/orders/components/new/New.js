@@ -27,29 +27,36 @@ export const New = () => {
     },
     {
       name: 'Package Details',
-      selector: (row) => row.packageDetails,
+      selector: (row) => (
+        <div>
+          <div>{row?.deadweight}</div>
+          <div>{row?.height}x{row.width}x{row.length}</div>
+          <div>{row?.volumatric_weight}</div>
+        </div>
+      ),
     },
     {
       name: 'Payment',
       selector: (row) => <div>
-      <div>{row?.payment_type_name}</div>
-    </div>,
+        <div>{row?.total_amount}</div>
+        <div>{row?.payment_type_name}</div>
+      </div>,
     },
     {
       name: 'Pickup Address',
       wrap: true,
       selector: (row) => <div>
-      <div>{row?.user_info?.address_line1}</div>
-      <div>{row?.user_info?.address_line2}</div>
-      <div>{row?.user_info?.landmark}</div>
-      <div>{row?.user_info?.city}-{row?.user_info?.pincode}</div>
-    </div>,
+        <div>{row?.user_info?.address_line1}</div>
+        <div>{row?.user_info?.address_line2}</div>
+        <div>{row?.user_info?.landmark}</div>
+        <div>{row?.user_info?.city}-{row?.user_info?.pincode}</div>
+      </div>,
     },
     {
       name: 'Status',
       selector: (row) => <div>
-      <div>{row?.status_name}</div>
-    </div>,
+        <div>{row?.status_name}</div>
+      </div>,
     },
     {
       name: 'Action',
