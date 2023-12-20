@@ -216,12 +216,12 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
           values={addressInfo}
           triggerValidation={triggerValidations}
           disabledFields={{
-            complete_address: true,
-            landmark: true,
-            pincode: true,
-            city: true,
-            state: true,
-            country: true,
+            complete_address: false,
+            landmark: false,
+            pincode: false,
+            city: false,
+            state: false,
+            country: false,
           }}
         />
       </div>
