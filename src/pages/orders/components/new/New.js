@@ -1,14 +1,29 @@
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 
 export const New = () => {
+  const [newOrders, setNewOrders] = useState([]);
   const columns = [
     {
       name: 'Order Details',
-      selector: (row) => row.orderDetails,
+      selector: (row) => (
+        <div>
+          <div>{row?.order_type_id}</div>
+          <div>{row?.created_date}</div>
+          <div>{row.channel}</div>
+        </div>
+      ),
     },
     {
       name: 'Customer details',
-      selector: (row) => row.customerDetails,
+      selector: (row) => (
+        <div>
+          <div>{row?.buyer_info?.first_name}</div>
+          <div>{row?.buyer_info?.email_address}</div>
+          <div>{row?.buyer_info?.contact_no}</div>
+        </div>
+      ),
     },
     {
       name: 'Package Details',
@@ -16,48 +31,55 @@ export const New = () => {
     },
     {
       name: 'Payment',
-      selector: (row) => row.payment,
+      selector: (row) => <div>
+      <div>{row?.payment_type_name}</div>
+    </div>,
     },
     {
       name: 'Pickup Address',
-      wrap:true,
-      selector: (row) => row.pickupAddress,
+      wrap: true,
+      selector: (row) => <div>
+      <div>{row?.user_info?.address_line1}</div>
+      <div>{row?.user_info?.address_line2}</div>
+      <div>{row?.user_info?.landmark}</div>
+      <div>{row?.user_info?.city}-{row?.user_info?.pincode}</div>
+    </div>,
     },
     {
       name: 'Status',
-      selector: (row) => row.status,
+      selector: (row) => <div>
+      <div>{row?.status_name}</div>
+    </div>,
     },
     {
       name: 'Action',
       button: true,
-      cell: (row) => <button id={row.id} className='bg-indigo-700 text-white px-2 py-1.5 rounded'>{"Track Order"}</button>,
+      cell: (row) => (
+        <button id={row.id} className="rounded bg-indigo-700 px-2 py-1.5 text-white">
+          {'Track Order'}
+        </button>
+      ),
     },
   ];
 
-  const data = [
-    {
-      id: 1,
-      orderDetails: 'Beetlejuice',
-      customerDetails: '1988',
-      packageDetails: "Package Details 1",
-      payment: "COD",
-      pickupAddress: "mock-202, temporary society , near mock location, landmark, city, state, country pincode",
-      status: "Picked Up",
-    },
-    {
-      id: 2,
-      orderDetails: 'Ghostbusters',
-      customerDetails: '1984',
-      packageDetails: "Package Details 2",
-      payment: "Prepaid",
-      pickupAddress: "mock-586, mock residency, near other location, landmark, city, state, country pincode",
-      status: "Picked Up",
-    },
-  ];
+  const fetchNewOrders = () => {
+    axios.get('http://43.252.197.60:8030/order/get_filtered_orders').then(async (resp) => {
+      if (resp.status === 200) {
+        setNewOrders(resp.data);
+        console.log('-=-=-=-Response-=-=-=', resp.data)
+      } else {
+        alert('There is some error while fetching orders.');
+      }
+    });
+  };
+
+  useEffect(() => {
+    fetchNewOrders();
+  }, []);
 
   return (
-    <div className='mt-5'>
-      <DataTable columns={columns} data={data} />
+    <div className="mt-5">
+      <DataTable columns={columns} data={newOrders} />
     </div>
   );
 };
