@@ -93,7 +93,12 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
   return (
     <RightDrawer isOpen={isOpen} heading={'Add New Pick Up Address'} onClose={handleCloseDrawer}>
       <div className="md:flex">
-        <div className="mb-2 px-2 text-sm font-medium lg:w-2/12">{'Tag this address as '}</div>
+        <div className="mb-2 inline-flex items-center px-2 text-sm font-medium lg:w-2/12">
+          {'Tag this address as '}
+          <Tooltip text="Give your pickup address a short and easy-to-remember name.">
+            <img src={infoIcon} className="ms-1" />
+          </Tooltip>
+        </div>
         <div className="mb-2 px-2 text-sm font-medium lg:w-9/12">
           <div className="flex w-full">
             <button
