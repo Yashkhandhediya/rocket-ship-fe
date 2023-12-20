@@ -7,8 +7,8 @@ const Sidebar = () => {
   return (
     <div
       id="mySidebar"
-      className="group/sidebar transition-all duration-500 fixed left-0 top-0 h-full w-[70px] overflow-x-hidden overflow-y-hidden bg-[#06064d] text-white hover:w-[218px] hover:overflow-y-auto [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar]:w-1">
-      <div className="sticky top-0 z-10 h-[62px] w-full bg-[#06064d] pb-4 pl-5 pr-3.5 pt-2.5 translate-y-0">
+      className="group/sidebar z-10 transition-all duration-500 fixed left-0 top-0 h-full w-[70px] overflow-x-hidden overflow-y-hidden bg-[#06064d] text-white hover:w-[218px] hover:z-100 hover:overflow-y-auto [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar]:w-1">
+      <div className="sticky top-0 z-100 h-[62px] w-full bg-[#06064d] pb-4 pl-5 pr-3.5 pt-2.5 translate-y-0">
         <img src={shortShipRocket} className="object-contain h-[34px] group-hover/sidebar:hidden" />
         <img
           src={shipRocket}

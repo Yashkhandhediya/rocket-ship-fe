@@ -13,7 +13,7 @@ const DomesticOrder = () => {
     2: false,
     3: false,
   };
-  const [state, setState] = useState(3);
+  const [state, setState] = useState(0);
   const [formData, setFormData] = useState(null);
   const [triggerValidations, setTriggerValidations] = useState(defaultValidations);
   const steps = {

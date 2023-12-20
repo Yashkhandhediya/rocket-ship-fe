@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Checkbox, Field, FieldAccordion, Tooltip } from '../../../../common/components';
 import { RightDrawer } from '../../../../common/components/right-drawer';
 import { editIcon, infoIcon, locationPin } from '../../../../common/icons';
@@ -6,17 +6,29 @@ import { BuyerAddressFields } from '../buyer-address-fields';
 import { useDispatch } from 'react-redux';
 import { setAddress } from '../../../../redux/actions/addAddressAction';
 
-const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
+const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
   const [isAddSupplier, setIsAddSupplier] = useState(false);
   const [isAddRTOAddress, setIsAddRTOAddress] = useState(false);
-  const [addressInfo, setAddressInfo] = useState(formValues);
-  const [addressTag, setAddressTag] = useState('Home');
-  const [contactDisabled, setContactDisabled] = useState(formValues ? true : false);
+  const [addressInfo, setAddressInfo] = useState(isEdit ? formValues : {});
+  const [addressTag, setAddressTag] = useState(isEdit ? formValues?.tag : 'Home');
+  const [contactDisabled, setContactDisabled] = useState(isEdit ? true : false);
 
   const [isValidFirstName, setIsValidFirstName] = useState(true);
   const [isValidNumber, setIsValidNumber] = useState(true);
   const [isValidEmailAddress, setIsValidEmailAddress] = useState(true);
   const [triggerValidations, setTriggerValidations] = useState(false);
+
+  const handleCloseDrawer = () => {
+    setIsAddSupplier(false);
+    setIsAddRTOAddress(false);
+    setIsValidFirstName(true);
+    setIsValidNumber(true);
+    setIsValidEmailAddress(true);
+    setTriggerValidations(false);
+    setAddressInfo({});
+    setAddressTag('Home');
+    onClose();
+  };
 
   const dispatch = useDispatch();
 
@@ -62,11 +74,24 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
       setTriggerValidations(true);
       return;
     }
-    dispatch(setAddress(addressInfo, onClose));
+    dispatch(setAddress(addressInfo, handleCloseDrawer));
   };
 
+  useEffect(() => {
+    if (!isEdit) {
+      setContactDisabled(false);
+      setTriggerValidations(false);
+      setAddressInfo({});
+      setAddressTag('Home');
+    } else {
+      setContactDisabled(true);
+      setAddressInfo(formValues);
+      setAddressTag(formValues?.tag);
+    }
+  }, [formValues]);
+
   return (
-    <RightDrawer isOpen={isOpen} heading={'Add New Pick Up Address'} onClose={onClose}>
+    <RightDrawer isOpen={isOpen} heading={'Add New Pick Up Address'} onClose={handleCloseDrawer}>
       <div className="md:flex">
         <div className="mb-2 px-2 text-sm font-medium lg:w-2/12">{'Tag this address as '}</div>
         <div className="mb-2 px-2 text-sm font-medium lg:w-9/12">
@@ -135,7 +160,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
               tooltip={'Please include the phone number of the person who will be present at this location.'}
               required={true}
               isDisabled={formValues}
-              value={addressInfo?.first_name}
+              value={addressInfo?.first_name || ''}
               onChange={handleSetAddressInfo}
               onBlur={() => setIsValidFirstName(addressInfo?.first_name)}
               triggerValidation={triggerValidations}
@@ -150,16 +175,20 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
               lableAddOn={
-                <img
-                  src={editIcon}
-                  className="ml-2 inline-flex cursor-pointer"
-                  onClick={() => setContactDisabled(!contactDisabled)}
-                />
+                !isEdit ? (
+                  <img
+                    src={editIcon}
+                    className="ml-2 inline-flex cursor-pointer"
+                    onClick={() => setContactDisabled(!contactDisabled)}
+                  />
+                ) : (
+                  ''
+                )
               }
               placeHolder={'Enter 10 digit mobile number'}
               required={true}
               isDisabled={contactDisabled}
-              value={addressInfo?.contact_no}
+              value={addressInfo?.contact_no || ''}
               onChange={handleSetAddressInfo}
               onBlur={() => setIsValidNumber(/^\d{10}$/.test(addressInfo?.contact_no))}
               triggerValidation={triggerValidations}
@@ -178,7 +207,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
               placeHolder={'i.e acd@gmail.com'}
               required={true}
               isDisabled={formValues}
-              value={addressInfo?.email_address}
+              value={addressInfo?.email_address || ''}
               onChange={handleSetAddressInfo}
               onBlur={() =>
                 setIsValidEmailAddress(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(addressInfo?.email_address))
@@ -215,14 +244,18 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
           onChange={handleSetAddressInfo}
           values={addressInfo}
           triggerValidation={triggerValidations}
-          disabledFields={{
-            complete_address: false,
-            landmark: false,
-            pincode: false,
-            city: false,
-            state: false,
-            country: false,
-          }}
+          disabledFields={
+            formValues
+              ? {
+                  complete_address: true,
+                  landmark: true,
+                  pincode: true,
+                  city: true,
+                  state: true,
+                  country: true,
+                }
+              : {}
+          }
         />
       </div>
       <div className="mb-4 mt-5 w-full border border-gray-100" />
@@ -282,10 +315,9 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
           </div>
           <div className="mt-2 gap-10 md:flex">
             <div className="lg:w-4/12 ">
-              <div className="mb-2 text-xs font-medium inline-flex items-center">
+              <div className="mb-2 inline-flex items-center text-xs font-medium">
                 {'Add RTO Address'}
-                <Tooltip
-                  text="Your package will be returned to the address selected by you, incase it needs to be delivered back to the origin.">
+                <Tooltip text="Your package will be returned to the address selected by you, incase it needs to be delivered back to the origin.">
                   <img src={infoIcon} className="ms-2" />
                 </Tooltip>
               </div>
@@ -319,7 +351,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
       <div className="my-6 flex justify-end gap-5">
         <button
           className="rounded border border-indigo-700 px-4 py-1.5 text-sm text-indigo-700"
-          onClick={onClose}>
+          onClick={handleCloseDrawer}>
           Cancel
         </button>
         <button

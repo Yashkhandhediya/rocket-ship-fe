@@ -32,7 +32,7 @@ const BuyerAdressFields = ({
               placeHolder={'House/Floor No. Building Name or Street, Locality'}
               required={true}
               isDisabled={disabledFields?.complete_address}
-              value={values?.[`complete_address`]}
+              value={values?.[`complete_address`] || ''}
               onChange={onChange}
               triggerValidation={triggerValidation}
               onBlur={() => {
@@ -51,7 +51,7 @@ const BuyerAdressFields = ({
               placeHolder={'Any nearby post office, market, Hospital as the landmark'}
               required={true}
               isDisabled={disabledFields?.landmark}
-              value={values?.[`landmark`]}
+              value={values?.[`landmark`] || ''}
               onChange={onChange}
             />
           </div>
@@ -67,7 +67,7 @@ const BuyerAdressFields = ({
               placeHolder={"Enter Buyer's Pincode"}
               required={true}
               isDisabled={disabledFields?.pincode}
-              value={values?.[`pincode`]}
+              value={values?.[`pincode`] || ''}
               onChange={onChange}
               triggerValidation={triggerValidation}
               onBlur={() => {
@@ -86,7 +86,7 @@ const BuyerAdressFields = ({
               inputClassNames={'text-xs bg-[#f4f9fd]'}
               placeHolder={"Enter Buyer's City"}
               required={true}
-              value={values?.[`city`]}
+              value={values?.[`city`] || ''}
               isDisabled={disabledFields?.city}
               triggerValidation={triggerValidation}
               onBlur={() => setIsValidCity(values?.city)}
@@ -103,7 +103,7 @@ const BuyerAdressFields = ({
               labelClassNames={'text-xs'}
               placeHolder={'Please Select State'}
               required={true}
-              value={values?.[`state`]}
+              value={values?.[`state`] || ''}
               triggerValidation={triggerValidation}
               onBlur={() => setIsValidState(values?.state)}
               isDisabled={disabledFields?.state}
@@ -119,7 +119,7 @@ const BuyerAdressFields = ({
               inputClassNames={'text-xs bg-[#f4f9fd]'}
               placeHolder={"Enter Buyer's country"}
               required={true}
-              value={values?.[`country`]}
+              value={values?.[`country`] || ''}
               triggerValidation={triggerValidation}
               onBlur={() => setIsValidCountry(values?.country)}
               isDisabled={disabledFields?.country}

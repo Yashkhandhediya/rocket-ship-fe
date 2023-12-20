@@ -114,6 +114,7 @@ export default function PickupDetails({ handleFormData, formData }) {
           setAddAddressDrawerOpen(false);
           setEditAddressDrawerOpen(false);
         }}
+        isEdit={editAddressDrawerOpen}
         formValues={editAddressDrawerOpen ? selectedAddress : null}
       />
     </div>

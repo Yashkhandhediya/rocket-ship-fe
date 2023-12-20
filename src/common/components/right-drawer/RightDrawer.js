@@ -2,7 +2,6 @@ const RightDrawer = ({ isOpen, heading, onClose, children }) => {
   return (
     <>
       <div
-        id="drawer-right-example"
         className={`fixed right-0 top-0 z-40 h-screen w-[80%] max-w-[80vw] overflow-y-auto rounded-lg bg-white px-5 py-4 transition-transform dark:bg-gray-800 ${
           isOpen ? 'transform-none' : 'translate-x-full'
         }`}
@@ -14,8 +13,6 @@ const RightDrawer = ({ isOpen, heading, onClose, children }) => {
         </h5>
         <button
           type="button"
-          data-drawer-hide="drawer-right-example"
-          aria-controls="drawer-right-example"
           className="absolute end-2.5 top-2.5 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"
           onClick={onClose}>
           <svg
