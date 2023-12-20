@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { infoIcon } from '../../icons';
-import { Tooltip } from '../tooltip';
+import { Tooltip } from 'flowbite-react';
+// import { Tooltip } from '../tooltip';
 
 const Tabs = ({ tabs, tabClassNames }) => {
   const [activeTab, setActiveTab] = useState(0);
@@ -21,7 +22,7 @@ const Tabs = ({ tabs, tabClassNames }) => {
                 onClick={() => setActiveTab(i)}>
                 {tab.title}
                 {tab?.tooltip && (
-                  <Tooltip id={tab.id} text={tab.tooltip}>
+                  <Tooltip text={tab.tooltip}>
                     <img className="ms-2" src={infoIcon} />
                   </Tooltip>
                 )}

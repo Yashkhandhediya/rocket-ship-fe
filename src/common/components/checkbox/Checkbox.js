@@ -8,7 +8,7 @@ const Checkbox = ({ id, label, checked, tooltip, onChange }) => {
 
       <label
         htmlFor={id}
-        className="dark:text-white mb-2 cursor-pointer px-6 text-xs font-medium text-gray-900">
+        className="inline-flex items-center mb-2 cursor-pointer px-6 text-xs font-medium text-gray-900">
         <span className="absolute left-0 top-0 h-[18px] w-[18px] rounded border border-gray-300 bg-transparent">
           {checked && (
             <span className="grid h-full w-full place-content-center rounded border border-indigo-700 fill-indigo-700 text-indigo-700">
@@ -26,7 +26,7 @@ const Checkbox = ({ id, label, checked, tooltip, onChange }) => {
         </span>
         {label ?? ''}
         {tooltip && (
-          <Tooltip id={id} text={tooltip} wrapperClassNames={"inline-flex"}>
+          <Tooltip text={tooltip}>
             <img src={infoIcon} className="ms-2" />
           </Tooltip>
         )}

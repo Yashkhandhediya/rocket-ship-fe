@@ -72,12 +72,9 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
         </div>
         <div className="mb-6 mt-6 w-full border border-gray-200" />
         <div>
-          <div className="mb-3 text-sm font-medium">
+          <div className="mb-3 text-sm font-medium inline-flex items-center">
             {'Volumetric Weight'}
-            <Tooltip
-              id="volumetricWeigt"
-              text="It is weight calculated based on the dimensions (L, B, H) entered for the shipment. This weight is calculated using the formula(LxBxH)/5000 (for most of our courier partners) which measures the amount of space that the shipment will take in the carrier."
-              wrapperClassNames={'inline-flex'}>
+            <Tooltip text="It is weight calculated based on the dimensions (L, B, H) entered for the shipment. This weight is calculated using the formula(LxBxH)/5000 (for most of our courier partners) which measures the amount of space that the shipment will take in the carrier.">
               <img src={infoIcon} className="ms-2" />
             </Tooltip>
           </div>

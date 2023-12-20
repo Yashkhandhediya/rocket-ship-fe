@@ -44,7 +44,7 @@ const Field = ({
           {showOptional && <span className="pl-1 text-[10px] text-gray-400">{'(Optional)'}</span>}
           {Boolean(lableAddOn) && lableAddOn}
           {tooltip && (
-            <Tooltip id={id} text={tooltip}>
+            <Tooltip text={tooltip}>
               <img src={infoIcon} className="ms-2" />
             </Tooltip>
           )}

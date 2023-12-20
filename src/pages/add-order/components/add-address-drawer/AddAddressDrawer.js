@@ -282,12 +282,10 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues = {} }) => {
           </div>
           <div className="mt-2 gap-10 md:flex">
             <div className="lg:w-4/12 ">
-              <div className="mb-2 text-xs font-medium">
-                {' '}
-                {'Add RTO Address'}{' '}
+              <div className="mb-2 text-xs font-medium inline-flex items-center">
+                {'Add RTO Address'}
                 <Tooltip
-                  id="addRtoAddress"
-                  text="Your package will be returned to the address selected by you, incase it needs to be delivered back to the origin." wrapperClassNames={"inline-flex"}>
+                  text="Your package will be returned to the address selected by you, incase it needs to be delivered back to the origin.">
                   <img src={infoIcon} className="ms-2" />
                 </Tooltip>
               </div>

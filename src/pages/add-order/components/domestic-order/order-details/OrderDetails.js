@@ -409,12 +409,9 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                 />
                 <label
                   htmlFor="prepaidRadio"
-                  className="dark:text-white mb-2 text-xs font-medium text-gray-900">
+                  className="inline-flex items-center mb-2 text-xs font-medium text-gray-900">
                   Prepaid
-                  <Tooltip
-                    id="prepaid"
-                    text="Payment already received from the buyer"
-                    wrapperClassNames={'inline-flex'}>
+                  <Tooltip text="Payment already received from the buyer">
                     <img src={infoIcon} className="ms-2" />
                   </Tooltip>
                 </label>
@@ -429,12 +426,9 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                   checked={paymentDetails.type === 'cod'}
                   onChange={handleSetPaymentMode}
                 />
-                <label htmlFor="codRadio" className="dark:text-white mb-2 text-xs font-medium text-gray-900">
+                <label htmlFor="codRadio" className="inline-flex items-center mb-2 text-xs font-medium text-gray-900">
                   Cash On Delivery
-                  <Tooltip
-                    id="prepaid"
-                    text="COD will be remitted to your account as per your selected payment cycle."
-                    wrapperClassNames={'inline-flex'}>
+                  <Tooltip text="COD will be remitted to your account as per your selected payment cycle.">
                     <img src={infoIcon} className="ms-2" />
                   </Tooltip>
                 </label>

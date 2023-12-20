@@ -1,20 +1,14 @@
-const Tooltip = ({ children, id, text, wrapperClassNames, tooltipClassNames }) => {
-  const randomizeNumber = Math.random() * 100000000000000;
+import { Tooltip as FlowbiteTooltip } from 'flowbite-react';
+
+const Tooltip = ({ children, text, ...rest }) => {
   return (
-    <div
-      data-tooltip-target={`${id}-${randomizeNumber}-tooltip`}
-      data-tooltip-placement="top"
-      data-tooltip-style="light"
-      className={wrapperClassNames}>
+    <FlowbiteTooltip
+      style="light"
+      content={text}
+      className="w-[250px] text-xs font-normal inline-flex text-gray-700 shadow-xl"
+      {...rest}>
       {children}
-      <div
-        id={`${id}-${randomizeNumber}-tooltip`}
-        role="tooltip"
-        className={`tooltip invisible absolute z-10 inline-block w-[250px] rounded-lg border border-gray-200 bg-white px-3 py-2 text-start text-xs font-normal text-gray-900 opacity-0 shadow-xl ${tooltipClassNames}`}>
-        {text}
-        <div className="tooltip-arrow shadow-sm" data-popper-arrow="" />
-      </div>
-    </div>
+    </FlowbiteTooltip>
   );
 };
 

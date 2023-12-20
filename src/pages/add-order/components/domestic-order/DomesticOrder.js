@@ -124,7 +124,6 @@ const DomesticOrder = () => {
             ...formData,
             date: newDate,
           });
-          console.log('api response only', resp);
           if (resp.status == 200) {
             window.alert('Order Placed Successfully');
             setState(0);
@@ -139,8 +138,6 @@ const DomesticOrder = () => {
       setState((prev) => (isNext ? prev + 1 : prev - 1));
     }
   };
-
-  console.log('--=-=-=-=-=-=formData-=-=-=-=-=-', formData);
 
   return (
     <div className="mb-8 pt-8 md:flex">
