@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 export default function PickupDetails({ handleFormData, formData }) {
   const [addAddressDrawerOpen, setAddAddressDrawerOpen] = useState(false);
   const [editAddressDrawerOpen, setEditAddressDrawerOpen] = useState(false);
+  const [searchAddress, setSearchAddress] = useState('');
   const addressList = useSelector((state) => state.addressList) || [];
   const [selectedAddress, setSelectedAddress] = useState(addressList.length ? addressList[0] : null);
 
@@ -17,6 +18,11 @@ export default function PickupDetails({ handleFormData, formData }) {
         ...formData,
         pickup_address: selectedAddress,
       });
+      setSearchAddress(
+        `${selectedAddress?.tag || ''}: ${selectedAddress?.complete_address} ${selectedAddress?.landmark} ${
+          selectedAddress?.city
+        } ${selectedAddress?.state} ${selectedAddress?.pincode}`,
+      );
     }
   }, [selectedAddress]);
 
@@ -32,10 +38,8 @@ export default function PickupDetails({ handleFormData, formData }) {
           <Field
             id={'searchAdress'}
             placeHolder={'Search your pick up address here by nickname or phone number'}
-            value={`${selectedAddress?.tag || ''}: ${selectedAddress?.complete_address} ${
-              selectedAddress?.landmark
-            } ${selectedAddress?.city} ${selectedAddress?.state} ${selectedAddress?.pincode}`}
-            onChange={() => {}}
+            value={searchAddress}
+            onChange={(e) => setSearchAddress(e?.target?.value)}
           />
         </div>
         <div className="mb-6 mt-6 w-full border border-gray-100" />
