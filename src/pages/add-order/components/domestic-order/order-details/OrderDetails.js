@@ -67,18 +67,18 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
       return product.unit_price > 0;
     });
     if (!formData?.product_info?.length) {
-      toast('Please add product name, unit price and quantity', {type:"error"});
+      toast('Please add product name, unit price and quantity', { type: 'error' });
     }
     if (!isValidProductName) {
-      toast(errors['productName'], {type: 'error'});
+      toast(errors['productName'], { type: 'error' });
       return false;
     }
     if (!isValidProductUnitPrice) {
-      toast(errors['unitPrice'], {type: 'error'});
+      toast(errors['unitPrice'], { type: 'error' });
       return false;
     }
     if (!isValidProductQuantity) {
-      toast(errors['quantity'], {type: 'error'});
+      toast(errors['quantity'], { type: 'error' });
       return false;
     }
     return true;
@@ -92,7 +92,8 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
 
   const handleDeleteProductField = (index) => {
     const allFields = [...productFields];
-    setProductFields(allFields.splice(index, 1));
+    allFields.splice(index, 1);
+    setProductFields(allFields);
   };
 
   const handleSetProductFields = (event, index) => {
@@ -314,7 +315,8 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                     <button
                       disabled={productFields.length === 1}
                       className="mt-4 px-2 py-1 disabled:opacity-50"
-                      onClick={() => handleDeleteProductField(index)}>
+                      onClick={() => handleDeleteProductField(index)}
+                    >
                       <img src={deleteIcon} className="w-4" />
                     </button>
                   </div>
@@ -323,7 +325,8 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                   <FieldAccordion
                     id={'product-details'}
                     label={'+ Add HSN Code, SKU, Tax Rate and Discount'}
-                    showOptional>
+                    showOptional
+                  >
                     <div className="mb-3 w-full pr-[200px] md:flex">
                       <div className="w-full px-2 pb-2 lg:w-3/12">
                         <Field
@@ -387,7 +390,8 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
           <div>
             <button
               className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-xs text-indigo-700'}
-              onClick={handleAddProductField}>
+              onClick={handleAddProductField}
+            >
               + Add Another Product
             </button>
           </div>
@@ -410,7 +414,8 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                 />
                 <label
                   htmlFor="prepaidRadio"
-                  className="inline-flex items-center mb-2 text-xs font-medium text-gray-900">
+                  className="mb-2 inline-flex items-center text-xs font-medium text-gray-900"
+                >
                   Prepaid
                   <Tooltip text="Payment already received from the buyer">
                     <img src={infoIcon} className="ms-2" />
@@ -427,7 +432,10 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                   checked={paymentDetails.type === 'cod'}
                   onChange={handleSetPaymentMode}
                 />
-                <label htmlFor="codRadio" className="inline-flex items-center mb-2 text-xs font-medium text-gray-900">
+                <label
+                  htmlFor="codRadio"
+                  className="mb-2 inline-flex items-center text-xs font-medium text-gray-900"
+                >
                   Cash On Delivery
                   <Tooltip text="COD will be remitted to your account as per your selected payment cycle.">
                     <img src={infoIcon} className="ms-2" />
@@ -439,7 +447,8 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
               <FieldAccordion
                 id={'product-details'}
                 label={'+ Add Shipping Charges, Giftwrap, Transaction fee'}
-                showOptional>
+                showOptional
+              >
                 <div className="mb-3 w-full md:flex">
                   <div className="w-full px-2 pb-2 md:w-4/12 lg:w-3/12 xl:w-2/12">
                     <Field

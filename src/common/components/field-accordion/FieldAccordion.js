@@ -17,14 +17,8 @@ const FieldAccordion = ({ id, children, label, showOptional }) => {
         onClick={() => setIsOpen(!isOpen)}
       >
         <span className="text-blue-700">{label}</span>
-        <img
-          className="accordion-icon shrink-0 text-indigo-700"
-          data-accordion-icon
-          src={downArrow}
-        />
-        {showOptional && (
-          <span className="ml-2 text-[10px] text-gray-400">{'(Optional)'}</span>
-        )}
+        <img className="accordion-icon shrink-0 text-indigo-700" data-accordion-icon src={downArrow} />
+        {showOptional && <span className="ml-2 text-[10px] text-gray-400">{'(Optional)'}</span>}
       </div>
       <div
         id={`${id}-accordion`}

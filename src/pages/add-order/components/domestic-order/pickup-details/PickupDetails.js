@@ -71,12 +71,14 @@ export default function PickupDetails({ handleFormData, formData }) {
                 <div
                   key={index}
                   className="md:w-/12 mb-3 px-2 lg:w-3/12"
-                  onClick={() => setSelectedAddress(address)}>
+                  onClick={() => setSelectedAddress(address)}
+                >
                   <div
                     className={`relative h-[11.5rem] w-full  cursor-pointer rounded-2xl border p-3 
                     ${
                       isSelectedAddress ? 'border-[#afcfff] bg-[#f4f8ff]' : 'border-gray-400 bg-transparent'
-                    }`}>
+                    }`}
+                  >
                     <span className="rounded bg-gray-200 px-2 py-[3px] text-[8px] text-gray-900">
                       {'Primary Address'}
                     </span>
@@ -100,7 +102,8 @@ export default function PickupDetails({ handleFormData, formData }) {
                         onClick={() => {
                           setEditAddressDrawerOpen(true);
                           setSelectedAddress(address);
-                        }}>
+                        }}
+                      >
                         <img src={editIcon} />
                         <div>{'Edit Address'}</div>
                       </button>

@@ -31,7 +31,7 @@ const BuyersInfoFields = ({ heading, alternateText, values, onChange, triggerVal
             }}
           />
           {!isValidPhone && (
-            <p className="text-xs text-red-500 mt-1">Please enter a valid 10-digit number.</p>
+            <p className="mt-1 text-xs text-red-500">Please enter a valid 10-digit number.</p>
           )}
         </div>
 
@@ -48,7 +48,7 @@ const BuyersInfoFields = ({ heading, alternateText, values, onChange, triggerVal
             triggerValidation={triggerValidation}
             onBlur={() => setIsValidFullName(Boolean(values?.[`first_name`]?.length))}
           />
-          {!isValidFullName && <p className="text-xs text-red-500 mt-1">Full Name is required.</p>}
+          {!isValidFullName && <p className="mt-1 text-xs text-red-500">Full Name is required.</p>}
         </div>
         <div className="px-2 pb-2 md:w-4/12 md:pb-0">
           <Field
@@ -63,10 +63,12 @@ const BuyersInfoFields = ({ heading, alternateText, values, onChange, triggerVal
             value={values?.[`email_address`]}
             onChange={onChange}
             onBlur={() => {
-              setIsValidEmail(!values?.[`email_address`] || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values?.[`email_address`]));
+              setIsValidEmail(
+                !values?.[`email_address`] || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values?.[`email_address`]),
+              );
             }}
           />
-          {!isValidEmail && <p className="text-xs text-red-500 mt-1">Please enter a valid email.</p>}
+          {!isValidEmail && <p className="mt-1 text-xs text-red-500">Please enter a valid email.</p>}
         </div>
       </div>
     </div>

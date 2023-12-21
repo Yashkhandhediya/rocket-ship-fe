@@ -1,4 +1,4 @@
-import { home, homeActive } from "../../icons/sidebar-icons";
+import { home, homeActive } from '../../icons/sidebar-icons';
 
 export const sidebarLinks = [
   {

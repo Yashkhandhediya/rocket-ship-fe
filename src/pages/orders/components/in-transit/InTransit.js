@@ -1,8 +1,5 @@
-
 const InTransit = () => {
-  return (
-    <div>InTransit</div>
-  )
-}
+  return <div>InTransit</div>;
+};
 
-export default InTransit
+export default InTransit;

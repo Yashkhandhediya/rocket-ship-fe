@@ -100,7 +100,8 @@ export default function BuyerDetails({ handleFormData, formData, triggerValidati
         <FieldAccordion
           id={'alternate-buyer-details'}
           label={" + Add Alternate Mobile Number, Buyer's Company Name, Buyer's GSTIN "}
-          showOptional>
+          showOptional
+        >
           <div className="md:flex">
             <div className="w-full px-2 pb-2 md:w-4/12 md:pb-0">
               {/* missing field in API */}

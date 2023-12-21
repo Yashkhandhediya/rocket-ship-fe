@@ -5,8 +5,9 @@ const Tooltip = ({ children, text, ...rest }) => {
     <FlowbiteTooltip
       style="light"
       content={text}
-      className="w-[250px] text-xs font-normal inline-flex text-gray-700 shadow-xl"
-      {...rest}>
+      className="inline-flex w-[250px] text-xs font-normal text-gray-700 shadow-xl"
+      {...rest}
+    >
       {children}
     </FlowbiteTooltip>
   );

@@ -39,7 +39,7 @@ const BuyerAdressFields = ({
                 setIsValidAddress(Boolean(values?.complete_address?.length));
               }}
             />
-            {!isValidAddress && <p className="text-xs text-red-500 mt-1">Address is required.</p>}
+            {!isValidAddress && <p className="mt-1 text-xs text-red-500">Address is required.</p>}
           </div>
           <div className="px-2 pb-2 md:w-6/12 md:pb-0">
             <Field
@@ -74,9 +74,7 @@ const BuyerAdressFields = ({
                 setIsValidPincode(/^\d{6}$/.test(values?.[`pincode`]));
               }}
             />
-            {!isValidPinCode && (
-              <p className="text-xs text-red-500 mt-1">Please enter a valid Pincode.</p>
-            )}
+            {!isValidPinCode && <p className="mt-1 text-xs text-red-500">Please enter a valid Pincode.</p>}
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
@@ -92,7 +90,7 @@ const BuyerAdressFields = ({
               onBlur={() => setIsValidCity(values?.city)}
               onChange={onChange}
             />
-            {!isValidCity && <p className="text-xs text-red-500 mt-1">City field is required.</p>}
+            {!isValidCity && <p className="mt-1 text-xs text-red-500">City field is required.</p>}
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
@@ -109,7 +107,7 @@ const BuyerAdressFields = ({
               isDisabled={disabledFields?.state}
               onChange={onChange}
             />
-            {!isValidState && <p className="text-xs text-red-500 mt-1">State field is required.</p>}
+            {!isValidState && <p className="mt-1 text-xs text-red-500">State field is required.</p>}
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
@@ -125,7 +123,7 @@ const BuyerAdressFields = ({
               isDisabled={disabledFields?.country}
               onChange={onChange}
             />
-            {!isValidCountry && <p className="text-xs text-red-500 mt-1">Country field is required.</p>}
+            {!isValidCountry && <p className="mt-1 text-xs text-red-500">Country field is required.</p>}
           </div>
         </div>
       </div>

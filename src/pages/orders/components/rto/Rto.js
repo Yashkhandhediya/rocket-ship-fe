@@ -1,8 +1,5 @@
-
 const Rto = () => {
-  return (
-    <div>Rto</div>
-  )
-}
+  return <div>Rto</div>;
+};
 
-export default Rto
+export default Rto;

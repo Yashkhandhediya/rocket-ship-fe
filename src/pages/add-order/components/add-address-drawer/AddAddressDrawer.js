@@ -106,7 +106,8 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
               onClick={() => {
                 setAddressTag('Home');
                 handleUpdateTag('Home');
-              }}>
+              }}
+            >
               Home
             </button>
             <button
@@ -114,7 +115,8 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
               onClick={() => {
                 setAddressTag('Work');
                 handleUpdateTag('Work');
-              }}>
+              }}
+            >
               Work
             </button>
             <button
@@ -122,7 +124,8 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
               onClick={() => {
                 setAddressTag('WareHouse');
                 handleUpdateTag('WareHouse');
-              }}>
+              }}
+            >
               WareHouse
             </button>
             <button
@@ -130,7 +133,8 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
               onClick={() => {
                 setAddressTag('Other');
                 handleUpdateTag('Other');
-              }}>
+              }}
+            >
               Other
             </button>
             {addressTag === 'Other' && (
@@ -269,7 +273,8 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
           className="flex cursor-pointer items-center text-xs text-indigo-700"
           onClick={() => {
             // open map modal to select location
-          }}>
+          }}
+        >
           <img src={locationPin} className="mr-2 h-3.5 w-3.5" />
           {'Update location on Map'}
           <span className="pl-2 text-[10px] text-gray-400">{'(Optional)'}</span>
@@ -356,12 +361,14 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
       <div className="my-6 flex justify-end gap-5">
         <button
           className="rounded border border-indigo-700 px-4 py-1.5 text-sm text-indigo-700"
-          onClick={handleCloseDrawer}>
+          onClick={handleCloseDrawer}
+        >
           Cancel
         </button>
         <button
           className="rounded bg-indigo-700 px-4 py-1.5 text-sm text-white"
-          onClick={handleSaveAddressInRedux}>
+          onClick={handleSaveAddressInRedux}
+        >
           Verify And Save Address
         </button>
       </div>

@@ -1,8 +1,5 @@
-
 const PickupMenifests = () => {
-  return (
-    <div>PickupMenifests</div>
-  )
-}
+  return <div>PickupMenifests</div>;
+};
 
-export default PickupMenifests
+export default PickupMenifests;

@@ -1,8 +1,5 @@
-
 const ReadyToShip = () => {
-  return (
-    <div>ReadyToShip</div>
-  )
-}
+  return <div>ReadyToShip</div>;
+};
 
-export default ReadyToShip
+export default ReadyToShip;
