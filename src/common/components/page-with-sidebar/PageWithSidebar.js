@@ -6,7 +6,7 @@ const PageWithSidebar = ({children}) => {
       <aside>
         <Sidebar />
       </aside>
-      <main className='h-full overflow-auto ml-[70px]'>{children}</main>
+      <main className='h-full overflow-auto ml-[70px]' style={{ scrollbarGutter: "stable"}}>{children}</main>
     </div>
   );
 };

@@ -70,7 +70,7 @@ const DomesticOrder = () => {
 
   const handleChangeStep = async (changeType) => {
     const isNext = changeType === 'NEXT';
-    if (isNext) {
+    if (!isNext) {
       if (state == 0) {
         if (
           !formData?.buyer_info?.contact_no ||
@@ -142,7 +142,7 @@ const DomesticOrder = () => {
 
   return (
     <div className="mb-8 pt-8 md:flex">
-      <div className="form-step px-6">
+      <div className="form-step pl-2 pr-4 md:min-w-[158px]">
         <Stepper step={state} />
       </div>
       <div className="grow px-6">

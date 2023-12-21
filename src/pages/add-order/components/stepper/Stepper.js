@@ -16,7 +16,7 @@ const Stepper = ({ step }) => {
 
   return (
     <div>
-      <ol>
+      <ol className='flex flex-wrap gap-2 md:block'>
         <li className="mb-4 flex text-center text-sm text-gray-800 font-medium">
           {renderStepperCount(1)}
           Buyers Details
