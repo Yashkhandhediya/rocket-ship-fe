@@ -6,8 +6,7 @@ const Tooltip = ({ children, text, ...rest }) => {
       style="light"
       content={text}
       className="inline-flex w-[250px] text-xs font-normal text-gray-700 shadow-xl"
-      {...rest}
-    >
+      {...rest}>
       {children}
     </FlowbiteTooltip>
   );

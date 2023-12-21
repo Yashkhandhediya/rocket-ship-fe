@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { infoIcon } from '../../icons';
-import { Tooltip } from 'flowbite-react';
-// import { Tooltip } from '../tooltip';
+import { Tooltip } from '../tooltip';
 
 const Tabs = ({ tabs, tabClassNames }) => {
   const [activeTab, setActiveTab] = useState(0);
