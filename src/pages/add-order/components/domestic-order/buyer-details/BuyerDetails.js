@@ -2,6 +2,8 @@ import { BuyersInfoFields } from '../../buyers-info-fields';
 import { BuyerAddressFields } from '../../buyer-address-fields';
 import { Checkbox, Field, FieldAccordion } from '../../../../../common/components';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export default function BuyerDetails({ handleFormData, formData, triggerValidations }) {
   const [isSameBilingAddress, setIsSameBilingAddress] = useState(true);
@@ -68,6 +70,27 @@ export default function BuyerDetails({ handleFormData, formData, triggerValidati
     });
   };
 
+  const fetchPincodeDetails = () => {
+    axios.get(`http://43.252.197.60:8030/pincode/${addressInfo?.pincode}`).then((resp) => {
+      if (resp.status == 200) {
+        setAddressInfo({
+          ...addressInfo,
+          city: resp.data?.Area,
+          state: resp.data?.State,
+          country: resp.data?.Country,
+        });
+      } else {
+        toast(`City/State not found for this pincode : ${addressInfo?.pincode || ''}`, { type: 'error' });
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (addressInfo?.pincode?.length >= 6) {
+      fetchPincodeDetails();
+    }
+  }, [addressInfo?.pincode]);
+
   useEffect(() => {
     handleFormData({
       buyer_info: buyerInfo,
@@ -100,8 +123,7 @@ export default function BuyerDetails({ handleFormData, formData, triggerValidati
         <FieldAccordion
           id={'alternate-buyer-details'}
           label={" + Add Alternate Mobile Number, Buyer's Company Name, Buyer's GSTIN "}
-          showOptional
-        >
+          showOptional>
           <div className="md:flex">
             <div className="w-full px-2 pb-2 md:w-4/12 md:pb-0">
               {/* missing field in API */}

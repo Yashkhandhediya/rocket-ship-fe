@@ -1,6 +1,5 @@
-import axios from 'axios';
 import { Field } from '../../../../common/components';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const BuyerAdressFields = ({
   heading,
@@ -15,30 +14,6 @@ const BuyerAdressFields = ({
   const [isValidCity, setIsValidCity] = useState(true);
   const [isValidState, setIsValidState] = useState(true);
   const [isValidCountry, setIsValidCountry] = useState(true);
-
-  const fetchPincodeDetails = () => {
-    axios.get(`http://43.252.197.60:8030/pincode/${values?.pincode}`).then((resp) => {
-      console.log('-=-=-=pincode-=-=-', resp);
-      if(resp.status == 200) {
-        onChange({
-          target: {
-            id: 'city'
-          }
-        })
-      }
-    //   {
-    //     "Area": "Surat",
-    //     "State": "Gujarat",
-    //     "Country": "India"
-    // }
-    });
-  };
-
-  useEffect(() => {
-    if (values?.pincode?.length >= 6) {
-      fetchPincodeDetails();
-    }
-  }, [values?.pincode]);
 
   return (
     <div>

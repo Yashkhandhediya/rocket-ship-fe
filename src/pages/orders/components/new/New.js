@@ -84,7 +84,6 @@ export const New = () => {
     axios.get('http://43.252.197.60:8030/order/get_filtered_orders').then(async (resp) => {
       if (resp.status === 200) {
         setNewOrders(resp.data);
-        console.log('-=-=-=-Response-=-=-=', resp.data);
       } else {
         toast('There is some error while fetching orders.', { type: 'error' });
       }
