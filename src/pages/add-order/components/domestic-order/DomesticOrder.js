@@ -14,7 +14,7 @@ const DomesticOrder = () => {
     2: false,
     3: false,
   };
-  const [state, setState] = useState(0);
+  const [state, setState] = useState(2);
   const [formData, setFormData] = useState(null);
   const [triggerValidations, setTriggerValidations] = useState(defaultValidations);
   const steps = {
@@ -70,7 +70,7 @@ const DomesticOrder = () => {
 
   const handleChangeStep = async (changeType) => {
     const isNext = changeType === 'NEXT';
-    if (!isNext) {
+    if (isNext) {
       if (state == 0) {
         if (
           !formData?.buyer_info?.contact_no ||
