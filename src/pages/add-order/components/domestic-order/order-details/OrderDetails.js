@@ -1,6 +1,7 @@
 import { Field, FieldAccordion, Tooltip } from '../../../../../common/components';
 import { useEffect, useState } from 'react';
 import { deleteIcon, infoIcon } from '../../../../../common/icons';
+import { toast } from 'react-toastify';
 
 export default function OrderDetails({ handleFormData, formData, triggerValidations }) {
   const defaultProductField = {
@@ -66,18 +67,18 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
       return product.unit_price > 0;
     });
     if (!formData?.product_info?.length) {
-      alert('Please add product name, unit price and quantity');
+      toast('Please add product name, unit price and quantity', {type:"error"});
     }
     if (!isValidProductName) {
-      alert(errors['productName']);
+      toast(errors['productName'], {type: 'error'});
       return false;
     }
     if (!isValidProductUnitPrice) {
-      alert(errors['unitPrice']);
+      toast(errors['unitPrice'], {type: 'error'});
       return false;
     }
     if (!isValidProductQuantity) {
-      alert(errors['quantity']);
+      toast(errors['quantity'], {type: 'error'});
       return false;
     }
     return true;

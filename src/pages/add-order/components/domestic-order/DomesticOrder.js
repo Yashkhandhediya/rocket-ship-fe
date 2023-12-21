@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BuyerDetails from './buyer-details/BuyerDetails';
 import OrderDetails from './order-details/OrderDetails';
 import PackageDetails from './package-details/PackageDetails';
 import PickupDetails from './pickup-details/PickupDetails';
 import axios from 'axios';
 import Stepper from '../stepper/Stepper';
+import { toast } from 'react-toastify';
 
 const DomesticOrder = () => {
   const defaultValidations = {
@@ -81,7 +82,7 @@ const DomesticOrder = () => {
           !formData?.address_info?.country
         ) {
           setTriggerValidations({ ...defaultValidations, 0: true });
-          window.alert('Please enter all required fields');
+          toast('Please enter all required fields', { type: 'error' });
         } else {
           setState((prev) => (isNext ? prev + 1 : prev - 1));
         }
@@ -97,7 +98,7 @@ const DomesticOrder = () => {
         });
         if (!formData?.product_info?.length || !isValidProducts || !formData?.channel || !formData?.date) {
           setTriggerValidations({ ...defaultValidations, 2: true });
-          alert('Please enter all required fields');
+          toast('Please enter all required fields', { type: 'error' });
         } else {
           setState((prev) => (isNext ? prev + 1 : prev - 1));
         }
@@ -115,7 +116,7 @@ const DomesticOrder = () => {
           formData?.height < 0.5
         ) {
           setTriggerValidations({ ...defaultValidations, 3: true });
-          window.alert('Please enter all required fields');
+          toast('Please enter all required fields', { type: 'error' });
         } else {
           setState((prev) => (isNext ? prev : prev - 1));
           let date = formData?.date?.split('-');
@@ -125,12 +126,12 @@ const DomesticOrder = () => {
             date: newDate,
           });
           if (resp.status == 200) {
-            window.alert('Order Placed Successfully');
+            toast('Order Placed Successfully', { type: 'success' });
             setState(0);
             setFormData({});
             setTriggerValidations(defaultValidations);
           } else {
-            window.alert('There is some error please check your network or contact support');
+            toast('There is some error please check your network or contact support', { type: 'error' });
           }
         }
       }
