@@ -9,9 +9,16 @@ import { setAddress } from '../../../../redux/actions/addAddressAction';
 const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
   const [isAddSupplier, setIsAddSupplier] = useState(false);
   const [isAddRTOAddress, setIsAddRTOAddress] = useState(false);
-  const [addressInfo, setAddressInfo] = useState(isEdit ? formValues : {});
+  const [addressInfo, setAddressInfo] = useState(
+    isEdit
+      ? formValues
+      : {
+          country: 'india',
+        },
+  );
   const [addressTag, setAddressTag] = useState(isEdit ? formValues?.tag : 'Home');
   const [contactDisabled, setContactDisabled] = useState(isEdit ? true : false);
+  const [disabledLocationFields, setDisabledLocationFields] = useState(false);
 
   const [isValidFirstName, setIsValidFirstName] = useState(true);
   const [isValidNumber, setIsValidNumber] = useState(true);
@@ -77,6 +84,25 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
     dispatch(setAddress(addressInfo, handleCloseDrawer));
   };
 
+  const onaddressPincodeVerify = (pincodeDetails) => {
+    setAddressInfo({
+      ...addressInfo,
+      pincodeDetails,
+    });
+    setDisabledLocationFields(true);
+  };
+
+  useEffect(() => {
+    if (!isEdit && (addressInfo?.city || addressInfo?.state)) {
+      setAddressInfo({
+        ...addressInfo,
+        city: '',
+        state: '',
+      });
+      setDisabledLocationFields(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (!isEdit) {
       setContactDisabled(false);
@@ -106,8 +132,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
               onClick={() => {
                 setAddressTag('Home');
                 handleUpdateTag('Home');
-              }}
-            >
+              }}>
               Home
             </button>
             <button
@@ -115,8 +140,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
               onClick={() => {
                 setAddressTag('Work');
                 handleUpdateTag('Work');
-              }}
-            >
+              }}>
               Work
             </button>
             <button
@@ -124,8 +148,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
               onClick={() => {
                 setAddressTag('WareHouse');
                 handleUpdateTag('WareHouse');
-              }}
-            >
+              }}>
               WareHouse
             </button>
             <button
@@ -133,8 +156,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
               onClick={() => {
                 setAddressTag('Other');
                 handleUpdateTag('Other');
-              }}
-            >
+              }}>
               Other
             </button>
             {addressTag === 'Other' && (
@@ -168,7 +190,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
               placeHolder={'Name of the person to be contacted'}
               tooltip={'Please include the phone number of the person who will be present at this location.'}
               required={true}
-              isDisabled={formValues}
+              isDisabled={isEdit}
               value={addressInfo?.first_name || ''}
               onChange={handleSetAddressInfo}
               onBlur={() => setIsValidFirstName(addressInfo?.first_name)}
@@ -215,7 +237,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
               labelClassNames={'text-xs'}
               placeHolder={'i.e acd@gmail.com'}
               required={true}
-              isDisabled={formValues}
+              isDisabled={isEdit}
               value={addressInfo?.email_address || ''}
               onChange={handleSetAddressInfo}
               onBlur={() =>
@@ -253,8 +275,9 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
           onChange={handleSetAddressInfo}
           values={addressInfo}
           triggerValidation={triggerValidations}
+          onPincodeVeify={onaddressPincodeVerify}
           disabledFields={
-            formValues
+            isEdit
               ? {
                   complete_address: true,
                   landmark: true,
@@ -263,7 +286,11 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
                   state: true,
                   country: true,
                 }
-              : {}
+              : {
+                  city: disabledLocationFields,
+                  state: disabledLocationFields,
+                  country: disabledLocationFields,
+                }
           }
         />
       </div>
@@ -273,8 +300,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
           className="flex cursor-pointer items-center text-xs text-indigo-700"
           onClick={() => {
             // open map modal to select location
-          }}
-        >
+          }}>
           <img src={locationPin} className="mr-2 h-3.5 w-3.5" />
           {'Update location on Map'}
           <span className="pl-2 text-[10px] text-gray-400">{'(Optional)'}</span>
@@ -361,14 +387,12 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
       <div className="my-6 flex justify-end gap-5">
         <button
           className="rounded border border-indigo-700 px-4 py-1.5 text-sm text-indigo-700"
-          onClick={handleCloseDrawer}
-        >
+          onClick={handleCloseDrawer}>
           Cancel
         </button>
         <button
           className="rounded bg-indigo-700 px-4 py-1.5 text-sm text-white"
-          onClick={handleSaveAddressInRedux}
-        >
+          onClick={handleSaveAddressInRedux}>
           Verify And Save Address
         </button>
       </div>

@@ -1,11 +1,14 @@
+import { toast } from 'react-toastify';
 import { Field } from '../../../../common/components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const BuyerAdressFields = ({
   heading,
   alternateText,
   values,
   onChange,
+  onPincodeVeify,
   triggerValidation,
   disabledFields,
 }) => {
@@ -14,6 +17,35 @@ const BuyerAdressFields = ({
   const [isValidCity, setIsValidCity] = useState(true);
   const [isValidState, setIsValidState] = useState(true);
   const [isValidCountry, setIsValidCountry] = useState(true);
+
+  const fetchPincodeDetails = () => {
+    try {
+      axios
+        .get(`http://43.252.197.60:8030/pincode/${values?.pincode}`)
+        .then((resp) => {
+          if (resp.status == 200 && onPincodeVeify) {
+            onPincodeVeify({
+              city: resp.data?.Area,
+              state: resp.data?.State,
+              country: resp.data?.Country,
+            });
+          } else {
+            toast(`City/State not found for this pincode : ${values?.pincode || ''}`, { type: 'error' });
+          }
+        })
+        .catch(() => {
+          toast(`Unable to get location from this pincode: ${values.pincode}`, { type: 'error' });
+        });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    if (values?.pincode?.length >= 6) {
+      fetchPincodeDetails();
+    }
+  }, [values?.pincode]);
 
   return (
     <div>

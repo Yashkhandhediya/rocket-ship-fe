@@ -2,12 +2,12 @@ import { BuyersInfoFields } from '../../buyers-info-fields';
 import { BuyerAddressFields } from '../../buyer-address-fields';
 import { Checkbox, Field, FieldAccordion } from '../../../../../common/components';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
 
 export default function BuyerDetails({ handleFormData, formData, triggerValidations }) {
   const [isSameBilingAddress, setIsSameBilingAddress] = useState(true);
   const [triggerBuyerValidations, setTriggerBuyerValidations] = useState(false);
+  const [disableAddressLocationField, setDisableAddressLocationField] = useState(false);
+  const [disableBillingLocationField, setDisableBillingLocationField] = useState(false);
 
   const [buyerInfo, setBuyerInfo] = useState({
     contact_no: formData?.buyer_info?.contact_no || '',
@@ -70,26 +70,42 @@ export default function BuyerDetails({ handleFormData, formData, triggerValidati
     });
   };
 
-  const fetchPincodeDetails = () => {
-    axios.get(`http://43.252.197.60:8030/pincode/${addressInfo?.pincode}`).then((resp) => {
-      if (resp.status == 200) {
-        setAddressInfo({
-          ...addressInfo,
-          city: resp.data?.Area,
-          state: resp.data?.State,
-          country: resp.data?.Country,
-        });
-      } else {
-        toast(`City/State not found for this pincode : ${addressInfo?.pincode || ''}`, { type: 'error' });
-      }
+  const onAddressPincodeVerify = (pincodeDetails) => {
+    setAddressInfo({
+      ...addressInfo,
+      ...pincodeDetails,
     });
+    setDisableAddressLocationField(true);
   };
 
+  const onBillingPincodeVerify = (pincodeDetails) => {
+    setBillingInfo({
+      ...billingInfo,
+      ...pincodeDetails,
+    });
+    setDisableBillingLocationField(true);
+  };
   useEffect(() => {
-    if (addressInfo?.pincode?.length >= 6) {
-      fetchPincodeDetails();
+    if (addressInfo?.city || addressInfo?.state) {
+      setAddressInfo({
+        ...addressInfo,
+        city: '',
+        state: '',
+      });
+      setDisableAddressLocationField(false);
     }
-  }, [addressInfo?.pincode]);
+  }, [addressInfo.pincode]);
+
+  useEffect(() => {
+    if (billingInfo?.city || billingInfo?.state) {
+      setBillingInfo({
+        ...billingInfo,
+        city: '',
+        state: '',
+      });
+      setDisableBillingLocationField(false);
+    }
+  }, [billingInfo.pincode]);
 
   useEffect(() => {
     handleFormData({
@@ -172,8 +188,11 @@ export default function BuyerDetails({ handleFormData, formData, triggerValidati
             values={addressInfo}
             triggerValidation={triggerBuyerValidations}
             onChange={handleSetAddressinfo}
+            onPincodeVeify={onAddressPincodeVerify}
             disabledFields={{
               country: true,
+              state: disableAddressLocationField,
+              city: disableAddressLocationField,
             }}
           />
         </div>
@@ -201,6 +220,12 @@ export default function BuyerDetails({ handleFormData, formData, triggerValidati
                 heading={"Buyer's Address"}
                 values={billingInfo}
                 onChange={handleSetBillinginfo}
+                onPincodeVeify={onBillingPincodeVerify}
+                disabledFields={{
+                  country: disableBillingLocationField,
+                  state: disableBillingLocationField,
+                  city: disableBillingLocationField,
+                }}
               />
             </div>
           )}

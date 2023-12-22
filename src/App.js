@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="App h-screen max-h-screen w-screen overflow-hidden">
       <Provider store={store}>
-        <ToastContainer position="top-right" autoClose="3000" hideProgressBar={true} />
+        <ToastContainer position="top-right" theme="colored" autoClose="3000" hideProgressBar={true} />
         <RouterProvider router={routes} />
       </Provider>
     </div>
