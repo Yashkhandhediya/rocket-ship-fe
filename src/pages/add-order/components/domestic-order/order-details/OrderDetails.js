@@ -138,10 +138,10 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
     axios
       .get('http://43.252.197.60:8030/order/get_order_id')
       .then((resp) => {
-        if (resp?.status == 200 && resp?.data?.order_id) {
+        if (resp?.status == 200 && resp?.data?.order_type_id) {
           handleFormData({
             ...formData,
-            order_id: resp?.data?.order_id,
+            order_type_id: resp?.data?.order_type_id,
           })
         }
       })
@@ -153,7 +153,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
 
   
   useEffect(() => {
-    if (!formData?.order_id) {
+    if (!formData?.order_type_id) {
       fetchOrderId();
     }
   }, []);
@@ -189,15 +189,15 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             {/* missing field in API */}
             <Field
-              id={'order_id'}
+              id={'order_type_id'}
               label={'Order ID'}
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
               placeHolder={'Enter Order ID'}
               required={true}
-              value={formData?.order_id || ''}
+              value={formData?.order_type_id || ''}
               triggerValidation={triggerValidations.trigger}
-              onBlur={() => setIsOrderIdValid(formData?.order_id?.length)}
+              onBlur={() => setIsOrderIdValid(formData?.order_type_id?.length)}
               onChange={setDirectKeysInForm}
             />
             {!isOrderIdValid && (

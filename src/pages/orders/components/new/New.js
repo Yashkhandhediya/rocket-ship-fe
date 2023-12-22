@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
+import { Link, generatePath } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 export const New = () => {
@@ -11,13 +12,18 @@ export const New = () => {
       selector: (row) => (
         <div className="flex flex-col gap-1 py-2 text-left">
           <div className="pb-0.5">
-            <span className="border-b-2 border-b-purple-700 text-purple-700">{row?.order_type_id}</span>
+            {/* <Link to={`/track-order/${row?.order_type_id}`} className="border-b-2 border-b-purple-700 text-purple-700">{row?.order_type_id}</Link> */}
+            <Link
+              to={generatePath(`/track-order/:orderId`, { orderId: row?.order_type_id })}
+              className="border-b-2 border-b-purple-700 text-purple-700">
+              {row?.order_type_id}
+            </Link>
           </div>
           <div className="text-xs">{row?.created_date}</div>
           <div>{row.channel}</div>
           <div className="">
             <span className="border-b-2 border-dashed border-b-purple-700 text-purple-700">
-              {'View Products'}{' '}
+              {'View Products'}
             </span>
           </div>
         </div>
