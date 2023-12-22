@@ -11,9 +11,7 @@ export const New = () => {
       selector: (row) => (
         <div className="flex flex-col gap-1 py-2 text-left">
           <div className="pb-0.5">
-            <span className="border-b-2 border-b-purple-700 text-purple-700">
-              {row?.order_type_id}
-            </span>
+            <span className="border-b-2 border-b-purple-700 text-purple-700">{row?.order_type_id}</span>
           </div>
           <div className="text-xs">{row?.created_date}</div>
           <div>{row.channel}</div>
@@ -98,13 +96,18 @@ export const New = () => {
   ];
 
   const fetchNewOrders = () => {
-    axios.get('http://43.252.197.60:8030/order/get_filtered_orders').then(async (resp) => {
-      if (resp.status === 200) {
-        setNewOrders(resp.data);
-      } else {
+    axios
+      .get('http://43.252.197.60:8030/order/get_filtered_orders')
+      .then(async (resp) => {
+        if (resp.status === 200) {
+          setNewOrders(resp?.data || []);
+        } else {
+          toast('There is some error while fetching orders.', { type: 'error' });
+        }
+      })
+      .catch(() => {
         toast('There is some error while fetching orders.', { type: 'error' });
-      }
-    });
+      });
   };
 
   useEffect(() => {

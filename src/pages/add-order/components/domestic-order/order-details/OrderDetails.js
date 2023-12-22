@@ -2,6 +2,7 @@ import { Field, FieldAccordion, Tooltip } from '../../../../../common/components
 import { useEffect, useState } from 'react';
 import { deleteIcon, infoIcon } from '../../../../../common/icons';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 export default function OrderDetails({ handleFormData, formData, triggerValidations }) {
   const defaultProductField = {
@@ -15,6 +16,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
   };
 
   const [productValidation, setProductValidation] = useState(false);
+  const [isOrderIdValid, setIsOrderIdValid] = useState(true);
 
   const [productFields, setProductFields] = useState([
     {
@@ -132,6 +134,30 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
     });
   };
 
+  const fetchOrderId = () => {
+    axios
+      .get('http://43.252.197.60:8030/order/get_order_id')
+      .then((resp) => {
+        if (resp?.status == 200 && resp?.data?.order_id) {
+          handleFormData({
+            ...formData,
+            order_id: resp?.data?.order_id,
+          })
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+        toast('Unable to generate order id', { type: 'error' });
+      });
+  };
+
+  
+  useEffect(() => {
+    if (!formData?.order_id) {
+      fetchOrderId();
+    }
+  }, []);
+
   useEffect(() => {
     if (triggerValidations.trigger) {
       setProductValidation(true);
@@ -163,15 +189,20 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             {/* missing field in API */}
             <Field
-              id={'orderId'}
+              id={'order_id'}
               label={'Order ID'}
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
               placeHolder={'Enter Order ID'}
               required={true}
-              // value={formData?.orderId}
-              // onChange={setDirectKeysInForm}
+              value={formData?.order_id || ''}
+              triggerValidation={triggerValidations.trigger}
+              onBlur={() => setIsOrderIdValid(formData?.order_id?.length)}
+              onChange={setDirectKeysInForm}
             />
+            {!isOrderIdValid && (
+              <p className="mt-1 text-xs text-red-500">Order Id is required.</p>
+            )}
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
@@ -182,7 +213,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
               labelClassNames={'text-xs'}
               placeHolder={'Enter Order Date'}
               required={true}
-              value={formData?.date}
+              value={formData?.date || ''}
               onChange={setDirectKeysInForm}
             />
             {productValidation && !formData?.date && (
@@ -201,7 +232,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                 'can select your connected store (Shopify/WooCommerce etc.) or mark the order as "Custom" (used for adding manual orders)'
               }
               required={true}
-              value={formData?.channel}
+              value={formData?.channel || ''}
               onChange={setDirectKeysInForm}
             />
             {productValidation && !formData?.channel && (
@@ -220,7 +251,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                   labelClassNames={'text-xs'}
                   placeHolder={'Enter Order Tag'}
                   required={true}
-                  value={formData?.orderTag}
+                  value={formData?.orderTag || ''}
                   onChange={setDirectKeysInForm}
                 />
               </div>
@@ -233,7 +264,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                   labelClassNames={'text-xs'}
                   placeHolder={"Reseller's Name"}
                   required={true}
-                  value={formData?.resellerName}
+                  value={formData?.resellerName || ''}
                   onChange={setDirectKeysInForm}
                 />
               </div>
@@ -255,7 +286,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       labelClassNames={'text-xs'}
                       placeHolder={'Enter or search your product name'}
                       required={true}
-                      value={field?.name}
+                      value={field?.name || ''}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
                     {productValidation && !field?.name?.length && (
@@ -272,7 +303,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       placeHolder={'0.00'}
                       leftAddOn="₹"
                       required={true}
-                      value={field?.unit_price}
+                      value={field?.unit_price || 0.00}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
                     {productValidation && (!field?.unit_price || field?.unit_price < 1) && (
@@ -288,7 +319,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       labelClassNames={'text-xs'}
                       placeHolder={'0'}
                       required={true}
-                      value={field?.quantity}
+                      value={field?.quantity || 0}
                       counterField={true}
                       onIncrease={() => handleQuantityCounter(Number(field?.quantity || 0) + 1, index)}
                       onDecrease={() => handleQuantityCounter(Number(field?.quantity || 0) - 1, index)}
@@ -307,7 +338,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       labelClassNames={'text-xs'}
                       placeHolder={'Edit Product Category'}
                       required={true}
-                      value={field?.category}
+                      value={field?.category || ''}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
                   </div>
@@ -315,8 +346,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                     <button
                       disabled={productFields.length === 1}
                       className="mt-4 px-2 py-1 disabled:opacity-50"
-                      onClick={() => handleDeleteProductField(index)}
-                    >
+                      onClick={() => handleDeleteProductField(index)}>
                       <img src={deleteIcon} className="w-4" />
                     </button>
                   </div>
@@ -325,8 +355,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                   <FieldAccordion
                     id={'product-details'}
                     label={'+ Add HSN Code, SKU, Tax Rate and Discount'}
-                    showOptional
-                  >
+                    showOptional>
                     <div className="mb-3 w-full pr-[200px] md:flex">
                       <div className="w-full px-2 pb-2 lg:w-3/12">
                         <Field
@@ -339,7 +368,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                           tooltip={
                             'HSN code is a 6-digit uniform code that classifies 5000+ products and is accepted worldwide.'
                           }
-                          value={field?.hsn_code}
+                          value={field?.hsn_code || ''}
                           onChange={(e) => handleSetProductFields(e, index)}
                         />
                       </div>
@@ -351,7 +380,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                           labelClassNames={'text-xs'}
                           placeHolder={'Enter Product SKU'}
                           tooltip={'Stock Keeping Unit, used for inventory management.'}
-                          value={field?.sku}
+                          value={field?.sku || ''}
                           onChange={(e) => handleSetProductFields(e, index)}
                         />
                       </div>
@@ -364,7 +393,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                           inputClassNames={'text-xs'}
                           labelClassNames={'text-xs'}
                           placeHolder={'0'}
-                          value={field?.tax_rate}
+                          value={field?.tax_rate || ''}
                           onChange={(e) => handleSetProductFields(e, index)}
                         />
                       </div>
@@ -377,7 +406,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                           labelClassNames={'text-xs'}
                           placeHolder={'0.00'}
                           tooltip={'Discount given to the buyer on this product'}
-                          value={field?.discount}
+                          value={field?.discount || ''}
                           onChange={(e) => handleSetProductFields(e, index)}
                         />
                       </div>
@@ -390,8 +419,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
           <div>
             <button
               className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-xs text-indigo-700'}
-              onClick={handleAddProductField}
-            >
+              onClick={handleAddProductField}>
               + Add Another Product
             </button>
           </div>
@@ -414,8 +442,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                 />
                 <label
                   htmlFor="prepaidRadio"
-                  className="mb-2 inline-flex items-center text-xs font-medium text-gray-900"
-                >
+                  className="mb-2 inline-flex items-center text-xs font-medium text-gray-900">
                   Prepaid
                   <Tooltip text="Payment already received from the buyer">
                     <img src={infoIcon} className="ms-2" />
@@ -434,8 +461,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                 />
                 <label
                   htmlFor="codRadio"
-                  className="mb-2 inline-flex items-center text-xs font-medium text-gray-900"
-                >
+                  className="mb-2 inline-flex items-center text-xs font-medium text-gray-900">
                   Cash On Delivery
                   <Tooltip text="COD will be remitted to your account as per your selected payment cycle.">
                     <img src={infoIcon} className="ms-2" />
@@ -447,8 +473,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
               <FieldAccordion
                 id={'product-details'}
                 label={'+ Add Shipping Charges, Giftwrap, Transaction fee'}
-                showOptional
-              >
+                showOptional>
                 <div className="mb-3 w-full md:flex">
                   <div className="w-full px-2 pb-2 md:w-4/12 lg:w-3/12 xl:w-2/12">
                     <Field
@@ -459,7 +484,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       labelClassNames={'text-xs'}
                       placeHolder={'0.00'}
                       leftAddOn="₹"
-                      value={paymentDetails?.shipping_charges}
+                      value={paymentDetails?.shipping_charges || 0.00}
                       onChange={handleSetPaymentDetails}
                     />
                   </div>
@@ -472,7 +497,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       labelClassNames={'text-xs'}
                       placeHolder={'0.00'}
                       leftAddOn="₹"
-                      value={paymentDetails?.gift_wrap}
+                      value={paymentDetails?.gift_wrap || 0.00}
                       onChange={handleSetPaymentDetails}
                     />
                   </div>
@@ -488,7 +513,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                         'In case of online payment, transaction fee applied can be added here and will be shown in your total order amount.'
                       }
                       leftAddOn="₹"
-                      value={paymentDetails?.transaction_fee}
+                      value={paymentDetails?.transaction_fee || 0.00}
                       onChange={handleSetPaymentDetails}
                     />
                   </div>
@@ -504,7 +529,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                         'In case of discounts offered, the discount amount can be added here and will be deduced in your total order amount'
                       }
                       leftAddOn="₹"
-                      value={paymentDetails?.discount}
+                      value={paymentDetails?.discount || 0.00}
                       onChange={handleSetPaymentDetails}
                     />
                   </div>
