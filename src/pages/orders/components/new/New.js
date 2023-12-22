@@ -9,17 +9,26 @@ export const New = () => {
     {
       name: 'Order Details',
       selector: (row) => (
-        <div>
-          <div>{row?.order_type_id}</div>
-          <div>{row?.created_date}</div>
+        <div className="flex flex-col gap-1 py-2 text-left">
+          <div className="pb-0.5">
+            <span className="border-b-2 border-b-purple-700 text-purple-700">
+              {row?.order_type_id}
+            </span>
+          </div>
+          <div className="text-xs">{row?.created_date}</div>
           <div>{row.channel}</div>
+          <div className="">
+            <span className="border-b-2 border-dashed border-b-purple-700 text-purple-700">
+              {'View Products'}{' '}
+            </span>
+          </div>
         </div>
       ),
     },
     {
       name: 'Customer details',
       selector: (row) => (
-        <div>
+        <div className="flex flex-col gap-1 py-2 text-left">
           <div>{row?.buyer_info?.first_name}</div>
           <div>{row?.buyer_info?.email_address}</div>
           <div>{row?.buyer_info?.contact_no}</div>
@@ -29,20 +38,28 @@ export const New = () => {
     {
       name: 'Package Details',
       selector: (row) => (
-        <div>
-          <div>{row?.deadweight}</div>
+        <div className="flex flex-col gap-1 py-2 text-left">
           <div>
-            {row?.height}x{row.width}x{row.length}
+            {'Deat wt.: '}
+            {row?.deadweight}
           </div>
-          <div>{row?.volumatric_weight}</div>
+          <div>
+            {row?.height?.toFixed(2)}x{row.width?.toFixed(2)}x{row.length?.toFixed(2)} {' (cm)'}
+          </div>
+          <div>
+            {'Volumetric wt.: '} {row?.volumatric_weight} {' Kg'}
+          </div>
         </div>
       ),
     },
     {
       name: 'Payment',
       selector: (row) => (
-        <div>
-          <div>{row?.total_amount}</div>
+        <div className="flex flex-col gap-1 py-2 text-left">
+          <div>
+            {'₹ '}
+            {row?.total_amount?.toFixed(2)}
+          </div>
           <div>{row?.payment_type_name}</div>
         </div>
       ),
@@ -51,7 +68,7 @@ export const New = () => {
       name: 'Pickup Address',
       wrap: true,
       selector: (row) => (
-        <div>
+        <div className="flex flex-col gap-1 py-2 text-left">
           <div>{row?.user_info?.address_line1}</div>
           <div>{row?.user_info?.address_line2}</div>
           <div>{row?.user_info?.landmark}</div>
@@ -64,7 +81,7 @@ export const New = () => {
     {
       name: 'Status',
       selector: (row) => (
-        <div>
+        <div className="flex flex-col gap-1 py-2 text-left">
           <div>{row?.status_name}</div>
         </div>
       ),
@@ -74,7 +91,7 @@ export const New = () => {
       button: true,
       cell: (row) => (
         <button id={row.id} className="rounded bg-indigo-700 px-2 py-1.5 text-white">
-          {'Track Order'}
+          {'Ship Now'}
         </button>
       ),
     },
