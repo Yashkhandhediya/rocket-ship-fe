@@ -10,3 +10,4 @@ export { default as stepperTickmark } from './stepper-tickmark.svg';
 export { default as shortShipRocket } from './short-ship-rocket.svg';
 export { default as shipRocket } from './ship-rocket.svg';
 export { default as moreAction } from './more-action.svg';
+export { default as copyToClipboard } from './copy-to-clipboard.svg';

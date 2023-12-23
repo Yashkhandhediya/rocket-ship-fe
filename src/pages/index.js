@@ -3,4 +3,4 @@ export * from './log-in';
 export * from './sign-up';
 export * from './orders';
 export * from './add-order';
-export * from './track-order';
+export * from './order-track-details';
