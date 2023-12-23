@@ -3,31 +3,50 @@ import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { Link, generatePath } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { MoreDropdown, Tooltip } from '../../../../common/components';
+import moment from 'moment';
+import { Badge } from 'flowbite-react';
+import { moreAction } from '../../../../common/icons';
+import { moreActionOptions } from './utils';
 
 export const New = () => {
   const [newOrders, setNewOrders] = useState([]);
   const columns = [
     {
       name: 'Order Details',
-      selector: (row) => (
-        <div className="flex flex-col gap-1 py-2 text-left">
-          <div className="pb-0.5">
-            {/* <Link to={`/track-order/${row?.order_type_id}`} className="border-b-2 border-b-purple-700 text-purple-700">{row?.order_type_id}</Link> */}
-            <Link
-              to={generatePath(`/track-order/:orderId`, { orderId: row?.order_type_id })}
-              className="border-b-2 border-b-purple-700 text-purple-700">
-              {row?.order_type_id}
-            </Link>
+      selector: (row) => {
+        const formattedDate = row?.created_date
+          ? moment(row?.created_date).format('DD MMM YYYY | hh:mm A')
+          : 'No date available.';
+        return (
+          <div className="flex flex-col gap-1 py-2 text-left">
+            <div className="pb-0.5">
+              <Link
+                to={generatePath(`/track-order/:orderId`, { orderId: row?.order_type_id })}
+                className="border-b-2 border-b-purple-700 text-purple-700">
+                {row?.order_type_id}
+              </Link>
+            </div>
+            <div className="text-xs">{formattedDate}</div>
+            <div>{row.channel}</div>
+            <div className="">
+              <Tooltip
+                text={
+                  <>
+                    <div>{row.product_info?.[0]?.name}</div>
+                    <div>SKU: {row.product_info?.[0]?.sku}</div>
+                    <div>QTY: {row.product_info?.[0]?.quantity}</div>
+                  </>
+                }
+                wrapperClassNames={'whitespace-pre-wrap '}>
+                <div className="relative cursor-pointer pb-0.5 text-purple-700 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-purple-700">
+                  {'View Products'}
+                </div>
+              </Tooltip>
+            </div>
           </div>
-          <div className="text-xs">{row?.created_date}</div>
-          <div>{row.channel}</div>
-          <div className="">
-            <span className="border-b-2 border-dashed border-b-purple-700 text-purple-700">
-              {'View Products'}
-            </span>
-          </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       name: 'Customer details',
@@ -64,7 +83,13 @@ export const New = () => {
             {'₹ '}
             {row?.total_amount?.toFixed(2)}
           </div>
-          <div>{row?.payment_type_name}</div>
+          <div>
+            <Badge
+              color="success"
+              className="h-fit w-fit rounded-sm p-1 py-0.5 text-[10px] font-normal capitalize">
+              {row?.payment_type_name}
+            </Badge>
+          </div>
         </div>
       ),
     },
@@ -73,11 +98,22 @@ export const New = () => {
       wrap: true,
       selector: (row) => (
         <div className="flex flex-col gap-1 py-2 text-left">
-          <div>{row?.user_info?.address_line1}</div>
-          <div>{row?.user_info?.address_line2}</div>
-          <div>{row?.user_info?.landmark}</div>
           <div>
-            {row?.user_info?.city}-{row?.user_info?.pincode}
+            <Tooltip
+              text={
+                <>
+                  <div>{`${row?.user_info?.address_line1 ?? ''} ${row?.user_info?.address_line2 ?? ''}`}</div>
+                  <div>{row?.user_info?.city ?? ''}</div>
+                  <div>
+                    {row?.user_info?.state ?? ''}-{row?.user_info?.pincode}
+                  </div>
+                  <div>{row?.user_info?.contact_no}</div>
+                </>
+              }>
+              <div className="relative cursor-pointer whitespace-pre-wrap pb-0.5 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-[#555]">
+                {row?.user_info?.tag}
+              </div>
+            </Tooltip>
           </div>
         </div>
       ),
@@ -86,17 +122,26 @@ export const New = () => {
       name: 'Status',
       selector: (row) => (
         <div className="flex flex-col gap-1 py-2 text-left">
-          <div>{row?.status_name}</div>
+          <Badge color="success" className="text-[10px] uppercase">
+            {row?.status_name}
+          </Badge>
         </div>
       ),
     },
     {
       name: 'Action',
-      button: true,
-      cell: (row) => (
-        <button id={row.id} className="rounded bg-indigo-700 px-2 py-1.5 text-white">
-          {'Ship Now'}
-        </button>
+      selector: (row) => (
+        <div className="flex gap-2 py-2 text-left">
+          <button id={row.id} className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white">
+            {'Ship Now'}
+          </button>
+          <div className="min-h-[32px] min-w-[32px]">
+            <MoreDropdown
+              renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
+              options={moreActionOptions()}
+            />
+          </div>
+        </div>
       ),
     },
   ];
@@ -122,7 +167,16 @@ export const New = () => {
 
   return (
     <div className="mt-5">
-      <DataTable columns={columns} data={newOrders} />
+      <DataTable
+        columns={columns}
+        data={newOrders}
+        sortActive={false}
+        customStyles={{
+          responsiveWrapper: {
+            style: { overflow: 'visible' },
+          },
+        }}
+      />
     </div>
   );
 };
