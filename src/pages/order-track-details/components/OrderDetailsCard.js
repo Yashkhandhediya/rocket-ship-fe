@@ -2,6 +2,7 @@ import { Badge } from 'flowbite-react';
 import DetailsLabelValue from './DetailsLabelValue';
 import DetailsCard from './DetailsCard';
 import { OrderDetailsIcon } from '../../../common/icons/order-details';
+import { Tooltip } from '../../../common/components';
 
 const OrderDetailsCard = ({ orderDetails }) => {
   return (
@@ -17,10 +18,21 @@ const OrderDetailsCard = ({ orderDetails }) => {
         <DetailsLabelValue
           label="Pickup Address"
           value={
-            <p className="relative mb-3 w-fit cursor-pointer text-xs font-medium before:absolute before:bottom-[-2px] before:w-full before:border before:border-dashed before:border-[#555]">
-              {/* change to dynamic value */}
-              {orderDetails?.tag || 'Primary'}
-            </p>
+            <Tooltip
+              text={
+                <>
+                  <div>{orderDetails?.tag}</div>
+                  <div>{orderDetails?.addressLine1}</div>
+                  <div>{orderDetails?.city}</div>
+                  <div>{`${orderDetails?.state || ''}-${orderDetails?.state || ''}`}</div>
+                  <div>{orderDetails?.contact_no}</div>
+                </>
+              }>
+              <p className="relative mb-3 w-fit cursor-pointer text-xs font-medium before:absolute before:bottom-[-2px] before:w-full before:border before:border-dashed before:border-[#555]">
+                {/* change to dynamic value */}
+                {orderDetails?.tag || 'Primary'}
+              </p>
+            </Tooltip>
           }
         />
         <DetailsLabelValue
