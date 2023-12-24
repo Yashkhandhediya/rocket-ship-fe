@@ -65,7 +65,7 @@ const OrderTrackDetails = () => {
                 />
               </div>
             </div>
-            <div className="flex w-full">
+            <div className="md:flex w-full">
               <div className="px-2 md:w-8/12">
                 <OrderDetailsCard orderDetails={{}} />
                 <PackageDetailsCard packageDetails={{}} />

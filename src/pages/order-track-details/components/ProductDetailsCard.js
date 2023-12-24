@@ -4,7 +4,7 @@ import DetailsCard from './DetailsCard';
 const ProductDetailsCard = ({ productDetails = [] }) => {
   return (
     <DetailsCard heading={'Product Details'} headingIcon={ProductDetailsIcon} headingClassNames="mb-[1px]">
-      <div className="overflow-x-auto">
+      <div className="w-[600px] pr-3">
         <div className="color-[#191919] rounded-lg bg-[#fafafa] p-3 leading-4 shadow-[0_1px_1px_rgba(0,0,0,0.102)]">
           <div className="flex text-xs font-medium">
             <div className="w-full px-2">{'Name'}</div>
