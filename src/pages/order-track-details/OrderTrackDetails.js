@@ -9,6 +9,7 @@ import PackageDetailsCard from './components/PackageDetailsCard';
 import CustomerDetailsCard from './components/CustomerDetailsCard';
 import ProductDetailsCard from './components/ProductDetailsCard';
 import AppChangesCard from './components/AppChangesCard';
+import OrderTrackRightContainer from './components/OrderTrackRightContainer';
 
 const OrderTrackDetails = () => {
   const { orderId } = useParams();
@@ -40,7 +41,7 @@ const OrderTrackDetails = () => {
                 />
               </div>
             </div>
-            <div className="w-full">
+            <div className="w-full flex">
               <div className="px-2 md:w-8/12">
                 <OrderDetailsCard orderDetails={{}} />
                 <PackageDetailsCard packageDetails={{}} />
@@ -49,7 +50,9 @@ const OrderTrackDetails = () => {
                 <AppChangesCard />
 
               </div>
-              <div className="px-2 md:w-4/12"></div>
+              <div className="px-2 md:w-4/12">
+                <OrderTrackRightContainer />
+              </div>
             </div>
           </div>
         </div>
