@@ -7,16 +7,15 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
   const volumatricWeight =
     useMemo(
       () =>
-        (parseInt(formData?.length || 0) * parseInt(formData?.width || 0) * parseInt(formData?.height || 0)) /
-        5000,
+        (Number(formData?.length || 0) * Number(formData?.width || 0) * Number(formData?.height || 0)) / 5000,
       [formData],
     ) || 0;
 
   const applicableWeight = useMemo(
     () =>
-      parseInt(volumatricWeight) > parseInt(formData?.dead_weight || 0)
-        ? parseInt(volumatricWeight)
-        : parseInt(formData?.dead_weight || 0),
+      Number(volumatricWeight) > Number(formData?.dead_weight || 0)
+        ? Number(volumatricWeight)
+        : Number(formData?.dead_weight || 0),
     [volumatricWeight, formData?.dead_weight],
   );
 
@@ -59,7 +58,7 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
               note={'(Max. 3 digits after decimal place) \nNote: The minimum chargeable weight is 0.50 Kg'}
               required={true}
               rightAddOn="Kg"
-              value={formData?.dead_weight}
+              value={formData?.dead_weight || ''}
               onChange={setDirectKeysInForm}
             />
             {validationTriggered && !formData?.dead_weight && (
@@ -93,7 +92,7 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
                       placeHolder={'0.00'}
                       required={true}
                       rightAddOn="CM"
-                      value={formData?.length}
+                      value={formData?.length || ''}
                       onChange={setDirectKeysInForm}
                     />
                     {validationTriggered && !formData?.length && (
@@ -111,7 +110,7 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
                       placeHolder={'0.00'}
                       required={true}
                       rightAddOn="CM"
-                      value={formData?.width}
+                      value={formData?.width || ''}
                       onChange={setDirectKeysInForm}
                     />
                     {validationTriggered && !formData?.width && (
@@ -129,7 +128,7 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
                       placeHolder={'0.00'}
                       required={true}
                       rightAddOn="CM"
-                      value={formData?.height}
+                      value={formData?.height || ''}
                       onChange={setDirectKeysInForm}
                     />
                     {validationTriggered && !formData?.height && (

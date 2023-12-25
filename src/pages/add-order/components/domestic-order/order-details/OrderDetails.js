@@ -35,7 +35,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
     shipping_charges: formData?.shipping_charges,
     gift_wrap: formData?.gift_wrap,
     transaction_fee: formData?.transaction_fee,
-    discount: formData?.discount || 0,
+    discount: formData?.discount || '',
   });
 
   const subProductTotal =
@@ -100,6 +100,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
 
   const handleSetProductFields = (event, index) => {
     const { id, value } = event.target;
+    
     const allFields = [...productFields];
     allFields[index][id] = value;
     setProductFields(allFields);
@@ -115,7 +116,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
     const { id, value } = event.target;
     setPaymentDetails({
       ...paymentDetails,
-      [id]: value,
+      [id]: id === 'type' ? value : Number(value),
     });
   };
   const handleSetPaymentMode = (event) => {
@@ -304,7 +305,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       placeHolder={'0.00'}
                       leftAddOn="₹"
                       required={true}
-                      value={field?.unit_price || 0.00}
+                      value={field?.unit_price || ''}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
                     {productValidation && (!field?.unit_price || field?.unit_price < 1) && (
@@ -320,7 +321,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       labelClassNames={'text-xs'}
                       placeHolder={'0'}
                       required={true}
-                      value={field?.quantity || 0}
+                      value={field?.quantity || ''}
                       counterField={true}
                       onIncrease={() => handleQuantityCounter(Number(field?.quantity || 0) + 1, index)}
                       onDecrease={() => handleQuantityCounter(Number(field?.quantity || 0) - 1, index)}
@@ -485,7 +486,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       labelClassNames={'text-xs'}
                       placeHolder={'0.00'}
                       leftAddOn="₹"
-                      value={paymentDetails?.shipping_charges || 0.00}
+                      value={paymentDetails?.shipping_charges || ''}
                       onChange={handleSetPaymentDetails}
                     />
                   </div>
@@ -498,7 +499,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       labelClassNames={'text-xs'}
                       placeHolder={'0.00'}
                       leftAddOn="₹"
-                      value={paymentDetails?.gift_wrap || 0.00}
+                      value={paymentDetails?.gift_wrap || ''}
                       onChange={handleSetPaymentDetails}
                     />
                   </div>
@@ -514,7 +515,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                         'In case of online payment, transaction fee applied can be added here and will be shown in your total order amount.'
                       }
                       leftAddOn="₹"
-                      value={paymentDetails?.transaction_fee || 0.00}
+                      value={paymentDetails?.transaction_fee || ''}
                       onChange={handleSetPaymentDetails}
                     />
                   </div>
@@ -530,7 +531,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                         'In case of discounts offered, the discount amount can be added here and will be deduced in your total order amount'
                       }
                       leftAddOn="₹"
-                      value={paymentDetails?.discount || 0.00}
+                      value={paymentDetails?.discount || ''}
                       onChange={handleSetPaymentDetails}
                     />
                   </div>
