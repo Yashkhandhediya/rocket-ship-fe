@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { infoIcon } from '../../icons';
-import { Tooltip } from '../tooltip';
+import { CustomTooltip } from '../custom-tooltip';
 
 const Tabs = ({ tabs, tabClassNames, panelClassNames }) => {
   const [activeTab, setActiveTab] = useState(0);
@@ -22,9 +22,9 @@ const Tabs = ({ tabs, tabClassNames, panelClassNames }) => {
               onClick={() => setActiveTab(i)}>
               {tab.title}
               {tab?.tooltip && (
-                <Tooltip text={tab.tooltip}>
+                <CustomTooltip text={tab.tooltip}>
                   <img className="ms-2" src={infoIcon} />
-                </Tooltip>
+                </CustomTooltip>
               )}
             </button>
             // </li>

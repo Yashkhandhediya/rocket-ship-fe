@@ -1,4 +1,4 @@
-import { Field, FieldAccordion, Tooltip } from '../../../../../common/components';
+import { Field, FieldAccordion, CustomTooltip } from '../../../../../common/components';
 import { useEffect, useState } from 'react';
 import { deleteIcon, infoIcon } from '../../../../../common/icons';
 import { toast } from 'react-toastify';
@@ -446,9 +446,9 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                   htmlFor="prepaidRadio"
                   className="mb-2 inline-flex items-center text-xs font-medium text-gray-900">
                   Prepaid
-                  <Tooltip text="Payment already received from the buyer">
+                  <CustomTooltip text="Payment already received from the buyer">
                     <img src={infoIcon} className="ms-2" />
-                  </Tooltip>
+                  </CustomTooltip>
                 </label>
               </div>
               <div className="lg:w-2/12">
@@ -465,9 +465,9 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                   htmlFor="codRadio"
                   className="mb-2 inline-flex items-center text-xs font-medium text-gray-900">
                   Cash On Delivery
-                  <Tooltip text="COD will be remitted to your account as per your selected payment cycle.">
+                  <CustomTooltip text="COD will be remitted to your account as per your selected payment cycle.">
                     <img src={infoIcon} className="ms-2" />
-                  </Tooltip>
+                  </CustomTooltip>
                 </label>
               </div>
             </div>

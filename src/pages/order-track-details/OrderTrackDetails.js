@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { blackLeftArrow, copyToClipboard, moreAction } from '../../common/icons';
 import { Badge } from 'flowbite-react';
-import { MoreDropdown, Tooltip } from '../../common/components';
+import { MoreDropdown, CustomTooltip } from '../../common/components';
 import { moreActionOptions } from '../orders/components/new/utils';
 import OrderDetailsCard from './components/OrderDetailsCard';
 import PackageDetailsCard from './components/PackageDetailsCard';
@@ -58,7 +58,7 @@ const OrderTrackDetails = () => {
                 </Link>
                 <div className="flex items-center text-lg font-medium">
                   #{orderId}
-                  <Tooltip
+                  <CustomTooltip
                     style="dark"
                     text={copyTooltip}
                     arrow={false}
@@ -69,7 +69,7 @@ const OrderTrackDetails = () => {
                       className="ml-2 h-3 w-3 cursor-pointer"
                       onClick={copyOrderId}
                     />
-                  </Tooltip>
+                  </CustomTooltip>
                 </div>
                 <Badge
                   color="success"

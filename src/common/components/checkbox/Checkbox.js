@@ -1,5 +1,5 @@
 import { infoIcon } from '../../icons';
-import { Tooltip } from '../tooltip';
+import { CustomTooltip } from '../custom-tooltip';
 
 const Checkbox = ({ id, label, checked, tooltip, onChange }) => {
   return (
@@ -28,9 +28,9 @@ const Checkbox = ({ id, label, checked, tooltip, onChange }) => {
         </span>
         {label ?? ''}
         {tooltip && (
-          <Tooltip text={tooltip}>
+          <CustomTooltip text={tooltip}>
             <img src={infoIcon} className="ms-2" />
-          </Tooltip>
+          </CustomTooltip>
         )}
       </label>
     </div>

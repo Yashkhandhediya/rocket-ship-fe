@@ -3,11 +3,14 @@ import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { Link, generatePath } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { MoreDropdown, Tooltip } from '../../../../common/components';
+import { MoreDropdown, CustomTooltip } from '../../../../common/components';
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
 import { moreAction } from '../../../../common/icons';
 import { moreActionOptions } from './utils';
+import DrawerWithSidebar from '../../../../common/components/drawer-with-sidebar/DrawerWithSidebar';
+import { ShipmentDrawerOrderDetails } from '../shipment-drawer-order-details';
+import ShipmentDrawerSelectCourier from '../shipment-drawer-select-courier/ShipmentDrawerSelectCourier';
 
 export const New = () => {
   const [newOrders, setNewOrders] = useState([]);
@@ -30,7 +33,7 @@ export const New = () => {
             <div className="text-xs">{formattedDate}</div>
             <div>{row.channel}</div>
             <div className="">
-              <Tooltip
+              <CustomTooltip
                 text={row.product_info?.map((product) => {
                   return (
                     <div key={product?.id}>
@@ -44,7 +47,7 @@ export const New = () => {
                 <div className="relative cursor-pointer pb-0.5 text-purple-700 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-purple-700">
                   {'View Products'}
                 </div>
-              </Tooltip>
+              </CustomTooltip>
             </div>
           </div>
         );
@@ -101,7 +104,7 @@ export const New = () => {
       selector: (row) => (
         <div className="flex flex-col gap-1 py-2 text-left">
           <div>
-            <Tooltip
+            <CustomTooltip
               text={
                 <>
                   <div>{`${row?.user_info?.address_line1 ?? ''} ${row?.user_info?.address_line2 ?? ''}`}</div>
@@ -115,7 +118,7 @@ export const New = () => {
               <div className="relative cursor-pointer whitespace-pre-wrap pb-0.5 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-[#555]">
                 {row?.user_info?.tag}
               </div>
-            </Tooltip>
+            </CustomTooltip>
           </div>
         </div>
       ),
@@ -178,6 +181,14 @@ export const New = () => {
             style: { overflow: 'visible' },
           },
         }}
+      />
+      <DrawerWithSidebar
+        isOpen={false}
+        onClose={() => {}}
+        leftHeading={'Order Details'}
+        rightHeading={'Select Courier Partner'}
+        leftComponent={<ShipmentDrawerOrderDetails />}
+        rightComponent={<ShipmentDrawerSelectCourier />}
       />
     </div>
   );

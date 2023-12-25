@@ -1,6 +1,6 @@
 import { Tooltip as FlowbiteTooltip } from 'flowbite-react';
 
-const Tooltip = ({ children, text, wrapperClassNames, width, ...rest }) => {
+const CustomTooltip = ({ children, text, wrapperClassNames, width, ...rest }) => {
   return (
     <FlowbiteTooltip
       style="light"
@@ -14,4 +14,4 @@ const Tooltip = ({ children, text, wrapperClassNames, width, ...rest }) => {
   );
 };
 
-export default Tooltip;
+export default CustomTooltip;

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Field, Tooltip } from '../../../../../common/components';
+import { Field, CustomTooltip } from '../../../../../common/components';
 import { infoIcon } from '../../../../../common/icons';
 
 export default function PackageDetails({ handleFormData, formData, triggerValidations }) {
@@ -73,9 +73,9 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
         <div>
           <div className="mb-3 inline-flex items-center text-sm font-medium">
             {'Volumetric Weight'}
-            <Tooltip text="It is weight calculated based on the dimensions (L, B, H) entered for the shipment. This weight is calculated using the formula(LxBxH)/5000 (for most of our courier partners) which measures the amount of space that the shipment will take in the carrier.">
+            <CustomTooltip text="It is weight calculated based on the dimensions (L, B, H) entered for the shipment. This weight is calculated using the formula(LxBxH)/5000 (for most of our courier partners) which measures the amount of space that the shipment will take in the carrier.">
               <img src={infoIcon} className="ms-2" />
-            </Tooltip>
+            </CustomTooltip>
           </div>
           <div>
             <div className="w-full md:flex">

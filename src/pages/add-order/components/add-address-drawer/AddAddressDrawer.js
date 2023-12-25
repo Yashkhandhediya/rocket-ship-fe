@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Checkbox, Field, FieldAccordion, Tooltip } from '../../../../common/components';
+import { Checkbox, Field, FieldAccordion, CustomTooltip } from '../../../../common/components';
 import { RightDrawer } from '../../../../common/components/right-drawer';
 import { editIcon, infoIcon, locationPin } from '../../../../common/icons';
 import { BuyerAddressFields } from '../buyer-address-fields';
@@ -158,9 +158,9 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
       <div className="md:flex">
         <div className="mb-2 inline-flex items-center px-2 text-sm font-medium lg:w-2/12">
           {'Tag this address as '}
-          <Tooltip text="Give your pickup address a short and easy-to-remember name.">
+          <CustomTooltip text="Give your pickup address a short and easy-to-remember name.">
             <img src={infoIcon} className="ms-1" />
-          </Tooltip>
+          </CustomTooltip>
         </div>
         <div className="mb-2 px-2 text-sm font-medium lg:w-9/12">
           <div className="flex w-full">
@@ -390,9 +390,9 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
             <div className="lg:w-4/12 ">
               <div className="mb-2 inline-flex items-center text-xs font-medium">
                 {'Add RTO Address'}
-                <Tooltip text="Your package will be returned to the address selected by you, incase it needs to be delivered back to the origin.">
+                <CustomTooltip text="Your package will be returned to the address selected by you, incase it needs to be delivered back to the origin.">
                   <img src={infoIcon} className="ms-2" />
-                </Tooltip>
+                </CustomTooltip>
               </div>
               <Checkbox
                 id={'addRtoAddress'}

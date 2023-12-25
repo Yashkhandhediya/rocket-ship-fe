@@ -2,7 +2,7 @@ import { Badge } from 'flowbite-react';
 import DetailsLabelValue from './DetailsLabelValue';
 import DetailsCard from './DetailsCard';
 import { OrderDetailsIcon } from '../../../common/icons/order-details';
-import { Tooltip } from '../../../common/components';
+import { CustomTooltip } from '../../../common/components';
 import moment from 'moment';
 
 const OrderDetailsCard = ({ orderDetails }) => {
@@ -21,7 +21,7 @@ const OrderDetailsCard = ({ orderDetails }) => {
         <DetailsLabelValue
           label="Pickup Address"
           value={
-            <Tooltip
+            <CustomTooltip
               text={
                 <>
                   {orderDetails?.user_info?.address_type && (
@@ -40,7 +40,7 @@ const OrderDetailsCard = ({ orderDetails }) => {
               <p className="relative mb-3 w-fit cursor-pointer text-xs font-medium before:absolute before:bottom-[-2px] before:w-full before:border before:border-dashed before:border-[#555]">
                 {orderDetails?.user_info?.address_type}
               </p>
-            </Tooltip>
+            </CustomTooltip>
           }
         />
         <DetailsLabelValue

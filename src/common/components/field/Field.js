@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { infoIcon } from '../../icons';
-import { Tooltip } from '../tooltip';
+import { CustomTooltip } from '../custom-tooltip';
 
 const Field = ({
   name,
@@ -44,9 +44,9 @@ const Field = ({
           {showOptional && <span className="pl-1 text-[10px] text-gray-400">{'(Optional)'}</span>}
           {Boolean(lableAddOn) && lableAddOn}
           {tooltip && (
-            <Tooltip text={tooltip}>
+            <CustomTooltip text={tooltip}>
               <img src={infoIcon} className="ms-2" />
-            </Tooltip>
+            </CustomTooltip>
           )}
         </label>
       )}
