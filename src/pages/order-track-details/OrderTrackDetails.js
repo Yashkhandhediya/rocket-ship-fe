@@ -10,11 +10,13 @@ import CustomerDetailsCard from './components/CustomerDetailsCard';
 import ProductDetailsCard from './components/ProductDetailsCard';
 import AppChangesCard from './components/AppChangesCard';
 import OrderTrackRightContainer from './components/OrderTrackRightContainer';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const OrderTrackDetails = () => {
   const { orderId } = useParams();
   const [copyTooltip, setCopyTooltip] = useState('Click to Copy');
+  const [orderDetails, setOrderDetails] = useState(null);
 
   const copyOrderId = () => {
     navigator.clipboard.writeText(orderId);
@@ -23,6 +25,26 @@ const OrderTrackDetails = () => {
       setCopyTooltip('Click to Copy');
     }, 1000);
   };
+
+  const fetchOrderDetails = () => {
+    axios
+      .get('http://43.252.197.60:8030/order/get_order_detail', {
+        params: {
+          id: orderId,
+        },
+      })
+      .then((resp) => {
+        if (resp.status === 200) {
+          setOrderDetails(resp?.data || {});
+        }
+      });
+  };
+
+  useEffect(() => {
+    if (!orderDetails) {
+      fetchOrderDetails();
+    }
+  }, [orderId]);
 
   return (
     <PageWithSidebar>
@@ -65,12 +87,12 @@ const OrderTrackDetails = () => {
                 />
               </div>
             </div>
-            <div className="md:flex w-full">
+            <div className="w-full md:flex">
               <div className="px-2 md:w-8/12">
-                <OrderDetailsCard orderDetails={{}} />
-                <PackageDetailsCard packageDetails={{}} />
-                <CustomerDetailsCard customerDetails={{}} />
-                <ProductDetailsCard productDetails={[1, 2]} />
+                <OrderDetailsCard orderDetails={orderDetails} />
+                <PackageDetailsCard packageDetails={orderDetails} />
+                <CustomerDetailsCard customerDetails={orderDetails?.buyer_info || {}} />
+                <ProductDetailsCard productDetails={orderDetails} />
                 <AppChangesCard />
               </div>
               <div className="px-2 md:w-4/12">

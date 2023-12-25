@@ -7,17 +7,26 @@ const CustomerDetailsCard = ({ customerDetails }) => {
     <DetailsCard heading={'Customer Details'} headingIcon={CustomerDetailsIcon}>
       <div className="flex w-full flex-wrap">
         {/* change to dynamic value */}
-        <DetailsLabelValue label="Name" value={customerDetails?.name || 'N/A'} />
+        <DetailsLabelValue label="Name" value={customerDetails?.first_name || 'N/A'} />
         <DetailsLabelValue label="Contact No." value={customerDetails?.contact_no || 'N/A'} />
-        <DetailsLabelValue label="Email" value={customerDetails?.email || 'N/A'} />
+        <DetailsLabelValue label="Email" value={customerDetails?.email_address || 'N/A'} />
         <DetailsLabelValue
           label="Address"
           value={
             <>
               <div>
-                <div>{`${customerDetails.address_line1 || ''}, ${customerDetails.address_line2 || ''}`}</div>
-                <div>{`${customerDetails.city || ''}, ${customerDetails.state || ''}`}</div>
-                <div>{`${customerDetails?.pincode || ''}, ${customerDetails?.country || ''}`}</div>
+                {customerDetails?.complete_address && (
+                  <div className="text-wrap">{`${customerDetails?.complete_address || ''}`}</div>
+                )}
+                {customerDetails?.landmark && (
+                  <div className="text-wrap">{`${customerDetails?.landmark || ''}`}</div>
+                )}
+                <div className="text-wrap">{`${customerDetails?.city || ''}, ${
+                  customerDetails.state || ''
+                }`}</div>
+                <div className="text-wrap">{`${customerDetails?.pincode || ''}, ${
+                  customerDetails?.country || ''
+                }`}</div>
               </div>
             </>
           }

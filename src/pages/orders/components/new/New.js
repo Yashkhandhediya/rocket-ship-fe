@@ -22,22 +22,24 @@ export const New = () => {
           <div className="flex flex-col gap-1 py-2 text-left">
             <div className="pb-0.5">
               <Link
-                to={generatePath(`/track-order/:orderId`, { orderId: row?.order_type_id })}
+                to={generatePath(`/track-order/:orderId`, { orderId: row?.id })}
                 className="border-b-2 border-b-purple-700 text-purple-700">
-                {row?.order_type_id}
+                {row?.id}
               </Link>
             </div>
             <div className="text-xs">{formattedDate}</div>
             <div>{row.channel}</div>
             <div className="">
               <Tooltip
-                text={
-                  <>
-                    <div>{row.product_info?.[0]?.name}</div>
-                    <div>SKU: {row.product_info?.[0]?.sku}</div>
-                    <div>QTY: {row.product_info?.[0]?.quantity}</div>
-                  </>
-                }
+                text={row.product_info?.map((product) => {
+                  return (
+                    <div key={product?.id}>
+                      <div>{product?.name}</div>
+                      <div>SKU: {product?.sku}</div>
+                      <div>QTY: {product?.quantity}</div>
+                    </div>
+                  );
+                })}
                 wrapperClassNames={'whitespace-pre-wrap '}>
                 <div className="relative cursor-pointer pb-0.5 text-purple-700 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-purple-700">
                   {'View Products'}
@@ -62,14 +64,14 @@ export const New = () => {
       name: 'Package Details',
       selector: (row) => (
         <div className="flex flex-col gap-1 py-2 text-left">
-          <div>
+          <div className="text-wrap">
             {'Deat wt.: '}
             {row?.deadweight}
           </div>
-          <div>
+          <div className="text-wrap">
             {row?.height?.toFixed(2)}x{row.width?.toFixed(2)}x{row.length?.toFixed(2)} {' (cm)'}
           </div>
-          <div>
+          <div className="text-wrap">
             {'Volumetric wt.: '} {row?.volumatric_weight} {' Kg'}
           </div>
         </div>
