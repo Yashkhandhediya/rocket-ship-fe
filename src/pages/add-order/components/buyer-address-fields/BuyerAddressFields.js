@@ -37,6 +37,7 @@ const BuyerAdressFields = ({
           toast(`Unable to get location from this pincode: ${values.pincode}`, { type: 'error' });
         });
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error(e);
     }
   };

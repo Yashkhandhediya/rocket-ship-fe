@@ -4,7 +4,7 @@ import { deleteIcon, infoIcon } from '../../../../../common/icons';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
-export default function OrderDetails({ handleFormData, formData, triggerValidations }) {
+export default function OrderDetails({ handleFormData, formData, triggerValidations, }) {
   const defaultProductField = {
     name: '',
     unit_price: '',
@@ -138,14 +138,15 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
     axios
       .get('http://43.252.197.60:8030/order/get_order_id')
       .then((resp) => {
-        if (resp?.status == 200 && resp?.data?.order_type_id) {
+        if (resp?.status == 200 && resp?.data?.order_id) {
           handleFormData({
             ...formData,
-            order_type_id: resp?.data?.order_type_id,
+            order_id: resp?.data?.order_id,
           })
         }
       })
       .catch((e) => {
+        // eslint-disable-next-line no-console
         console.error(e);
         toast('Unable to generate order id', { type: 'error' });
       });
@@ -153,7 +154,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
 
   
   useEffect(() => {
-    if (!formData?.order_type_id) {
+    if (!formData?.order_id) {
       fetchOrderId();
     }
   }, []);
@@ -189,15 +190,15 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             {/* missing field in API */}
             <Field
-              id={'order_type_id'}
+              id={'order_id'}
               label={'Order ID'}
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
               placeHolder={'Enter Order ID'}
               required={true}
-              value={formData?.order_type_id || ''}
+              value={formData?.order_id || ''}
               triggerValidation={triggerValidations.trigger}
-              onBlur={() => setIsOrderIdValid(formData?.order_type_id?.length)}
+              onBlur={() => setIsOrderIdValid(formData?.order_id?.length)}
               onChange={setDirectKeysInForm}
             />
             {!isOrderIdValid && (

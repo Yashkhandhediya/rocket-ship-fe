@@ -3,14 +3,34 @@ import { AddressVerifiedTag } from '../../../../../common/address-verified-tag';
 import { Field } from '../../../../../common/components';
 import { addAdressIcon, editIcon } from '../../../../../common/icons';
 import AddAddressDrawer from '../../add-address-drawer/AddAddressDrawer';
-import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export default function PickupDetails({ handleFormData, formData }) {
   const [addAddressDrawerOpen, setAddAddressDrawerOpen] = useState(false);
   const [editAddressDrawerOpen, setEditAddressDrawerOpen] = useState(false);
   const [searchAddress, setSearchAddress] = useState('');
-  const addressList = useSelector((state) => state.addressList) || [];
+  const [addressList, setAddressList] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(addressList.length ? addressList[0] : null);
+
+  const fetchUserAddressList = () => {
+    axios
+      .get('http://43.252.197.60:8030/address', {
+        params: {
+          user_id: 1,
+        },
+      })
+      .then((resp) => {
+        if (resp.status == 200) {
+          setAddressList(resp?.data || []);
+        }
+      })
+      .catch((e) => {
+        // eslint-disable-next-line no-console
+        console.error(e);
+        toast('Unable to fetch address', { type: 'error' });
+      });
+  };
 
   useEffect(() => {
     if (selectedAddress) {
@@ -25,6 +45,12 @@ export default function PickupDetails({ handleFormData, formData }) {
       );
     }
   }, [selectedAddress]);
+
+  useEffect(() => {
+    if (!addressList?.length) {
+      fetchUserAddressList();
+    }
+  }, []);
 
   return (
     <div>
@@ -50,7 +76,7 @@ export default function PickupDetails({ handleFormData, formData }) {
         <div className="mb-4 mt-6 w-full border border-gray-100" />
         <div>
           <div className="mb-3 text-sm font-medium">{'Other Addresses'}</div>
-          <div className="block md:flex">
+          <div className="block flex-wrap md:flex">
             <div className="md:w-/12 mb-3 px-2 lg:w-3/12" onClick={() => setAddAddressDrawerOpen(true)}>
               <div className="h-[11.5rem] w-full cursor-pointer rounded-2xl border border-dashed border-indigo-700 bg-white px-6 py-14 text-center">
                 <img src={addAdressIcon} className="m-auto align-middle" />
@@ -59,29 +85,23 @@ export default function PickupDetails({ handleFormData, formData }) {
             </div>
             {/* card with Address */}
             {addressList?.map((address, index) => {
-              const isSelectedAddress =
-                address?.first_name === selectedAddress?.first_name &&
-                address?.complete_address === selectedAddress?.complete_address &&
-                address?.contact_no === selectedAddress?.contact_no &&
-                address?.pincode === selectedAddress?.pincode &&
-                address?.city === selectedAddress?.city &&
-                address?.state === selectedAddress?.state &&
-                address?.country === selectedAddress?.country;
+              const isSelectedAddress = address?.id == selectedAddress?.id;
+              
               return (
                 <div
                   key={index}
                   className="md:w-/12 mb-3 px-2 lg:w-3/12"
-                  onClick={() => setSelectedAddress(address)}
-                >
+                  onClick={() => setSelectedAddress(address)}>
                   <div
                     className={`relative h-[11.5rem] w-full  cursor-pointer rounded-2xl border p-3 
                     ${
                       isSelectedAddress ? 'border-[#afcfff] bg-[#f4f8ff]' : 'border-gray-400 bg-transparent'
-                    }`}
-                  >
-                    <span className="rounded bg-gray-200 px-2 py-[3px] text-[8px] text-gray-900">
-                      {'Primary Address'}
-                    </span>
+                    }`}>
+                    {address.is_primary && (
+                      <span className="rounded bg-gray-200 px-2 py-[3px] text-[8px] text-gray-900">
+                        {'Primary Address'}
+                      </span>
+                    )}
                     <div>
                       <div className="overflow-hidden truncate align-middle text-xs font-medium leading-9">
                         {address?.tag}
@@ -102,8 +122,7 @@ export default function PickupDetails({ handleFormData, formData }) {
                         onClick={() => {
                           setEditAddressDrawerOpen(true);
                           setSelectedAddress(address);
-                        }}
-                      >
+                        }}>
                         <img src={editIcon} />
                         <div>{'Edit Address'}</div>
                       </button>
@@ -122,6 +141,7 @@ export default function PickupDetails({ handleFormData, formData }) {
           setEditAddressDrawerOpen(false);
         }}
         isEdit={editAddressDrawerOpen}
+        refetchAddress={fetchUserAddressList}
         formValues={editAddressDrawerOpen ? selectedAddress : null}
       />
     </div>

@@ -5,18 +5,17 @@ import { editIcon, infoIcon, locationPin } from '../../../../common/icons';
 import { BuyerAddressFields } from '../buyer-address-fields';
 import { useDispatch } from 'react-redux';
 import { setAddress } from '../../../../redux/actions/addAddressAction';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
-const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
+const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress }) => {
   const [isAddSupplier, setIsAddSupplier] = useState(false);
   const [isAddRTOAddress, setIsAddRTOAddress] = useState(false);
-  const [addressInfo, setAddressInfo] = useState(
-    isEdit
-      ? formValues
-      : {
-          country: 'india',
-        },
-  );
-  const [addressTag, setAddressTag] = useState(isEdit ? formValues?.tag : 'Home');
+  const [addressInfo, setAddressInfo] = useState({
+    country: 'india',
+    tag: 'Home',
+  });
+  const [addressTag, setAddressTag] = useState(isEdit ? formValues?.tag || 'Home' : 'Home');
   const [contactDisabled, setContactDisabled] = useState(isEdit ? true : false);
   const [disabledLocationFields, setDisabledLocationFields] = useState(false);
 
@@ -81,13 +80,28 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
       setTriggerValidations(true);
       return;
     }
+    axios
+      .post('http://43.252.197.60:8030/address', {
+        data: addressInfo,
+      })
+      .then((resp) => {
+        if (resp.status == 200) {
+          toast('Pickup details saved successfully', { type: 'success' });
+          refetchAddress();
+        }
+      })
+      .catch((e) => {
+        toast('Unable to save address please retry', { type: 'error' });
+        // eslint-disable-next-line no-console
+        console.error(e);
+      });
     dispatch(setAddress(addressInfo, handleCloseDrawer));
   };
 
   const onaddressPincodeVerify = (pincodeDetails) => {
     setAddressInfo({
       ...addressInfo,
-      pincodeDetails,
+      ...pincodeDetails,
     });
     setDisabledLocationFields(true);
   };
@@ -100,8 +114,31 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
         state: '',
       });
       setDisabledLocationFields(false);
+    } else if (isEdit) {
+      setAddressInfo({
+        ...formValues,
+      });
+    } else {
+      setAddressInfo({
+        ...addressInfo,
+        city: '',
+        state: '',
+        country: 'india',
+        tag: 'Home',
+      });
     }
-  }, []);
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (disabledLocationFields) {
+      setAddressInfo({
+        ...addressInfo,
+        city: '',
+        state: '',
+      });
+      setDisabledLocationFields(false);
+    }
+  }, [addressInfo.pincode]);
 
   useEffect(() => {
     if (!isEdit) {
@@ -275,7 +312,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit }) => {
           onChange={handleSetAddressInfo}
           values={addressInfo}
           triggerValidation={triggerValidations}
-          onPincodeVeify={onaddressPincodeVerify}
+          onPincodeVeify={!isEdit ? onaddressPincodeVerify : null}
           disabledFields={
             isEdit
               ? {
