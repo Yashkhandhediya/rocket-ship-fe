@@ -12,7 +12,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
     category: '',
     hsn_code: '',
     sku: '',
-    discount: '0',
+    discount: 0,
   };
 
   const [productValidation, setProductValidation] = useState(false);
@@ -35,7 +35,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
     shipping_charges: formData?.shipping_charges,
     gift_wrap: formData?.gift_wrap,
     transaction_fee: formData?.transaction_fee,
-    discount: formData?.discount || '0',
+    discount: formData?.discount || 0,
   });
 
   const subProductTotal =
@@ -408,7 +408,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                           labelClassNames={'text-xs'}
                           placeHolder={'0.00'}
                           tooltip={'Discount given to the buyer on this product'}
-                          value={field?.discount || '0'}
+                          value={field?.discount || 0}
                           onChange={(e) => handleSetProductFields(e, index)}
                         />
                       </div>
@@ -531,7 +531,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                         'In case of discounts offered, the discount amount can be added here and will be deduced in your total order amount'
                       }
                       leftAddOn="₹"
-                      value={paymentDetails?.discount || '0'}
+                      value={paymentDetails?.discount || 0}
                       onChange={handleSetPaymentDetails}
                     />
                   </div>
