@@ -14,6 +14,10 @@ import ShipmentDrawerSelectCourier from '../shipment-drawer-select-courier/Shipm
 
 export const New = () => {
   const [newOrders, setNewOrders] = useState([]);
+  const [selectShipmentDrawer, setSelectShipmentDrawer] = useState({
+    isOpen: false,
+    orderId: '',
+  });
   const columns = [
     {
       name: 'Order Details',
@@ -137,7 +141,15 @@ export const New = () => {
       name: 'Action',
       selector: (row) => (
         <div className="flex gap-2 py-2 text-left">
-          <button id={row.id} className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white">
+          <button
+            id={row.id}
+            className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
+            onClick={() =>
+              setSelectShipmentDrawer({
+                isOpen: true,
+                orderId: row.id,
+              })
+            }>
             {'Ship Now'}
           </button>
           <div className="min-h-[32px] min-w-[32px]">
@@ -183,12 +195,17 @@ export const New = () => {
         }}
       />
       <DrawerWithSidebar
-        isOpen={false}
-        onClose={() => {}}
+        isOpen={selectShipmentDrawer?.isOpen}
+        onClose={() =>
+          setSelectShipmentDrawer({
+            isOpen: false,
+            orderId: '',
+          })
+        }
         leftHeading={'Order Details'}
         rightHeading={'Select Courier Partner'}
-        leftComponent={<ShipmentDrawerOrderDetails />}
-        rightComponent={<ShipmentDrawerSelectCourier />}
+        leftComponent={<ShipmentDrawerOrderDetails orderId={selectShipmentDrawer?.orderId} />}
+        rightComponent={<ShipmentDrawerSelectCourier orderId={selectShipmentDrawer?.orderId} />}
       />
     </div>
   );

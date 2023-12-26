@@ -118,7 +118,6 @@ const DomesticOrder = () => {
           setTriggerValidations({ ...defaultValidations, 3: true });
           toast('Please enter all required fields', { type: 'error' });
         } else {
-          console.log('form dataaaaaaaaaaaaaaaa',formData);
           setState((prev) => (isNext ? prev : prev - 1));
           let date = formData?.date?.split('-');
           let newDate = new Date(date[2], date[1], date[0]);

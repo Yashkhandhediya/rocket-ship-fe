@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { blackLeftArrow, copyToClipboard, moreAction } from '../../common/icons';
 import { Badge } from 'flowbite-react';
-import { MoreDropdown, CustomTooltip } from '../../common/components';
+import { MoreDropdown, CustomTooltip, DrawerWithSidebar } from '../../common/components';
 import { moreActionOptions } from '../orders/components/new/utils';
 import OrderDetailsCard from './components/OrderDetailsCard';
 import PackageDetailsCard from './components/PackageDetailsCard';
@@ -12,11 +12,14 @@ import AppChangesCard from './components/AppChangesCard';
 import OrderTrackRightContainer from './components/OrderTrackRightContainer';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { ShipmentDrawerOrderDetails } from '../orders/components/shipment-drawer-order-details';
+import ShipmentDrawerSelectCourier from '../orders/components/shipment-drawer-select-courier/ShipmentDrawerSelectCourier';
 
 const OrderTrackDetails = () => {
   const { orderId } = useParams();
   const [copyTooltip, setCopyTooltip] = useState('Click to Copy');
   const [orderDetails, setOrderDetails] = useState(null);
+  const [shipmentDrawerOpen, setShipmentDrawerOpen] = useState(false);
 
   const copyOrderId = () => {
     navigator.clipboard.writeText(orderId);
@@ -101,6 +104,14 @@ const OrderTrackDetails = () => {
             </div>
           </div>
         </div>
+        <DrawerWithSidebar
+          isOpen={shipmentDrawerOpen}
+          onClose={() => setShipmentDrawerOpen(false)}
+          leftHeading={'Order Details'}
+          rightHeading={'Select Courier Partner'}
+          leftComponent={<ShipmentDrawerOrderDetails orderId={orderId} />}
+          rightComponent={<ShipmentDrawerSelectCourier orderId={orderId} />}
+        />
       </div>
     </PageWithSidebar>
   );
