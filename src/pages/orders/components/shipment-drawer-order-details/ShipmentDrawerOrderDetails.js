@@ -1,14 +1,34 @@
 import { openBox } from '../../../../common/icons';
 import LabelValue from './components/LabelValue';
 
-const ShipmentDrawerOrderDetails = () => {
+const ShipmentDrawerOrderDetails = ({ orderDetails }) => {
   return (
     <div>
-      <LabelValue label={'Pickup From'} value={'380001, Gujarat'} tooltipText={'Address'} />
-      <LabelValue label={'Deliver To'} value={'380001, Gujarat'} tooltipText={'Address'} />
-      <LabelValue label={'Order Value'} value={`₹ ${290.0}`} />
-      <LabelValue label={'Payment Mode'} value={`Prepaid`} />
-      <LabelValue label={'Applicable Weight (in Kg)'} value={`${0.2} Kg`} />
+      <LabelValue
+        label={'Pickup From'}
+        value={`${orderDetails?.user_info?.pincode}, ${orderDetails?.user_info?.state}`}
+        tooltipText={
+          <div>
+            <div>{`${orderDetails?.user_info?.complete_address}`}</div>
+            <div>{`${orderDetails?.user_info?.state}-${orderDetails?.user_info?.pincode}`}</div>
+            <div>{`${orderDetails?.user_info?.contact_no}`}</div>
+          </div>
+        }
+      />
+      <LabelValue
+        label={'Deliver To'}
+        value={`${orderDetails?.buyer_info?.pincode}, ${orderDetails?.buyer_info?.state}`}
+        tooltipText={
+          <div>
+            <div>{`${orderDetails?.buyer_info?.complete_address}`}</div>
+            <div>{`${orderDetails?.buyer_info?.state}-${orderDetails?.buyer_info?.pincode}`}</div>
+            <div>{`${orderDetails?.buyer_info?.contact_no}`}</div>
+          </div>
+        }
+      />
+      <LabelValue label={'Order Value'} value={`₹ ${orderDetails?.total_amount}`} />
+      <LabelValue label={'Payment Mode'} value={orderDetails?.payment_type_name} />
+      <LabelValue label={'Applicable Weight (in Kg)'} value={`${orderDetails?.applicable_weight} Kg`} />
       <div className="text-left">
         <div className="mb-6 text-lg font-medium">{'Buyer Insights'}</div>
         <div>

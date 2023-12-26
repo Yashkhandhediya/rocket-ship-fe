@@ -16,7 +16,7 @@ export const New = () => {
   const [newOrders, setNewOrders] = useState([]);
   const [selectShipmentDrawer, setSelectShipmentDrawer] = useState({
     isOpen: false,
-    orderId: '',
+    orderDetails: {},
   });
   const columns = [
     {
@@ -147,7 +147,7 @@ export const New = () => {
             onClick={() =>
               setSelectShipmentDrawer({
                 isOpen: true,
-                orderId: row.id,
+                orderDetails: row,
               })
             }>
             {'Ship Now'}
@@ -199,13 +199,13 @@ export const New = () => {
         onClose={() =>
           setSelectShipmentDrawer({
             isOpen: false,
-            orderId: '',
+            orderDetails: '',
           })
         }
         leftHeading={'Order Details'}
         rightHeading={'Select Courier Partner'}
-        leftComponent={<ShipmentDrawerOrderDetails orderId={selectShipmentDrawer?.orderId} />}
-        rightComponent={<ShipmentDrawerSelectCourier orderId={selectShipmentDrawer?.orderId} />}
+        leftComponent={<ShipmentDrawerOrderDetails orderDetails={selectShipmentDrawer?.orderDetails} />}
+        rightComponent={<ShipmentDrawerSelectCourier orderDetails={selectShipmentDrawer?.orderDetails} />}
       />
     </div>
   );

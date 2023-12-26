@@ -81,7 +81,9 @@ const OrderTrackDetails = () => {
                 </Badge>
               </div>
               <div className="flex gap-1.5">
-                <button className="min-w-fit rounded bg-indigo-700 px-6 py-2 text-xs font-medium text-white">
+                <button
+                  className="min-w-fit rounded bg-indigo-700 px-6 py-2 text-xs font-medium text-white"
+                  onClick={() => setShipmentDrawerOpen(true)}>
                   {'Ship Now'}
                 </button>
                 <MoreDropdown
@@ -109,8 +111,10 @@ const OrderTrackDetails = () => {
           onClose={() => setShipmentDrawerOpen(false)}
           leftHeading={'Order Details'}
           rightHeading={'Select Courier Partner'}
-          leftComponent={<ShipmentDrawerOrderDetails orderId={orderId} />}
-          rightComponent={<ShipmentDrawerSelectCourier orderId={orderId} />}
+          leftComponent={<ShipmentDrawerOrderDetails orderDetails={orderDetails} />}
+          rightComponent={
+            <ShipmentDrawerSelectCourier orderDetails={orderDetails} isOpen={shipmentDrawerOpen} />
+          }
         />
       </div>
     </PageWithSidebar>
