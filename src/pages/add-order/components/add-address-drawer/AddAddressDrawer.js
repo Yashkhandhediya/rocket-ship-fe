@@ -81,9 +81,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
       return;
     }
     axios
-      .post('http://43.252.197.60:8030/address', {
-        data: addressInfo,
-      })
+      .post('http://43.252.197.60:8030/address', addressInfo)
       .then((resp) => {
         if (resp.status == 200) {
           toast('Pickup details saved successfully', { type: 'success' });
