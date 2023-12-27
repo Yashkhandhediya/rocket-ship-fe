@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails } from '../pages';
+import Tracking from '../pages/tracking/Tracking';
 
 const routes = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const routes = createBrowserRouter([
   {
     path: '/track-order/:orderId',
     element: <OrderTrackDetails />,
+  },
+  {
+    path: '/tracking/:orderId',
+    element: <Tracking/>,
   },
 ]);
 
