@@ -5,29 +5,53 @@ import ShipmentSelfFullfiled from './components/ShipmentSelfFullfiled';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen }) => {
+const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
   const [shipmentsDetails, setShipmentDetails] = useState(null);
 
   const tabsData = [
     {
       title: 'All',
       id: 'all',
-      panel: <ShipmentCourierPartnersTable courierCompanies={shipmentsDetails} />,
+      panel: (
+        <ShipmentCourierPartnersTable
+          orderId={orderDetails?.id}
+          shipmentDetails={shipmentsDetails}
+          closeShipmentDrawer={onClose}
+        />
+      ),
     },
     {
       title: 'Air',
       id: 'air',
-      panel: <ShipmentCourierPartnersTable courierCompanies={shipmentsDetails} />,
+      panel: (
+        <ShipmentCourierPartnersTable
+          orderId={orderDetails?.id}
+          shipmentDetails={shipmentsDetails}
+          closeShipmentDrawer={onClose}
+        />
+      ),
     },
     {
       title: 'Surface',
       id: 'surface',
-      panel: <ShipmentCourierPartnersTable courierCompanies={shipmentsDetails} />,
+      panel: (
+        <ShipmentCourierPartnersTable
+          orderId={orderDetails?.id}
+          shipmentDetails={shipmentsDetails}
+          closeShipmentDrawer={onClose}
+        />
+      ),
     },
     {
       title: 'Local',
       id: 'local',
-      panel: <ShipmentCourierPartnersTable courierCompanies={shipmentsDetails} />,
+      panel: (
+        <ShipmentCourierPartnersTable
+          orderId={orderDetails?.id}
+          shipmentDetails={shipmentsDetails}
+          closeShipmentDrawer={onClose}
+        />
+      ),
     },
     {
       title: 'Self-Fullfilled',

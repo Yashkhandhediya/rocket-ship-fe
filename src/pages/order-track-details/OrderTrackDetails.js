@@ -29,8 +29,8 @@ const OrderTrackDetails = () => {
     }, 1000);
   };
 
-  const fetchOrderDetails = () => {
-    axios
+  const fetchOrderDetails = async () => {
+    await axios
       .get('http://43.252.197.60:8030/order/get_order_detail', {
         params: {
           id: orderId,
@@ -44,7 +44,7 @@ const OrderTrackDetails = () => {
   };
 
   useEffect(() => {
-    if (!orderDetails) {
+    if (!orderDetails && orderId) {
       fetchOrderDetails();
     }
   }, [orderId]);
@@ -113,7 +113,11 @@ const OrderTrackDetails = () => {
           rightHeading={'Select Courier Partner'}
           leftComponent={<ShipmentDrawerOrderDetails orderDetails={orderDetails} />}
           rightComponent={
-            <ShipmentDrawerSelectCourier orderDetails={orderDetails} isOpen={shipmentDrawerOpen} />
+            <ShipmentDrawerSelectCourier
+              orderDetails={orderDetails}
+              isOpen={shipmentDrawerOpen}
+              onClose={() => setShipmentDrawerOpen(false)}
+            />
           }
         />
       </div>

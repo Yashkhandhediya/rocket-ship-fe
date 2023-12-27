@@ -1,31 +1,51 @@
 import DataTable from 'react-data-table-component';
 import { infoIcon } from '../../../../../common/icons';
 import { CustomTooltip, RatingProgressBar } from '../../../../../common/components';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
-const ShipmentCourierPartnersTable = ({ courierCompanies }) => {
+const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentDrawer }) => {
+  const handleShipOrder = () => {
+    if (orderId) {
+      axios
+        .post(`http://43.252.197.60:8030/order/${orderId}/shipment`)
+        .then((resp) => {
+          if (resp.status === 200) {
+            toast(resp.success ? 'Order shipped successfully' : resp.error, {
+              type: resp.status ? 'success' : 'error',
+            });
+            if (resp.success) {
+              closeShipmentDrawer();
+            }
+          }
+        })
+        .catch((e) => {
+          // eslint-disable-next-line no-console
+          console.error(e)
+          toast('Unable to ship order', { type: 'error' });
+        });
+    }
+  };
+
   const columns = [
     {
       name: 'Courier Partner',
       selector: (row) => (
         <div className="flex gap-1 pb-4 pt-7 text-left">
-          <div className="">
-            <img src={''} className="h-10 w-10 rounded-full bg-gray-400" />
-          </div>
+          <div>{/* <img src={''} className="h-10 w-10 rounded-full bg-gray-400" /> */}</div>
           <div>
             <h4 className="pb-1.5 text-xs font-medium text-[#555]">
-              {row?.courier_name || 'Xpressbees Surface'}
+              {row?.partner_name || 'Xpressbees Surface'}
             </h4>
             <div className="pb-1.5 text-xs text-[#555]">
               {`${Number(row?.surface_max_weight || 0) ? 'Surface ' : 'Air'} | Min-weight: `}
               <span className="font-medium">
-                {Number(row?.surface_max_weight || 0)
-                  ? row?.surface_max_weight
-                  : row?.air_max_weight || 10.54}
+                {Number(row?.surface_max_weight || 0) ? row?.surface_max_weight : row?.air_max_weight || 0}
               </span>
             </div>
             <div className="pb-1.5 text-xs text-[#555]">
               {`RTO Charges: ₹`}
-              <span className="font-medium">{row?.rto_charges || 520}</span>
+              <span className="font-medium">{row?.charge_RTO}</span>
             </div>
           </div>
         </div>
@@ -36,7 +56,7 @@ const ShipmentCourierPartnersTable = ({ courierCompanies }) => {
       selector: (row) => (
         <div className="flex flex-col gap-1 py-2 text-left">
           <div className="relative h-12 w-12 text-sm font-medium">
-            <RatingProgressBar rating={row?.rating || 4.5} />
+            <RatingProgressBar rating={row?.rating || 0} />
           </div>
         </div>
       ),
@@ -45,7 +65,7 @@ const ShipmentCourierPartnersTable = ({ courierCompanies }) => {
       name: 'Expected Pickup',
       selector: (row) => (
         <div className="flex flex-col gap-1 py-2 text-left">
-          <div className="text-xs text-[#555]">{row?.expected_pickup || 'Tommorow'}</div>
+          <div className="text-xs text-[#555]">{row?.expected_pickup || '-'}</div>
         </div>
       ),
     },
@@ -53,7 +73,7 @@ const ShipmentCourierPartnersTable = ({ courierCompanies }) => {
       name: 'Estimated Delivery',
       selector: (row) => (
         <div className="flex flex-col gap-1 py-2 text-left">
-          <div className="text-xs text-[#555]">{row?.estimated_delivery || 'Dec 28, 2023'}</div>
+          <div className="text-xs text-[#555]">{row?.estimated_delivery || '-'}</div>
         </div>
       ),
     },
@@ -61,7 +81,7 @@ const ShipmentCourierPartnersTable = ({ courierCompanies }) => {
       name: 'Chargeable Weight',
       selector: (row) => (
         <div className="flex h-full w-full flex-col gap-1 py-2 text-center">
-          <div className="text-xs text-[#555]">{`${row?.charge_weight || 1.25} Kg`}</div>
+          <div className="text-xs text-[#555]">{`${row?.charged_weight || ''} Kg`}</div>
         </div>
       ),
     },
@@ -70,17 +90,17 @@ const ShipmentCourierPartnersTable = ({ courierCompanies }) => {
       selector: (row) => (
         <div className="flex flex-col gap-1 py-2 text-left">
           <div className="flex items-center">
-            <div className="text-base font-bold text-[gray]">{`₹${row?.rate || 180.49}`}</div>
+            <div className="text-base font-bold text-[gray]">{`₹${row?.total_amount || ''}`}</div>
             <CustomTooltip
               text={
                 <>
                   <div className="mb-1.5">
                     {`Freight Charge: `}
-                    <span className="font-bold">{`₹ ${row?.freight_charge || 0.0}`}</span>
+                    <span className="font-bold">{`₹ ${row?.charge_freight || ''}`}</span>
                   </div>
                   <div className="">
                     {`Cod Charges: `}
-                    <span className="font-bold">{`₹ ${row?.cod_charges || 0.0}`}</span>
+                    <span className="font-bold">{`₹ ${row?.charge_COD || ''}`}</span>
                   </div>
                 </>
               }>
@@ -94,7 +114,10 @@ const ShipmentCourierPartnersTable = ({ courierCompanies }) => {
       name: 'Action',
       selector: (row) => (
         <div className="flex flex-col gap-1 py-2 text-left">
-          <button id={row.id} className="min-w-fit rounded bg-indigo-600 px-5 py-2 text-white">
+          <button
+            id={row.id}
+            className="min-w-fit rounded bg-indigo-600 px-5 py-2 text-white"
+            onClick={handleShipOrder}>
             {'Ship Now'}
           </button>
         </div>
@@ -104,13 +127,9 @@ const ShipmentCourierPartnersTable = ({ courierCompanies }) => {
 
   return (
     <div className="mt-3 h-full w-full text-left">
-      <div className="text-xs text-[#888]">{`${courierCompanies?.length || 0} Couriers Found`}</div>
+      <div className="text-xs text-[#888]">{`${shipmentDetails?.length || 0} Couriers Found`}</div>
       <div className="mt-4 h-full max-h-full w-full overflow-auto">
-        <DataTable
-          columns={columns}
-          data={[{}, {}, {}]}
-          sortActive={false}
-        />
+        <DataTable columns={columns} data={shipmentDetails || []} sortActive={false} />
       </div>
     </div>
   );

@@ -178,6 +178,13 @@ export const New = () => {
       });
   };
 
+  const closeShipmentDrawer = () => {
+    setSelectShipmentDrawer({
+      isOpen: false,
+      orderDetails: '',
+    });
+  };
+
   useEffect(() => {
     fetchNewOrders();
   }, []);
@@ -196,16 +203,16 @@ export const New = () => {
       />
       <DrawerWithSidebar
         isOpen={selectShipmentDrawer?.isOpen}
-        onClose={() =>
-          setSelectShipmentDrawer({
-            isOpen: false,
-            orderDetails: '',
-          })
-        }
+        onClose={closeShipmentDrawer}
         leftHeading={'Order Details'}
         rightHeading={'Select Courier Partner'}
         leftComponent={<ShipmentDrawerOrderDetails orderDetails={selectShipmentDrawer?.orderDetails} />}
-        rightComponent={<ShipmentDrawerSelectCourier orderDetails={selectShipmentDrawer?.orderDetails} />}
+        rightComponent={
+          <ShipmentDrawerSelectCourier
+            orderDetails={selectShipmentDrawer?.orderDetails}
+            onClose={closeShipmentDrawer}
+          />
+        }
       />
     </div>
   );

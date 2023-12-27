@@ -6,6 +6,7 @@ import PickupDetails from './pickup-details/PickupDetails';
 import axios from 'axios';
 import Stepper from '../stepper/Stepper';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const DomesticOrder = () => {
   const defaultValidations = {
@@ -14,6 +15,7 @@ const DomesticOrder = () => {
     2: false,
     3: false,
   };
+  const navigate = useNavigate();
   const [state, setState] = useState(0);
   const [formData, setFormData] = useState(null);
   const [triggerValidations, setTriggerValidations] = useState(defaultValidations);
@@ -130,6 +132,7 @@ const DomesticOrder = () => {
             setState(0);
             setFormData({});
             setTriggerValidations(defaultValidations);
+            navigate('/orders');
           } else {
             toast('There is some error please check your network or contact support', { type: 'error' });
           }

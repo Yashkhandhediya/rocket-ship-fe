@@ -4,7 +4,7 @@ import { deleteIcon, infoIcon } from '../../../../../common/icons';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
-export default function OrderDetails({ handleFormData, formData, triggerValidations, }) {
+export default function OrderDetails({ handleFormData, formData, triggerValidations }) {
   const defaultProductField = {
     name: '',
     unit_price: '',
@@ -18,17 +18,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
   const [productValidation, setProductValidation] = useState(false);
   const [isOrderIdValid, setIsOrderIdValid] = useState(true);
 
-  const [productFields, setProductFields] = useState([
-    {
-      name: formData?.name,
-      unit_price: formData?.unit_price,
-      quantity: formData?.quantity,
-      category: formData?.category,
-      hsn_code: formData?.hsn_code,
-      sku: formData?.sku,
-      discount: formData?.discount,
-    },
-  ]);
+  const [productFields, setProductFields] = useState(formData?.product_info || [defaultProductField]);
 
   const [paymentDetails, setPaymentDetails] = useState({
     type: formData?.type || 'cod',
@@ -100,7 +90,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
 
   const handleSetProductFields = (event, index) => {
     const { id, value } = event.target;
-    
+
     const allFields = [...productFields];
     allFields[index][id] = value;
     setProductFields(allFields);
@@ -143,7 +133,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
           handleFormData({
             ...formData,
             order_id: String(resp?.data?.order_id),
-          })
+          });
         }
       })
       .catch((e) => {
@@ -153,7 +143,6 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
       });
   };
 
-  
   useEffect(() => {
     if (!formData?.order_id) {
       fetchOrderId();
@@ -202,9 +191,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
               onBlur={() => setIsOrderIdValid(formData?.order_id?.length)}
               onChange={setDirectKeysInForm}
             />
-            {!isOrderIdValid && (
-              <p className="mt-1 text-xs text-red-500">Order Id is required.</p>
-            )}
+            {!isOrderIdValid && <p className="mt-1 text-xs text-red-500">Order Id is required.</p>}
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
