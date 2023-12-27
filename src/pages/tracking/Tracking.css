@@ -1,91 +1,181 @@
-.tarcking-main{
-    background: #ededed;
-    height: 100vh;
-    overflow-y: auto;
+.tarcking-main {
+  background: #ededed;
+  height: 100vh;
+  overflow-y: auto;
 }
-.name-header{
-    display: flex;
-    min-height: 80px;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    background: white;
-    font-size: xx-large;
+.name-header {
+  display: flex;
+  min-height: 80px;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  font-size: xx-large;
 }
 
-.info-main{
-    display: flex;
-    justify-content: center;
+.info-main {
+  display: flex;
+  justify-content: center;
 }
-.info-container{
-    display: grid;
-    grid-template-areas:
+.info-container {
+  display: grid;
+  grid-template-areas:
     'aa aa'
     'bb cc'
     'bb dd'
     'bb dd'
     'bb xx';
-    background: #ededed;
-    grid-gap: 20px;
-    margin-top: 20px;
-    width: 80%;
+  background: #ededed;
+  grid-gap: 20px;
+  margin-top: 20px;
+  width: 80%;
 }
 
-.buyer-confirm-msg-container{
-    grid-area: aa;
-    background: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
-    min-height: 40px;
+.buyer-confirm-msg-container {
+  grid-area: aa;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  min-height: 60px;
+  font-size: 0.9rem;
 }
 
-.map-container{
-    grid-area: bb;
-    background: white;
-    min-height: 550px;
-    border-radius: 5px;
-    padding: 5px;
+.buyer-confirm-msg-container a {
+  color: #337ab7;
+  cursor: pointer;
 }
 
-.status-header{
-    display: grid;
-    grid-template-areas: 
+.map-container {
+  grid-area: bb;
+  background: white;
+  min-height: 550px;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.status-header {
+  display: grid;
+  grid-template-areas:
     'status status copy copy'
     'val val val val';
-    border-bottom: grey;
-    border-bottom-style: solid;
-    border-bottom-width: 0.5px;
+  border-bottom: grey;
+  border-bottom-style: solid;
+  border-bottom-width: 0.5px;
 }
 
-.status-text{
-    grid-area: status;
-    font-size: 16px;
+.status-text {
+  grid-area: status;
+  font-size: 16px;
 }
 
-.copy-icon{
-    grid-area: copy;
-    text-align: right;
+.copy-icon {
+  grid-area: copy;
+  text-align: right;
 }
 
-.status-val{
-    grid-area: val;
-    font-size: 25px;
-    color: orange;
-
+.status-val {
+  grid-area: val;
+  font-size: 25px;
+  color: orange;
 }
 
-.order-details-container{
-    grid-area: cc;
-    background: white;
-    min-height: 200px;
+.order-details-container {
+  grid-area: cc;
+  background: white;
+  border-radius: 5px;
+  padding: 10px;
+  /* min-height: 200px; */
 }
 
-.ratings-container{
-    grid-area: dd;
-    background: white;
-    min-height: 300px;
+.ratings-container {
+  grid-area: dd;
+  background: white;
+  min-height: 300px;
+  padding: 20px;
+  border-radius: 5px;
 }
 
+.order-details-header {
+  padding: 20px;
+  border-bottom: grey;
+  border-bottom-style: solid;
+  border-bottom-width: 0.5px;
+}
 
+.rating-number-list {
+  --red: rgb(204, 58, 41);
+  --yellow: rgb(247, 179, 54);
+  --green: rgb(113, 213, 58);
+}
+
+.rating-number {
+  border-style: solid;
+  border-width: 1px;
+  background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box;
+  border-radius: 50%;
+  font-size: 16px;
+  padding: 7px;
+  color: rgb(0, 0, 0);
+  width: 35px;
+  height: 35px;
+  display: block;
+  text-align: center;
+  transition: width 0.3s ease 0s;
+  position: relative;
+  float: left;
+  margin-left: -1px;
+  line-height: 22.8571px;
+  text-decoration: none solid rgb(0, 0, 0);
+  background-color: rgb(255, 255, 255);
+  boxsizing: border-box;
+}
+
+.rating-number:hover {
+  cursor: pointer;
+}
+
+.rating-poor {
+  border-color: var(--red);
+}
+.rating-poor:hover {
+  background-color: var(--red);
+  color: white;
+}
+
+.rating-medium:hover {
+  background-color: var(--yellow);
+  color: white;
+}
+.rating-medium {
+  border-color: var(--yellow);
+}
+
+.rating-good:hover {
+  background-color: var(--green);
+  color: white;
+}
+
+.rating-good {
+  border-color: var(--green);
+}
+
+.rating-number-link {
+  margin-right: 10px;
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+.order-grid-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+.order-grid-item {
+  padding: 10px;
+}
+
+.font-0\.8 {
+  font-size: 0.8rem;
+}
