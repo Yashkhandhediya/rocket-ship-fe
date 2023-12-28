@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
 import orders from './orders';
-import addressList from './addAddressReducer';
+import ordersList from './setOrdersReducer';
 
-export default combineReducers({ orders, addressList });
+export default combineReducers({ orders, ordersList });

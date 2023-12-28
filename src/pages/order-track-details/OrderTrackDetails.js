@@ -3,7 +3,7 @@ import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithS
 import { blackLeftArrow, copyToClipboard, moreAction } from '../../common/icons';
 import { Badge } from 'flowbite-react';
 import { MoreDropdown, CustomTooltip, DrawerWithSidebar } from '../../common/components';
-import { moreActionOptions } from '../orders/components/new/utils';
+import { moreActionOptions } from '../orders/components/utils';
 import OrderDetailsCard from './components/OrderDetailsCard';
 import PackageDetailsCard from './components/PackageDetailsCard';
 import CustomerDetailsCard from './components/CustomerDetailsCard';

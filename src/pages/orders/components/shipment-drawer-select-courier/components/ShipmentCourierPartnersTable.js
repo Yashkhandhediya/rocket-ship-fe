@@ -3,25 +3,30 @@ import { infoIcon } from '../../../../../common/icons';
 import { CustomTooltip, RatingProgressBar } from '../../../../../common/components';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { setAllOrders } from '../../../../../redux';
+import { useDispatch } from 'react-redux';
 
 const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentDrawer }) => {
+  const dispatch = useDispatch();
+
   const handleShipOrder = () => {
     if (orderId) {
       axios
         .post(`http://43.252.197.60:8030/order/${orderId}/shipment`)
         .then((resp) => {
-          if (resp.status === 200) {
-            toast(resp.success ? 'Order shipped successfully' : resp.error, {
-              type: resp.status ? 'success' : 'error',
+          if (resp?.status === 200) {
+            toast(resp?.data?.success ? 'Order shipped successfully' : resp?.data?.error, {
+              type: resp?.data?.status ? 'success' : 'error',
             });
-            if (resp.success) {
+            dispatch(setAllOrders(null));
+            if (resp?.data?.success) {
               closeShipmentDrawer();
             }
           }
         })
         .catch((e) => {
           // eslint-disable-next-line no-console
-          console.error(e)
+          console.error(e);
           toast('Unable to ship order', { type: 'error' });
         });
     }

@@ -7,13 +7,16 @@ import { MoreDropdown, CustomTooltip } from '../../../../common/components';
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
 import { moreAction } from '../../../../common/icons';
-import { moreActionOptions } from './utils';
+import { moreActionOptions } from '../utils';
 import DrawerWithSidebar from '../../../../common/components/drawer-with-sidebar/DrawerWithSidebar';
 import { ShipmentDrawerOrderDetails } from '../shipment-drawer-order-details';
 import ShipmentDrawerSelectCourier from '../shipment-drawer-select-courier/ShipmentDrawerSelectCourier';
+import { setAllOrders } from '../../../../redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 export const New = () => {
-  const [newOrders, setNewOrders] = useState([]);
+  const dispatch = useDispatch();
+  const allOrdersList = useSelector(state => state?.ordersList);
   const [selectShipmentDrawer, setSelectShipmentDrawer] = useState({
     isOpen: false,
     orderDetails: {},
@@ -120,7 +123,7 @@ export const New = () => {
                 </>
               }>
               <div className="relative cursor-pointer whitespace-pre-wrap pb-0.5 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-[#555]">
-                {row?.user_info?.tag}
+                {'Primary'}
               </div>
             </CustomTooltip>
           </div>
@@ -168,7 +171,7 @@ export const New = () => {
       .get('http://43.252.197.60:8030/order/get_filtered_orders')
       .then(async (resp) => {
         if (resp.status === 200) {
-          setNewOrders(resp?.data || []);
+          dispatch(setAllOrders(resp?.data || []));
         } else {
           toast('There is some error while fetching orders.', { type: 'error' });
         }
@@ -186,14 +189,16 @@ export const New = () => {
   };
 
   useEffect(() => {
-    fetchNewOrders();
-  }, []);
+    if(!allOrdersList) {
+      fetchNewOrders();
+    }
+  }, [allOrdersList]);
 
   return (
     <div className="mt-5">
       <DataTable
         columns={columns}
-        data={newOrders}
+        data={allOrdersList|| []}
         sortActive={false}
         customStyles={{
           responsiveWrapper: {
@@ -210,6 +215,7 @@ export const New = () => {
         rightComponent={
           <ShipmentDrawerSelectCourier
             orderDetails={selectShipmentDrawer?.orderDetails}
+            isOpen={selectShipmentDrawer?.isOpen}
             onClose={closeShipmentDrawer}
           />
         }

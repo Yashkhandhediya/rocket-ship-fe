@@ -3,8 +3,6 @@ import { Checkbox, Field, FieldAccordion, CustomTooltip } from '../../../../comm
 import { RightDrawer } from '../../../../common/components/right-drawer';
 import { editIcon, infoIcon, locationPin } from '../../../../common/icons';
 import { BuyerAddressFields } from '../buyer-address-fields';
-import { useDispatch } from 'react-redux';
-import { setAddress } from '../../../../redux/actions/addAddressAction';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -35,8 +33,6 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
     setAddressTag('Home');
     onClose();
   };
-
-  const dispatch = useDispatch();
 
   const tagClasses = (tag) => {
     return tag === addressTag
@@ -93,7 +89,6 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
         // eslint-disable-next-line no-console
         console.error(e);
       });
-    dispatch(setAddress(addressInfo, handleCloseDrawer));
   };
 
   const onaddressPincodeVerify = (pincodeDetails) => {
