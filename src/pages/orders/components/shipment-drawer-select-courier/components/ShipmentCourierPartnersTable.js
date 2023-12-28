@@ -5,16 +5,21 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { setAllOrders } from '../../../../../redux';
 import { useDispatch } from 'react-redux';
+import { useState } from 'react';
+import './ShipmentCourierPartnersTable.css'
 
 const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentDrawer }) => {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleShipOrder = () => {
+    setIsLoading(true);
     if (orderId) {
       axios
         .post(`http://43.252.197.60:8030/order/${orderId}/shipment`)
         .then((resp) => {
           if (resp?.status === 200) {
+            setIsLoading(false);
             toast(resp?.data?.success ? 'Order shipped successfully' : resp?.data?.error, {
               type: resp?.data?.status ? 'success' : 'error',
             });
@@ -27,6 +32,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         .catch((e) => {
           // eslint-disable-next-line no-console
           console.error(e);
+          setIsLoading(false);
           toast('Unable to ship order', { type: 'error' });
         });
     }
@@ -132,6 +138,11 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
 
   return (
     <div className="mt-3 h-full w-full text-left">
+      {isLoading && (
+        <div className="loader-overlay">
+          <div className="loader"></div>
+        </div>
+      )}
       <div className="text-xs text-[#888]">{`${shipmentDetails?.length || 0} Couriers Found`}</div>
       <div className="mt-4 h-full max-h-full w-full overflow-auto">
         <DataTable columns={columns} data={shipmentDetails || []} sortActive={false} />
