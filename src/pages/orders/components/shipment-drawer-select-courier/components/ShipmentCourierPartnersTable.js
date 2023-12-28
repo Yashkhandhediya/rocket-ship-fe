@@ -21,7 +21,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           if (resp?.status === 200) {
             setIsLoading(false);
             toast(resp?.data?.success ? 'Order shipped successfully' : resp?.data?.error, {
-              type: resp?.data?.status ? 'success' : 'error',
+              type: resp?.data?.success ? 'success' : 'error',
             });
             dispatch(setAllOrders(null));
             if (resp?.data?.success) {
