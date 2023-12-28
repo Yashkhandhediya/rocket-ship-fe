@@ -9,8 +9,16 @@ export default function Tracking() {
     const [shipmentData, setShipmentData] = useState();
 
     const fetchTrackShipmentOrder = () => {
+    // Parse query parameters from the URL
+    const queryParams = new URLSearchParams(window.location.search);
+
+    // Get the value of the 'stringValue' parameter
+    const stringValue = queryParams.get('data');
+
+    // Set the received string value in the component state
+    console.log('url data',stringValue)
         axios
-            .get('http://43.252.197.60:8030/order/track')
+            .get('http://43.252.197.60:8030/order/track?order_id='+stringValue)
             .then(async (resp) => {
                 if (resp.status === 200) {
                     const data = resp?.data?.ShipmentData?.[0]?.Shipment;

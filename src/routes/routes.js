@@ -28,7 +28,7 @@ const routes = createBrowserRouter([
     element: <OrderTrackDetails />,
   },
   {
-    path: '/tracking/:orderId',
+    path: '/tracking',
     element: <Tracking/>,
   },
 ]);

@@ -144,7 +144,7 @@ export const New = () => {
       name: 'Action',
       selector: (row) => (
         <div className="flex gap-2 py-2 text-left">
-          <button
+          {row?.status_name == 'new' ? <button
             id={row.id}
             className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
             onClick={() =>
@@ -154,7 +154,25 @@ export const New = () => {
               })
             }>
             {'Ship Now'}
-          </button>
+          </button> :
+            <button
+              id={row.id}
+              className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
+              onClick={() =>{
+              const resp = axios.get('http://43.252.197.60:8030/order/track?order_id='+row.id)
+              let newURL =  `http://${window.location.host}/tracking?data=${encodeURIComponent('20')}`
+              console.log('new url', newURL)
+              let newTab =window.open(newURL,'_blank');
+              if (newTab){
+                newTab.focus()
+              }
+
+              // console.log('urllll',window.location.host+'/tracking/1')
+            }
+              }>
+              {'Track'}
+            </button>
+          }
           <div className="min-h-[32px] min-w-[32px]">
             <MoreDropdown
               renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
@@ -189,7 +207,7 @@ export const New = () => {
   };
 
   useEffect(() => {
-    if(!allOrdersList) {
+    if (!allOrdersList) {
       fetchNewOrders();
     }
   }, [allOrdersList]);
@@ -198,7 +216,7 @@ export const New = () => {
     <div className="mt-5">
       <DataTable
         columns={columns}
-        data={allOrdersList|| []}
+        data={allOrdersList || []}
         sortActive={false}
         customStyles={{
           responsiveWrapper: {
