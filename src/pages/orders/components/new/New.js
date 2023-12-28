@@ -160,7 +160,7 @@ export const New = () => {
               className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
               onClick={() =>{
               const resp = axios.get('http://43.252.197.60:8030/order/track?order_id='+row.id)
-              let newURL =  `http://${window.location.host}/tracking?data=${encodeURIComponent('20')}`
+              let newURL =  `http://${window.location.host}/tracking?data=${encodeURIComponent('15')}`
               console.log('new url', newURL)
               let newTab =window.open(newURL,'_blank');
               if (newTab){
