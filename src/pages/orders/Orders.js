@@ -2,9 +2,39 @@ import { useNavigate } from 'react-router-dom';
 import { Tabs } from '../../common/components/tabs';
 import { ordersTabs } from './duck';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAllOrders } from '../../redux';
+import { toast } from 'react-toastify';
+import { useEffect } from 'react';
 
 const Orders = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const allOrdersList = useSelector((state) => state?.ordersList);
+  
+  const fetchNewOrders = () => {
+    axios
+      .get('http://43.252.197.60:8030/order/get_filtered_orders')
+      .then(async (resp) => {
+        if (resp.status === 200) {
+          dispatch(setAllOrders(resp?.data || []));
+        } else {
+          toast('There is some error while fetching orders.', { type: 'error' });
+        }
+      })
+      .catch(() => {
+        toast('There is some error while fetching orders.', { type: 'error' });
+      });
+  };
+
+  
+  useEffect(() => {
+    if (!allOrdersList) {
+      fetchNewOrders();
+    }
+  }, [allOrdersList]);
 
   return (
     <PageWithSidebar>

@@ -1,8 +1,7 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { Link, generatePath } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { MoreDropdown, CustomTooltip } from '../../../../common/components';
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
@@ -11,12 +10,11 @@ import { moreActionOptions } from '../utils';
 import DrawerWithSidebar from '../../../../common/components/drawer-with-sidebar/DrawerWithSidebar';
 import { ShipmentDrawerOrderDetails } from '../shipment-drawer-order-details';
 import ShipmentDrawerSelectCourier from '../shipment-drawer-select-courier/ShipmentDrawerSelectCourier';
-import { setAllOrders } from '../../../../redux';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 export const New = () => {
-  const dispatch = useDispatch();
-  const allOrdersList = useSelector(state => state?.ordersList);
+  const allOrdersList = useSelector((state) => state?.ordersList);
+  const newOrdersList = allOrdersList?.filter((order) => (order?.status_name || '')?.toLowerCase() === 'new');
   const [selectShipmentDrawer, setSelectShipmentDrawer] = useState({
     isOpen: false,
     orderDetails: {},
@@ -144,35 +142,36 @@ export const New = () => {
       name: 'Action',
       selector: (row) => (
         <div className="flex gap-2 py-2 text-left">
-          {row?.status_name == 'new' ? <button
-            id={row.id}
-            className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
-            onClick={() =>
-              setSelectShipmentDrawer({
-                isOpen: true,
-                orderDetails: row,
-              })
-            }>
-            {'Ship Now'}
-          </button> :
+          {row?.status_name == 'new' ? (
             <button
               id={row.id}
               className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
-              onClick={() =>{
-              const resp = axios.get('http://43.252.197.60:8030/order/track?order_id='+row.id)
-              let newURL =  `http://${window.location.host}/tracking?data=${encodeURIComponent('15')}`
-              console.log('new url', newURL)
-              let newTab =window.open(newURL,'_blank');
-              if (newTab){
-                newTab.focus()
-              }
-
-              // console.log('urllll',window.location.host+'/tracking/1')
-            }
+              onClick={() =>
+                setSelectShipmentDrawer({
+                  isOpen: true,
+                  orderDetails: row,
+                })
               }>
+              {'Ship Now'}
+            </button>
+          ) : (
+            <button
+              id={row.id}
+              className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
+              onClick={() => {
+                const resp = axios.get('http://43.252.197.60:8030/order/track?order_id=' + row.id);
+                let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent('15')}`;
+                console.log('new url', newURL);
+                let newTab = window.open(newURL, '_blank');
+                if (newTab) {
+                  newTab.focus();
+                }
+
+                // console.log('urllll',window.location.host+'/tracking/1')
+              }}>
               {'Track'}
             </button>
-          }
+          )}
           <div className="min-h-[32px] min-w-[32px]">
             <MoreDropdown
               renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
@@ -184,21 +183,6 @@ export const New = () => {
     },
   ];
 
-  const fetchNewOrders = () => {
-    axios
-      .get('http://43.252.197.60:8030/order/get_filtered_orders')
-      .then(async (resp) => {
-        if (resp.status === 200) {
-          dispatch(setAllOrders(resp?.data || []));
-        } else {
-          toast('There is some error while fetching orders.', { type: 'error' });
-        }
-      })
-      .catch(() => {
-        toast('There is some error while fetching orders.', { type: 'error' });
-      });
-  };
-
   const closeShipmentDrawer = () => {
     setSelectShipmentDrawer({
       isOpen: false,
@@ -206,17 +190,11 @@ export const New = () => {
     });
   };
 
-  useEffect(() => {
-    if (!allOrdersList) {
-      fetchNewOrders();
-    }
-  }, [allOrdersList]);
-
   return (
     <div className="mt-5">
       <DataTable
         columns={columns}
-        data={allOrdersList || []}
+        data={newOrdersList || []}
         sortActive={false}
         customStyles={{
           responsiveWrapper: {

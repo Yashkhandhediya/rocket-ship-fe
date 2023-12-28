@@ -1,19 +1,15 @@
-import axios from 'axios';
-import { useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import { Link, generatePath } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { MoreDropdown, CustomTooltip } from '../../../../common/components';
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
 import { moreAction } from '../../../../common/icons';
 import { moreActionOptions } from '../utils';
-import { useDispatch, useSelector } from 'react-redux';
-import { setAllOrders } from '../../../../redux';
+import { useSelector } from 'react-redux';
 
 export const All = () => {
-  const dispatch = useDispatch();
   const allOrdersList = useSelector((state) => state?.ordersList);
+
   const columns = [
     {
       name: 'Order Details',
@@ -160,27 +156,6 @@ export const All = () => {
       ),
     },
   ];
-
-  const fetchAllOrders = () => {
-    axios
-      .get('http://43.252.197.60:8030/order/get_filtered_orders')
-      .then(async (resp) => {
-        if (resp.status === 200) {
-          dispatch(setAllOrders(resp.data || []));
-        } else {
-          toast('There is some error while fetching orders.', { type: 'error' });
-        }
-      })
-      .catch(() => {
-        toast('There is some error while fetching orders.', { type: 'error' });
-      });
-  };
-
-  useEffect(() => {
-    if (!allOrdersList) {
-      fetchAllOrders();
-    }
-  }, [allOrdersList]);
 
   return (
     <div className="mt-5">
