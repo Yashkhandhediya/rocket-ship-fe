@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Field } from '../../common/components';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { type } from '@testing-library/user-event/dist/type';
 
 const LogIn = () => {
   const navigate = useNavigate();
   const [loginInput, setLoginInput] = useState({
-    email: '',
+    username: '',
     password: '',
   });
 
@@ -18,7 +21,21 @@ const LogIn = () => {
   };
 
   const handleSubmit = () => {
-    navigate('/');
+    const headers={'Content-Type': 'application/x-www-form-urlencoded'};
+    console.log('username pass', loginInput.username, loginInput.password);
+    axios.post('http://43.252.197.60:8030/login/access-token',{username:loginInput.username, password:loginInput.password}, {headers}).then(
+      (response)=>{
+        console.log(response);
+        if (response.data.access_token){
+          toast('Login Success',{type:'success'})
+          navigate('/orders')
+        }
+        else if(response.data.msg){
+          toast(response.data.msg,{type:'error'})
+        }
+      }
+    );
+
   };
 
   return (
@@ -34,11 +51,11 @@ const LogIn = () => {
         <form>
           <Field
             type={'email'}
-            id={'email'}
+            id={'username'}
             label={'Email ID'}
             placeHolder={'Enter your email ID'}
             required={true}
-            value={loginInput['email']}
+            value={loginInput['username']}
             onChange={handleChangeInput}
           />
           <Field

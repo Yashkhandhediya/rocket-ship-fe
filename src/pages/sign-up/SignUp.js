@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Field } from '../../common/components';
+import axios from 'axios';
 
 const SignUp = () => {
   const navigate = useNavigate();
   const [signupInput, setSignupInput] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
+    first_name: "",
+    last_name: "",
+    email_address: "",
+    contact_no: "",
+    password: ""
   });
 
   const handleChangeInput = (e) => {
@@ -20,7 +22,7 @@ const SignUp = () => {
   };
 
   const handleSubmit = () => {
-    navigate('/');
+    // api of signup
   };
 
   return (
@@ -56,11 +58,20 @@ const SignUp = () => {
           </div>
           <Field
             type={'email'}
-            id={'email'}
+            id={'email_address'}
             label={'Email ID'}
             placeHolder={'Enter your email ID'}
             required={true}
-            value={signupInput['email']}
+            value={signupInput['email_address']}
+            onChange={handleChangeInput}
+          />
+          <Field
+            type={'tel'}
+            id={'contact_no'}
+            label={'Contact No'}
+            placeHolder={'Enter Contact No'}
+            required={true}
+            value={signupInput['contact_no']}
             onChange={handleChangeInput}
           />
           <Field
