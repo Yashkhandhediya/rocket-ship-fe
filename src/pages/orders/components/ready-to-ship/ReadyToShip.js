@@ -11,7 +11,7 @@ import { ShipmentDrawerOrderDetails } from '../shipment-drawer-order-details';
 import ShipmentDrawerSelectCourier from '../shipment-drawer-select-courier/ShipmentDrawerSelectCourier';
 import { useDispatch, useSelector } from 'react-redux';
 import { setClonedOrder } from '../../../../redux';
-import axios from 'axios';
+import { SchedulePickupModal } from '../schedule-pickup-modal';
 
 export const ReadyToShip = () => {
   const dispatch = useDispatch();
@@ -25,6 +25,7 @@ export const ReadyToShip = () => {
     isOpen: false,
     orderDetails: {},
   });
+  const [scheduleModal, setScheduleModal] = useState({ isOpen: false, pickupDetails: {} });
 
   const columns = [
     {
@@ -160,17 +161,18 @@ export const ReadyToShip = () => {
               id={row.id}
               className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
               onClick={() => {
+                setScheduleModal({
+                  isOpen: true,
+                  pickupDetails: row,
+                })
                 // const resp = axios.get('http://43.252.197.60:8030/order/track?order_id=' + row.id);
-                let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
-                console.log('new url', newURL);
-                let newTab = window.open(newURL, '_blank');
-                if (newTab) {
-                  newTab.focus();
-                }
-
-                // console.log('urllll',window.location.host+'/tracking/1')
+                // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
+                // let newTab = window.open(newURL, '_blank');
+                // if (newTab) {
+                //   newTab.focus();
+                // }
               }}>
-              {'Track'}
+              {'Schedule Pickup'}
             </button>
           <div className="min-h-[32px] min-w-[32px]">
             <MoreDropdown
@@ -221,6 +223,15 @@ export const ReadyToShip = () => {
             isOpen={selectShipmentDrawer?.isOpen}
             onClose={closeShipmentDrawer}
           />
+        }
+      />
+      <SchedulePickupModal
+        isOpen={scheduleModal.isOpen}
+        onClose={() =>
+          setScheduleModal({
+            isOpen: false,
+            pickupDetails: {},
+          })
         }
       />
     </div>

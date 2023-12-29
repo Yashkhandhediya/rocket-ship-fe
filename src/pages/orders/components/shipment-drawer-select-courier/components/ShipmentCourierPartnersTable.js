@@ -6,11 +6,13 @@ import { toast } from 'react-toastify';
 import { setAllOrders } from '../../../../../redux';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
-import './ShipmentCourierPartnersTable.css'
+import './ShipmentCourierPartnersTable.css';
+import { SchedulePickupModal } from '../../schedule-pickup-modal';
 
 const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentDrawer }) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const [scheduleModal, setScheduleModal] = useState({ isOpen: false, pickupDetails: {} });
 
   const handleShipOrder = () => {
     setIsLoading(true);
@@ -20,8 +22,22 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         .then((resp) => {
           if (resp?.status === 200) {
             setIsLoading(false);
-            toast(resp?.data?.success ? 'Order shipped successfully' : resp?.data?.error, {
-              type: resp?.data?.success ? 'success' : 'error',
+            toast(
+              resp?.data?.success ? (
+                <div>
+                  <div className="font-medium">{'Success'}</div>
+                  <div>{'AWB assignedsuccessfully'}</div>
+                </div>
+              ) : (
+                resp?.data?.error
+              ),
+              {
+                type: resp?.data?.success ? 'success' : 'error',
+              },
+            );
+            setScheduleModal({
+              isOpen: true,
+              pickupDetails: resp?.data
             });
             dispatch(setAllOrders(null));
             if (resp?.data?.success) {
@@ -147,6 +163,15 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
       <div className="mt-4 h-full max-h-full w-full overflow-auto">
         <DataTable columns={columns} data={shipmentDetails || []} sortActive={false} />
       </div>
+      <SchedulePickupModal
+        isOpen={scheduleModal.isOpen}
+        onClose={() =>
+          setScheduleModal({
+            isOpen: false,
+            pickupDetails: {},
+          })
+        }
+      />
     </div>
   );
 };
