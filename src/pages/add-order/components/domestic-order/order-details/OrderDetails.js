@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { deleteIcon, infoIcon } from '../../../../../common/icons';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import moment from 'moment';
 
 export default function OrderDetails({ handleFormData, formData, triggerValidations }) {
   const defaultProductField = {
@@ -202,7 +203,8 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
               labelClassNames={'text-xs'}
               placeHolder={'Enter Order Date'}
               required={true}
-              value={formData?.date || ''}
+              maxDate={moment(new Date()).format('YYYY-MM-DD')}
+              value={moment(formData?.date || new Date()).format('YYYY-MM-DD')}
               onChange={setDirectKeysInForm}
             />
             {productValidation && !formData?.date && (

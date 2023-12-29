@@ -1,13 +1,16 @@
 import DataTable from 'react-data-table-component';
-import { Link, generatePath } from 'react-router-dom';
+import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { MoreDropdown, CustomTooltip } from '../../../../common/components';
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
 import { moreAction } from '../../../../common/icons';
 import { moreActionOptions } from '../utils';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setClonedOrder } from '../../../../redux';
 
 export const All = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const allOrdersList = useSelector((state) => state?.ordersList);
 
   const columns = [
@@ -149,13 +152,20 @@ export const All = () => {
           <div className="min-h-[32px] min-w-[32px]">
             <MoreDropdown
               renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
-              options={moreActionOptions()}
+              options={moreActionOptions({
+                cloneOrder: () => cloneOrder(row),
+              })}
             />
           </div>
         </div>
       ),
     },
   ];
+
+  function cloneOrder(orderDetails) {
+    dispatch(setClonedOrder(orderDetails));
+    navigate('/add-order');
+  }
 
   return (
     <div className="mt-5">

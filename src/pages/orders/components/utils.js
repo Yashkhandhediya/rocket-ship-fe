@@ -1,4 +1,4 @@
-export const moreActionOptions = () => [
+export const moreActionOptions = (actions) => [
   {
     label: 'Download Invoice',
     key: 'downloadInvoice',
@@ -34,7 +34,7 @@ export const moreActionOptions = () => [
   {
     label: 'Clone Order',
     key: 'cloneOrder',
-    onClick: () => {},
+    onClick: actions?.cloneOrder,
   },
   {
     label: 'Cancel Order',

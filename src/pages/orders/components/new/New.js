@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 import DataTable from 'react-data-table-component';
-import { Link, generatePath } from 'react-router-dom';
+import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { MoreDropdown, CustomTooltip } from '../../../../common/components';
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
@@ -10,9 +10,12 @@ import { moreActionOptions } from '../utils';
 import DrawerWithSidebar from '../../../../common/components/drawer-with-sidebar/DrawerWithSidebar';
 import { ShipmentDrawerOrderDetails } from '../shipment-drawer-order-details';
 import ShipmentDrawerSelectCourier from '../shipment-drawer-select-courier/ShipmentDrawerSelectCourier';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setClonedOrder } from '../../../../redux';
 
 export const New = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const allOrdersList = useSelector((state) => state?.ordersList);
   const newOrdersList = allOrdersList?.filter((order) => (order?.status_name || '')?.toLowerCase() === 'new');
   const [selectShipmentDrawer, setSelectShipmentDrawer] = useState({
@@ -175,13 +178,20 @@ export const New = () => {
           <div className="min-h-[32px] min-w-[32px]">
             <MoreDropdown
               renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
-              options={moreActionOptions()}
+              options={moreActionOptions({
+                cloneOrder: () => cloneOrder(row),
+              })}
             />
           </div>
         </div>
       ),
     },
   ];
+
+  function cloneOrder(orderDetails) {
+    dispatch(setClonedOrder(orderDetails));
+    navigate('/add-order');
+  }
 
   const closeShipmentDrawer = () => {
     setSelectShipmentDrawer({

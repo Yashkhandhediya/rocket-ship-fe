@@ -17,6 +17,7 @@ const Field = ({
   isDisabled,
   maxLength,
   minLength,
+  maxDate,
   showOptional = false,
   labelClassNames = '',
   inputClassNames = '',
@@ -86,6 +87,7 @@ const Field = ({
           placeholder={placeHolder}
           required={required}
           onBlur={onBlur}
+          max={maxDate || ''}
           maxLength={maxLength}
           minLength={minLength}
         />
