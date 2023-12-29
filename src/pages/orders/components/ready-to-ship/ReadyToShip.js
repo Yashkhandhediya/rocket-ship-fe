@@ -11,6 +11,7 @@ import { ShipmentDrawerOrderDetails } from '../shipment-drawer-order-details';
 import ShipmentDrawerSelectCourier from '../shipment-drawer-select-courier/ShipmentDrawerSelectCourier';
 import { useDispatch, useSelector } from 'react-redux';
 import { setClonedOrder } from '../../../../redux';
+import axios from 'axios';
 
 export const ReadyToShip = () => {
   const dispatch = useDispatch();
@@ -129,12 +130,12 @@ export const ReadyToShip = () => {
             <div className="pb-0.5">
               {(row?.status_name || '')?.toLowerCase() === 'new' ? (
                 'Not Assigned'
-              ) : (
-                <Link
-                  to={generatePath(`/tracking/:orderId`, { orderId: row?.id })}
-                  className="border-b-2 border-b-purple-700 text-purple-700">
-                  {'Track order'}
-                </Link>
+              ) : (''
+                // <Link
+                //   to={generatePath(`/tracking/:orderId`, { orderId: row?.id })}
+                //   className="border-b-2 border-b-purple-700 text-purple-700">
+                //   {'Track order'}
+                // </Link>
               )}
             </div>
           </div>
@@ -155,12 +156,22 @@ export const ReadyToShip = () => {
       name: 'Action',
       selector: (row) => (
         <div className="flex gap-2 py-2 text-left">
-          <button
-            id={row.id}
-            className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
-            onClick={() => {}}>
-            {(row?.status_name || '')?.toLowerCase() == 'new' ? 'Ship Now' : 'Download Menifest'}
-          </button>
+            <button
+              id={row.id}
+              className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
+              onClick={() => {
+                // const resp = axios.get('http://43.252.197.60:8030/order/track?order_id=' + row.id);
+                let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
+                console.log('new url', newURL);
+                let newTab = window.open(newURL, '_blank');
+                if (newTab) {
+                  newTab.focus();
+                }
+
+                // console.log('urllll',window.location.host+'/tracking/1')
+              }}>
+              {'Track'}
+            </button>
           <div className="min-h-[32px] min-w-[32px]">
             <MoreDropdown
               renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
