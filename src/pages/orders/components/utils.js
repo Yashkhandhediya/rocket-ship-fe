@@ -39,6 +39,6 @@ export const moreActionOptions = (actions) => [
   {
     label: 'Cancel Order',
     key: 'cancelOrder',
-    onClick: () => {},
+    onClick: actions?.cancelOrder,
   },
 ];

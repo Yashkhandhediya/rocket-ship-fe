@@ -6,7 +6,9 @@ import { Badge } from 'flowbite-react';
 import { moreAction } from '../../../../common/icons';
 import { moreActionOptions } from '../utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { setClonedOrder } from '../../../../redux';
+import { setAllOrders, setClonedOrder } from '../../../../redux';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export const All = () => {
   const dispatch = useDispatch();
@@ -154,6 +156,7 @@ export const All = () => {
               renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
               options={moreActionOptions({
                 cloneOrder: () => cloneOrder(row),
+                cancelOrder: () => cancelOrder(row),
               })}
             />
           </div>
@@ -161,6 +164,23 @@ export const All = () => {
       ),
     },
   ];
+
+  function cancelOrder(orderDetails) {
+    axios
+      .put(`http://43.252.197.60:8030/order/?id=${orderDetails?.id}`, {
+        ...orderDetails,
+        status: 'cancelled',
+      })
+      .then((resp) => {
+        if (resp?.status === 200) {
+          dispatch(setAllOrders(null));
+          toast('Order cancelled successfully', { type: 'success' });
+        }
+      })
+      .catch(() => {
+        toast('Unable to cancel Order', { type: 'error' });
+      });
+  }
 
   function cloneOrder(orderDetails) {
     dispatch(setClonedOrder(orderDetails));

@@ -11,7 +11,8 @@ import DrawerWithSidebar from '../../../../common/components/drawer-with-sidebar
 import { ShipmentDrawerOrderDetails } from '../shipment-drawer-order-details';
 import ShipmentDrawerSelectCourier from '../shipment-drawer-select-courier/ShipmentDrawerSelectCourier';
 import { useDispatch, useSelector } from 'react-redux';
-import { setClonedOrder } from '../../../../redux';
+import { setAllOrders, setClonedOrder } from '../../../../redux';
+import { toast } from 'react-toastify';
 
 export const New = () => {
   const dispatch = useDispatch();
@@ -180,6 +181,7 @@ export const New = () => {
               renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
               options={moreActionOptions({
                 cloneOrder: () => cloneOrder(row),
+                cancelOrder: () => cancelOrder(row),
               })}
             />
           </div>
@@ -187,6 +189,23 @@ export const New = () => {
       ),
     },
   ];
+
+  function cancelOrder(orderDetails) {
+    axios
+      .put(`http://43.252.197.60:8030/order/?id=${orderDetails?.id}`, {
+        ...orderDetails,
+        status: 'cancelled',
+      })
+      .then((resp) => {
+        if (resp?.status === 200) {
+          dispatch(setAllOrders(null));
+          toast('Order cancelled successfully', { type: 'success' });
+        }
+      })
+      .catch(() => {
+        toast('Unable to cancel Order', { type: 'error' });
+      });
+  }
 
   function cloneOrder(orderDetails) {
     dispatch(setClonedOrder(orderDetails));
