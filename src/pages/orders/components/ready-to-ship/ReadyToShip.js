@@ -233,6 +233,7 @@ export const ReadyToShip = () => {
             pickupDetails: {},
           })
         }
+        pickupDetails={scheduleModal.pickupDetails}
       />
     </div>
   );

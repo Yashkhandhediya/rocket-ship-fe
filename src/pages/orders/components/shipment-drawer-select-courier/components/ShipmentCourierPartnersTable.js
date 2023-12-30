@@ -37,7 +37,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
             );
             setScheduleModal({
               isOpen: true,
-              pickupDetails: resp?.data
+              pickupDetails: {id: orderId}
             });
             dispatch(setAllOrders(null));
             if (resp?.data?.success) {
@@ -171,6 +171,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
             pickupDetails: {},
           })
         }
+        pickupDetails={scheduleModal.pickupDetails}
       />
     </div>
   );

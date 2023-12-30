@@ -1,20 +1,70 @@
 import { faCalendarDays } from '@fortawesome/free-regular-svg-icons';
 import { faCircleCheck, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios';
 import { Modal } from 'flowbite-react';
+import moment from 'moment';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
-const SchedulePickupModal = ({ isOpen, onClose }) => {
+const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
+  const [datesToMap, seDatesToMap] = useState([]);
+  const [scheduleDetails, setScheduleDetails] = useState({
+    pickup_time: '',
+    pickup_date: '',
+  });
+
+  const handleSelectDate = (date) => {
+    setScheduleDetails({
+      pickup_date: date,
+      pickup_time: moment().format('HH:mm:ss.SSSZ'),
+    });
+  };
+
+  const schedulePickup = () => {
+    axios
+      .post(`http://43.252.197.60:8030/order/${pickupDetails.id}/pickup`, {
+        pickup_date: moment(scheduleDetails.pickup_date).format('YYYY-MM-DD'),
+        pickup_time: scheduleDetails.pickup_time,
+      })
+      .then((resp) => {
+        if (resp.status === 200) {
+          toast(
+            `pickup scheduled successfully on date ${moment(scheduleDetails.pickup_date).format(
+              'YYYY-MM-DD',
+            ), {type: "success"}}`,
+          );
+          onClose();
+        }
+      }).catch(() => {
+        toast("Unable to schedule pickup", {type: "error"})
+      });
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      const today = moment();
+      const dateArray = [];
+      // .format('YYYY-MM-DD')
+      for (let i = 0; i < 6; i++) {
+        const nextDate = moment(today).add(i, 'days');
+        dateArray.push(nextDate);
+      }
+      seDatesToMap(dateArray);
+    }
+  }, [isOpen]);
+
   return (
     <Modal dismissible show={isOpen} onClose={onClose} className="min-w-[700px]">
-      <Modal.Header className='p-4 pb-2'>{'Schedule Your Pickup'}</Modal.Header>
-      <Modal.Body className='py-4 px-4'>
+      <Modal.Header className="p-4 pb-2">{'Schedule Your Pickup'}</Modal.Header>
+      <Modal.Body className="px-4 py-4">
         <div className="mb-4 flex items-center rounded-md bg-green-100 px-2 py-1.5">
           <FontAwesomeIcon icon={faCircleCheck} className="mr-2 inline-flex text-green-600" />
-          <div className="flex text-wrap text-[11px] flex-wrap">
+          <div className="flex flex-wrap text-wrap text-[11px]">
             {'Your package has been assigned to '}
-            <p className='font-semibold mx-0.5 inline-flex'>{'Xpressbees Surface'}</p>
+            <p className="mx-0.5 inline-flex font-semibold">{'Xpressbees Surface'}</p>
             {' successfully. The AWB number of the same is '}
-            <p className='font-semibold px-0.5 text-indigo-700 inline-flex'>{'4658461858515'}</p>
+            <p className="inline-flex px-0.5 font-semibold text-indigo-700">{'4658461858515'}</p>
           </div>
         </div>
         <div className="mb-4 flex items-center gap-2 rounded-md bg-gray-100 p-2 text-xs">
@@ -29,13 +79,27 @@ const SchedulePickupModal = ({ isOpen, onClose }) => {
             <FontAwesomeIcon icon={faCalendarDays} className="mr-2 h-5 w-5" />
             <label>{'Please select a suitable date for your order to be picked up'}</label>
           </div>
-          <div className="flex gap-1.5 py-1">
-            {[1, 2, 3, 4, 5].map((day, i) => {
+          <div className="flex gap-2 py-1">
+            {datesToMap.map((day, i) => {
+              let displayFormat = day;
+              let datePillClassNames = 'border-gray-400 bg-white text-black';
+              if (scheduleDetails?.pickup_date && moment(scheduleDetails?.pickup_date).isSame(day, 'day')) {
+                datePillClassNames = 'border-blue-400 bg-blue-100 text-indigo-700';
+              }
+              if (moment(day).isSame(moment(), 'day')) {
+                displayFormat = 'Today';
+              } else if (moment(day).isSame(moment().add(1, 'days'), 'day')) {
+                displayFormat = 'Tommorow';
+              } else {
+                displayFormat = moment(day).format('D MMMM YY');
+              }
+
               return (
                 <div
                   key={i}
-                  className="cursor-pointer rounded-full border-2 border-gray-400 bg-white px-1.5 text-xs">
-                  {day + ' December 24'}
+                  className={`cursor-pointer rounded-full border-2 px-1.5 text-xs ${datePillClassNames}`}
+                  onClick={() => handleSelectDate(day)}>
+                  {displayFormat}
                 </div>
               );
             })}
@@ -44,8 +108,8 @@ const SchedulePickupModal = ({ isOpen, onClose }) => {
             {'In case you schedule the pickup for Today, You will not be able to reschedule this pick up.'}
           </div>
         </div>
-        <div className='text-[10px] flex mt-2'>
-          <p className='font-medium'>{'Note: '}</p>
+        <div className="mt-2 flex text-[10px]">
+          <p className="font-medium">{'Note: '}</p>
           <p>
             {
               'Please ensure that your invoice is in the package, and your label is visible on the package to be delivered'
@@ -53,9 +117,13 @@ const SchedulePickupModal = ({ isOpen, onClose }) => {
           </p>
         </div>
       </Modal.Body>
-      <Modal.Footer className='flex gap-4 justify-center pt-3 pb-5'>
-        <button className='text-indigo-700 rounded-md py-2 px-4 text-xs'>{"I'll do it later"}</button>
-        <button className='bg-indigo-700 rounded-md py-2 px-4 text-white text-xs'>{"Schedule Pick Up"}</button>
+      <Modal.Footer className="flex justify-center gap-4 pb-5 pt-3">
+        <button className="rounded-md px-4 py-2 text-xs text-indigo-700" onClick={onClose}>
+          {"I'll do it later"}
+        </button>
+        <button className="rounded-md bg-indigo-700 px-4 py-2 text-xs text-white" onClick={schedulePickup}>
+          {'Schedule Pick Up'}
+        </button>
       </Modal.Footer>
     </Modal>
   );
