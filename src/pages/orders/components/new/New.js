@@ -194,6 +194,7 @@ export const New = () => {
       .put(`http://43.252.197.60:8030/order/?id=${orderDetails?.id}`, {
         ...orderDetails,
         status: 'cancelled',
+        status_name: 'cancelled'
       })
       .then((resp) => {
         if (resp?.status === 200) {
