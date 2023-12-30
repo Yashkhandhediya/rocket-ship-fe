@@ -31,7 +31,7 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
     handleFormData({
       ...formData,
       volumatric_weight: volumatricWeight,
-      applicable1_weight: applicableWeight,
+      applicable_weight: applicableWeight,
     });
   }, [volumatricWeight, applicableWeight]);
 
