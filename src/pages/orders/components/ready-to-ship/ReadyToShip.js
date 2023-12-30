@@ -131,7 +131,15 @@ export const ReadyToShip = () => {
             <div className="pb-0.5">
               {(row?.status_name || '')?.toLowerCase() === 'new' ? (
                 'Not Assigned'
-              ) : (''
+              ) : (
+                <a href={`http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`} 
+                   target='_blank' style={{color:'blue', textDecoration:'underline'}}
+                   rel="noopener noreferrer">Track Order</a>
+                // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
+                // let newTab = window.open(newURL, '_blank');
+                // if (newTab) {
+                //   newTab.focus();
+                // }
                 // <Link
                 //   to={generatePath(`/tracking/:orderId`, { orderId: row?.id })}
                 //   className="border-b-2 border-b-purple-700 text-purple-700">
