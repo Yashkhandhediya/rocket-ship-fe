@@ -27,6 +27,7 @@ const LogIn = () => {
       (response)=>{
         console.log(response);
         if (response.data.access_token){
+          localStorage.setItem('access_token',response.data.access_token)
           toast('Login Success',{type:'success'})
           navigate('/orders')
         }
