@@ -62,7 +62,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           <div>{/* <img src={''} className="h-10 w-10 rounded-full bg-gray-400" /> */}</div>
           <div>
             <h4 className="pb-1.5 text-xs font-medium text-[#555]">
-              {row?.partner_name || 'Xpressbees Surface'}
+              {row?.partner_name || 'Delhivery'}
             </h4>
             <div className="pb-1.5 text-xs text-[#555]">
               {`${Number(row?.surface_max_weight || 0) ? 'Surface ' : 'Air'} | Min-weight: `}

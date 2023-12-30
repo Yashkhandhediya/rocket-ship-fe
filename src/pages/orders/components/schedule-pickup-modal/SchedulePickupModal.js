@@ -62,7 +62,7 @@ const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
           <FontAwesomeIcon icon={faCircleCheck} className="mr-2 inline-flex text-green-600" />
           <div className="flex flex-wrap text-wrap text-[11px]">
             {'Your package has been assigned to '}
-            <p className="mx-0.5 inline-flex font-semibold">{'Xpressbees Surface'}</p>
+            <p className="mx-0.5 inline-flex font-semibold">{'Delhivery'}</p>
             {' successfully. The AWB number of the same is '}
             <p className="inline-flex px-0.5 font-semibold text-indigo-700">{'4658461858515'}</p>
           </div>
