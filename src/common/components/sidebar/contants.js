@@ -1,4 +1,5 @@
 import { home, homeActive } from '../../icons/sidebar-icons';
+import { logout } from './utils';
 
 export const sidebarLinks = [
   {
@@ -140,5 +141,11 @@ export const sidebarLinks = [
     path: '/',
     icon: home,
     hoverIcon: homeActive,
+  },
+  {
+    title: 'Logout',
+    icon: home,
+    hoverIcon: homeActive,
+    onClick: logout
   },
 ];
