@@ -4,10 +4,11 @@ import ShipmentCourierPartnersTable from './components/ShipmentCourierPartnersTa
 import ShipmentSelfFullfiled from './components/ShipmentSelfFullfiled';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import Loader from '../../../../common/loader/Loader';
 
 const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
   const [shipmentsDetails, setShipmentDetails] = useState(null);
-
+  const [isLoading, setIsLoading] = useState(true)
   const tabsData = [
     {
       title: 'All',
@@ -65,12 +66,14 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
       .then((resp) => {
         if (resp.status === 200) {
           setShipmentDetails(resp?.data);
+          setIsLoading(false);
         }
       })
       .catch((e) => {
         // eslint-disable-next-line no-console
         console.error(e);
         toast('Unable to fetch shipment details', { type: 'error' });
+        setIsLoading(false);
       });
   };
 
@@ -82,6 +85,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
 
   return (
     <div className="mt-3">
+      {isLoading && <Loader/>}
       <Tabs tabs={tabsData} tabClassNames={'px-6 text-[#888]'} />
     </div>
   );

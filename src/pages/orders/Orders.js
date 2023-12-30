@@ -6,9 +6,11 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllOrders } from '../../redux';
 import { toast } from 'react-toastify';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Loader from '../../common/loader/Loader';
 
 const Orders = () => {
+  const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -20,12 +22,15 @@ const Orders = () => {
       .then(async (resp) => {
         if (resp.status === 200) {
           dispatch(setAllOrders(resp?.data || []));
+          setIsLoading(false)
         } else {
           toast('There is some error while fetching orders.', { type: 'error' });
+          setIsLoading(false)
         }
       })
       .catch(() => {
         toast('There is some error while fetching orders.', { type: 'error' });
+        setIsLoading(false)
       });
   };
 
@@ -38,6 +43,7 @@ const Orders = () => {
 
   return (
     <PageWithSidebar>
+      {isLoading && <Loader/>}
       <div className="h-full w-full bg-[#f8f8f8] px-4 text-center">
         <div className="flex items-center justify-between px-1.5 pb-3 pt-4">
           <h1 className="text-xl font-bold">Orders</h1>
