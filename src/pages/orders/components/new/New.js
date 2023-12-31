@@ -5,7 +5,7 @@ import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { MoreDropdown, CustomTooltip } from '../../../../common/components';
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
-import { moreAction } from '../../../../common/icons';
+import { filter, moreAction } from '../../../../common/icons';
 import { moreActionOptions } from '../utils';
 import DrawerWithSidebar from '../../../../common/components/drawer-with-sidebar/DrawerWithSidebar';
 import { ShipmentDrawerOrderDetails } from '../shipment-drawer-order-details';
@@ -13,6 +13,7 @@ import ShipmentDrawerSelectCourier from '../shipment-drawer-select-courier/Shipm
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllOrders, setClonedOrder } from '../../../../redux';
 import { toast } from 'react-toastify';
+import { MoreFiltersDrawer } from '../more-filters-drawer';
 
 export const New = () => {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ export const New = () => {
     isOpen: false,
     orderDetails: {},
   });
+  const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   const columns = [
     {
       name: 'Order Details',
@@ -194,7 +196,7 @@ export const New = () => {
       .put(`http://43.252.197.60:8030/order/?id=${orderDetails?.id}`, {
         ...orderDetails,
         status: 'cancelled',
-        status_name: 'cancelled'
+        status_name: 'cancelled',
       })
       .then((resp) => {
         if (resp?.status === 200) {
@@ -221,6 +223,15 @@ export const New = () => {
 
   return (
     <div className="mt-5">
+      <div className="mb-4 flex w-full">
+        <div>{''}</div>
+        <div>
+          <button className="inline-flex items-center border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-indigo-700 rounded-sm" onClick={() => setOpenFilterDrawer(true)}>
+            <img src={filter} className="mr-2 w-4" />
+            {'More Filters'}
+          </button>
+        </div>
+      </div>
       <DataTable
         columns={columns}
         data={newOrdersList || []}
@@ -245,6 +256,7 @@ export const New = () => {
           />
         }
       />
+      <MoreFiltersDrawer isOpen={openFilterDrawer} onClose={() => setOpenFilterDrawer(false)} />
     </div>
   );
 };

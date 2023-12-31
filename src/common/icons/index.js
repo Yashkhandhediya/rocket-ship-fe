@@ -12,3 +12,4 @@ export { default as shipRocket } from './ship-rocket.svg';
 export { default as moreAction } from './more-action.svg';
 export { default as copyToClipboard } from './copy-to-clipboard.svg';
 export { default as openBox } from './open-box.svg';
+export { default as filter } from './filter.svg';

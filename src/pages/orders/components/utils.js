@@ -42,3 +42,20 @@ export const moreActionOptions = (actions) => [
     onClick: actions?.cancelOrder,
   },
 ];
+
+export const tableCustomStyle = {
+  responsiveWrapper: {
+    style: {
+      overflowY: 'auto',
+      maxHeight: 'calc(100vh - 10rem)',
+      scrollbarGutter: 'stable',
+    },
+  },
+  head: {
+    style: {
+      position: 'sticky',
+      top: 0,
+      zIndex: 1,
+    },
+  },
+};

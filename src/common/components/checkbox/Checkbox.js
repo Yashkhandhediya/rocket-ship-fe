@@ -1,10 +1,10 @@
 import { infoIcon } from '../../icons';
 import { CustomTooltip } from '../custom-tooltip';
 
-const Checkbox = ({ id, label, checked, tooltip, onChange }) => {
+const Checkbox = ({ id, label, checked,value="",  tooltip, onChange }) => {
   return (
     <div className="relative flex">
-      <input type="checkbox" className="peer hidden" id={id} checked={checked} onChange={onChange} />
+      <input type="checkbox" className="peer hidden" value={value} id={id} checked={checked} onChange={onChange} />
 
       <label
         htmlFor={id}

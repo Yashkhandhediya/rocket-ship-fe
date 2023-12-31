@@ -84,7 +84,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
   }, [orderDetails?.id, isOpen]);
 
   return (
-    <div className="mt-3">
+    <div className="mt-3 h-full">
       {isLoading && <Loader/>}
       <Tabs tabs={tabsData} tabClassNames={'px-6 text-[#888]'} />
     </div>

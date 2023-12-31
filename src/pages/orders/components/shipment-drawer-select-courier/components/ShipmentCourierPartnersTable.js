@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import './ShipmentCourierPartnersTable.css';
 import { SchedulePickupModal } from '../../schedule-pickup-modal';
+import { tableCustomStyle } from '../../utils';
 
 const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentDrawer }) => {
   const dispatch = useDispatch();
@@ -37,7 +38,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
             );
             setScheduleModal({
               isOpen: true,
-              pickupDetails: {id: orderId}
+              pickupDetails: { id: orderId },
             });
             dispatch(setAllOrders(null));
             if (resp?.data?.success) {
@@ -61,9 +62,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         <div className="flex gap-1 pb-4 pt-7 text-left">
           <div>{/* <img src={''} className="h-10 w-10 rounded-full bg-gray-400" /> */}</div>
           <div>
-            <h4 className="pb-1.5 text-xs font-medium text-[#555]">
-              {row?.partner_name || 'Delhivery'}
-            </h4>
+            <h4 className="pb-1.5 text-xs font-medium text-[#555]">{row?.partner_name || 'Delhivery'}</h4>
             <div className="pb-1.5 text-xs text-[#555]">
               {`${Number(row?.surface_max_weight || 0) ? 'Surface ' : 'Air'} | Min-weight: `}
               <span className="font-medium">
@@ -159,9 +158,16 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           <div className="loader"></div>
         </div>
       )}
-      <div className="text-xs text-[#888]">{`${shipmentDetails?.length || 0} Couriers Found`}</div>
-      <div className="mt-4 h-full max-h-full w-full overflow-auto">
-        <DataTable columns={columns} data={shipmentDetails || []} sortActive={false} />
+      <div className="text-xs text-[rgb(136,136,136)]">{`${
+        shipmentDetails?.length || 0
+      } Couriers Found`}</div>
+      <div className="mt-4 h-full w-full">
+        <DataTable
+          columns={columns}
+          data={shipmentDetails || []}
+          sortActive={false}
+          customStyles={tableCustomStyle}
+        />
       </div>
       <SchedulePickupModal
         isOpen={scheduleModal.isOpen}

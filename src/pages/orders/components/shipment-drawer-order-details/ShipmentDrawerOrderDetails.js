@@ -58,7 +58,7 @@ const ShipmentDrawerOrderDetails = ({ orderDetails }) => {
         isOpen={openMoreDetails}
         onClose={() => setOpenMoreDetails(false)}
         heading={'Buyer Insights'}
-        drawerWrapperClassNames={'max-w-[375px] w-[375px] px-0'}>
+        width={"375px"}>
         <div className="w-full">
           <LabelValue label={'Buyer Name'} value={orderDetails?.buyer_info?.first_name} />
           <div className="mb-2 mt-4 w-full border border-gray-100" />
