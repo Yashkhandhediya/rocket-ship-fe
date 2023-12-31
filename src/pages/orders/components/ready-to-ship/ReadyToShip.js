@@ -4,19 +4,21 @@ import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { MoreDropdown, CustomTooltip } from '../../../../common/components';
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
-import { moreAction } from '../../../../common/icons';
-import { moreActionOptions } from '../utils';
+import { filterIcon, moreAction } from '../../../../common/icons';
+import { filterReadyToShip, moreActionOptions } from '../utils';
 import DrawerWithSidebar from '../../../../common/components/drawer-with-sidebar/DrawerWithSidebar';
 import { ShipmentDrawerOrderDetails } from '../shipment-drawer-order-details';
 import ShipmentDrawerSelectCourier from '../shipment-drawer-select-courier/ShipmentDrawerSelectCourier';
 import { useDispatch, useSelector } from 'react-redux';
 import { setClonedOrder } from '../../../../redux';
 import { SchedulePickupModal } from '../schedule-pickup-modal';
+import { MoreFiltersDrawer } from '../more-filters-drawer';
 
 export const ReadyToShip = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const allOrdersList = useSelector((state) => state?.ordersList);
+  const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   const readyShipOrdersList = allOrdersList?.filter(
     (order) => (order?.status_name || '')?.toLowerCase() !== 'new',
   );
@@ -132,9 +134,13 @@ export const ReadyToShip = () => {
               {(row?.status_name || '')?.toLowerCase() === 'new' ? (
                 'Not Assigned'
               ) : (
-                <a href={`http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`} 
-                   target='_blank' style={{color:'blue', textDecoration:'underline'}}
-                   rel="noopener noreferrer">Track Order</a>
+                <a
+                  href={`http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`}
+                  target="_blank"
+                  style={{ color: 'blue', textDecoration: 'underline' }}
+                  rel="noopener noreferrer">
+                  Track Order
+                </a>
                 // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
                 // let newTab = window.open(newURL, '_blank');
                 // if (newTab) {
@@ -165,23 +171,23 @@ export const ReadyToShip = () => {
       name: 'Action',
       selector: (row) => (
         <div className="flex gap-2 py-2 text-left">
-            <button
-              id={row.id}
-              className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
-              onClick={() => {
-                setScheduleModal({
-                  isOpen: true,
-                  pickupDetails: row,
-                })
-                // const resp = axios.get('http://43.252.197.60:8030/order/track?order_id=' + row.id);
-                // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
-                // let newTab = window.open(newURL, '_blank');
-                // if (newTab) {
-                //   newTab.focus();
-                // }
-              }}>
-              {'Schedule Pickup'}
-            </button>
+          <button
+            id={row.id}
+            className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
+            onClick={() => {
+              setScheduleModal({
+                isOpen: true,
+                pickupDetails: row,
+              });
+              // const resp = axios.get('http://43.252.197.60:8030/order/track?order_id=' + row.id);
+              // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
+              // let newTab = window.open(newURL, '_blank');
+              // if (newTab) {
+              //   newTab.focus();
+              // }
+            }}>
+            {'Schedule Pickup'}
+          </button>
           <div className="min-h-[32px] min-w-[32px]">
             <MoreDropdown
               renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
@@ -209,6 +215,16 @@ export const ReadyToShip = () => {
 
   return (
     <div className="mt-5">
+      <div className="mb-4 flex w-full">
+        <div>
+          <button
+            className="inline-flex items-center rounded-sm border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-indigo-700"
+            onClick={() => setOpenFilterDrawer(true)}>
+            <img src={filterIcon} className="mr-2 w-4" />
+            {'More Filters'}
+          </button>
+        </div>
+      </div>
       <DataTable
         columns={columns}
         data={readyShipOrdersList || []}
@@ -242,6 +258,11 @@ export const ReadyToShip = () => {
           })
         }
         pickupDetails={scheduleModal.pickupDetails}
+      />
+      <MoreFiltersDrawer
+        isOpen={openFilterDrawer}
+        onClose={() => setOpenFilterDrawer(false)}
+        fieldNames={filterReadyToShip}
       />
     </div>
   );

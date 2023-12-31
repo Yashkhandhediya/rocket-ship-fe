@@ -1,4 +1,4 @@
-import { All, Delivered, New, PickupMenifests, ReadyToShip, Rto } from '../components';
+import { All, Delivered, InTransit, New, PickupMenifests, ReadyToShip, Rto } from '../components';
 
 export const ordersTabs = [
   {
@@ -19,7 +19,7 @@ export const ordersTabs = [
   {
     title: 'In Transit',
     id: 'inTransit',
-    panel: <>{'In Transit'}</>,
+    panel: <InTransit />,
   },
   {
     title: 'Delivered',

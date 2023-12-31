@@ -3,17 +3,20 @@ import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { MoreDropdown, CustomTooltip } from '../../../../common/components';
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
-import { moreAction } from '../../../../common/icons';
-import { moreActionOptions } from '../utils';
+import { filterIcon, moreAction } from '../../../../common/icons';
+import { filterAllOrders, moreActionOptions } from '../utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllOrders, setClonedOrder } from '../../../../redux';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useState } from 'react';
+import { MoreFiltersDrawer } from '../more-filters-drawer';
 
 export const All = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const allOrdersList = useSelector((state) => state?.ordersList);
+  const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
 
   const columns = [
     {
@@ -189,6 +192,16 @@ export const All = () => {
 
   return (
     <div className="mt-5">
+      <div className="mb-4 flex w-full">
+        <div>
+          <button
+            className="inline-flex items-center rounded-sm border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-indigo-700"
+            onClick={() => setOpenFilterDrawer(true)}>
+            <img src={filterIcon} className="mr-2 w-4" />
+            {'More Filters'}
+          </button>
+        </div>
+      </div>
       <DataTable
         columns={columns}
         data={allOrdersList || []}
@@ -198,6 +211,11 @@ export const All = () => {
             style: { overflow: 'visible' },
           },
         }}
+      />
+      <MoreFiltersDrawer
+        isOpen={openFilterDrawer}
+        onClose={() => setOpenFilterDrawer(false)}
+        fieldNames={filterAllOrders}
       />
     </div>
   );

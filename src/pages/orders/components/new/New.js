@@ -5,8 +5,8 @@ import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { MoreDropdown, CustomTooltip } from '../../../../common/components';
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
-import { filter, moreAction } from '../../../../common/icons';
-import { moreActionOptions } from '../utils';
+import { filterIcon, moreAction } from '../../../../common/icons';
+import { moreActionOptions, allFilterFields } from '../utils';
 import DrawerWithSidebar from '../../../../common/components/drawer-with-sidebar/DrawerWithSidebar';
 import { ShipmentDrawerOrderDetails } from '../shipment-drawer-order-details';
 import ShipmentDrawerSelectCourier from '../shipment-drawer-select-courier/ShipmentDrawerSelectCourier';
@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAllOrders, setClonedOrder } from '../../../../redux';
 import { toast } from 'react-toastify';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
+
 
 export const New = () => {
   const dispatch = useDispatch();
@@ -224,10 +225,11 @@ export const New = () => {
   return (
     <div className="mt-5">
       <div className="mb-4 flex w-full">
-        <div>{''}</div>
         <div>
-          <button className="inline-flex items-center border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-indigo-700 rounded-sm" onClick={() => setOpenFilterDrawer(true)}>
-            <img src={filter} className="mr-2 w-4" />
+          <button
+            className="inline-flex items-center rounded-sm border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-indigo-700"
+            onClick={() => setOpenFilterDrawer(true)}>
+            <img src={filterIcon} className="mr-2 w-4" />
             {'More Filters'}
           </button>
         </div>
@@ -256,7 +258,11 @@ export const New = () => {
           />
         }
       />
-      <MoreFiltersDrawer isOpen={openFilterDrawer} onClose={() => setOpenFilterDrawer(false)} />
+      <MoreFiltersDrawer
+        isOpen={openFilterDrawer}
+        onClose={() => setOpenFilterDrawer(false)}
+        fieldNames={allFilterFields}
+      />
     </div>
   );
 };
