@@ -2,8 +2,16 @@ import { BuyersInfoFields } from '../../buyers-info-fields';
 import { BuyerAddressFields } from '../../buyer-address-fields';
 import { Checkbox, Field, FieldAccordion } from '../../../../../common/components';
 import { useEffect, useState } from 'react';
+import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
+import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { isEmpty } from 'lodash';
 
-export default function BuyerDetails({ handleFormData, formData, triggerValidations }) {
+export default function BuyerDetails({ handleFormData, formData, currentStep, handleChangeStep }) {
+  const dispatch = useDispatch();
+
+  const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order) || {};
+
   const [isSameBilingAddress, setIsSameBilingAddress] = useState(true);
   const [triggerBuyerValidations, setTriggerBuyerValidations] = useState(false);
   const [disableAddressLocationField, setDisableAddressLocationField] = useState(false);
@@ -85,6 +93,36 @@ export default function BuyerDetails({ handleFormData, formData, triggerValidati
     });
     setDisableBillingLocationField(true);
   };
+
+  const changeNextStep = (type) => {
+    if (type === 'NEXT') {
+      setTriggerBuyerValidations(true);
+      if (
+        !buyerInfo?.contact_no ||
+        !buyerInfo?.first_name ||
+        !addressInfo?.complete_address ||
+        !addressInfo?.pincode ||
+        !addressInfo?.city ||
+        !addressInfo?.state ||
+        !addressInfo?.country
+      ) {
+        toast('Please enter all required fields', { type: 'error' });
+      } else {
+        dispatch(
+          setDomesticOrder({
+            buyer_info: buyerInfo,
+            company_info: companyInfo,
+            address_info: addressInfo,
+            billing_info: billingInfo,
+          }),
+        );
+        handleChangeStep(currentStep + 1);
+      }
+    } else if (currentStep > 0) {
+      handleChangeStep(currentStep - 1);
+    }
+  };
+
   useEffect(() => {
     if (addressInfo?.city || addressInfo?.state) {
       setAddressInfo({
@@ -108,20 +146,13 @@ export default function BuyerDetails({ handleFormData, formData, triggerValidati
   }, [billingInfo.pincode]);
 
   useEffect(() => {
-    handleFormData({
-      buyer_info: buyerInfo,
-      company_info: companyInfo,
-      address_info: addressInfo,
-      billing_info: billingInfo,
-    });
-  }, [billingInfo, addressInfo, companyInfo, buyerInfo]);
-
-  useEffect(() => {
-    if (triggerValidations.trigger) {
-      setTriggerBuyerValidations(true);
-      triggerValidations.reset();
+    if (!isEmpty(domesticOrderFormValues)) {
+      setBuyerInfo(domesticOrderFormValues.buyer_info);
+      setCompanyInfo(domesticOrderFormValues.company_info);
+      setAddressInfo(domesticOrderFormValues.address_info);
+      setBillingInfo(domesticOrderFormValues.billing_info);
     }
-  }, [triggerValidations.trigger]);
+  }, [domesticOrderFormValues]);
 
   return (
     <div>
@@ -230,6 +261,14 @@ export default function BuyerDetails({ handleFormData, formData, triggerValidati
             </div>
           )}
         </div>
+      </div>
+      <div className="flex justify-end gap-4">
+        <button
+          type="button"
+          className="dark:focus:ring-purple-900 rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
+          onClick={() => changeNextStep('NEXT')}>
+          {'Next'}
+        </button>
       </div>
     </div>
   );

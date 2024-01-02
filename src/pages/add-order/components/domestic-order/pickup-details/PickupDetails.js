@@ -5,8 +5,16 @@ import { addAdressIcon, editIcon } from '../../../../../common/icons';
 import AddAddressDrawer from '../../add-address-drawer/AddAddressDrawer';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { isEmpty } from 'lodash';
 
-export default function PickupDetails({ handleFormData, formData }) {
+export default function PickupDetails({ currentStep, handleChangeStep }) {
+  const dispatch = useDispatch();
+
+  const domesticOrderPickupAddress =
+    useSelector((state) => state?.addOrder?.domestic_order?.pickup_address) || {};
+
   const [addAddressDrawerOpen, setAddAddressDrawerOpen] = useState(false);
   const [editAddressDrawerOpen, setEditAddressDrawerOpen] = useState(false);
   const [searchAddress, setSearchAddress] = useState('');
@@ -32,12 +40,25 @@ export default function PickupDetails({ handleFormData, formData }) {
       });
   };
 
+  const changeNextStep = (type) => {
+    if (type === 'NEXT') {
+      if (!selectedAddress) {
+        toast('Please select an address to proceed Next', { type: 'error' });
+      } else {
+        dispatch(
+          setDomesticOrder({
+            pickup_address: selectedAddress,
+          }),
+        );
+        handleChangeStep(currentStep + 1);
+      }
+    } else if (currentStep > 0) {
+      handleChangeStep(currentStep - 1);
+    }
+  };
+
   useEffect(() => {
     if (selectedAddress) {
-      handleFormData({
-        ...formData,
-        pickup_address: selectedAddress,
-      });
       setSearchAddress(
         `${selectedAddress?.tag || ''}: ${selectedAddress?.complete_address} ${selectedAddress?.landmark} ${
           selectedAddress?.city
@@ -51,6 +72,13 @@ export default function PickupDetails({ handleFormData, formData }) {
       fetchUserAddressList();
     }
   }, []);
+
+  useEffect(() => {
+    if (!isEmpty(domesticOrderPickupAddress) && !isEmpty(addressList)) {
+      const selectAddress = addressList?.find((address) => address?.id === domesticOrderPickupAddress?.id);
+      setSelectedAddress(selectAddress);
+    }
+  }, [domesticOrderPickupAddress, addressList]);
 
   return (
     <div>
@@ -86,7 +114,7 @@ export default function PickupDetails({ handleFormData, formData }) {
             {/* card with Address */}
             {addressList?.map((address, index) => {
               const isSelectedAddress = address?.id == selectedAddress?.id;
-              
+
               return (
                 <div
                   key={index}
@@ -133,6 +161,22 @@ export default function PickupDetails({ handleFormData, formData }) {
             })}
           </div>
         </div>
+      </div>
+      <div className="flex justify-end gap-4">
+        {currentStep !== 0 && (
+          <button
+            type="button"
+            className="dark:focus:ring-purple-900 rounded-lg border border-purple-600 px-8 py-2 text-sm font-medium text-purple-600 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-purple-300"
+            onClick={() => changeNextStep('BACK')}>
+            {'Back'}
+          </button>
+        )}
+        <button
+          type="button"
+          className="dark:focus:ring-purple-900 rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
+          onClick={() => changeNextStep('NEXT')}>
+          {'Next'}
+        </button>
       </div>
       <AddAddressDrawer
         isOpen={addAddressDrawerOpen || editAddressDrawerOpen}

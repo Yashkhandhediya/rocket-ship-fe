@@ -14,7 +14,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAllOrders, setClonedOrder } from '../../../../redux';
 import { toast } from 'react-toastify';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
-
+import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
+import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 
 export const New = () => {
   const dispatch = useDispatch();
@@ -211,7 +212,9 @@ export const New = () => {
   }
 
   function cloneOrder(orderDetails) {
-    dispatch(setClonedOrder(orderDetails));
+    const clonedOrder = getClonedOrderFields(orderDetails);
+    dispatch(setClonedOrder(clonedOrder));
+    dispatch(setDomesticOrder(clonedOrder));
     navigate('/add-order');
   }
 

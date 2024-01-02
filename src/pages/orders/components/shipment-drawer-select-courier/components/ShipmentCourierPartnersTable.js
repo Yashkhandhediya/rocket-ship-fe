@@ -8,7 +8,6 @@ import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import './ShipmentCourierPartnersTable.css';
 import { SchedulePickupModal } from '../../schedule-pickup-modal';
-import { tableCustomStyle } from '../../utils';
 
 const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentDrawer }) => {
   const dispatch = useDispatch();
@@ -166,7 +165,8 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           columns={columns}
           data={shipmentDetails || []}
           sortActive={false}
-          customStyles={tableCustomStyle}
+          fixedHeader={true}
+          fixedHeaderScrollHeight={"calc(100vh - 10rem)"}
         />
       </div>
       <SchedulePickupModal

@@ -33,7 +33,7 @@ const Field = ({
     if (triggerValidation && onBlur) {
       onBlur();
     }
-  }, [triggerValidation]);
+  }, [triggerValidation, value]);
 
   return (
     <div className="w-full">

@@ -10,47 +10,47 @@ import { useEffect, useState } from 'react';
 import Loader from '../../common/loader/Loader';
 
 const Orders = () => {
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const allOrdersList = useSelector((state) => state?.ordersList);
-  
+
   const fetchNewOrders = () => {
     axios
       .get('http://43.252.197.60:8030/order/get_filtered_orders')
       .then(async (resp) => {
         if (resp.status === 200) {
           dispatch(setAllOrders(resp?.data || []));
-          setIsLoading(false)
+          setIsLoading(false);
         } else {
           toast('There is some error while fetching orders.', { type: 'error' });
-          setIsLoading(false)
+          setIsLoading(false);
         }
       })
       .catch(() => {
         toast('There is some error while fetching orders.', { type: 'error' });
-        setIsLoading(false)
+        setIsLoading(false);
       });
   };
 
-  
   useEffect(() => {
     if (!allOrdersList) {
       fetchNewOrders();
+    } else {
+      setIsLoading(false);
     }
   }, [allOrdersList]);
 
   return (
     <PageWithSidebar>
-      {isLoading && <Loader/>}
+      {isLoading && <Loader />}
       <div className="h-full w-full bg-[#f8f8f8] px-4 text-center">
         <div className="flex items-center justify-between px-1.5 pb-3 pt-4">
           <h1 className="text-xl font-bold">Orders</h1>
           <button
             className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-sm font-medium text-indigo-600'}
-            onClick={() => navigate('/add-order')}
-          >
+            onClick={() => navigate('/add-order')}>
             + Add Order
           </button>
         </div>

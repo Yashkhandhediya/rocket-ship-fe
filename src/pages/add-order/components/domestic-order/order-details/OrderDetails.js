@@ -4,8 +4,15 @@ import { deleteIcon, infoIcon } from '../../../../../common/icons';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import moment from 'moment';
+import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { cloneDeep, isEmpty } from 'lodash';
 
-export default function OrderDetails({ handleFormData, formData, triggerValidations }) {
+export default function OrderDetails({ currentStep, handleChangeStep }) {
+  const dispatch = useDispatch();
+
+  const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order) || {};
+
   const defaultProductField = {
     name: '',
     unit_price: '',
@@ -19,18 +26,28 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
   const [productValidation, setProductValidation] = useState(false);
   const [isOrderIdValid, setIsOrderIdValid] = useState(true);
 
-  const [productFields, setProductFields] = useState(formData?.product_info || [defaultProductField]);
+  const [formDirectField, setFormDirectField] = useState({
+    channel: '',
+    date: moment(new Date()).format('YYYY-MM-DD'),
+    tag: '',
+    reseller_name: '',
+    sub_total: 0,
+    other_charges: 0,
+    total_amount: 0,
+  });
+
+  const [productFields, setProductFields] = useState([defaultProductField]);
 
   const [paymentDetails, setPaymentDetails] = useState({
-    type: formData?.type || 'cod',
-    shipping_charges: formData?.shipping_charges,
-    gift_wrap: formData?.gift_wrap,
-    transaction_fee: formData?.transaction_fee,
-    discount: formData?.discount || 0,
+    type: 'cod',
+    shipping_charges: 0,
+    gift_wrap: 0,
+    transaction_fee: 0,
+    discount: 0,
   });
 
   const subProductTotal =
-    formData?.product_info?.reduce((total, product) => {
+    productFields?.reduce((total, product) => {
       return (total += product
         ? (Number(product?.unit_price || 0) - Number(product?.discount || 0)) * Number(product?.quantity || 0)
         : 0);
@@ -50,16 +67,16 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
       unitPrice: 'Product unit price should be greter than 0',
       quantity: 'Product quantity should be greter than 0',
     };
-    const isValidProductName = formData?.product_info?.every((product) => {
+    const isValidProductName = productFields?.every((product) => {
       return product.name;
     });
-    const isValidProductUnitPrice = formData?.product_info?.every((product) => {
+    const isValidProductUnitPrice = productFields?.every((product) => {
       return product.unit_price > 0;
     });
-    const isValidProductQuantity = formData?.product_info?.every((product) => {
+    const isValidProductQuantity = productFields?.every((product) => {
       return product.unit_price > 0;
     });
-    if (!formData?.product_info?.length) {
+    if (!productFields?.length) {
       toast('Please add product name, unit price and quantity', { type: 'error' });
     }
     if (!isValidProductName) {
@@ -110,6 +127,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
       [id]: id === 'type' ? value : Number(value),
     });
   };
+
   const handleSetPaymentMode = (event) => {
     const { name, value } = event.target;
     setPaymentDetails({
@@ -120,8 +138,8 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
 
   const setDirectKeysInForm = (event) => {
     const { id, value } = event.target;
-    handleFormData({
-      ...formData,
+    setFormDirectField({
+      ...formDirectField,
       [id]: value,
     });
   };
@@ -131,8 +149,8 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
       .get('http://43.252.197.60:8030/order/get_order_id')
       .then((resp) => {
         if (resp?.status == 200 && resp?.data?.order_id) {
-          handleFormData({
-            ...formData,
+          setFormDirectField({
+            ...formDirectField,
             order_id: String(resp?.data?.order_id),
           });
         }
@@ -144,34 +162,60 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
       });
   };
 
+  const changeNextStep = (type) => {
+    if (type === 'NEXT') {
+      setProductValidation(true);
+      const isValidProducts = productFields?.every((product) => {
+        return product.name && product.unit_price > 0 && product.quantity > 0;
+      });
+      if (!productFields?.length || !isValidProducts || !formDirectField?.channel || !formDirectField?.date) {
+        toast('Please enter all required fields', { type: 'error' });
+      } else {
+        dispatch(
+          setDomesticOrder({
+            product_info: productFields,
+            payment_details: paymentDetails,
+            ...formDirectField,
+          }),
+        );
+        handleChangeStep(currentStep + 1);
+      }
+    } else if (currentStep > 0) {
+      handleChangeStep(currentStep - 1);
+    }
+  };
+
   useEffect(() => {
-    if (!formData?.order_id) {
+    if (!formDirectField?.order_id) {
       fetchOrderId();
     }
   }, []);
 
   useEffect(() => {
-    if (triggerValidations.trigger) {
-      setProductValidation(true);
-      triggerValidations.reset();
-    }
-  }, [triggerValidations.trigger]);
-
-  useEffect(() => {
-    handleFormData({
-      product_info: productFields,
-      payment_details: paymentDetails,
-    });
-  }, [productFields, paymentDetails]);
-
-  useEffect(() => {
-    handleFormData({
-      ...formData,
+    setFormDirectField({
+      ...formDirectField,
       sub_total: subProductTotal,
       other_charges: otherCharges,
       total_amount: totalOrderValue,
     });
   }, [subProductTotal, otherCharges, totalOrderValue]);
+
+  useEffect(() => {
+    if (!isEmpty(domesticOrderFormValues)) {
+      setProductFields(cloneDeep(domesticOrderFormValues?.product_info || []));
+      setPaymentDetails(domesticOrderFormValues?.payment_details);
+      setFormDirectField({
+        ...formDirectField,
+        channel: domesticOrderFormValues?.channel,
+        date: moment(new Date()).format('YYYY-MM-DD'),
+        tag: domesticOrderFormValues?.tag,
+        reseller_name: domesticOrderFormValues?.reseller_name,
+        sub_total: domesticOrderFormValues?.sub_total,
+        other_charges: domesticOrderFormValues?.other_charges,
+        total_amount: domesticOrderFormValues?.total_amount,
+      });
+    }
+  }, [domesticOrderFormValues]);
 
   return (
     <div>
@@ -187,9 +231,9 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
               labelClassNames={'text-xs'}
               placeHolder={'Enter Order ID'}
               required={true}
-              value={formData?.order_id || ''}
-              triggerValidation={triggerValidations.trigger}
-              onBlur={() => setIsOrderIdValid(formData?.order_id?.length)}
+              value={formDirectField?.order_id || ''}
+              triggerValidation={productValidation}
+              onBlur={() => setIsOrderIdValid(formDirectField?.order_id?.length)}
               onChange={setDirectKeysInForm}
             />
             {!isOrderIdValid && <p className="mt-1 text-xs text-red-500">Order Id is required.</p>}
@@ -204,10 +248,10 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
               placeHolder={'Enter Order Date'}
               required={true}
               maxDate={moment(new Date()).format('YYYY-MM-DD')}
-              value={moment(formData?.date || new Date()).format('YYYY-MM-DD')}
+              value={formDirectField.date}
               onChange={setDirectKeysInForm}
             />
-            {productValidation && !formData?.date && (
+            {productValidation && !formDirectField?.date && (
               <p className="mt-1 text-xs text-red-500">Order date is required.</p>
             )}
           </div>
@@ -223,11 +267,11 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                 'can select your connected store (Shopify/WooCommerce etc.) or mark the order as "Custom" (used for adding manual orders)'
               }
               required={true}
-              value={formData?.channel || ''}
+              value={formDirectField?.channel}
               onChange={setDirectKeysInForm}
             />
-            {productValidation && !formData?.channel && (
-              <p className="mt-1 text-xs text-red-500">Order date is required.</p>
+            {productValidation && !formDirectField?.channel && (
+              <p className="mt-1 text-xs text-red-500">Order Channel is required.</p>
             )}
           </div>
         </div>
@@ -242,7 +286,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                   labelClassNames={'text-xs'}
                   placeHolder={'Enter Order Tag'}
                   required={true}
-                  value={formData?.orderTag || ''}
+                  value={formDirectField?.tag || ''}
                   onChange={setDirectKeysInForm}
                 />
               </div>
@@ -255,7 +299,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                   labelClassNames={'text-xs'}
                   placeHolder={"Reseller's Name"}
                   required={true}
-                  value={formData?.resellerName || ''}
+                  value={formDirectField?.reseller_name || ''}
                   onChange={setDirectKeysInForm}
                 />
               </div>
@@ -475,7 +519,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       labelClassNames={'text-xs'}
                       placeHolder={'0.00'}
                       leftAddOn="₹"
-                      value={paymentDetails?.shipping_charges || ''}
+                      value={paymentDetails?.shipping_charges || 0}
                       onChange={handleSetPaymentDetails}
                     />
                   </div>
@@ -488,7 +532,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                       labelClassNames={'text-xs'}
                       placeHolder={'0.00'}
                       leftAddOn="₹"
-                      value={paymentDetails?.gift_wrap || ''}
+                      value={paymentDetails?.gift_wrap || 0}
                       onChange={handleSetPaymentDetails}
                     />
                   </div>
@@ -504,7 +548,7 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
                         'In case of online payment, transaction fee applied can be added here and will be shown in your total order amount.'
                       }
                       leftAddOn="₹"
-                      value={paymentDetails?.transaction_fee || ''}
+                      value={paymentDetails?.transaction_fee || 0}
                       onChange={handleSetPaymentDetails}
                     />
                   </div>
@@ -530,11 +574,11 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
             <div className="my-5 rounded-md bg-[#ecf2fe99] p-5 text-sm">
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Sub-total for Product'}</p>
-                <p className="w-6/12 text-end">{'₹ ' + subProductTotal}</p>
+                <p className="w-6/12 text-end">{'₹ ' + formDirectField?.sub_total || 0}</p>
               </div>
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Other Charges'}</p>
-                <p className="w-6/12 text-end">{'₹ ' + otherCharges || 0}</p>
+                <p className="w-6/12 text-end">{'₹ ' + formDirectField?.other_charges || 0}</p>
               </div>
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Discounts'}</p>
@@ -544,11 +588,27 @@ export default function OrderDetails({ handleFormData, formData, triggerValidati
               </div>
               <div className="mt-4 flex justify-between">
                 <p className="w-6/12 font-medium">{'Total Order Value'}</p>
-                <p className="w-6/12 text-end font-medium">{'₹ ' + totalOrderValue || 0}</p>
+                <p className="w-6/12 text-end font-medium">{'₹ ' + formDirectField?.total_amount || 0}</p>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      <div className="flex justify-end gap-4">
+        {currentStep !== 0 && (
+          <button
+            type="button"
+            className="dark:focus:ring-purple-900 rounded-lg border border-purple-600 px-8 py-2 text-sm font-medium text-purple-600 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-purple-300"
+            onClick={() => changeNextStep('BACK')}>
+            {'Back'}
+          </button>
+        )}
+        <button
+          type="button"
+          className="dark:focus:ring-purple-900 rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
+          onClick={() => changeNextStep('NEXT')}>
+          {'Next'}
+        </button>
       </div>
     </div>
   );

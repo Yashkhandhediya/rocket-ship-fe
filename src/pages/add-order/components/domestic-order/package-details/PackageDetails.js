@@ -1,46 +1,116 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Field, CustomTooltip } from '../../../../../common/components';
 import { infoIcon } from '../../../../../common/icons';
+import { resetDomesticOrder, setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
+import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { isEmpty } from 'lodash';
 
-export default function PackageDetails({ handleFormData, formData, triggerValidations }) {
+export default function PackageDetails({ currentStep, handleChangeStep }) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order);
   const [validationTriggered, setValidationTriggered] = useState(false);
+  const [formDirectField, setFormDirectField] = useState({
+    length: 0,
+    width: 0,
+    height: 0,
+    dead_weight: '',
+    applicable_weight: '',
+    volumatric_weight: '',
+  });
   const volumatricWeight =
     useMemo(
       () =>
-        (Number(formData?.length || 0) * Number(formData?.width || 0) * Number(formData?.height || 0)) / 5000,
-      [formData],
+        (Number(formDirectField?.length || 0) *
+          Number(formDirectField?.width || 0) *
+          Number(formDirectField?.height || 0)) /
+        5000,
+      [formDirectField],
     ) || 0;
 
   const applicableWeight = useMemo(
     () =>
-      Number(volumatricWeight) > Number(formData?.dead_weight || 0)
+      Number(volumatricWeight) > Number(formDirectField?.dead_weight || 0)
         ? Number(volumatricWeight)
-        : Number(formData?.dead_weight || 0),
-    [volumatricWeight, formData?.dead_weight],
+        : Number(formDirectField?.dead_weight || 0),
+    [volumatricWeight, formDirectField?.dead_weight],
   );
 
   const setDirectKeysInForm = (event) => {
     const { id, value } = event.target;
-    handleFormData({
-      ...formData,
+    setFormDirectField({
+      ...formDirectField,
       [id]: value,
     });
   };
 
+  const placeOrder = async () => {
+    let date = domesticOrderFormValues?.date?.split('-');
+    let newDate = new Date(date[2], date[1], date[0]);
+    let resp = await axios.post('http://43.252.197.60:8030/order', {
+      ...domesticOrderFormValues,
+      ...formDirectField,
+      date: newDate,
+    });
+    if (resp.status == 200) {
+      toast('Order Placed Successfully', { type: 'success' });
+      dispatch(resetDomesticOrder());
+      navigate('/orders');
+    } else {
+      toast('There is some error please check your network or contact support', { type: 'error' });
+    }
+  };
+
+  const changeNextStep = (type) => {
+    if (type === 'NEXT') {
+      setValidationTriggered(true);
+      if (
+        !formDirectField?.dead_weight ||
+        formDirectField?.dead_weight < 0.5 ||
+        !formDirectField.length ||
+        formDirectField?.length < 0.5 ||
+        !formDirectField.width ||
+        formDirectField?.width < 0.5 ||
+        !formDirectField.height ||
+        formDirectField?.height < 0.5
+      ) {
+        toast('Please enter all required fields', { type: 'error' });
+      } else {
+        dispatch(
+          setDomesticOrder({
+            ...formDirectField,
+          }),
+        );
+        placeOrder();
+      }
+    } else if (currentStep > 0) {
+      handleChangeStep(currentStep - 1);
+    }
+  };
+
   useEffect(() => {
-    handleFormData({
-      ...formData,
+    setFormDirectField({
+      ...formDirectField,
       volumatric_weight: volumatricWeight,
       applicable_weight: applicableWeight,
     });
   }, [volumatricWeight, applicableWeight]);
 
   useEffect(() => {
-    if (triggerValidations.trigger) {
-      setValidationTriggered(true);
-      triggerValidations.reset();
+    if (!isEmpty(domesticOrderFormValues)) {
+      setFormDirectField({
+        length: domesticOrderFormValues?.length,
+        width: domesticOrderFormValues?.width,
+        height: domesticOrderFormValues?.height,
+        dead_weight: domesticOrderFormValues?.dead_weight,
+        applicable_weight: domesticOrderFormValues?.applicable_weight,
+        volumatric_weight: domesticOrderFormValues?.volumatric_weight,
+      });
     }
-  }, [triggerValidations]);
+  }, [domesticOrderFormValues]);
 
   return (
     <div>
@@ -58,13 +128,13 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
               note={'(Max. 3 digits after decimal place) \nNote: The minimum chargeable weight is 0.50 Kg'}
               required={true}
               rightAddOn="Kg"
-              value={formData?.dead_weight || ''}
+              value={formDirectField?.dead_weight || ''}
               onChange={setDirectKeysInForm}
             />
-            {validationTriggered && !formData?.dead_weight && (
+            {validationTriggered && !formDirectField?.dead_weight && (
               <p className="mt-1 text-xs text-red-500">Weight is required</p>
             )}
-            {validationTriggered && formData?.dead_weight < 0.5 && (
+            {validationTriggered && formDirectField?.dead_weight < 0.5 && (
               <p className="mt-1 text-xs text-red-500">Weight should be greter than 0</p>
             )}
           </div>
@@ -92,13 +162,13 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
                       placeHolder={'0.00'}
                       required={true}
                       rightAddOn="CM"
-                      value={formData?.length || ''}
+                      value={formDirectField?.length || ''}
                       onChange={setDirectKeysInForm}
                     />
-                    {validationTriggered && !formData?.length && (
+                    {validationTriggered && !formDirectField?.length && (
                       <p className="mt-1 text-xs text-red-500">Length is required</p>
                     )}
-                    {validationTriggered && formData?.length < 0.5 && (
+                    {validationTriggered && formDirectField?.length < 0.5 && (
                       <p className="mt-1 text-xs text-red-500">Weight should be greter than 0.5</p>
                     )}
                   </div>
@@ -110,13 +180,13 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
                       placeHolder={'0.00'}
                       required={true}
                       rightAddOn="CM"
-                      value={formData?.width || ''}
+                      value={formDirectField?.width || ''}
                       onChange={setDirectKeysInForm}
                     />
-                    {validationTriggered && !formData?.width && (
+                    {validationTriggered && !formDirectField?.width && (
                       <p className="mt-1 text-xs text-red-500">Breadth is required</p>
                     )}
-                    {validationTriggered && formData?.width < 0.5 && (
+                    {validationTriggered && formDirectField?.width < 0.5 && (
                       <p className="mt-1 text-xs text-red-500">Breadth should be greter than 0.5</p>
                     )}
                   </div>
@@ -128,13 +198,13 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
                       placeHolder={'0.00'}
                       required={true}
                       rightAddOn="CM"
-                      value={formData?.height || ''}
+                      value={formDirectField?.height || ''}
                       onChange={setDirectKeysInForm}
                     />
-                    {validationTriggered && !formData?.height && (
+                    {validationTriggered && !formDirectField?.height && (
                       <p className="mt-1 text-xs text-red-500">Height is required</p>
                     )}
-                    {validationTriggered && formData?.height < 0.5 && (
+                    {validationTriggered && formDirectField?.height < 0.5 && (
                       <p className="mt-1 text-xs text-red-500">Height should be greter than 0.5</p>
                     )}
                   </div>
@@ -187,6 +257,22 @@ export default function PackageDetails({ handleFormData, formData, triggerValida
             </div>
           </div>
         </div>
+      </div>
+      <div className="flex justify-end gap-4">
+        {currentStep !== 0 && (
+          <button
+            type="button"
+            className="dark:focus:ring-purple-900 rounded-lg border border-purple-600 px-8 py-2 text-sm font-medium text-purple-600 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-purple-300"
+            onClick={() => changeNextStep('BACK')}>
+            {'Back'}
+          </button>
+        )}
+        <button
+          type="button"
+          className="dark:focus:ring-purple-900 rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
+          onClick={() => changeNextStep('NEXT')}>
+          {'Place Order'}
+        </button>
       </div>
     </div>
   );
