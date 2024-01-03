@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { DomesticOrder } from './components';
+import { BulkOrder, DomesticOrder } from './components';
 import { Tabs } from '../../common/components';
 import { blackLeftArrow } from '../../common/icons';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
@@ -21,7 +21,7 @@ const AddOrder = () => {
     {
       title: 'Bulk Order',
       id: 'bulk-order',
-      panel: <>{'Bulk Order'}</>,
+      panel: <BulkOrder />,
       tooltip: 'Upload multiple orders in bulk with an excel sheet',
     },
     {
