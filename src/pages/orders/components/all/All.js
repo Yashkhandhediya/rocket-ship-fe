@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
 import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
+import NoOrdersFound from '../no-order-found/NoOrdersFound';
 
 export const All = () => {
   const dispatch = useDispatch();
@@ -209,7 +210,7 @@ export const All = () => {
       <DataTable
         columns={columns}
         data={allOrdersList || []}
-        sortActive={false}
+        noDataComponent={<NoOrdersFound />}
         customStyles={{
           responsiveWrapper: {
             style: { overflow: 'visible' },

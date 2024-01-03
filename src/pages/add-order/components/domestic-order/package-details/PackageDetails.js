@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { isEmpty } from 'lodash';
+import moment from 'moment';
 
 export default function PackageDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
@@ -47,13 +48,26 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     });
   };
 
+  const getFullDateForPayload = (date) => {
+    let newDate = moment(date, 'YYYY-MM-DD');
+    const currentTime = moment();
+    return  moment({
+      year: newDate.year(),
+      month: newDate.month(),
+      date: newDate.date(),
+      hour: currentTime.hours(),
+      minute: currentTime.minutes(),
+      second: currentTime.seconds(),
+      millisecond: currentTime.milliseconds(),
+    }).toDate();
+  }
+
   const placeOrder = async () => {
-    let date = domesticOrderFormValues?.date?.split('-');
-    let newDate = new Date(date[2], date[1], date[0]);
+    const date = getFullDateForPayload(domesticOrderFormValues?.date);
     let resp = await axios.post('http://43.252.197.60:8030/order', {
       ...domesticOrderFormValues,
       ...formDirectField,
-      date: newDate,
+      date: date,
     });
     if (resp.status == 200) {
       toast('Order Placed Successfully', { type: 'success' });

@@ -1,0 +1,1 @@
+export {default as noOrdersFound} from './no-orders-found.webp'

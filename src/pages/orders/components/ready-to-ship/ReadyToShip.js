@@ -15,6 +15,7 @@ import { SchedulePickupModal } from '../schedule-pickup-modal';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
 import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
+import NoOrdersFound from '../no-order-found/NoOrdersFound';
 
 export const ReadyToShip = () => {
   const dispatch = useDispatch();
@@ -232,7 +233,7 @@ export const ReadyToShip = () => {
       <DataTable
         columns={columns}
         data={readyShipOrdersList || []}
-        sortActive={false}
+        noDataComponent={<NoOrdersFound />}
         customStyles={{
           responsiveWrapper: {
             style: { overflow: 'visible' },

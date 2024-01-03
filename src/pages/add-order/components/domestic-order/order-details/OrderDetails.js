@@ -202,8 +202,14 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
 
   useEffect(() => {
     if (!isEmpty(domesticOrderFormValues)) {
-      setProductFields(cloneDeep(domesticOrderFormValues?.product_info || []));
-      setPaymentDetails(domesticOrderFormValues?.payment_details);
+      setProductFields(
+        cloneDeep(
+          domesticOrderFormValues?.product_info?.length
+            ? domesticOrderFormValues?.product_info
+            : [defaultProductField],
+        ),
+      );
+      setPaymentDetails({ type: 'cod', ...(domesticOrderFormValues?.payment_details || {}) });
       setFormDirectField({
         ...formDirectField,
         channel: domesticOrderFormValues?.channel,
@@ -472,7 +478,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                   className="mr-3"
                   value="prepaid"
                   name="type"
-                  checked={paymentDetails.type === 'prepaid'}
+                  checked={paymentDetails?.type === 'prepaid'}
                   onChange={handleSetPaymentMode}
                 />
                 <label
@@ -491,7 +497,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                   className="mr-3"
                   value="cod"
                   name="type"
-                  checked={paymentDetails.type === 'cod'}
+                  checked={paymentDetails?.type === 'cod'}
                   onChange={handleSetPaymentMode}
                 />
                 <label
@@ -583,7 +589,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Discounts'}</p>
                 <p className="w-6/12 text-end">
-                  {'₹ ' + (paymentDetails.discount ? Number(paymentDetails.discount) : 0)}
+                  {'₹ ' + (paymentDetails?.discount ? Number(paymentDetails?.discount) : 0)}
                 </p>
               </div>
               <div className="mt-4 flex justify-between">

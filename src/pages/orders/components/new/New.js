@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
 import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
+import NoOrdersFound from '../no-order-found/NoOrdersFound';
 
 export const New = () => {
   const dispatch = useDispatch();
@@ -240,7 +241,7 @@ export const New = () => {
       <DataTable
         columns={columns}
         data={newOrdersList || []}
-        sortActive={false}
+        noDataComponent={<NoOrdersFound />}
         customStyles={{
           responsiveWrapper: {
             style: { overflow: 'visible' },
