@@ -36,9 +36,7 @@ const Tabs = ({ tabs, tabClassNames, panelClassNames }) => {
           return (
             <div
               key={tab.id}
-              className={`dark:bg-gray-800 rounded-lg  bg-gray-50 ${i !== activeTab ? 'hidden' : ''} ${
-                panelClassNames || ''
-              }`}
+              className={`rounded-lg  ${i !== activeTab ? 'hidden' : ''} ${panelClassNames || ''}`}
               id={`${tab.id}-panel`}>
               {tab.panel}
             </div>

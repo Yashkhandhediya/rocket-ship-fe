@@ -17,6 +17,7 @@ import { MoreFiltersDrawer } from '../more-filters-drawer';
 import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import NoOrdersFound from '../no-order-found/NoOrdersFound';
+// import ShipmentCourierPartnersTable2 from '../shipment-drawer-select-courier/components/ShipmentCourierPartnersTable2';
 
 export const New = () => {
   const dispatch = useDispatch();
@@ -248,6 +249,9 @@ export const New = () => {
           },
         }}
       />
+      {/* temporary */}
+      {/* <ShipmentCourierPartnersTable2 /> */}
+
       <DrawerWithSidebar
         isOpen={selectShipmentDrawer?.isOpen}
         onClose={closeShipmentDrawer}
