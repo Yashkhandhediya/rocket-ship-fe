@@ -3,7 +3,7 @@ const RightDrawer = ({ isOpen, heading, onClose, children, drawerWrapperClassNam
     <>
       <div
         className={`dark:bg-gray-800 fixed right-0 top-0 z-40 h-screen text-start ${
-          width ? `w-[${width}] max-w-[${width}]` : 'w-[80%] max-w-[80vw]'
+          width ? ` w-[${width}] max-w-[${width}] ` : 'w-[80%] max-w-[80vw]'
         } rounded-lg bg-white transition-transform ${isOpen ? 'transform-none' : 'translate-x-full'} ${
           drawerWrapperClassNames || ''
         }`}
