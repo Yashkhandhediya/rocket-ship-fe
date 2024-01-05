@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { MoreDropdown, CustomTooltip } from '../../../../common/components';
@@ -16,184 +16,202 @@ import { toast } from 'react-toastify';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
 import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
-import NoOrdersFound from '../no-order-found/NoOrdersFound';
-// import ShipmentCourierPartnersTable2 from '../shipment-drawer-select-courier/components/ShipmentCourierPartnersTable2';
+import ShipmentCourierPartnersTable2 from '../shipment-drawer-select-courier/components/ShipmentCourierPartnersTable2';
+import { createColumnHelper } from '@tanstack/react-table';
+import { CommonBadge } from '../../../../common/components/common-badge';
 
 export const New = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const allOrdersList = useSelector((state) => state?.ordersList);
-  const newOrdersList = allOrdersList?.filter((order) => (order?.status_name || '')?.toLowerCase() === 'new');
+  const newOrdersList =
+    allOrdersList?.filter((order) => (order?.status_name || '')?.toLowerCase() === 'new') || [];
   const [selectShipmentDrawer, setSelectShipmentDrawer] = useState({
     isOpen: false,
     orderDetails: {},
   });
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
-  const columns = [
-    {
-      name: 'Order Details',
-      selector: (row) => {
-        const formattedDate = row?.created_date
-          ? moment(row?.created_date).format('DD MMM YYYY | hh:mm A')
-          : 'No date available.';
-        return (
-          <div className="flex flex-col gap-1 py-2 text-left">
-            <div className="pb-0.5">
-              <Link
-                to={generatePath(`/track-order/:orderId`, { orderId: row?.id })}
-                className="border-b-2 border-b-purple-700 text-purple-700">
-                {row?.id}
-              </Link>
-            </div>
-            <div className="text-xs">{formattedDate}</div>
-            <div>{row.channel}</div>
-            <div className="">
-              <CustomTooltip
-                text={row.product_info?.map((product) => {
-                  return (
-                    <div key={product?.id}>
-                      <div>{product?.name}</div>
-                      <div>SKU: {product?.sku}</div>
-                      <div>QTY: {product?.quantity}</div>
-                    </div>
-                  );
-                })}
-                wrapperClassNames={'whitespace-pre-wrap '}>
-                <div className="relative cursor-pointer pb-0.5 text-purple-700 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-purple-700">
-                  {'View Products'}
-                </div>
-              </CustomTooltip>
-            </div>
-          </div>
-        );
-      },
-    },
-    {
-      name: 'Customer details',
-      selector: (row) => (
-        <div className="flex flex-col gap-1 py-2 text-left">
-          <div>{row?.buyer_info?.first_name}</div>
-          <div>{row?.buyer_info?.email_address}</div>
-          <div>{row?.buyer_info?.contact_no}</div>
-        </div>
-      ),
-    },
-    {
-      name: 'Package Details',
-      selector: (row) => (
-        <div className="flex flex-col gap-1 py-2 text-left">
-          <div className="text-wrap">
-            {'Deat wt.: '}
-            {row?.deadweight}
-          </div>
-          <div className="text-wrap">
-            {row?.height?.toFixed(2)}x{row.width?.toFixed(2)}x{row.length?.toFixed(2)} {' (cm)'}
-          </div>
-          <div className="text-wrap">
-            {'Volumetric wt.: '} {row?.volumatric_weight} {' Kg'}
-          </div>
-        </div>
-      ),
-    },
-    {
-      name: 'Payment',
-      selector: (row) => (
-        <div className="flex flex-col gap-1 py-2 text-left">
-          <div>
-            {'₹ '}
-            {row?.total_amount?.toFixed(2)}
-          </div>
-          <div>
-            <Badge
-              color="success"
-              className="h-fit w-fit rounded-sm p-1 py-0.5 text-[10px] font-normal capitalize">
-              {row?.payment_type_name}
-            </Badge>
-          </div>
-        </div>
-      ),
-    },
-    {
-      name: 'Pickup Address',
-      wrap: true,
-      selector: (row) => (
-        <div className="flex flex-col gap-1 py-2 text-left">
-          <div>
-            <CustomTooltip
-              text={
-                <>
-                  <div>{`${row?.user_info?.address_line1 ?? ''} ${row?.user_info?.address_line2 ?? ''}`}</div>
-                  <div>{row?.user_info?.city ?? ''}</div>
-                  <div>
-                    {row?.user_info?.state ?? ''}-{row?.user_info?.pincode}
-                  </div>
-                  <div>{row?.user_info?.contact_no}</div>
-                </>
-              }>
-              <div className="relative cursor-pointer whitespace-pre-wrap pb-0.5 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-[#555]">
-                {'Primary'}
-              </div>
-            </CustomTooltip>
-          </div>
-        </div>
-      ),
-    },
-    {
-      name: 'Status',
-      selector: (row) => (
-        <div className="flex flex-col gap-1 py-2 text-left">
-          <Badge color="success" className="text-[10px] uppercase">
-            {row?.status_name}
-          </Badge>
-        </div>
-      ),
-    },
-    {
-      name: 'Action',
-      selector: (row) => (
-        <div className="flex gap-2 py-2 text-left">
-          {row?.status_name == 'new' ? (
-            <button
-              id={row.id}
-              className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
-              onClick={() =>
-                setSelectShipmentDrawer({
-                  isOpen: true,
-                  orderDetails: row,
-                })
-              }>
-              {'Ship Now'}
-            </button>
-          ) : (
-            <button
-              id={row.id}
-              className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
-              onClick={() => {
-                axios.get('http://43.252.197.60:8030/order/track?order_id=' + row.id);
-                let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent('15')}`;
-                let newTab = window.open(newURL, '_blank');
-                if (newTab) {
-                  newTab.focus();
-                }
 
-                // console.log('urllll',window.location.host+'/tracking/1')
-              }}>
-              {'Track'}
-            </button>
-          )}
-          <div className="min-h-[32px] min-w-[32px]">
-            <MoreDropdown
-              renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
-              options={moreActionOptions({
-                cloneOrder: () => cloneOrder(row),
-                cancelOrder: () => cancelOrder(row),
-              })}
-            />
-          </div>
-        </div>
-      ),
-    },
-  ];
+  const getColumns = () => {
+    const columnHelper = createColumnHelper();
+    return [
+      columnHelper.accessor('orderDetails', {
+        header: 'Order Details',
+        cell: ({ row }) => {
+          const formattedDate = row?.original?.created_date
+            ? moment(row?.original?.created_date).format('DD MMM YYYY | hh:mm A')
+            : 'No date available.';
+          return (
+            <div className="flex flex-col gap-2 text-left text-xs">
+              <div className="pb-0.5">
+                <Link
+                  to={generatePath(`/track-order/:orderId`, { orderId: row?.original?.id })}
+                  className="border-b-2 border-b-purple-700 text-purple-700">
+                  {row?.original?.id}
+                </Link>
+              </div>
+              <div className="text-[11px]">{formattedDate}</div>
+              <div>{(row?.original?.channel || '')?.toUpperCase()}</div>
+              <div>
+                <CustomTooltip
+                  text={[row?.original?.product_infom, row?.original?.product_info].map((product, i) => {
+                    return (
+                      <Fragment key={`${product?.id}-${i}`}>
+                        {i !== 0 && <div className="w-full my-2 h-[1px] bg-gray-500" />}
+                        <div key={`${product?.id}-${i} w-full`}>
+                          <div>{product?.name}</div>
+                          <div>SKU: {product?.sku}</div>
+                          <div>QTY: {product?.quantity}</div>
+                        </div>
+                      </Fragment>
+                    );
+                  })}
+                  wrapperClassNames={'whitespace-pre-wrap '}>
+                  <div className="relative cursor-pointer pb-0.5 text-purple-700 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-purple-700">
+                    {'View Products'}
+                  </div>
+                </CustomTooltip>
+              </div>
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor('customerDetails', {
+        header: 'Customer details',
+        cell: ({ row }) => {
+          return (
+            <div className="flex flex-col gap-2 text-left text-xs">
+              {row?.original?.buyer_info?.first_name && <div>{row?.original?.buyer_info?.first_name}</div>}
+              {row?.original?.buyer_info?.email_address && (
+                <div>{row?.original?.buyer_info?.email_address}</div>
+              )}
+              {row?.original?.buyer_info?.contact_no && <div>{row?.original?.buyer_info?.contact_no}</div>}
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor('packageDetails', {
+        header: 'Package Details',
+        cell: ({ row }) => {
+          return (
+            <div className="flex flex-col gap-2 text-left text-xs">
+              <div className="text-wrap">
+                {'Deat wt.: '}
+                {row?.original?.deadweight}
+              </div>
+              <div className="text-wrap">
+                {row?.original?.height?.toFixed(2)}x{row?.original?.width?.toFixed(2)}x
+                {row?.original?.length?.toFixed(2)} {' (cm)'}
+              </div>
+              <div className="text-wrap">
+                {'Volumetric wt.: '} {row?.original?.volumatric_weight} {' Kg'}
+              </div>
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor('payment', {
+        header: 'Payment',
+        cell: ({ row }) => {
+          return (
+            <div className="flex flex-col gap-2 text-left text-xs">
+              <div>
+                {'₹ '}
+                {row?.original?.total_amount?.toFixed(2)}
+              </div>
+              <CommonBadge type={(row?.original?.payment_type_name || '').toUpperCase()} />
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor('pickupAddress', {
+        header: 'Pickup Address',
+        cell: ({ row }) => {
+          return (
+            <div className="flex flex-col gap-1 text-left text-xs">
+              <div>
+                <CustomTooltip
+                  text={
+                    <>
+                      {row?.original?.user_info?.tag && (
+                        <div className="font-medium">{`${row?.original?.user_info?.tag}`}</div>
+                      )}
+                      {row?.original?.user_info?.complete_address && (
+                        <div>{`${row?.original?.user_info?.complete_address ?? ''}`}</div>
+                      )}
+                      {row?.original?.user_info?.city && <div>{row?.original?.user_info?.city ?? ''}</div>}
+                      <div>
+                        {row?.original?.user_info?.state ?? ''}-{row?.original?.user_info?.pincode}
+                      </div>
+                      <div>{row?.original?.user_info?.contact_no}</div>
+                    </>
+                  }>
+                  <div className="relative cursor-pointer whitespace-pre-wrap pb-0.5 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-[#555]">
+                    {row?.original?.user_info?.tag || 'Primary'}
+                  </div>
+                </CustomTooltip>
+              </div>
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor('status', {
+        header: 'Status',
+        cell: ({ row }) => {
+          return (
+            <div className="flex flex-col gap-1 text-left text-xs">
+              <CommonBadge type={'SUCCESS'} text={row?.original?.status_name} />
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor('action', {
+        header: 'Action',
+        cell: ({ row }) => {
+          return (
+            <div className="flex gap-2 text-left text-xs">
+              {row?.original?.status_name == 'new' ? (
+                <button
+                  id={row?.original?.id}
+                  className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
+                  onClick={() => {
+                    setSelectShipmentDrawer({
+                      isOpen: true,
+                      orderDetails: row,
+                    })
+                  }}>
+                  {'Ship Now'}
+                </button>
+              ) : (
+                <button
+                  id={row?.original?.id}
+                  className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
+                  onClick={() => {
+                    axios.get('http://43.252.197.60:8030/order/track?order_id=' + row?.original?.id);
+                    let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent('15')}`;
+                    let newTab = window.open(newURL, '_blank');
+                    if (newTab) {
+                      newTab.focus();
+                    }
+                  }}>
+                  {'Track'}
+                </button>
+              )}
+              <div className="min-h-[32px] min-w-[32px]">
+                <MoreDropdown
+                  renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
+                  options={moreActionOptions({
+                    cloneOrder: () => cloneOrder(row),
+                    cancelOrder: () => cancelOrder(row),
+                  })}
+                />
+              </div>
+            </div>
+          );
+        },
+      }),
+    ];
+  };
 
   function cancelOrder(orderDetails) {
     axios
@@ -227,6 +245,17 @@ export const New = () => {
     });
   };
 
+  const rowSubComponent = () => {
+    return (
+      <Badge className="flex w-fit items-center rounded-lg bg-sky-200 text-[8px]">
+        <div className="flex items-center">
+          <span className="mr-1 inline-flex h-4 w-4 rounded-full border-4 border-black"></span>
+          {'Secured'}
+        </div>
+      </Badge>
+    );
+  };
+
   return (
     <div className="mt-5">
       <div className="mb-4 flex w-full">
@@ -239,7 +268,7 @@ export const New = () => {
           </button>
         </div>
       </div>
-      <DataTable
+      {/* <DataTable
         columns={columns}
         data={newOrdersList || []}
         noDataComponent={<NoOrdersFound />}
@@ -248,9 +277,15 @@ export const New = () => {
             style: { overflow: 'visible' },
           },
         }}
+      /> */}
+
+      <ShipmentCourierPartnersTable2
+        columns={getColumns()}
+        rowData={newOrdersList}
+        shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
+        rowSubComponent={rowSubComponent}
+        tableWrapperStyles={{ height: '78vh' }}
       />
-      {/* temporary */}
-      {/* <ShipmentCourierPartnersTable2 /> */}
 
       <DrawerWithSidebar
         isOpen={selectShipmentDrawer?.isOpen}

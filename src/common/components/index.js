@@ -7,3 +7,4 @@ export * from './more-dropdown';
 export * from './drawer-with-sidebar';
 export * from './rating-progress-bar';
 export * from './right-drawer';
+export * from './common-badge'

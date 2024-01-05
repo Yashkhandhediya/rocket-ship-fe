@@ -7,7 +7,7 @@ const CustomTooltip = ({ children, text, wrapperClassNames, width, ...rest }) =>
       content={text}
       className={`inline-flex ${
         width ? `min-w-[${width}]` : 'min-w-[150px]'
-      } max-w-[250px] text-xs font-normal text-gray-700 shadow-xl ${wrapperClassNames}`}
+      } max-w-[250px] text-xs font-normal text-gray-700 shadow-xl [&>*:first-child]:w-full ${wrapperClassNames}`}
       {...rest}>
       {children}
     </FlowbiteTooltip>
