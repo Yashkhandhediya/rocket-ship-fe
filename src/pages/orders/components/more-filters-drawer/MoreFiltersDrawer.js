@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Checkbox, Field, RightDrawer } from '../../../../common/components';
-import CustomMultiSelect from './CustomMultiSelect';
+import { Checkbox, Field, RightDrawer, CustomMultiSelect } from '../../../../common/components';
 import { fieldDefaultValues } from '../utils';
 
 const MoreFiltersDrawer = ({ isOpen, onClose, fieldNames = [] }) => {

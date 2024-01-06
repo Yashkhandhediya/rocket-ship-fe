@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { Fragment, useState } from 'react';
-import DataTable from 'react-data-table-component';
 import { Link, generatePath, useNavigate } from 'react-router-dom';
-import { MoreDropdown, CustomTooltip } from '../../../../common/components';
+import { MoreDropdown, CustomTooltip, CustomDataTable } from '../../../../common/components';
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
 import { filterIcon, moreAction } from '../../../../common/icons';
@@ -16,7 +15,6 @@ import { toast } from 'react-toastify';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
 import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
-import ShipmentCourierPartnersTable2 from '../shipment-drawer-select-courier/components/ShipmentCourierPartnersTable2';
 import { createColumnHelper } from '@tanstack/react-table';
 import { CommonBadge } from '../../../../common/components/common-badge';
 
@@ -268,22 +266,15 @@ export const New = () => {
           </button>
         </div>
       </div>
-      {/* <DataTable
-        columns={columns}
-        data={newOrdersList || []}
-        noDataComponent={<NoOrdersFound />}
-        customStyles={{
-          responsiveWrapper: {
-            style: { overflow: 'visible' },
-          },
-        }}
-      /> */}
 
-      <ShipmentCourierPartnersTable2
+      <CustomDataTable
         columns={getColumns()}
         rowData={newOrdersList}
+        enableRowSelection={true}
         shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
+        onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}
         rowSubComponent={rowSubComponent}
+        enablePagination={true}
         tableWrapperStyles={{ height: '78vh' }}
       />
 

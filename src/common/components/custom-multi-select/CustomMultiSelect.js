@@ -1,33 +1,53 @@
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 
 const CustomMultiSelect = ({
   onChange,
   id,
+  isMulti = true,
   options,
   label,
   placeholder,
+  isSearchable = false,
+  value,
   displayValuesAsStrings,
   displayCountAsValue,
   displayCountAsValueLabel,
-  selected = [],
+  renderCustomDisplayValue,
+  selected,
+  menuPlacement = 'auto',
+  CustomDropdownIndicator,
+  closeMenuOnSelect = false,
 }) => {
+  const renderCustomValue = (props) => {
+    return <components.SingleValue {...props}>{renderCustomDisplayValue(selected)}</components.SingleValue>;
+  };
+  const renderCustomIndicator = (props) => {
+    return (
+      <components.DropdownIndicator {...props}>{<CustomDropdownIndicator />}</components.DropdownIndicator>
+    );
+  };
 
   return (
     <>
       <label className="mb-2 flex items-center  text-xs font-medium text-gray-600">{label}</label>
       <Select
-        isMulti
+        isMulti={isMulti}
         id={id}
-        closeMenuOnSelect={false}
+        isSearchable={isSearchable}
+        closeMenuOnSelect={closeMenuOnSelect}
         placeholder={placeholder}
         options={options}
-        onChange={(select) => onChange(select.map((obj) => obj.value))}
+        value={value}
+        menuPlacement={menuPlacement}
+        onChange={(select) => (isMulti ? onChange(select.map((obj) => obj.value)) : onChange(select.value))}
         components={{
           IndicatorSeparator: null,
           ...(displayValuesAsStrings ? { MultiValueContainer: () => selected?.join(', ') } : {}),
           ...(displayCountAsValue
             ? { MultiValueContainer: () => `${selected?.length} ${displayCountAsValueLabel}` }
             : {}),
+          ...(renderCustomDisplayValue ? { SingleValue: renderCustomValue } : {}),
+          ...(CustomDropdownIndicator ? { DropdownIndicator: renderCustomIndicator } : {}),
         }}
         styles={{
           control: (styles) => ({
