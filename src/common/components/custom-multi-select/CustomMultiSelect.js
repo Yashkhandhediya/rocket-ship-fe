@@ -1,3 +1,4 @@
+import { Checkbox } from 'flowbite-react';
 import Select, { components } from 'react-select';
 
 const CustomMultiSelect = ({
@@ -8,23 +9,115 @@ const CustomMultiSelect = ({
   label,
   placeholder,
   isSearchable = false,
-  value,
+  hideSelectedOptions = false,
   displayValuesAsStrings,
   displayCountAsValue,
   displayCountAsValueLabel,
-  renderCustomDisplayValue,
+  renderSingleCustomDisplayValue,
+  withCheckbox,
+  selectAllEnabled,
   selected,
   menuPlacement = 'auto',
   CustomDropdownIndicator,
   closeMenuOnSelect = false,
 }) => {
-  const renderCustomValue = (props) => {
-    return <components.SingleValue {...props}>{renderCustomDisplayValue(selected)}</components.SingleValue>;
+  const selectAllOption = {
+    label: 'Select all',
+    value: 'selectAll',
   };
+
+  const OptionWithCheckbox = (props) => {
+    return (
+      <div>
+        <components.Option {...props}>
+          <Checkbox
+            color={'indigo'}
+            className={`mr-3 ${props.isDisabled ? 'opacity-60' : ''}`}
+            checked={props.isSelected}
+            disabled={props.isDisabled}
+            onChange={() => null}
+          />
+          {props.children}
+        </components.Option>
+      </div>
+    );
+  };
+
+  const renderCustomSingleValue = (props) => {
+    return (
+      <components.SingleValue {...props}>{renderSingleCustomDisplayValue(selected)}</components.SingleValue>
+    );
+  };
+
   const renderCustomIndicator = (props) => {
     return (
       <components.DropdownIndicator {...props}>{<CustomDropdownIndicator />}</components.DropdownIndicator>
     );
+  };
+
+  const renderDisplayCountAsValue = (props) => {
+    const label = `${props.getValue()?.length} ${displayCountAsValueLabel}`;
+    return props.index === 0 ? <div>{label}</div> : null;
+  };
+
+  const renderDisplayValuesAsStrings = (props) => {
+    const valuesSeparator =
+      props.selectProps.value.length === props.children?.[0]?._owner.index + 1 ? '' : ',';
+    return (
+      <components.MultiValueContainer
+        {...props}>{`${props.data.label}${valuesSeparator} `}</components.MultiValueContainer>
+    );
+  };
+
+  const handleSelectChange = (selectedOption, event) => {
+    if (selectedOption !== null && selectedOption.length > 0) {
+      if (selectedOption[selectedOption.length - 1].value === selectAllOption.value) {
+        return onChange([selectAllOption, ...options]);
+      }
+
+      let result = [];
+      if (selectedOption.length === options.length) {
+        if (selectedOption.find((option) => option.value === selectAllOption.value)) {
+          result = selectedOption.filter((option) => option.value !== selectAllOption.value);
+        } else if (event.action === 'select-option') {
+          result = [selectAllOption, ...options];
+        }
+        return onChange(result);
+      }
+    }
+
+    return onChange(selectedOption);
+  };
+
+  const checkboxOptionStyles = (state) => {
+    if (state.isFocused) {
+      return {
+        background: '#B2D4FF',
+        color: 'inherit',
+        ':active': {
+          background: 'inherit',
+        },
+      };
+    }
+
+    if (state.isSelected && !state.isDisabled) {
+      return {
+        background: 'transparent',
+        color: 'inherit',
+        ':active': {
+          background: 'inherit',
+        },
+      };
+    }
+    if (state.isSelected && state.isDisabled) {
+      return {
+        background: 'transparent',
+        ':active': {
+          background: 'inherit',
+        },
+      };
+    }
+    return {};
   };
 
   return (
@@ -36,17 +129,18 @@ const CustomMultiSelect = ({
         isSearchable={isSearchable}
         closeMenuOnSelect={closeMenuOnSelect}
         placeholder={placeholder}
-        options={options}
-        value={value}
+        options={selectAllEnabled ? [selectAllOption, ...options] : options}
+        value={selected}
+        hideSelectedOptions={hideSelectedOptions}
         menuPlacement={menuPlacement}
-        onChange={(select) => (isMulti ? onChange(select.map((obj) => obj.value)) : onChange(select.value))}
+        onChange={handleSelectChange}
+        // onChange={(select) => (isMulti ? onChange(select.map((obj) => obj.value)) : onChange(select.value))}
         components={{
           IndicatorSeparator: null,
-          ...(displayValuesAsStrings ? { MultiValueContainer: () => selected?.join(', ') } : {}),
-          ...(displayCountAsValue
-            ? { MultiValueContainer: () => `${selected?.length} ${displayCountAsValueLabel}` }
-            : {}),
-          ...(renderCustomDisplayValue ? { SingleValue: renderCustomValue } : {}),
+          ...(withCheckbox ? { Option: OptionWithCheckbox } : {}),
+          ...(displayValuesAsStrings ? { MultiValueContainer: renderDisplayValuesAsStrings } : {}),
+          ...(displayCountAsValue ? { MultiValue: renderDisplayCountAsValue } : {}),
+          ...(renderSingleCustomDisplayValue ? { SingleValue: renderCustomSingleValue } : {}),
           ...(CustomDropdownIndicator ? { DropdownIndicator: renderCustomIndicator } : {}),
         }}
         styles={{
@@ -54,9 +148,10 @@ const CustomMultiSelect = ({
             ...styles,
             fontSize: '12px',
           }),
-          option: (styles) => ({
+          option: (styles, state) => ({
             ...styles,
             fontSize: '12px',
+            ...(withCheckbox ? checkboxOptionStyles(state) : {}),
           }),
           input: (styles) => ({
             ...styles,
@@ -66,6 +161,10 @@ const CustomMultiSelect = ({
           valueContainer: (styles) => ({
             ...styles,
             fontSize: '12px',
+          }),
+          multiValue: (styles) => ({
+            ...styles,
+            ...(displayValuesAsStrings ? { background: 'transparent' } : {}),
           }),
           noOptionsMessage: (styles) => ({
             ...styles,

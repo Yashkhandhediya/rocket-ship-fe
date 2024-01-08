@@ -157,10 +157,11 @@ const CustomDataTable = ({
                 id={'new-pagination'}
                 isMulti={false}
                 options={paginationRowsPerPageOptions.map((value) => ({ label: value, value: value }))}
-                renderCustomDisplayValue={(selected) => `${selected} Orders`}
+                renderSingleCustomDisplayValue={(selected) => `${selected} Orders`}
                 selected={table.getState().pagination.pageSize}
                 onChange={(value) => table.setPageSize(Number(value))}
                 closeMenuOnSelect={true}
+                hideSelectedOptions={false}
                 CustomDropdownIndicator={() => (
                   <div className="flex cursor-pointer flex-col">
                     <FontAwesomeIcon icon={faAngleUp} className="h-2.5 text-gray-400" />

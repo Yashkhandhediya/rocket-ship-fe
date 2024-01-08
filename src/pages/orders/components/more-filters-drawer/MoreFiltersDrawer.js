@@ -16,7 +16,7 @@ const MoreFiltersDrawer = ({ isOpen, onClose, fieldNames = [] }) => {
     awbOrOrderId: '',
     menifestId: '',
     escalationStatus: [],
-    AWB:'',
+    AWB: '',
     shippingPartners: [],
   });
 
@@ -112,8 +112,13 @@ const MoreFiltersDrawer = ({ isOpen, onClose, fieldNames = [] }) => {
               id={'channels'}
               label={'Channels'}
               placeholder="Select Channels"
-              options={[{ label: 'Custom', value: 'custom' }]}
+              options={[
+                { label: 'Custom', value: 'custom' },
+                { label: 'tempob785', value: 'tempob785' },
+                { label: 'tempop2', value: 'tempop2' },
+              ]}
               selected={filterSelection?.channels}
+              withCheckbox={true}
               displayValuesAsStrings
               onChange={(val) =>
                 handleChangeValues({
@@ -189,6 +194,7 @@ const MoreFiltersDrawer = ({ isOpen, onClose, fieldNames = [] }) => {
               placeholder="Select Pickup Address"
               options={[{ label: 'Primary', value: 'primary' }]}
               selected={filterSelection?.pickupAddress}
+              withCheckbox={true}
               displayValuesAsStrings
               onChange={(val) =>
                 handleChangeValues({
@@ -210,8 +216,11 @@ const MoreFiltersDrawer = ({ isOpen, onClose, fieldNames = [] }) => {
               id={'deliveryCountry'}
               label={'Delivery Country'}
               placeholder="Select Delivery Country"
-              options={[{ label: 'India', value: 'India' }]}
+              options={[{ label: 'India', value: 'India' }, { label: 'USA', value: 'USA' }, { label: 'Canada', value: 'Canada' }]}
               selected={filterSelection?.deliveryCountry}
+              withCheckbox={true}
+              selectAllEnabled
+              isSearchable
               displayCountAsValue
               displayCountAsValueLabel={'Delivery Country Selected'}
               onChange={(val) =>
@@ -335,6 +344,7 @@ const MoreFiltersDrawer = ({ isOpen, onClose, fieldNames = [] }) => {
                 { label: 'Resolved', value: 'Resolved' },
               ]}
               selected={filterSelection?.escalationStatus}
+              withCheckbox={true}
               displayValuesAsStrings
               onChange={(val) =>
                 handleChangeValues({
@@ -358,6 +368,9 @@ const MoreFiltersDrawer = ({ isOpen, onClose, fieldNames = [] }) => {
               placeholder="Select Couriers"
               options={[{ label: 'Other', value: 'Other' }]}
               selected={filterSelection?.couriers}
+              withCheckbox={true}
+              isSearchable
+              selectAllEnabled
               displayCountAsValue
               displayCountAsValueLabel={'Couriers Selected'}
               onChange={(val) =>
@@ -382,6 +395,9 @@ const MoreFiltersDrawer = ({ isOpen, onClose, fieldNames = [] }) => {
               placeholder="Select Shipping Partners"
               options={[{ label: 'Others', value: 'Others' }]}
               selected={filterSelection?.shippingPartners}
+              withCheckbox={true}
+              isSearchable
+              selectAllEnabled
               displayCountAsValue
               displayCountAsValueLabel={'Shipping Partners Selected'}
               onChange={(val) =>
