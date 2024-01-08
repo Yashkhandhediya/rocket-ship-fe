@@ -64,14 +64,17 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
 
   const handleSaveAddressInRedux = () => {
     if (
-      !isValidFirstName ||
-      !isValidFirstName ||
-      !isValidEmailAddress ||
+      !addressInfo?.contact_no ||
+      !addressInfo?.first_name ||
+      !addressInfo.email_address ||
       !addressInfo?.complete_address ||
       !addressInfo?.pincode ||
       !addressInfo?.city ||
       !addressInfo?.state ||
-      !addressInfo?.country
+      !addressInfo?.country ||
+      !isValidEmailAddress || 
+      !isValidFirstName||
+      !isValidNumber
     ) {
       setTriggerValidations(true);
       return;
@@ -82,6 +85,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
         if (resp.status == 200) {
           toast('Pickup details saved successfully', { type: 'success' });
           refetchAddress();
+          handleCloseDrawer();
         }
       })
       .catch((e) => {
@@ -236,7 +240,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
               lableAddOn={
-                !isEdit ? (
+                isEdit ? (
                   <img
                     src={editIcon}
                     className="ml-2 inline-flex cursor-pointer"
