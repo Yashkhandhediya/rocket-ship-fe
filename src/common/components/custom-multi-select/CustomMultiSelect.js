@@ -70,23 +70,31 @@ const CustomMultiSelect = ({
   };
 
   const handleSelectChange = (selectedOption, event) => {
-    if (selectedOption !== null && selectedOption.length > 0) {
-      if (selectedOption[selectedOption.length - 1].value === selectAllOption.value) {
-        return onChange([selectAllOption, ...options]);
-      }
-
-      let result = [];
-      if (selectedOption.length === options.length) {
-        if (selectedOption.find((option) => option.value === selectAllOption.value)) {
-          result = selectedOption.filter((option) => option.value !== selectAllOption.value);
-        } else if (event.action === 'select-option') {
-          result = [selectAllOption, ...options];
+    if (isMulti && withCheckbox) {
+      if (selectedOption !== null && selectedOption.length > 0) {
+        if (selectedOption[selectedOption.length - 1].value === selectAllOption.value) {
+          return onChange(
+            isMulti
+              ? onChange([selectAllOption, ...options].map((obj) => obj.value))
+              : onChange(selectedOption.value),
+          );
         }
-        return onChange(result);
+
+        let result = [];
+        if (selectedOption.length === options.length) {
+          if (selectedOption.find((option) => option.value === selectAllOption.value)) {
+            result = selectedOption.filter((option) => option.value !== selectAllOption.value);
+          } else if (event.action === 'select-option') {
+            result = [selectAllOption, ...options];
+          }
+          return onChange(isMulti ? onChange(result.map((obj) => obj.value)) : onChange(result?.[0].value));
+        }
       }
     }
 
-    return onChange(selectedOption);
+    return onChange(
+      isMulti ? onChange(selectedOption.map((obj) => obj.value)) : onChange(selectedOption.value),
+    );
   };
 
   const checkboxOptionStyles = (state) => {

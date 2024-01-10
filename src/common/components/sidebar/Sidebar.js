@@ -29,6 +29,7 @@ const Sidebar = () => {
             </Link>
           ) : (
             <div
+              key={i}
               className="group/sidebarItem mx-3.5 mb-3 flex cursor-pointer items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#06064d]"
               onClick={nav?.onClick}>
               <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" />

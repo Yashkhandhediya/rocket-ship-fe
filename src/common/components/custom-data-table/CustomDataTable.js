@@ -4,6 +4,7 @@ import { Fragment, useEffect, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faAngleUp, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { CustomMultiSelect } from '../custom-multi-select';
+import NoOrdersFound from '../../../pages/orders/components/no-order-found/NoOrdersFound';
 
 const CustomDataTable = ({
   columns,
@@ -15,6 +16,7 @@ const CustomDataTable = ({
   rowSubComponent,
   tableWrapperStyles,
   enablePagination,
+  NoDataFoundComponent,
   paginationRowsPerPageOptions = [15, 30, 60, 100],
 }) => {
   const [rowSelection, setRowSelection] = useState({});
@@ -50,7 +52,7 @@ const CustomDataTable = ({
     getCoreRowModel: getCoreRowModel(),
     onRowSelectionChange: setRowSelection,
     enableRowSelection: enableRowSelection,
-    ...(enablePagination? {getPaginationRowModel: getPaginationRowModel()}:{}),
+    ...(enablePagination ? { getPaginationRowModel: getPaginationRowModel() } : {}),
     state: {
       rowSelection,
     },
@@ -83,10 +85,10 @@ const CustomDataTable = ({
   }, [onRowSelectStateChange, selectedFlatRows]);
 
   useEffect(() => {
-    if(enablePagination && table.setPageSize) {
-      table.setPageSize(Number(paginationRowsPerPageOptions[0]))
+    if (enablePagination && table.setPageSize) {
+      table.setPageSize(Number(paginationRowsPerPageOptions[0]));
     }
-  }, [enablePagination, table.setPageSize])
+  }, [enablePagination, table.setPageSize]);
 
   return (
     <div
@@ -99,7 +101,7 @@ const CustomDataTable = ({
             return (
               <Table.HeadCell
                 key={`${header.id}-${headerInd}`}
-                className={`items-center bg-transparent font-medium bg-white p-3 normal-case leading-4 
+                className={`items-center bg-transparent bg-white p-3 font-medium normal-case leading-4 
                 ${headerCellStyle[headerInd]} ${getCellwidth(header?.id)}`}>
                 {flexRender(header.column.columnDef.header, header.getContext())}
               </Table.HeadCell>
@@ -107,45 +109,58 @@ const CustomDataTable = ({
           })}
         </Table.Head>
         <Table.Body className="align-top">
-          {table.getRowModel().flatRows.map((row, rowInd) => {
-            const cells = row?.getVisibleCells();
-            const hasSubRow = shouldRenderRowSubComponent({ row });
-            return (
-              <Fragment key={`${row?.id}-${rowInd}-fragment`}>
-                <Table.Row key={`${row?.id}-divider-${rowInd}`}>
-                  <Table.Cell className="bg-red p-1.5"></Table.Cell>
-                </Table.Row>
-                <Table.Row key={`${row?.id}-${rowInd}`}>
-                  {cells.map((cell, cellInd) => {
-                    return (
-                      <Table.Cell
-                        key={`${cell.id}-${cellInd}`}
-                        className={`bg-white px-3 py-4 
-                        ${rowCellStyle(cellInd, hasSubRow)} ${getCellwidth(cell?.column?.id)}`}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </Table.Cell>
-                    );
-                  })}
-                </Table.Row>
-                {hasSubRow && (
-                  <Table.Row
-                    key={`${row?.id}-${rowInd}-tags`}
-                    className="border-[rgba(112, 112, 112, 0.1)] border-t">
-                    {enableRowSelection && (
-                      <Table.Cell className={`bg-red rounded-bl-lg bg-white p-3`}></Table.Cell>
-                    )}
-                    <Table.Cell
-                      className={`bg-red rounded-br-lg bg-white p-3 ${
-                        enableRowSelection ? 'rounded-br-lg' : 'rounded-b-lg'
-                      }`}
-                      colSpan={row.getVisibleCells().length - 1}>
-                      {rowSubComponent({ row })}
-                    </Table.Cell>
+          {table.getRowModel().flatRows?.length ? (
+            table.getRowModel().flatRows.map((row, rowInd) => {
+              const cells = row?.getVisibleCells();
+              const hasSubRow = shouldRenderRowSubComponent({ row });
+              return (
+                <Fragment key={`${row?.id}-${rowInd}-fragment`}>
+                  <Table.Row key={`${row?.id}-divider-${rowInd}`}>
+                    <Table.Cell className="bg-red p-1.5"></Table.Cell>
                   </Table.Row>
-                )}
-              </Fragment>
-            );
-          })}
+                  <Table.Row key={`${row?.id}-${rowInd}`}>
+                    {cells.map((cell, cellInd) => {
+                      return (
+                        <Table.Cell
+                          key={`${cell.id}-${cellInd}`}
+                          className={`bg-white px-3 py-4 
+                        ${rowCellStyle(cellInd, hasSubRow)} ${getCellwidth(cell?.column?.id)}`}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </Table.Cell>
+                      );
+                    })}
+                  </Table.Row>
+                  {hasSubRow && (
+                    <Table.Row
+                      key={`${row?.id}-${rowInd}-tags`}
+                      className="border-[rgba(112, 112, 112, 0.1)] border-t">
+                      {enableRowSelection && (
+                        <Table.Cell className={`rounded-bl-lg bg-white p-3`}></Table.Cell>
+                      )}
+                      <Table.Cell
+                        className={`rounded-br-lg bg-white p-3 ${
+                          enableRowSelection ? 'rounded-br-lg' : 'rounded-b-lg'
+                        }`}
+                        colSpan={row.getVisibleCells().length - 1}>
+                        {rowSubComponent({ row })}
+                      </Table.Cell>
+                    </Table.Row>
+                  )}
+                </Fragment>
+              );
+            })
+          ) : (
+            <>
+              <Table.Row>
+                <Table.Cell className="p-1.5"></Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell className="rounded-lg bg-white" colSpan={preparedColumns?.length}>
+                  {NoDataFoundComponent ? <NoDataFoundComponent /> : <NoOrdersFound />}
+                </Table.Cell>
+              </Table.Row>
+            </>
+          )}
         </Table.Body>
       </Table>
       <div>

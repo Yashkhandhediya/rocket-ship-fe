@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Checkbox, Field, RightDrawer, CustomMultiSelect } from '../../../../common/components';
 import { fieldDefaultValues } from '../utils';
 
@@ -216,7 +216,11 @@ const MoreFiltersDrawer = ({ isOpen, onClose, fieldNames = [] }) => {
               id={'deliveryCountry'}
               label={'Delivery Country'}
               placeholder="Select Delivery Country"
-              options={[{ label: 'India', value: 'India' }, { label: 'USA', value: 'USA' }, { label: 'Canada', value: 'Canada' }]}
+              options={[
+                { label: 'India', value: 'India' },
+                { label: 'USA', value: 'USA' },
+                { label: 'Canada', value: 'Canada' },
+              ]}
               selected={filterSelection?.deliveryCountry}
               withCheckbox={true}
               selectAllEnabled
@@ -445,7 +449,9 @@ const MoreFiltersDrawer = ({ isOpen, onClose, fieldNames = [] }) => {
         </div>
       }>
       <div className="mt-1 flex w-full flex-col gap-3">
-        {fieldNames?.map((name) => renderFieldBasedOnName(name))}
+        {fieldNames?.map((name, i) => (
+          <Fragment key={`${name}-${i}`}>{renderFieldBasedOnName(name)}</Fragment>
+        ))}
       </div>
     </RightDrawer>
   );
