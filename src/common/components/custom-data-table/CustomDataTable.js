@@ -141,7 +141,9 @@ const CustomDataTable = ({
                         className={`rounded-br-lg bg-white p-3 ${
                           enableRowSelection ? 'rounded-br-lg' : 'rounded-b-lg'
                         }`}
-                        colSpan={row.getVisibleCells().length - 1}>
+                        colSpan={
+                          enableRowSelection ? row.getVisibleCells().length - 1 : row.getVisibleCells().length
+                        }>
                         {rowSubComponent({ row })}
                       </Table.Cell>
                     </Table.Row>
@@ -163,51 +165,53 @@ const CustomDataTable = ({
           )}
         </Table.Body>
       </Table>
-      <div>
-        <div className="flex w-full flex-wrap-reverse justify-between gap-2 rounded-lg bg-white px-4 py-2">
-          <div className="mr-2 flex items-center">
-            <div className="mr-4 text-xs text-black">{'Items per page: '}</div>
-            <div>
-              <CustomMultiSelect
-                id={'new-pagination'}
-                isMulti={false}
-                options={paginationRowsPerPageOptions.map((value) => ({ label: value, value: value }))}
-                renderSingleCustomDisplayValue={(selected) => `${selected} Orders`}
-                selected={table.getState().pagination.pageSize}
-                onChange={(value) => table.setPageSize(Number(value))}
-                closeMenuOnSelect={true}
-                hideSelectedOptions={false}
-                CustomDropdownIndicator={() => (
-                  <div className="flex cursor-pointer flex-col">
-                    <FontAwesomeIcon icon={faAngleUp} className="h-2.5 text-gray-400" />
-                    <FontAwesomeIcon icon={faAngleDown} className="h-2.5 text-gray-400" />
-                  </div>
-                )}
-              />
+      {enablePagination && (
+        <div>
+          <div className="flex w-full flex-wrap-reverse justify-between gap-2 rounded-lg bg-white px-4 py-2">
+            <div className="mr-2 flex items-center">
+              <div className="mr-4 text-xs text-black">{'Items per page: '}</div>
+              <div>
+                <CustomMultiSelect
+                  id={'new-pagination'}
+                  isMulti={false}
+                  options={paginationRowsPerPageOptions.map((value) => ({ label: value, value: value }))}
+                  renderSingleCustomDisplayValue={(selected) => `${selected} Orders`}
+                  selected={table.getState().pagination.pageSize}
+                  onChange={(value) => table.setPageSize(Number(value))}
+                  closeMenuOnSelect={true}
+                  hideSelectedOptions={false}
+                  CustomDropdownIndicator={() => (
+                    <div className="flex cursor-pointer flex-col">
+                      <FontAwesomeIcon icon={faAngleUp} className="h-2.5 text-gray-400" />
+                      <FontAwesomeIcon icon={faAngleDown} className="h-2.5 text-gray-400" />
+                    </div>
+                  )}
+                />
+              </div>
+            </div>
+            <div className="flex items-center text-xs">
+              <Button
+                color="light"
+                className="mr-6 border-0 *:px-3 *:text-xs *:font-normal"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}>
+                <FontAwesomeIcon icon={faArrowLeft} className="mx-2 h-4 w-3" />
+                {'PREV'}
+              </Button>
+              <button className="rounded-lg border-0 bg-gray-100 px-3 py-2 font-medium" disabled={true}>
+                {'1'}
+              </button>
+              <Button
+                color="light"
+                className="ml-6 border-0 *:px-3  *:text-xs *:font-normal"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}>
+                {'NEXT'} <FontAwesomeIcon icon={faArrowRight} className="mx-2 h-4 w-3" />
+              </Button>
             </div>
           </div>
-          <div className="flex items-center text-xs">
-            <Button
-              color="light"
-              className="mr-6 border-0 *:px-3 *:text-xs *:font-normal"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}>
-              <FontAwesomeIcon icon={faArrowLeft} className="mx-2 h-4 w-3" />
-              {'PREV'}
-            </Button>
-            <button className="rounded-lg border-0 bg-gray-100 px-3 py-2 font-medium" disabled={true}>
-              {'1'}
-            </button>
-            <Button
-              color="light"
-              className="ml-6 border-0 *:px-3  *:text-xs *:font-normal"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}>
-              {'NEXT'} <FontAwesomeIcon icon={faArrowRight} className="mx-2 h-4 w-3" />
-            </Button>
-          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -16,7 +16,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
       panel: (
         <ShipmentCourierPartnersTable
           orderId={orderDetails?.id}
-          shipmentDetails={shipmentsDetails}
+          shipmentDetails={shipmentsDetails || []}
           closeShipmentDrawer={onClose}
         />
       ),
@@ -27,7 +27,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
       panel: (
         <ShipmentCourierPartnersTable
           orderId={orderDetails?.id}
-          shipmentDetails={shipmentsDetails}
+          shipmentDetails={shipmentsDetails || []}
           closeShipmentDrawer={onClose}
         />
       ),
@@ -38,7 +38,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
       panel: (
         <ShipmentCourierPartnersTable
           orderId={orderDetails?.id}
-          shipmentDetails={shipmentsDetails}
+          shipmentDetails={shipmentsDetails || []}
           closeShipmentDrawer={onClose}
         />
       ),
@@ -49,7 +49,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
       panel: (
         <ShipmentCourierPartnersTable
           orderId={orderDetails?.id}
-          shipmentDetails={shipmentsDetails}
+          shipmentDetails={shipmentsDetails || []}
           closeShipmentDrawer={onClose}
         />
       ),
@@ -73,6 +73,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
         // eslint-disable-next-line no-console
         console.error(e);
         toast('Unable to fetch shipment details', { type: 'error' });
+        setShipmentDetails([]);
         setIsLoading(false);
       });
   };
