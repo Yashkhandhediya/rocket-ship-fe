@@ -43,7 +43,7 @@ export const New = () => {
             <div className="flex flex-col gap-2 text-left text-xs">
               <div className="pb-0.5">
                 <Link
-                  to={generatePath(`/track-order/:orderId`, { orderId: row?.original?.id })}
+                  to={generatePath(`/track-order/:orderId`, { orderId: row?.original?.id || 1 })}
                   className="border-b-2 border-b-purple-700 text-purple-700">
                   {row?.original?.id}
                 </Link>
@@ -55,7 +55,7 @@ export const New = () => {
                   text={[row?.original?.product_infom, row?.original?.product_info].map((product, i) => {
                     return (
                       <Fragment key={`${product?.id}-${i}`}>
-                        {i !== 0 && <div className="w-full my-2 h-[1px] bg-gray-500" />}
+                        {i !== 0 && <div className="my-2 h-[1px] w-full bg-gray-500" />}
                         <div key={`${product?.id}-${i} w-full`}>
                           <div>{product?.name}</div>
                           <div>SKU: {product?.sku}</div>
@@ -176,7 +176,7 @@ export const New = () => {
                     setSelectShipmentDrawer({
                       isOpen: true,
                       orderDetails: row,
-                    })
+                    });
                   }}>
                   {'Ship Now'}
                 </button>

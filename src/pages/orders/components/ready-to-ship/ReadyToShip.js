@@ -45,7 +45,7 @@ export const ReadyToShip = () => {
             <div className="flex flex-col gap-2 text-left text-xs">
               <div className="pb-0.5">
                 <Link
-                  to={generatePath(`/track-order/:orderId`, { orderId: row?.original?.id })}
+                  to={generatePath(`/track-order/:orderId`, { orderId: row?.original?.id || 1})}
                   className="border-b-2 border-b-purple-700 text-purple-700">
                   {row?.original?.id}
                 </Link>
