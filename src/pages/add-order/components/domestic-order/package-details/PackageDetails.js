@@ -67,6 +67,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     let resp = await axios.post('http://43.252.197.60:8030/order', {
       ...domesticOrderFormValues,
       ...formDirectField,
+      order_type: 'domestic',
       date: date,
     });
     if (resp.status == 200) {

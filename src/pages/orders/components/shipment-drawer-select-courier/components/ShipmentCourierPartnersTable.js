@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import './ShipmentCourierPartnersTable.css';
 import { SchedulePickupModal } from '../../schedule-pickup-modal';
+import { createColumnHelper } from '@tanstack/react-table';
 
 const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentDrawer }) => {
   const dispatch = useDispatch();
@@ -61,7 +62,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         <div className="flex gap-1 pb-4 pt-7 text-left">
           <div>{/* <img src={''} className="h-10 w-10 rounded-full bg-gray-400" /> */}</div>
           <div>
-            <h4 className="pb-1.5 text-xs font-medium text-[#555]">{row?.partner_name || 'Delhivery'}</h4>
+            <h4 className="pb-1.5 text-xs font-medium text-[#555]">{row?.original?.partner_name || 'Delhivery'}</h4>
             <div className="pb-1.5 text-xs text-[#555]">
               {`${Number(row?.surface_max_weight || 0) ? 'Surface ' : 'Air'} | Min-weight: `}
               <span className="font-medium">
@@ -149,6 +150,105 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
       ),
     },
   ];
+
+  const getColumns = () => {
+    const columnHelper = createColumnHelper()
+    return [
+      columnHelper.accessor('courierPartner',{
+        header: 'Courier Partner',
+        cell: (row) => (
+          <div className="flex gap-1 pb-4 pt-7 text-left">
+            <div>{/* <img src={''} className="h-10 w-10 rounded-full bg-gray-400" /> */}</div>
+            <div>
+              <h4 className="pb-1.5 text-xs font-medium text-[#555]">{row?.original?.partner_name || 'Delhivery'}</h4>
+              <div className="pb-1.5 text-xs text-[#555]">
+                {`${Number(row?.original?.surface_max_weight || 0) ? 'Surface ' : 'Air'} | Min-weight: `}
+                <span className="font-medium">
+                  {Number(row?.original?.surface_max_weight || 0) ? row?.original?.surface_max_weight : row?.original?.air_max_weight || 0}
+                </span>
+              </div>
+              <div className="pb-1.5 text-xs text-[#555]">
+                {`RTO Charges: ₹`}
+                <span className="font-medium">{row?.original?.charge_RTO}</span>
+              </div>
+            </div>
+          </div>
+        ),
+      }),
+      columnHelper.accessor('rating',{
+        header: 'Rating',
+        cell: (row) => (
+          <div className="flex flex-col gap-1 text-left">
+            <div className="relative h-12 w-12 text-sm font-medium">
+              <RatingProgressBar rating={row?.original?.rating || 0} />
+            </div>
+          </div>
+        ),
+      }),
+      columnHelper.accessor('expectedPickup',{
+        header: 'Expected Pickup',
+        cell: (row) => (
+          <div className="flex flex-col gap-1 text-left">
+            <div className="text-xs text-[#555]">{row?.original?.expected_pickup || '-'}</div>
+          </div>
+        ),
+      }),
+      columnHelper.accessor('estimatedDelivery',{
+        header: 'Estimated Delivery',
+        cell: (row) => (
+          <div className="flex flex-col gap-1 text-left">
+            <div className="text-xs text-[#555]">{row?.original?.estimated_delivery || '-'}</div>
+          </div>
+        ),
+      }),
+      columnHelper.accessor('chargebleWeight',{
+        header: 'Chargeable Weight',
+        cell: (row) => (
+          <div className="flex h-full w-full flex-col gap-1 text-center">
+            <div className="text-xs text-[#555]">{`${row?.original?.charged_weight || ''} Kg`}</div>
+          </div>
+        ),
+      }),
+      columnHelper.accessor('charges',{
+        header: 'Charges',
+        cell: (row) => (
+          <div className="flex flex-col gap-1 py-2 text-left">
+            <div className="flex items-center">
+              <div className="text-base font-bold text-[gray]">{`₹${row?.original?.total_amount || ''}`}</div>
+              <CustomTooltip
+                text={
+                  <>
+                    <div className="mb-1.5">
+                      {`Freight Charge: `}
+                      <span className="font-bold">{`₹ ${row?.original?.charge_freight || ''}`}</span>
+                    </div>
+                    <div className="">
+                      {`Cod Charges: `}
+                      <span className="font-bold">{`₹ ${row?.original?.charge_COD || ''}`}</span>
+                    </div>
+                  </>
+                }>
+                <img src={infoIcon} className="ml-1" />
+              </CustomTooltip>
+            </div>
+          </div>
+        ),
+      }),
+      columnHelper.accessor('action',{
+        header: 'Action',
+        cell: (row) => (
+          <div className="flex flex-col gap-1 py-2 text-left">
+            <button
+              id={row?.original?.id}
+              className="min-w-fit rounded bg-indigo-600 px-5 py-2 text-white"
+              onClick={handleShipOrder}>
+              {'Ship Now'}
+            </button>
+          </div>
+        ),
+      }),
+    ];
+  }
 
   return (
     <div className="mt-3 h-full w-full text-left">

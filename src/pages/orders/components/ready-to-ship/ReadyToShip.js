@@ -54,7 +54,7 @@ export const ReadyToShip = () => {
               <div>{(row?.original?.channel || '')?.toUpperCase()}</div>
               <div>
                 <CustomTooltip
-                  text={[row?.original?.product_info, row?.original?.product_info].map((product, i) => {
+                  text={row?.original?.product_info.map((product, i) => {
                     return (
                       <Fragment key={`${product?.id}-${i}`}>
                         {i !== 0 && <div className="my-2 h-[1px] w-full bg-gray-500" />}
@@ -106,20 +106,20 @@ export const ReadyToShip = () => {
       }),
       columnHelper.accessor('pickup/rtoAddress', {
         header: 'Pickup/RTO Address',
-        cell: (row) => (
+        cell: ({row}) => (
           <div className="flex flex-col gap-1 text-left text-xs">
             <div>
               <CustomTooltip
                 text={
                   <>
-                    <div>{`${row?.user_info?.address_line1 ?? ''} ${
-                      row?.user_info?.address_line2 ?? ''
+                    <div>{`${row?.original?.user_info?.address_line1 ?? ''} ${
+                      row?.original?.user_info?.address_line2 ?? ''
                     }`}</div>
-                    <div>{row?.user_info?.city ?? ''}</div>
+                    <div>{row?.original?.user_info?.city ?? ''}</div>
                     <div>
-                      {row?.user_info?.state ?? ''}-{row?.user_info?.pincode}
+                      {row?.original?.user_info?.state ?? ''}-{row?.original?.user_info?.pincode}
                     </div>
-                    <div>{row?.user_info?.contact_no}</div>
+                    <div>{row?.original?.user_info?.contact_no}</div>
                   </>
                 }>
                 <div className="relative cursor-pointer whitespace-pre-wrap pb-0.5 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-[#555]">
@@ -132,17 +132,17 @@ export const ReadyToShip = () => {
       }),
       columnHelper.accessor('shippingDetails', {
         header: 'Shipping Details',
-        cell: (row) => {
+        cell: ({row}) => {
           return (
             <div className="flex flex-col gap-1 text-left text-xs">
-              <div>{row?.courier_name}</div>
+              <div>{row?.original?.courier_name}</div>
               <div>{'AWB#'}</div>
               <div className="pb-0.5">
-                {(row?.status_name || '')?.toLowerCase() === 'new' ? (
+                {(row?.original?.status_name || '')?.toLowerCase() === 'new' ? (
                   'Not Assigned'
                 ) : (
                   <a
-                    href={`http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`}
+                    href={`http://${window.location.host}/tracking?data=${encodeURIComponent(row?.original?.id)}`}
                     target="_blank"
                     style={{ color: 'blue', textDecoration: 'underline' }}
                     rel="noopener noreferrer">
@@ -176,15 +176,16 @@ export const ReadyToShip = () => {
       }), 
       columnHelper.accessor('action', {
         header: 'Action',
-        cell: (row) => (
+        cell: ({row}) => (
           <div className="flex gap-2 text-left text-xs">
             <button
-              id={row.id}
+              id={row?.original?.id}
               className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
               onClick={() => {
                 setScheduleModal({
                   isOpen: true,
-                  pickupDetails: row,
+                  pickupDetails: row?.original,
+
                 });
                 // const resp = axios.get('http://43.252.197.60:8030/order/track?order_id=' + row.id);
                 // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
@@ -199,7 +200,7 @@ export const ReadyToShip = () => {
               <MoreDropdown
                 renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                 options={moreActionOptions({
-                  cloneOrder: () => cloneOrder(row),
+                  cloneOrder: () => cloneOrder(row.original),
                 })}
               />
             </div>

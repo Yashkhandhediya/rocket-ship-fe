@@ -14,6 +14,8 @@ const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
     pickup_date: '',
   });
 
+  console.log('in schwdule pickup', pickupDetails);
+
   const handleSelectDate = (date) => {
     setScheduleDetails({
       pickup_date: date,
@@ -22,22 +24,20 @@ const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
   };
 
   const schedulePickup = () => {
+    const formattedDate = moment(scheduleDetails.pickup_date).format('YYYY-MM-DD');
     axios
-      .post(`http://43.252.197.60:8030/order/${pickupDetails.id}/pickup`, {
-        pickup_date: moment(scheduleDetails.pickup_date).format('YYYY-MM-DD'),
+      .post(`http://43.252.197.60:8030/order/${pickupDetails?.id}/pickup`, {
+        pickup_date: formattedDate,
         pickup_time: scheduleDetails.pickup_time,
       })
       .then((resp) => {
         if (resp.status === 200) {
-          toast(
-            `pickup scheduled successfully on date ${moment(scheduleDetails.pickup_date).format(
-              'YYYY-MM-DD',
-            ), {type: "success"}}`,
-          );
+          toast(`pickup scheduled successfully on date ${formattedDate}`, { type: 'success' });
           onClose();
         }
-      }).catch(() => {
-        toast("Unable to schedule pickup", {type: "error"})
+      })
+      .catch(() => {
+        toast('Unable to schedule pickup', { type: 'error' });
       });
   };
 
