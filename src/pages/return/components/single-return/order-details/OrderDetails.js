@@ -1,10 +1,13 @@
+import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
+import { FileInput, Label } from 'flowbite-react';
 import { cloneDeep, isEmpty } from 'lodash';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { CustomMultiSelect, Field, FieldAccordion } from '../../../../../common/components';
+import { CustomMultiSelect, Field, FieldAccordion, FieldTextArea } from '../../../../../common/components';
 import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 
 const OrderDetails = ({ currentStep, handleChangeStep }) => {
@@ -124,7 +127,7 @@ const OrderDetails = ({ currentStep, handleChangeStep }) => {
       const isValidProducts = productFields?.every((product) => {
         return product.name && product.unit_price > 0 && product.quantity > 0;
       });
-      if (!productFields?.length || !isValidProducts || !formDirectField?.channel || !formDirectField?.date) {
+      if (!productFields?.length || !formDirectField?.channel || !formDirectField?.date) {
         toast('Please enter all required fields', { type: 'error' });
       } else {
         dispatch(
@@ -265,8 +268,38 @@ const OrderDetails = ({ currentStep, handleChangeStep }) => {
           id={'orderDetails'}
           label={'+ Add Comments and Product images provided by Buyer'}
           showOptional>
-          <div>
-            <h1>Hello</h1>
+          <div className="flex w-full flex-col items-center gap-4 md:w-3/4 lg:flex-row">
+            <div className="w-full lg:w-3/4">
+              <FieldTextArea
+                label={'Channel'}
+                inputClassNames={'text-xs'}
+                labelClassNames={'text-xs'}
+                placeHolder={'Enter Channel'}
+                required={false}
+                value={formDirectField?.channel}
+                onChange={setDirectKeysInForm}
+                rows={5}
+              />
+            </div>
+            <div className="w-full lg:w-auto">
+              <p className={`mb-2 flex items-center  text-xs font-medium text-gray-600`}>
+                <span> {'Product Image'}</span>
+                <span className="pl-1 text-[10px] text-gray-400">Upto 3</span>
+              </p>
+              <Label htmlFor="bulkOrderDropZone">
+                <div className="grid h-[98px] place-items-center rounded-[10px] border border-dashed border-indigo-700 bg-[#f4f8ff99]">
+                  <div className="flex flex-col items-center gap-1.5">
+                    <FontAwesomeIcon icon={faCloudArrowUp} className="h-6 w-8 text-indigo-700" />
+                    <Label
+                      htmlFor="bulkOrderDropZone"
+                      className="cursor-pointer rounded-md px-5 py-0 text-[10px] font-medium text-indigo-500 ">
+                      {'Add Image(s)'}
+                    </Label>
+                  </div>
+                </div>
+                <FileInput id="bulkOrderDropZone" className="hidden" />
+              </Label>
+            </div>
           </div>
         </FieldAccordion>
       </div>

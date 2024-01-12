@@ -21,7 +21,7 @@ export default function BuyerDetails({ handleFormData, formData, currentStep, ha
         last_name: formData?.buyer_info?.last_name || '',
         email_address: formData?.buyer_info?.email_address || '',
     });
-    console.log(buyerInfo.last_name, "UUUUUU")
+
     const [companyInfo, setCompanyInfo] = useState({
         name: formData?.company_info?.name || '',
         gst: formData?.company_info?.gst || '',
