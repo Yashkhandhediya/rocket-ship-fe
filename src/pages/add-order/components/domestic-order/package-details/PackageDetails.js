@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
+import { setAllOrders } from '../../../../../redux';
 
 export default function PackageDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
@@ -73,6 +74,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     if (resp.status == 200) {
       toast('Order Placed Successfully', { type: 'success' });
       dispatch(resetDomesticOrder());
+      dispatch(setAllOrders(null))
       navigate('/orders');
     } else {
       toast('There is some error please check your network or contact support', { type: 'error' });

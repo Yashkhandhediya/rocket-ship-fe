@@ -186,11 +186,13 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
 
       <SchedulePickupModal
         isOpen={scheduleModal.isOpen}
-        onClose={() =>
+        onClose={() =>{
           setScheduleModal({
             isOpen: false,
             pickupDetails: {},
           })
+          closeShipmentDrawer()
+        }
         }
         pickupDetails={scheduleModal.pickupDetails}
       />

@@ -55,7 +55,7 @@ const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
   }, [isOpen]);
 
   return (
-    <Modal dismissible show={isOpen} onClose={onClose} className="min-w-[700px]">
+    <Modal show={isOpen} onClose={onClose} className="min-w-[700px]">
       <Modal.Header className="p-4 pb-2">{'Schedule Your Pickup'}</Modal.Header>
       <Modal.Body className="px-4 py-4">
         <div className="mb-4 flex items-center rounded-md bg-green-100 px-2 py-1.5">

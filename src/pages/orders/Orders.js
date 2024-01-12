@@ -8,6 +8,7 @@ import { setAllOrders } from '../../redux';
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 import Loader from '../../common/loader/Loader';
+import { isEmpty } from 'lodash';
 
 const Orders = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -35,7 +36,7 @@ const Orders = () => {
   };
 
   useEffect(() => {
-    if (!allOrdersList) {
+    if (!allOrdersList || isEmpty[allOrdersList]) {
       fetchNewOrders();
     } else {
       setIsLoading(false);
