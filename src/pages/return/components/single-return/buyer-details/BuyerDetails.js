@@ -122,6 +122,7 @@ export default function BuyerDetails({ formData, currentStep, handleChangeStep }
           <BuyerAddressFields
             heading={'Where is the return being picked from?'}
             values={addressInfo}
+            alternateText={"(Buyer's Address)"}
             triggerValidation={triggerBuyerValidations}
             onChange={handleSetAddressinfo}
             onPincodeVeify={onAddressPincodeVerify}
