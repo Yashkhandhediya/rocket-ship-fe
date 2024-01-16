@@ -3,6 +3,7 @@ import './Tracking.css'
 import axios from "axios";
 import { toast } from "react-toastify";
 import moment from "moment";
+import { BACKEND_URL } from "../../common/utils/env.config";
 
 export default function Tracking() {
     const [shipmentData, setShipmentData] = useState();

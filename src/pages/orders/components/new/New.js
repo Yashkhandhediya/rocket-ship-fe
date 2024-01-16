@@ -17,6 +17,7 @@ import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
 import { CommonBadge } from '../../../../common/components/common-badge';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
 
 export const New = () => {
   const dispatch = useDispatch();

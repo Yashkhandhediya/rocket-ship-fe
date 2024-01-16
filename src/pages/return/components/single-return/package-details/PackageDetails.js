@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
+import { BACKEND_URL } from '../../../../../common/utils/env.config';
 
 export default function PackageDetails({ currentStep, handleChangeStep }) {
     const dispatch = useDispatch();

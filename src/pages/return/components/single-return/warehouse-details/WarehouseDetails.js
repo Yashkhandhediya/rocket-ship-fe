@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
+import { BACKEND_URL } from '../../../../../common/utils/env.config';
 
 
 const WarehouseDetails = ({ currentStep, handleChangeStep }) => {

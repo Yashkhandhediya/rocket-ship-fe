@@ -5,6 +5,7 @@ import ShipmentSelfFullfiled from './components/ShipmentSelfFullfiled';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Loader from '../../../../common/loader/Loader';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
 
 const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
   const [shipmentsDetails, setShipmentDetails] = useState(null);

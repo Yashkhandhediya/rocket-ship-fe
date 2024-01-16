@@ -2,6 +2,7 @@ import { toast } from 'react-toastify';
 import { Field } from '../../../../common/components';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
 
 const BuyerAdressFields = ({
   heading,

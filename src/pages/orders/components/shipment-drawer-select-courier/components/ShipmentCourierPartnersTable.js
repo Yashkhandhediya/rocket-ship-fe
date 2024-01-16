@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import './ShipmentCourierPartnersTable.css';
 import { SchedulePickupModal } from '../../schedule-pickup-modal';
+import { BACKEND_URL } from '../../../../../common/utils/env.config';
 
 const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentDrawer }) => {
   const dispatch = useDispatch();

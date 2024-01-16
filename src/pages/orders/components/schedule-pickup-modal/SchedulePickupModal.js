@@ -6,6 +6,7 @@ import { Modal } from 'flowbite-react';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
 
 const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
   const [datesToMap, seDatesToMap] = useState([]);
