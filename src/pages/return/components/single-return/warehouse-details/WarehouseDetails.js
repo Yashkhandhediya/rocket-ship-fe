@@ -24,7 +24,7 @@ const WarehouseDetails = ({ currentStep, handleChangeStep }) => {
 
     const fetchUserAddressList = () => {
         axios
-            .get('http://43.252.197.60:8030/address', {
+            .get(BACKEND_URL+'/address', {
                 params: {
                     user_id: 1,
                 },

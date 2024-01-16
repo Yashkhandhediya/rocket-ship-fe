@@ -21,7 +21,7 @@ const BuyerAdressFields = ({
   const fetchPincodeDetails = () => {
     try {
       axios
-        .get(`http://43.252.197.60:8030/pincode/${values?.pincode}`)
+        .get(`${BACKEND_URL}/pincode/${values?.pincode}`)
         .then((resp) => {
           if (resp.status == 200 && onPincodeVeify) {
             onPincodeVeify({

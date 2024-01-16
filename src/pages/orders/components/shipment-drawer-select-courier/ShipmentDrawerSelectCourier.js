@@ -62,7 +62,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
   ];
   const fetchShipmentDetails = () => {
     axios
-      .get(`http://43.252.197.60:8030/order/${orderDetails?.id}/estimate`)
+      .get(`${BACKEND_URL}/order/${orderDetails?.id}/estimate`)
       .then((resp) => {
         if (resp.status === 200) {
           setShipmentDetails(resp?.data);

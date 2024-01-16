@@ -1,7 +1,7 @@
 import { useState } from "react";
 import BuyerDetails from "./buyer-details/BuyerDetails";
 import WarehouseDetails from "./warehouse-details/WarehouseDetails";
-import OrderDetails from "./order-details/OrderDetails";
+import ReturnDetails from './return-details/ReturnDetails';
 import PackageDetails from "./package-details/PackageDetails";
 import Stepper from '../stepper/Stepper';
 const SingleReturn = () => {
@@ -9,7 +9,7 @@ const SingleReturn = () => {
     const steps = {
         0: <BuyerDetails currentStep={state} handleChangeStep={setState} />,
         1: <WarehouseDetails currentStep={state} handleChangeStep={setState} />,
-        2: <OrderDetails currentStep={state} handleChangeStep={setState} />,
+        2: <ReturnDetails currentStep={state} handleChangeStep={setState} />,
         3: <PackageDetails currentStep={state} handleChangeStep={setState} />,
     };
 

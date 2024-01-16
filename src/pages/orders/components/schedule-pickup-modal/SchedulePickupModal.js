@@ -23,7 +23,7 @@ const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
 
   const schedulePickup = () => {
     axios
-      .post(`http://43.252.197.60:8030/order/${pickupDetails.id}/pickup`, {
+      .post(`${BACKEND_URL}/order/${pickupDetails.id}/pickup`, {
         pickup_date: moment(scheduleDetails.pickup_date).format('YYYY-MM-DD'),
         pickup_time: scheduleDetails.pickup_time,
       })

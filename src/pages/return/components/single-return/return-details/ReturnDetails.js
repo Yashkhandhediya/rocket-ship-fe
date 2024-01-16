@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { CustomMultiSelect, Field, FieldAccordion, FieldTextArea } from '../../../../../common/components';
 import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 
-const OrderDetails = ({ currentStep, handleChangeStep }) => {
+const ReturnDetails = ({ currentStep, handleChangeStep }) => {
   const dispatch = useDispatch();
 
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order) || {};
@@ -103,14 +103,15 @@ const OrderDetails = ({ currentStep, handleChangeStep }) => {
     }
   };
 
-  const fetchOrderId = () => {
+  const fetchReturnId = () => {
     axios
-      .get('http://43.252.197.60:8030/order/get_order_id')
+      .get(BACKEND_URL+'/return/get_return_id')
       .then((resp) => {
-        if (resp?.status == 200 && resp?.data?.order_id) {
+        console.log('return response',resp);
+        if (resp?.status == 200 && resp?.data?.return_id) {
           setFormDirectField({
             ...formDirectField,
-            order_id: String(resp?.data?.order_id),
+            return_id: String(resp?.data?.return_id),
           });
         }
       })
@@ -145,8 +146,8 @@ const OrderDetails = ({ currentStep, handleChangeStep }) => {
   };
 
   useEffect(() => {
-    if (!formDirectField?.order_id) {
-      fetchOrderId();
+    if (!formDirectField?.return_id) {
+      fetchReturnId();
     }
   }, []);
 
@@ -190,15 +191,15 @@ const OrderDetails = ({ currentStep, handleChangeStep }) => {
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
             {/* missing field in API */}
             <Field
-              id={'order_id'}
+              id={'return_id'}
               label={'Return ID'}
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
               placeHolder={'Enter Return ID'}
               required={true}
-              value={formDirectField?.order_id || ''}
+              value={formDirectField?.return_id || ''}
               triggerValidation={productValidation}
-              onBlur={() => setIsOrderIdValid(formDirectField?.order_id?.length)}
+              onBlur={() => setIsOrderIdValid(formDirectField?.return_id?.length)}
               onChange={setDirectKeysInForm}
             />
             {!isOrderIdValid && <p className="mt-1 text-xs text-red-500">Return Id is required.</p>}
@@ -324,4 +325,4 @@ const OrderDetails = ({ currentStep, handleChangeStep }) => {
   );
 };
 
-export default OrderDetails;
+export default ReturnDetails;

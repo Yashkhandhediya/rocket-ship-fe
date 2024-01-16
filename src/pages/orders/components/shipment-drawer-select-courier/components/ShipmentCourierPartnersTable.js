@@ -18,7 +18,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
     setIsLoading(true);
     if (orderId) {
       axios
-        .post(`http://43.252.197.60:8030/order/${orderId}/shipment`)
+        .post(`${BACKEND_URL}/order/${orderId}/shipment`)
         .then((resp) => {
           if (resp?.status === 200) {
             setIsLoading(false);

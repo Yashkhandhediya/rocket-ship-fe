@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
+import { BACKEND_URL } from '../../../../../common/utils/env.config';
 
 export default function PackageDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
@@ -64,7 +65,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
 
   const placeOrder = async () => {
     const date = getFullDateForPayload(domesticOrderFormValues?.date);
-    let resp = await axios.post('http://43.252.197.60:8030/order', {
+    let resp = await axios.post(BACKEND_URL+'/order', {
       ...domesticOrderFormValues,
       ...formDirectField,
       date: date,
