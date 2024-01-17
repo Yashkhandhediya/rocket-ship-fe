@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails } from '../pages';
 import Tracking from '../pages/tracking/Tracking';
 import PrivateRoute from './private-route/PrivateRoute';
+import { SellerKYC } from '../pages/kyc';
 
 const routes = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const routes = createBrowserRouter([
     path: '/tracking',
     element: <PrivateRoute component={<Tracking />} />,
   },
+  {
+    path: '/seller/kyc',
+    element: <PrivateRoute component={<SellerKYC />} />,
+  }
 ]);
 
 export default routes;
