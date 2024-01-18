@@ -28,6 +28,8 @@ const Field = ({
   onIncrease,
   onDecrease,
   tooltip,
+  autoComplete='on',
+  readOnly = false,
 }) => {
   useEffect(() => {
     if (triggerValidation && onBlur) {
@@ -90,6 +92,8 @@ const Field = ({
           max={maxDate || ''}
           maxLength={maxLength}
           minLength={minLength}
+          autoComplete={autoComplete}
+          readOnly={readOnly}
         />
         {counterField && onIncrease && (
           <button

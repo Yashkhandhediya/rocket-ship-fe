@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { KYC_Document, KYC_adhaar } from "../../../../common/icons";
+import { Adhaar_Document } from "../adhaar_document";
+import { Document_Upload } from "../document_upload";
 
 const DocumentVerification = () => {
     const [openAccordion, setOpenAccordion] = useState(0);
+    const [triggerBuyerValidations, setTriggerBuyerValidations] = useState(false);
 
     const handleAccordionToggle = (index) => {
-        setOpenAccordion((prev) => (prev === index ? null : index));
+        setOpenAccordion((prev) => (prev === index ? 0 : index));
+        return index;
     };
 
     return (
@@ -14,20 +18,22 @@ const DocumentVerification = () => {
                 Please select any of the 2 options below to verify your KYC
             </div>
 
-            {/* First Collapse */}
             <div id="accordion-collapse" data-accordion="collapse" className="w-[90%]">
+
+                {/* First Collapse */}
                 <div className="mb-6">
                     <h2 id={'accordion-collapse-heading-1'}>
                         <button
                             type="button"
-                            className={`flex items-center justify-between w-full px-5 py-3 font-medium rtl:text-right text-[#191919] bg-white border border-gray-200 ${openAccordion === 1
-                                ? 'rounded-t-xl border-1 border-[#ACCCFB]'
-                                : 'rounded-xl text-[#191919]'
+                            className={`flex items-center justify-between w-full px-5 py-3 font-medium rtl:text-right bg-white border border-gray-200 ${openAccordion === 1
+                                ? 'rounded-t-xl border-1 border-[#ACCBFB]'
+                                : 'rounded-xl'
                                 } gap-3`}
                             data-accordion-target={'#accordion-collapse-body-1'}
                             aria-expanded={openAccordion === 1}
                             aria-controls={'accordion-collapse-body-1'}
                             onClick={() => handleAccordionToggle(1)}
+                            style={{ color: '#191919' }} //for styling
                         >
                             <div className="flex flex-row gap-4">
                                 <img src={KYC_adhaar} alt="KYC using Adhaar" />
@@ -41,7 +47,7 @@ const DocumentVerification = () => {
                             </div>
                             <svg
                                 data-accordion-icon
-                                className={`w-3 h-3 shrink-0 rotate-${openAccordion === 1 ? '0' : '180'} transform origin-center transition-transform duration-500 ease-in-out shrink-0`}
+                                className={`w-3 h-3 shrink-0 rotate-${() => handleAccordionToggle(1)} === 1 ? '0' : '180'} transform origin-center transition-transform duration-300 ease-in-out shrink-0`}
                                 aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -51,10 +57,13 @@ const DocumentVerification = () => {
                             </svg>
                         </button>
                     </h2>
-                    <div id={'accordion-collapse-body-1'} className={`${openAccordion === 1 ? 'block' : 'hidden'}`} aria-labelledby={'accordion-collapse-heading-1 p-5 border border-gray-200 dark:border-gray-700 dark:bg-gray-900'}>
-                        <p className="mb-2 text-gray-500 dark:text-gray-400">
-                            {'Accordion Item 1 Content'}
-                        </p>
+                    <div id={'accordion-collapse-body-1'} className={`${openAccordion === 1 ? 'block' : 'hidden'} bg-white p-4 border border-t-0 rounded-b-xl border-1 border-[#ACCBFB]`} aria-labelledby={'accordion-collapse-heading-1'}>
+                        <div className="py-4 font-normal">
+                            <Adhaar_Document
+                                triggerValidation={triggerBuyerValidations}
+                                setTriggerValidations={setTriggerBuyerValidations}
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -65,14 +74,15 @@ const DocumentVerification = () => {
                     <h2 id={'accordion-collapse-heading-2'}>
                         <button
                             type="button"
-                            className={`flex items-center justify-between w-full px-5 py-3 text-[#191919] font-medium bg-white rtl:text-right text-sm border border-gray-200 ${openAccordion === 2
-                                ? 'rounded-t-xl border-1 border-[#ACCCFB]'
-                                : 'rounded-xl text-[#191919]'
+                            className={`flex items-center justify-between w-full px-5 py-3 font-medium bg-white rtl:text-right text-sm border border-gray-200 ${openAccordion === 2
+                                ? 'rounded-t-xl border-1 border-[#ACCBFB]'
+                                : 'rounded-xl'
                                 } gap-3`}
                             data-accordion-target={'#accordion-collapse-body-2'}
                             aria-expanded={openAccordion === 2}
                             aria-controls={'accordion-collapse-body-2'}
                             onClick={() => handleAccordionToggle(2)}
+                            style={{ color: '#191919' }} //for styling
                         >
                             <div className="flex flex-row gap-4">
                                 <img src={KYC_Document} alt="KYC using Adhaar" />
@@ -86,7 +96,7 @@ const DocumentVerification = () => {
                             </div>
                             <svg
                                 data-accordion-icon
-                                className={`w-3 h-3 shrink-0 ${openAccordion === 2 ? 'rotate-0' : 'rotate-180'}`}
+                                className={`w-3 h-3 shrink-0 rotate-${() => handleAccordionToggle(2)} === 2 ? '0' : '180'} transform origin-center transition-transform duration-300 ease-in-out shrink-0`}
                                 aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -96,10 +106,11 @@ const DocumentVerification = () => {
                             </svg>
                         </button>
                     </h2>
-                    <div id={'accordion-collapse-body-2'} className={`${openAccordion === 2 ? 'block' : 'hidden'}`} aria-labelledby={`accordion-collapse-heading-2 p-5 border border-gray-200 dark:border-gray-700 dark:bg-gray-900`}>
-                        <p className="mb-2 text-gray-500 dark:text-gray-400">
-                            {'Accordion Item 2 Content'}
-                        </p>
+                    <div id={'accordion-collapse-body-2'} className={`${openAccordion === 2 ? 'block' : 'hidden'} bg-white p-4 border border-t-0 rounded-b-xl border-1 border-[#ACCBFB]`} aria-labelledby={`accordion-collapse-heading-2 `}>
+                        <div className="py-4 font-normal">
+                            <Document_Upload
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
