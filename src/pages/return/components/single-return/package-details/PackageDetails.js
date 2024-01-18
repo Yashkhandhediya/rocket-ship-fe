@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Field, CustomTooltip } from '../../../../../common/components';
 import { infoIcon } from '../../../../../common/icons';
-import { resetDomesticOrder, setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
+import { resetDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
@@ -9,11 +9,12 @@ import { useNavigate } from 'react-router-dom';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
+import { setSingleReturn } from '../../../../../redux/actions/addReturnAction';
 
 export default function PackageDetails({ currentStep, handleChangeStep }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order);
+    const domesticReturnFormValues = useSelector((state) => state?.addReturn?.single_return);
     const [validationTriggered, setValidationTriggered] = useState(false);
     const [formDirectField, setFormDirectField] = useState({
         length: 0,
@@ -42,10 +43,10 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     );
 
     const setDirectKeysInForm = (event) => {
-        const { id, value } = event.target;
+        const { id, value, type } = event.target;
         setFormDirectField({
             ...formDirectField,
-            [id]: value,
+            [id]: type === 'number' ? parseInt(value, 10) : value,
         });
     };
 
@@ -64,16 +65,16 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     }
 
     const placeOrder = async () => {
-        const date = getFullDateForPayload(domesticOrderFormValues?.date);
-        let resp = await axios.post(BACKEND_URL+'/order', {
-            ...domesticOrderFormValues,
+        const date = getFullDateForPayload(domesticReturnFormValues?.date);
+        let resp = await axios.post(BACKEND_URL+'/return', {
+            ...domesticReturnFormValues,
             ...formDirectField,
             date: date,
         });
         if (resp.status == 200) {
-            toast('Order Placed Successfully', { type: 'success' });
+            toast('Return Placed Successfully', { type: 'success' });
             dispatch(resetDomesticOrder());
-            navigate('/orders');
+            navigate('/returns');
         } else {
             toast('There is some error please check your network or contact support', { type: 'error' });
         }
@@ -95,7 +96,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
                 toast('Please enter all required fields', { type: 'error' });
             } else {
                 dispatch(
-                    setDomesticOrder({
+                    setSingleReturn({
                         ...formDirectField,
                     }),
                 );
@@ -115,17 +116,17 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     }, [volumatricWeight, applicableWeight]);
 
     useEffect(() => {
-        if (!isEmpty(domesticOrderFormValues)) {
+        if (!isEmpty(domesticReturnFormValues)) {
             setFormDirectField({
-                length: domesticOrderFormValues?.length,
-                width: domesticOrderFormValues?.width,
-                height: domesticOrderFormValues?.height,
-                dead_weight: domesticOrderFormValues?.dead_weight,
-                applicable_weight: domesticOrderFormValues?.applicable_weight,
-                volumatric_weight: domesticOrderFormValues?.volumatric_weight,
+                length: domesticReturnFormValues?.length,
+                width: domesticReturnFormValues?.width,
+                height: domesticReturnFormValues?.height,
+                dead_weight: domesticReturnFormValues?.dead_weight,
+                applicable_weight: domesticReturnFormValues?.applicable_weight,
+                volumatric_weight: domesticReturnFormValues?.volumatric_weight,
             });
         }
-    }, [domesticOrderFormValues]);
+    }, [domesticReturnFormValues]);
 
     return (
         <div>
@@ -195,7 +196,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
                                             placeHolder={'0.00'}
                                             required={true}
                                             rightAddOn="CM"
-                                            value={formDirectField?.width || ''}
+                                            value={formDirectField?.width || 0}
                                             onChange={setDirectKeysInForm}
                                         />
                                         {validationTriggered && !formDirectField?.width && (
@@ -286,7 +287,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
                     type="button"
                     className="dark:focus:ring-purple-900 rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
                     onClick={() => changeNextStep('NEXT')}>
-                    {'Place Order'}
+                    {'Place Return'}
                 </button>
             </div>
         </div>

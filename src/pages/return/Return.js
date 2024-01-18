@@ -25,7 +25,7 @@ const Return = () => {
         <PageWithSidebar>
             <div className="h-full bg-[#f8f8f8] pl-4">
                 <div className="py-4">
-                    <Link to={'/'} className="text-decoration-none flex items-center text-lg font-bold">
+                    <Link to={'/returns'} className="text-decoration-none flex items-center text-lg font-bold">
                         <img src={blackLeftArrow} className="mr-2 mt-1 h-4 w-4" />
                         <span>{'Add Return'}</span>
                     </Link>

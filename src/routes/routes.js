@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails, Return } from '../pages';
 import Tracking from '../pages/tracking/Tracking';
 import PrivateRoute from './private-route/PrivateRoute';
+import { Returns } from '../pages/returns';
 
 const routes = createBrowserRouter([
   {
@@ -33,8 +34,12 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<Tracking />} />,
   },
   {
-    path: '/return',
+    path: '/add-return',
     element: <PrivateRoute component={<Return />} />,
+  },
+  {
+    path: '/returns',
+    element: <PrivateRoute component={<Returns />} />,
   },
 ]);
 

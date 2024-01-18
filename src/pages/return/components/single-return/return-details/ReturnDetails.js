@@ -8,18 +8,18 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { CustomMultiSelect, Field, FieldAccordion, FieldTextArea } from '../../../../../common/components';
-import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
+import { setSingleReturn } from '../../../../../redux/actions/addReturnAction';
 
 const ReturnDetails = ({ currentStep, handleChangeStep }) => {
   const dispatch = useDispatch();
 
-  const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order) || {};
+  const domesticReturnFormValues = useSelector((state) => state?.addReturn?.single_return) || {};
 
   const defaultProductField = {
     name: '',
-    unit_price: '',
-    quantity: '',
+    unit_price: 0,
+    quantity: 0,
     category: '',
     hsn_code: '',
     sku: '',
@@ -65,7 +65,6 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
     transaction_fee: 0,
     discount: 0,
   });
-
   const subProductTotal =
     productFields?.reduce((total, product) => {
       return (total += product
@@ -91,10 +90,15 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
 
   const handleChangeValues = (e) => {
     const { id, value } = e.target;
+    console.log(id)
     if (id !== 'securedShipments') {
       setFilterSelection({
         ...filterSelection,
         [id]: value,
+      });
+      setFormDirectField({
+        ...formDirectField,
+        [id]: value.join(','),
       });
     } else if (id === 'securedShipments') {
       setFilterSelection({
@@ -133,7 +137,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
         toast('Please enter all required fields', { type: 'error' });
       } else {
         dispatch(
-          setDomesticOrder({
+          setSingleReturn({
             product_info: productFields,
             payment_details: paymentDetails,
             ...formDirectField,
@@ -162,27 +166,27 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
   }, [subProductTotal, otherCharges, totalOrderValue]);
 
   useEffect(() => {
-    if (!isEmpty(domesticOrderFormValues)) {
+    if (!isEmpty(domesticReturnFormValues)) {
       setProductFields(
         cloneDeep(
-          domesticOrderFormValues?.product_info?.length
-            ? domesticOrderFormValues?.product_info
+          domesticReturnFormValues?.product_info?.length
+            ? domesticReturnFormValues?.product_info
             : [defaultProductField],
         ),
       );
-      setPaymentDetails({ type: 'cod', ...(domesticOrderFormValues?.payment_details || {}) });
+      setPaymentDetails({ type: 'cod', ...(domesticReturnFormValues?.payment_details || {}) });
       setFormDirectField({
         ...formDirectField,
-        channel: domesticOrderFormValues?.channel,
+        channel: domesticReturnFormValues?.channel,
         date: moment(new Date()).format('YYYY-MM-DD'),
-        tag: domesticOrderFormValues?.tag,
-        reseller_name: domesticOrderFormValues?.reseller_name,
-        sub_total: domesticOrderFormValues?.sub_total,
-        other_charges: domesticOrderFormValues?.other_charges,
-        total_amount: domesticOrderFormValues?.total_amount,
+        tag: domesticReturnFormValues?.tag,
+        reseller_name: domesticReturnFormValues?.reseller_name,
+        sub_total: domesticReturnFormValues?.sub_total,
+        other_charges: domesticReturnFormValues?.other_charges,
+        total_amount: domesticReturnFormValues?.total_amount,
       });
     }
-  }, [domesticOrderFormValues]);
+  }, [domesticReturnFormValues]);
 
   return (
     <div>
@@ -246,11 +250,11 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
         <div className="mb-6 mt-4 w-full border border-gray-200" />
         <div className="mb-3 px-2 pb-2 md:w-1/3 md:pb-0">
           <CustomMultiSelect
-            id={'return'}
+            id={'return_reason'}
             label={'Return Reason'}
             placeholder="Select reason for return"
             options={[
-              { label: 'Reason 1', value: 'Reason 1' },
+              { label: 'Damaged', value: 'damaged' },
               { label: 'Reason 2', value: 'Reason 2' },
               { label: 'Reason 3', value: 'Reason 3' },
             ]}
@@ -259,7 +263,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
             onChange={(val) =>
               handleChangeValues({
                 target: {
-                  id: 'return',
+                  id: 'return_reason',
                   value: val,
                 },
               })

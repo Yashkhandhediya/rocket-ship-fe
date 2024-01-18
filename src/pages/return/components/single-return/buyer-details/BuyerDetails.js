@@ -8,7 +8,7 @@ import { BuyersInfoFields } from '../../buyers-info-fields';
 
 export default function BuyerDetails({ formData, currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
-  const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order) || {};
+  const domesticOrderFormValues = useSelector((state) => state?.addReturn?.single_return) || {};
   const [triggerBuyerValidations, setTriggerBuyerValidations] = useState(false);
   const [disableAddressLocationField, setDisableAddressLocationField] = useState(false);
 

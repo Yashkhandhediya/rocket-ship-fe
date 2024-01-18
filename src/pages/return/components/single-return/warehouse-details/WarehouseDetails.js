@@ -9,13 +9,14 @@ import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
+import { setSingleReturn } from '../../../../../redux/actions/addReturnAction';
 
 
 const WarehouseDetails = ({ currentStep, handleChangeStep }) => {
     const dispatch = useDispatch();
 
     const domesticOrderPickupAddress =
-        useSelector((state) => state?.addOrder?.domestic_order?.pickup_address) || {};
+        useSelector((state) => {console.log(state); return state?.addReturn?.single_return?.pickup_address}) || {};
 
     const [addAddressDrawerOpen, setAddAddressDrawerOpen] = useState(false);
     const [editAddressDrawerOpen, setEditAddressDrawerOpen] = useState(false);
@@ -48,7 +49,7 @@ const WarehouseDetails = ({ currentStep, handleChangeStep }) => {
                 toast('Please select an address to proceed Next', { type: 'error' });
             } else {
                 dispatch(
-                    setDomesticOrder({
+                    setSingleReturn({
                         pickup_address: selectedAddress,
                     }),
                 );
