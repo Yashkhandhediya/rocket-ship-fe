@@ -3,7 +3,7 @@ import { KYC_Document, KYC_adhaar } from "../../../../common/icons";
 import { Adhaar_Document } from "../adhaar_document";
 import { Document_Upload } from "../document_upload";
 
-const DocumentVerification = () => {
+const DocumentVerification = ({ currentStep, handleChangeStep, setIsKYCCompleted }) => {
     const [openAccordion, setOpenAccordion] = useState(0);
     const [triggerBuyerValidations, setTriggerBuyerValidations] = useState(false);
 
@@ -62,6 +62,7 @@ const DocumentVerification = () => {
                             <Adhaar_Document
                                 triggerValidation={triggerBuyerValidations}
                                 setTriggerValidations={setTriggerBuyerValidations}
+                                setIsKYCCompleted={setIsKYCCompleted}
                             />
                         </div>
                     </div>
@@ -109,6 +110,7 @@ const DocumentVerification = () => {
                     <div id={'accordion-collapse-body-2'} className={`${openAccordion === 2 ? 'block' : 'hidden'} bg-white p-4 border border-t-0 rounded-b-xl border-1 border-[#ACCBFB]`} aria-labelledby={`accordion-collapse-heading-2 `}>
                         <div className="py-4 font-normal">
                             <Document_Upload
+                                setIsKYCCompleted={setIsKYCCompleted}
                             />
                         </div>
                     </div>

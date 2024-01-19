@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { Field } from "../../../../common/components";
 import { upload } from "../../../../common/icons";
 
-const Document_Upload = () => {
+const Document_Upload = ({ setIsKYCCompleted }) => {
     const [documentType1, setDocumentType1] = useState('');
     const [documentType2, setDocumentType2] = useState('');
     const [disableInput1, setDisableInput1] = useState(true);
@@ -126,12 +126,24 @@ const Document_Upload = () => {
         }
     }
 
-    const completeKYC = () => {
-        if(showDocument1Info && showDocument2Info){
+    const isCompleteKYC = () => {
+        if (showDocument1Info && showDocument2Info) {
             return true;
         }
-        else{
+        else {
             return false;
+        }
+    }
+
+    const completeKYC = () => {
+        if (isCompleteKYC()) {
+            toast.success('KYC completed successfully', { type: 'success' })
+            // API call to complete KYC
+            setIsKYCCompleted(true)
+        }
+        else {
+            // Show error message
+            toast.error('Please complete KYC', { type: 'error' })
         }
     }
 
@@ -419,9 +431,9 @@ const Document_Upload = () => {
 
             <div className="flex justify-start gap-4 mt-6">
                 <button
-                    className={`px-12 text-[12px] py-2 w-4/12 ${isSumbit2Disabled() ? "bg-white border text-purple-600 border-purple-600" : "bg-[#FAFAFA] border text-purple-400 border-[#e5e5e5]"} transition-colors duration-200 rounded-md`}
-                    disabled={!completeKYC()}
-                    onClick={() => { toast.success('KYC completed successfully', { type: 'success' }) }}
+                    className={`px-12 text-[12px] py-2 w-4/12 ${isCompleteKYC() ? "bg-white border text-purple-600 border-purple-600" : "bg-[#FAFAFA] border text-purple-400 border-[#e5e5e5] cursor-not-allowed"} transition-colors duration-200 rounded-md`}
+                    disabled={!isCompleteKYC()}
+                    onClick={() => { completeKYC() }}
                 >
                     Complete KYC
                 </button>

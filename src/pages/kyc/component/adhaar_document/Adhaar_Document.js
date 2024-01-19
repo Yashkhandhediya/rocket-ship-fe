@@ -3,7 +3,7 @@ import { Field } from '../../../../common/components'
 import { OTP_Input } from '../otp_Input';
 import { toast } from 'react-toastify';
 
-const Adhaar_Document = ({ triggerValidation,setTriggerValidations }) => {
+const Adhaar_Document = ({ triggerValidation,setTriggerValidations,setIsKYCCompleted}) => {
     const [isValidAdhaar, setIsValidAdhaar] = useState(true);
     const [adhaarNumber, setAdhaarNumber] = useState('')
     const [showOTPBox, setShowOTPBox] = useState(false)
@@ -72,7 +72,7 @@ const Adhaar_Document = ({ triggerValidation,setTriggerValidations }) => {
                 <div className="flex justify-start gap-4 mt-6">
                     <button
                         type="button"
-                        className={`dark:focus:ring-purple-900 rounded-lg ${isValidAdhaar && adhaarNumber.length ? "bg-purple-600" : "bg-[#FAFAFA] border text-[#cbcbcb] border-[#e5e5e5]"} transition-colors duration-300 px-8 py-2 text-[0.8rem] font-medium text-white focus:outline-none focus:ring-4 focus:ring-purple-300`}
+                        className={`dark:focus:ring-purple-900 rounded-lg ${isValidAdhaar && adhaarNumber.length ? "bg-purple-600" : "bg-[#FAFAFA] border text-[#c6c6c6] border-[#e5e5e5]"} transition-colors duration-300 px-8 py-2 text-[0.8rem] font-medium text-white focus:outline-none focus:ring-4 focus:ring-purple-300`}
                         disabled={!isValidAdhaar}
                         onClick={() => handleSendOTP()}
                     >
@@ -82,6 +82,7 @@ const Adhaar_Document = ({ triggerValidation,setTriggerValidations }) => {
             }
             {showOTPBox && <OTP_Input handleSendOTP={handleSendOTP}
                 timer={30}
+                setIsKYCCompleted={setIsKYCCompleted}
             />}
         </div>
     )
