@@ -47,13 +47,15 @@ const DocumentVerification = ({ currentStep, handleChangeStep, setIsKYCCompleted
                             </div>
                             <svg
                                 data-accordion-icon
-                                className={`w-3 h-3 shrink-0 rotate-${() => handleAccordionToggle(1)} === 1 ? '0' : '180'} transform origin-center transition-transform duration-300 ease-in-out shrink-0`}
+                                className={`w-5 h-5 shrink-0 rotate-${() => handleAccordionToggle(1)} === 1 ? '0' : '180'} transform origin-center transition-transform duration-300 ease-in-out shrink-0`}
                                 aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg"
+                                strokeWidth="1.5"
+                                stroke="currentColor"
                                 fill="none"
-                                viewBox="0 0 10 6"
+                                viewBox="0 0 24 24"
                             >
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5 5 1 1 5" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                             </svg>
                         </button>
                     </h2>
@@ -97,13 +99,15 @@ const DocumentVerification = ({ currentStep, handleChangeStep, setIsKYCCompleted
                             </div>
                             <svg
                                 data-accordion-icon
-                                className={`w-3 h-3 shrink-0 rotate-${() => handleAccordionToggle(2)} === 2 ? '0' : '180'} transform origin-center transition-transform duration-300 ease-in-out shrink-0`}
+                                className={`w-5 h-5 shrink-0 rotate-${() => handleAccordionToggle(2)} === 2 ? '0' : '180'} transform origin-center transition-transform duration-300 ease-in-out shrink-0`}
                                 aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg"
+                                strokeWidth="1.5"
+                                stroke="currentColor"
                                 fill="none"
-                                viewBox="0 0 10 6"
+                                viewBox="0 0 24 24"
                             >
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5 5 1 1 5" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                             </svg>
                         </button>
                     </h2>
