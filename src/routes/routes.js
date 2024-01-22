@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails, Return } from '../pages';
+import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails, Return, WeightDiscrepancy } from '../pages';
 import Tracking from '../pages/tracking/Tracking';
 import PrivateRoute from './private-route/PrivateRoute';
 import { Returns } from '../pages/returns';
@@ -40,6 +40,10 @@ const routes = createBrowserRouter([
   {
     path: '/returns',
     element: <PrivateRoute component={<Returns />} />,
+  },
+  {
+    path: '/weight-discrepancy',
+    element: <PrivateRoute component={<WeightDiscrepancy />} />,
   },
 ]);
 
