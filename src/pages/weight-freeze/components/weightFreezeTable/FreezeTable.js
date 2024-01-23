@@ -1,8 +1,9 @@
+import { useState } from 'react';
+import { FreezeModal } from '../weightFreezeModal';
+
 const FreezeTable = ({ data }) => {
-  console.log(
-    'data',
-    data[0].map((item) => item),
-  );
+  const [show, setShow] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(null);
   return (
     <div className="mt-4 flex flex-col border border-b-0 border-black text-[12px] font-bold text-[#484848]">
       {/* table headings */}
@@ -50,13 +51,21 @@ const FreezeTable = ({ data }) => {
               <div className="flex h-full w-2/12 items-center border-r-2">{item?.images[0]}</div>
               <div className="flex h-full w-1/12 items-center border-r-2">{item?.status_name}</div>
               <div className="flex h-full w-[10%] items-center border-r-2">
-                <button className="border-blue-500 rounded-md border px-4 py-1 bg-white text-blue-500">
-                  Freeze Product</button>
+                <button className="rounded-md border border-blue-500 bg-white px-4 py-1 text-blue-500" 
+                onClick={() =>{
+                  setSelectedIndex(key);
+                  setShow(true);
+                }}
+                >
+                  Freeze Product
+                </button>
               </div>
             </div>
           );
         })}
       </div>
+      {/* Modal for Weight Free */}
+      {show && selectedIndex && <FreezeModal show={show} setShow={setShow} data={data[0][selectedIndex]}/>}
     </div>
   );
 };
