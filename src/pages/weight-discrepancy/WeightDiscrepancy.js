@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Tabs } from '../../common/components/tabs';
 import { returnsTabs } from './duck';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
@@ -12,6 +12,14 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 
 const WeightDiscrepancy = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [enableDate, setEnableDate] = useState(true);
+  const oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().slice(0, 10);
+  const todayDate = new Date().toISOString().slice(0, 10);
+  const [fromDate, setFromDate] = useState(oneMonthAgo);
+  const [toDate, setToDate] = useState(todayDate);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -42,6 +50,25 @@ const WeightDiscrepancy = () => {
       setIsLoading(false);
     }
   }, [allReturnsList]);
+
+  const checkDate = (fromDate, toDate) => {
+    const from = new Date(fromDate);
+    const to = new Date(toDate);
+    return from < to;
+  };
+
+  const handleDateChange = () => {
+    if (checkDate(fromDate, toDate)) {
+      const currentSearchParams = new URLSearchParams(searchParams);
+      // Update the desired parameter
+      currentSearchParams.set('from', fromDate);
+      currentSearchParams.set('to', toDate);
+      // Update the search params
+      setSearchParams(currentSearchParams);
+    } else {
+      toast.error('From date should be less than To date');
+    }
+  };
 
   return (
     <PageWithSidebar>
@@ -86,28 +113,28 @@ const WeightDiscrepancy = () => {
         </div>
 
         <div className='stats flex flex-wrap justify-between gap-5 py-2 px-4'>
-          <div className='flex flex-col gap-2 border border-rose-700 bg-pink-50 flex-1 basis-full md:basis-2/5 lg:basis-1/5 rounded-xl p-4'>
+          <div className='flex flex-col gap-2 border border-rose-700 bg-pink-50 flex-1 basis-full md:basis-2/5 xl:basis-1/5 rounded-xl p-4'>
             <div className='text-sm'>Total Weight Discrepancies</div>
             <div className='flex justify-between items-end'>
               <strong className='text-2xl'>0</strong>
               <div className='text-gray-500 text-sm align-baseline'>Last 30 Days</div>
             </div>
           </div>
-          <div className='flex flex-col gap-2 border border-rose-700 bg-pink-50 flex-1 basis-full md:basis-2/5 lg:basis-1/5 rounded-xl p-4'>
+          <div className='flex flex-col gap-2 border border-rose-700 bg-pink-50 flex-1 basis-full md:basis-2/5 xl:basis-1/5 rounded-xl p-4'>
             <div className='text-sm'>Discrepancies Accepted</div>
             <div className='flex justify-between items-end'>
               <strong className='text-2xl'>0</strong>
               <div className='text-gray-500 text-sm align-baseline'>Last 30 Days</div>
             </div>
           </div>
-          <div className='flex flex-col gap-2 border border-rose-700 bg-pink-50 flex-1 basis-full md:basis-2/5 lg:basis-1/5 rounded-xl p-4'>
+          <div className='flex flex-col gap-2 border border-rose-700 bg-pink-50 flex-1 basis-full md:basis-2/5 xl:basis-1/5 rounded-xl p-4'>
             <div className='text-sm'>Disputes Accepted by Courier</div>
             <div className='flex justify-between items-end'>
               <strong className='text-2xl'>0</strong>
               <div className='text-gray-500 text-sm align-baseline'>Last 30 Days</div>
             </div>
           </div>
-          <div className='flex flex-col gap-2 border border-rose-700 bg-pink-50 flex-1 basis-full md:basis-2/5 lg:basis-1/5 rounded-xl p-4'>
+          <div className='flex flex-col gap-2 border border-rose-700 bg-pink-50 flex-1 basis-full md:basis-2/5 xl:basis-1/5 rounded-xl p-4'>
             <div className='text-sm'>Disputes Rejected by Courier</div>
             <div className='flex justify-between items-end'>
               <strong className='text-2xl'>0</strong>
@@ -117,8 +144,8 @@ const WeightDiscrepancy = () => {
         </div>
 
         <div className='flex justify-between px-5 py-2 ml-2 border-b'>
-          <div className='flex gap-3'>
-            <div className='order-input flex items-center gap-1 py-1 px-2 rounded-md border overflow-hidden'>
+          <div className='flex items-center gap-3'>
+            <div className='order-input px-3 py-1 flex items-center gap-1 rounded-md border overflow-hidden'>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -138,17 +165,82 @@ const WeightDiscrepancy = () => {
                   transform="scale(8.53333)"
                 ></path>
               </svg>
-              <input name='order-id' placeholder='Order Id or AWB No.' title='Enter to search' style={{ border: 'none', outline: 'none' }} />
+              <input name='order-id' placeholder='Order Id or AWB No.' title='Enter to search' style={{ border: 'none', outline: 'none', width: '100px' }} />
             </div>
-            <div className='order-input flex gap-1 py-1 px-2 rounded-md border'>
-              <span>value</span>
+            <div className='flexorder-input flex gap-1 border'>
+              {/* From Date */}
+              <div>
+                <div className="group relative">
+                  {!enableDate && (
+                    <div
+                      className="absolute bottom-full left-1/2 mb-2 hidden w-full -translate-x-1/2 transform rounded-md bg-black p-2 text-center text-sm text-white group-hover:block"
+                      style={{ fontSize: '12px' }}>
+                      Select any status other than “Action Required” or “Not requested” to filter by date
+                      <div className="absolute left-[40%] z-[10000000] mt-2 h-2 w-2 border-8 border-b-0 border-black border-l-transparent border-r-transparent"></div>
+                    </div>
+                  )}
+                  <input
+                    type={`${enableDate ? 'date' : 'text'}`}
+                    id="default-search"
+                    className={`block w-[200px] rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-blue-500 focus:ring-blue-500 ${enableDate ? '' : 'cursor-not-allowed opacity-50'}`}
+                    required
+                    onChange={(ev) => {
+                      setFromDate(ev.target.value);
+                    }}
+                    value={enableDate ? fromDate : 'N/A'}
+                    disabled={!enableDate}
+                  />
+                </div>
+              </div>
+              {/* To date */}
+              <div>
+                <div className="group relative">
+                  {!enableDate && (
+                    <div
+                      className="absolute bottom-full left-1/2 mb-2 hidden w-full -translate-x-1/2 transform rounded-md bg-black p-2 text-center text-sm text-white group-hover:block"
+                      style={{ fontSize: '12px' }}>
+                      Select any status other than “Action Required” or “Not requested” to filter by date
+                      <div className="absolute left-[40%] z-[10000000] mt-2 h-2 w-2 border-8 border-b-0 border-black border-l-transparent border-r-transparent"></div>
+                    </div>
+                  )}
+                  <input
+                    type={`${enableDate ? 'date' : 'text'}`}
+                    id="default-search"
+                    className={`dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 block w-[200px] rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-blue-500 focus:ring-blue-500 
+              ${enableDate ? '' : 'opacity-50'}`}
+                    placeholder="Channel"
+                    required
+                    onChange={(ev) => {
+                      setToDate(ev.target.value);
+                    }}
+                    value={enableDate ? toDate : 'N/A'}
+                    disabled={!enableDate}
+                  />
+                </div>
+              </div>
+              {/* Apply Button */}
+              <div>
+                {/* Apply button for dates */}
+                <button
+                  className={`border-1 h-[33px] w-[100px] rounded-[4px] border-[#7664e8] bg-[#7664e8] text-[12px] leading-[30px] text-white hover:bg-[#7664e8] hover:text-white ${enableDate
+                    ? ''
+                    : 'cursor-not-allowed border-[#e1e1e1] bg-[#e1e1e1] hover:bg-[#e1e1e1] hover:text-black'
+                    }'}}`}
+                  onClick={() => {
+                    handleDateChange();
+                  }}
+                  disabled={!enableDate}>
+                  Apply
+                </button>
+              </div>
+              {/* <span>value</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" x="0" y="0" viewBox="0 0 256 256">
                 <path
                   fillOpacity="1"
                   strokeMiterlimit="10"
                   d="M192 1664h288v-288H192v288zm352 0h320v-288H544v288zm-352-352h288V992H192v320zm352 0h320V992H544v320zM192 928h288V640H192v288zm736 736h320v-288H928v288zM544 928h320V640H544v288zm768 736h288v-288h-288v288zm-384-352h320V992H928v320zM576 448V160q0-13-9.5-22.5T544 128h-64q-13 0-22.5 9.5T448 160v288q0 13 9.5 22.5T480 480h64q13 0 22.5-9.5T576 448zm736 864h288V992h-288v320zM928 928h320V640H928v288zm384 0h288V640h-288v288zm32-480V160q0-13-9.5-22.5T1312 128h-64q-13 0-22.5 9.5T1216 160v288q0 13 9.5 22.5t22.5 9.5h64q13 0 22.5-9.5t9.5-22.5zm384-64v1280q0 52-38 90t-90 38H192q-52 0-90-38t-38-90V384q0-52 38-90t90-38h128v-96q0-66 47-113T480 0h64q66 0 113 47t47 113v96h384v-96q0-66 47-113t113-47h64q66 0 113 47t47 113v96h128q52 0 90 38t38 90z"
                 ></path>
-              </svg>
+              </svg> */}
             </div>
             {/* <div className='order-input flex gap-1 py-1 px-2 rounded-md border overflow-hidden'> */}
             <select name='date-range' className='outline-none border-0 rounded-md h-8 text-sm'>
@@ -177,7 +269,7 @@ const WeightDiscrepancy = () => {
           </div>
         </div>
 
-        <div className='flex flex-col items-center'>
+        <div className='flex flex-col items-center py-24 px-10'>
           <div>
             <img src='https://app.shiprocket.in/app/img/no_data/weight_discrepancy_0.png' />
           </div>
