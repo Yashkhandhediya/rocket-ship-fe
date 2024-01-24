@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
-const FreezeTabs = ({ tabs , setData}) => {
+const FreezeTabs = ({ tabs, setData , setLoading }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().slice(0, 10);
   const todayDate = new Date().toISOString().slice(0, 10);
@@ -12,14 +13,39 @@ const FreezeTabs = ({ tabs , setData}) => {
   const [showToggleButton, setShowToggleButton] = useState(false);
   const [SRSuggested, setSRSuggested] = useState(true);
 
+  const dataGet = (param_name, param_value) => { //eslint-disable-line
+    //API to get data
+    setLoading(true);
+    axios.get('http://43.252.197.60:8050/weight_freeze/get_weight_freeze', {})
+      .then((response) => {
+        const filteredData = response.data.filter((item) => {
+          if (item[param_name] == null) {
+            item[param_name] = 0;
+          }
+          if (item[param_name] == param_value) {
+            return item;
+          }
+        });
+        setData(filteredData);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      })
+  };
+
   //get freeze_status from url
   const freezeStatus = searchParams.get('freeze_status');
   const handleTabChange = (freezeStatus) => {
+    setData([]);
     const currentSearchParams = new URLSearchParams(searchParams);
     // Update the desired parameter
     currentSearchParams.set('freeze_status', freezeStatus);
     // Update the search params
     setSearchParams(currentSearchParams);
+    //filter the data on the basis of freeze_status
+    dataGet('status_id', freezeStatus);
   };
 
   const checkDate = (fromDate, toDate) => {
@@ -67,12 +93,9 @@ const FreezeTabs = ({ tabs , setData}) => {
     } else {
       setShowToggleButton(false);
     }
+    handleTabChange(freezeStatus);
   }, [freezeStatus]);
 
-  useEffect(() => {
-    //call api whenever url params change
-    //api call
-  }, [searchParams]);
 
   return (
     <>

@@ -1,9 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FreezeModal } from '../weightFreezeModal';
-
-const FreezeTable = ({ data }) => {
+import axios from 'axios';
+import { useSearchParams } from 'react-router-dom';
+const FreezeTable = ({ data, setLoading }) => {
   const [show, setShow] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const freezeStatus = searchParams.get('freeze_status');
+
+  useEffect(() => {
+  }, []);
+
   return (
     <div className="mt-4 flex flex-col border border-b-0 border-black text-[12px] font-bold text-[#484848]">
       {/* table headings */}
@@ -22,7 +29,7 @@ const FreezeTable = ({ data }) => {
       </div>
       {/* table data */}
       <div className="flex flex-col items-center justify-center">
-        {data[0].map((item, key) => {
+        {data && data.map((item, key) => {
           return (
             <div
               className="flex h-32 w-full flex-row items-center justify-between border border-b-[#E5E7EB] text-left"
@@ -41,14 +48,21 @@ const FreezeTable = ({ data }) => {
                 <div className="flex flex-col gap-2">
                   <div>Dimension :</div>
                   <div className="font-normal">
-                    {item.package_details.length.toFixed(3)} x {item.package_details.width.toFixed(3)} x{' '}
-                    {item.package_details.height.toFixed(3)}
+                    {item.package_details?.length.toFixed(3)} x {item.package_details?.width.toFixed(3)} x{' '}
+                    {item.package_details?.height.toFixed(3)}
                   </div>
                   <div>Dead Weight :</div>
-                  <div className="font-normal">{item.package_details.dead_weight}</div>
+                  <div className="font-normal">{item.package_details?.dead_weight}</div>
                 </div>
               </div>
-              <div className="flex h-full w-2/12 items-center border-r-2">{item?.images[0]}</div>
+              <div className="flex h-full w-2/12 items-center border-r-2">
+                {freezeStatus == '0' ? '' : (
+                  <div className='flex flex-row w-full justify-center'>
+                    <img src={`http://43.252.197.60:8050/image/get_image?file_path=${item.images[0]}`} alt="" className='w-[45%] mx-2 border border-black border-dashed' />
+                    <img src={`http://43.252.197.60:8050/image/get_image?file_path=${item.images[1]}`} alt="" className='w-[45%] mx-2 border border-black border-dashed' />
+                  </div>
+                )}
+              </div>
               <div className="flex h-full w-1/12 items-center border-r-2">{item?.status_name}</div>
               <div className="flex h-full w-[10%] items-center border-r-2">
                 <button className="rounded-md border border-blue-500 bg-white px-4 py-1 text-blue-500" 
@@ -65,7 +79,7 @@ const FreezeTable = ({ data }) => {
         })}
       </div>
       {/* Modal for Weight Free */}
-      {show && selectedIndex && <FreezeModal show={show} setShow={setShow} data={data[0][selectedIndex]}/>}
+      {show && selectedIndex !== null && <FreezeModal show={show} setShow={setShow} data={data[selectedIndex]}/>}
     </div>
   );
 };
