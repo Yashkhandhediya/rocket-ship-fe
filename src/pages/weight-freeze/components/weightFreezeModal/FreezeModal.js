@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { upload } from '../../../../common/icons';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const FreezeModal = ({ setShow, data }) => {
+const FreezeModal = ({ setShow, data, setLoading, type }) => {
     const [weightFreezeData, setWeightFreezeData] = useState({
         product_id: data.id,
         length: data.package_details.length,
@@ -121,15 +121,17 @@ const FreezeModal = ({ setShow, data }) => {
     };
 
     const handleUpload = (name, file) => {
+        setLoading(true);
         const formData = new FormData();
         formData.append('file', file);
         axios.post(`http://43.252.197.60:8050/image/upload_image?product_id=${data.id}`, { file: file }, { headers: { 'Content-Type': 'multipart/form-data' } })
             .then((response) => {
-                console.log(response.data.filepath);
                 setWeightFreezeData({ ...weightFreezeData, images: { ...weightFreezeData.images, [name]: response.data.filepath } })
             }).catch((error) => {
-                console.log(error);
+                toast('Something went wrong while uploading image', { type: 'error' })
+                console.log(error); //eslint-disable-line
             })
+        setLoading(false);
     }
 
 
@@ -141,19 +143,28 @@ const FreezeModal = ({ setShow, data }) => {
             return toast('Please upload all the images', { type: 'error' })
         }
         const headers = { 'Content-Type': 'application/json' };
-        axios.post('http://43.252.197.60:8050/weight_freeze/', weightFreezeData, { headers })
+        const url = type === 'Freeze'
+            ? 'http://43.252.197.60:8050/weight_freeze/'
+            : `http://43.252.197.60:8050/weight_freeze/update?id=${data.id}`
+        axios.post(url, weightFreezeData, { headers })
             .then((response) => {
-                console.log(response);
                 if (response.status === 200) {
                     toast('Request submitted successfully', { type: 'success' })
                     setShow(false);
                 }
             }).catch((error) => {
-                console.log(error);
+                toast('Something went wrong', { type: 'error' })
+                setShow(false);
+                console.log(error); //eslint-disable-line
             })
     }
 
-    console.log(weightFreezeData);
+    useEffect(() => {
+        if (weightFreezeData.length != 0 && weightFreezeData.width != 0 && weightFreezeData.height != 0 && weightFreezeData.weight != 0) {
+            const chargableWeight = Math.max(weightFreezeData.weight, ((weightFreezeData.length * weightFreezeData.width * weightFreezeData.height) / 5000));
+            setWeightFreezeData({ ...weightFreezeData, chargable_weight: chargableWeight })
+        }
+    }, [weightFreezeData.length, weightFreezeData.width, weightFreezeData.height, weightFreezeData.weight])
     return (
         <>
             <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
@@ -162,7 +173,7 @@ const FreezeModal = ({ setShow, data }) => {
                     <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
                         {/*header*/}
                         <div className="border-blueGray-200 flex w-full items-center justify-center rounded-t border-b border-solid p-5">
-                            <h3 className="text-2xl font-semibold">Add Product and Package Details</h3>
+                            <h3 className="text-2xl font-semibold">{type == 'Freeze' ? 'Add Product and Package Details' : 'Edit Product and Package Details'}</h3>
                             <button
                                 className="border-0 bg-transparent p-1 text-2xl font-semibold leading-none text-black opacity-100 outline-none focus:outline-none"
                                 onClick={() => setShow(false)}>
@@ -178,7 +189,7 @@ const FreezeModal = ({ setShow, data }) => {
                             <p className="text-lg font-semibold">Product Details</p>
                             <div className="m-1 flex flex-col rounded-md border border-gray-200">
                                 {/* Product Information */}
-                                <div className="gap-8 flex flex-row p-4 px-8">
+                                <div className="gap-8 h-52 flex flex-row p-4 px-8">
 
                                     {/* Product Name and Category Section */}
                                     <div className="flex w-[55%] flex-col gap-4">
@@ -381,8 +392,10 @@ const FreezeModal = ({ setShow, data }) => {
                             <button
                                 className="mb-1 mr-1 rounded-lg bg-blue-600 px-6 py-2 text-sm text-white shadow outline-none transition-all duration-150 border ease-linear hover:shadow-lg focus:outline-none font-semibold"
                                 type="button"
-                                onClick={() => handleWeightFreezeSubmit()}>
-                                Request Weight Freeze
+                                onClick={() => handleWeightFreezeSubmit()}
+                                disabled={type!='Freeze' || weightFreezeData.status_id == 1}
+                                >
+                                {type == 'Freeze' ? 'Request Weight Freeze' : 'Request in process'}
                             </button>
                         </div>
 

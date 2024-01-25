@@ -6,32 +6,38 @@ import { Loader } from '../../common/components';
 const Weight_Freeze = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const tabs = [
+  const [tabs, setTabs] = useState([
     {
       title: 'Action required',
       freezeStatus: 5,
+      items: 0
     },
     {
       title: 'Request Raised',
       freezeStatus: 2,
+      items: 0
     },
     {
       title: 'Request Aceepted',
       freezeStatus: 1,
+      items: 0
     },
     {
       title: 'Request Rejected',
       freezeStatus: 3,
+      items: 0
     },
     {
       title: 'Not Requested',
       freezeStatus: 0,
+      items: 0
     },
     {
       title: 'Unfreezed',
       freezeStatus: 4,
+      items: 0
     },
-  ];
+  ]);
 
   useEffect(() => {
     // dataGet();
@@ -48,7 +54,7 @@ const Weight_Freeze = () => {
         <hr className="border-[#c2c2c2]" />
         <div className="px-4 pb-0">
           {/* content-wrapper */}
-          <FreezeTabs tabs={tabs} setData={setData} setLoading={setLoading}/>
+          <FreezeTabs tabs={tabs} setTabs={setTabs} setData={setData} setLoading={setLoading} />
         </div>
         <div>
           <FreezeTable data={data} setLoading={setLoading}/>

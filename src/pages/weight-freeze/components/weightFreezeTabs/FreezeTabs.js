@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
-const FreezeTabs = ({ tabs, setData , setLoading }) => {
+const FreezeTabs = ({ tabs, setData, setLoading, setTabs }) => { // eslint-disable-line
   const [searchParams, setSearchParams] = useSearchParams();
   const oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().slice(0, 10);
   const todayDate = new Date().toISOString().slice(0, 10);
@@ -13,11 +13,76 @@ const FreezeTabs = ({ tabs, setData , setLoading }) => {
   const [showToggleButton, setShowToggleButton] = useState(false);
   const [SRSuggested, setSRSuggested] = useState(true);
 
+  const freezeStatus = parseInt(searchParams.get('freeze_status'), 10);
+  const fromDateURL = searchParams.get('from');
+  const toDateURL = searchParams.get('to') || null;
+  const search = searchParams.get('search');
+  const page = parseInt(searchParams.get('page'), 10);
+  const perPage = parseInt(searchParams.get('per_page'), 10) || 15;
+  const channel_code = searchParams.get('channel_code');
+
   const dataGet = (param_name, param_value) => { //eslint-disable-line
+    setData([]);
     //API to get data
     setLoading(true);
-    axios.get('http://43.252.197.60:8050/weight_freeze/get_weight_freeze', {})
+    const url = fromDateURL && toDateURL && freezeStatus != 5 && freezeStatus != 0
+      ? `http://43.252.197.60:8050/weight_freeze/get_weight_freeze?search=${search}&per_page=${perPage}&page=${page}&from=${fromDateURL}&to=${toDateURL}&channel_code=${channel_code}`
+      : `http://43.252.197.60:8050/weight_freeze/get_weight_freeze?search=${search}&per_page=${perPage}&page=${page}&channel_code=${channel_code}`
+    axios.get(url, {})
       .then((response) => {
+        //count items in each status
+        console.log("Response", response.data);
+        const count = response.data.reduce((acc, item) => {
+          if (item.status_id == 1) {
+            acc.accepted++;
+          }
+          if (item.status_id == 2) {
+            acc.requested++;
+          }
+          if (item.status_id == 3) {
+            acc.rejected++;
+          }
+          if (item.status_id == 4) {
+            acc.unfreezed++;
+          }
+          if (item.status_id == 5) {
+            acc.action_required++;
+          }
+          if (item.status_id == 0 || item.status_id == null) {
+            acc.not_requested++;
+          }
+          return acc;
+        }, {
+          accepted: 0,
+          requested: 0,
+          rejected: 0,
+          unfreezed: 0,
+          action_required: 0,
+          not_requested: 0,
+        });
+        //update the count in tabs using setTabs
+        tabs.map((item) => {
+          if (item.freezeStatus == 1) {
+            item.items = count.accepted;
+          }
+          if (item.freezeStatus == 2) {
+            item.items = count.requested;
+          }
+          if (item.freezeStatus == 3) {
+            item.items = count.rejected;
+          }
+          if (item.freezeStatus == 4) {
+            item.items = count.unfreezed;
+          }
+          if (item.freezeStatus == 5) {
+            item.items = count.action_required;
+          }
+          if (item.freezeStatus == 0 || item.freezeStatus == null) {
+            item.items = count.not_requested;
+          }
+          return item;
+        });
+
         const filteredData = response.data.filter((item) => {
           if (item[param_name] == null) {
             item[param_name] = 0;
@@ -30,18 +95,21 @@ const FreezeTabs = ({ tabs, setData , setLoading }) => {
         setLoading(false);
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error); //eslint-disable-line
         setLoading(false);
       })
   };
 
   //get freeze_status from url
-  const freezeStatus = searchParams.get('freeze_status');
   const handleTabChange = (freezeStatus) => {
     setData([]);
     const currentSearchParams = new URLSearchParams(searchParams);
     // Update the desired parameter
     currentSearchParams.set('freeze_status', freezeStatus);
+    currentSearchParams.set('page', 1);
+    currentSearchParams.set('per_page', 15);
+    currentSearchParams.set('from', '');
+    currentSearchParams.set('to', '');
     // Update the search params
     setSearchParams(currentSearchParams);
     //filter the data on the basis of freeze_status
@@ -71,16 +139,22 @@ const FreezeTabs = ({ tabs, setData , setLoading }) => {
     setSRSuggested(ev.target.checked);
     const currentSearchParams = new URLSearchParams(searchParams);
     if (!ev.target.checked) {
-        const set = freezeStatus==1?'6':'7'
-        currentSearchParams.set('freeze_status', set);
-        setSearchParams(currentSearchParams);
+      const set = freezeStatus == 1 ? '6' : '7'
+      currentSearchParams.set('freeze_status', set);
+      setSearchParams(currentSearchParams);
     }
     if (ev.target.checked) {
-        const set = freezeStatus==6?'1':'3'
-        currentSearchParams.set('freeze_status', set);
-        setSearchParams(currentSearchParams);
+      const set = freezeStatus == 6 ? '1' : '3'
+      currentSearchParams.set('freeze_status', set);
+      setSearchParams(currentSearchParams);
     }
   };
+
+  const handleSearchInput = (e) => {
+    const currentSearchParams = new URLSearchParams(searchParams);
+    currentSearchParams.set('search', e.target.value);
+    setSearchParams(currentSearchParams);
+  }
 
   useEffect(() => {
     if (freezeStatus == 5 || freezeStatus == 0) {
@@ -96,6 +170,10 @@ const FreezeTabs = ({ tabs, setData , setLoading }) => {
     handleTabChange(freezeStatus);
   }, [freezeStatus]);
 
+  useEffect(() => {
+    dataGet('status_id', freezeStatus);
+  }, [searchParams]);
+
 
   return (
     <>
@@ -104,15 +182,14 @@ const FreezeTabs = ({ tabs, setData , setLoading }) => {
           return (
             <div
               key={item.freezeStatus}
-              className={`mb-2 flex w-full flex-row items-center justify-center gap-3 rounded-lg border px-4 py-4 text-[16px] font-[400] hover:cursor-pointer hover:bg-[#e1e1e122] lg:mb-0 lg:w-auto lg:rounded-none lg:border-0 lg:border-b-8 lg:px-6 lg:py-2 ${
-                freezeStatus == item.freezeStatus
+              className={`mb-2 flex w-full flex-row items-center justify-center gap-3 rounded-lg border px-4 py-4 text-[16px] font-[400] hover:cursor-pointer hover:bg-[#e1e1e122] lg:mb-0 lg:w-auto lg:rounded-none lg:border-0 lg:border-b-8 lg:px-6 lg:py-2 ${freezeStatus == item.freezeStatus
                   ? 'w-full border-b-8 border-[#7664e8] font-bold text-[#7664e8] lg:border-b-8'
                   : 'font-[400] lg:border-white'
-              }`}
+                }`}
               onClick={() => handleTabChange(item.freezeStatus)}>
               <div className={``}>{item.title}</div>
               <div className="flex items-center justify-center rounded-[40px] border border-[#57B960] bg-[#EBF7E8] px-[10px] text-sm text-[#57B960]">
-                0
+                {item.items}
               </div>
             </div>
           );
@@ -125,7 +202,7 @@ const FreezeTabs = ({ tabs, setData , setLoading }) => {
       </div>
 
       {/* filter section */}
-      <div className="mt-4 flex flex-row gap-4">
+      <div className="mt-4 flex flex-row gap-4 lg:flex-nowrap flex-wrap">
         {/* Search */}
         <div>
           <div className="relative">
@@ -150,6 +227,7 @@ const FreezeTabs = ({ tabs, setData , setLoading }) => {
               id="default-search"
               className="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 block w-full rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-blue-500 focus:ring-blue-500"
               placeholder="Name or SKU"
+              onChange={(ev) => { handleSearchInput(ev) }}
               required
             />
           </div>
@@ -209,11 +287,10 @@ const FreezeTabs = ({ tabs, setData , setLoading }) => {
         <div>
           {/* Apply button for dates */}
           <button
-            className={`border-1 h-[33px] w-[100px] rounded-[4px] border-[#7664e8] bg-[#7664e8] text-[12px] leading-[30px] text-white hover:bg-[#7664e8] hover:text-white ${
-              enableDate
+            className={`border-1 h-[33px] w-[100px] rounded-[4px] border-[#7664e8] bg-[#7664e8] text-[12px] leading-[30px] text-white hover:bg-[#7664e8] hover:text-white ${enableDate
                 ? ''
                 : 'cursor-not-allowed border-[#e1e1e1] bg-[#e1e1e1] hover:bg-[#e1e1e1] hover:text-black'
-            }'}}`}
+              }'}}`}
             onClick={() => {
               handleDateChange();
             }}
@@ -241,6 +318,15 @@ const FreezeTabs = ({ tabs, setData , setLoading }) => {
             </div>
           </div>
         )}
+        <div className="flex justify-end w-2/5 items-center">
+          <button className='border text-[14px] flex justify-center items-center gap-2 text-[#7664E8] hover:text-black lg:h-8 h-auto px-[5px] w-[150px] border-[#7664E8] rounded-[4px]'>
+            {/* <img src={} alt="" width={'14px'} /> */}
+            {/* Todo: Upload image add */}
+            Import Products
+          </button>
+          <button className='border text-[14px] text-[#7664E8] hover:text-black lg:h-8 h-auto px-[5px] w-[150px] border-[#7664E8] rounded-[4px]'>Export products</button>
+          <button className='border text-[14px] text-[#7664E8] hover:text-black lg:h-8 h-auto px-[5px] w-[150px] border-[#7664E8] rounded-[4px]'>Export Order List</button>
+        </div>
       </div>
     </>
   );

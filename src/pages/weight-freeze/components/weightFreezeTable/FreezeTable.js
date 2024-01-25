@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { FreezeModal } from '../weightFreezeModal';
-import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
+import { noData } from '../../../../common/images';
 const FreezeTable = ({ data, setLoading }) => {
   const [show, setShow] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(null);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();  // eslint-disable-line
   const freezeStatus = searchParams.get('freeze_status');
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const FreezeTable = ({ data, setLoading }) => {
       </div>
       {/* table data */}
       <div className="flex flex-col items-center justify-center">
-        {data && data.map((item, key) => {
+        {data.length ? data.map((item, key) => {
           return (
             <div
               className="flex h-32 w-full flex-row items-center justify-between border border-b-[#E5E7EB] text-left"
@@ -65,21 +65,27 @@ const FreezeTable = ({ data, setLoading }) => {
               </div>
               <div className="flex h-full w-1/12 items-center border-r-2">{item?.status_name}</div>
               <div className="flex h-full w-[10%] items-center border-r-2">
-                <button className="rounded-md border border-blue-500 bg-white px-4 py-1 text-blue-500" 
-                onClick={() =>{
-                  setSelectedIndex(key);
-                  setShow(true);
-                }}
+                <button className="rounded-md border border-blue-500 bg-white px-4 py-1 text-blue-500"
+                  onClick={() => {
+                    setSelectedIndex(key);
+                    setShow(true);
+                  }}
                 >
-                  Freeze Product
+                  {freezeStatus == 0 ? 'Freeze Product' : 'Edit Details'}
                 </button>
               </div>
             </div>
           );
-        })}
+        }) : (
+          <div className='pt-12 mb-12 w-full flex justify-center items-center flex-col'>
+            <img src={noData} alt="" width={'230px'} />
+            <div className='text-3xl mt-10 text-[#6457B6]'>We could not find any data for the applied filters.</div>
+            <div className='text-[14px] mt-2 font-normal opacity-80'>Please change filters and retry.</div>
+          </div>
+        )}
       </div>
       {/* Modal for Weight Free */}
-      {show && selectedIndex !== null && <FreezeModal show={show} setShow={setShow} data={data[selectedIndex]}/>}
+      {show && selectedIndex !== null && <FreezeModal show={show} setShow={setShow} data={data[selectedIndex]} setLoading={setLoading} type={freezeStatus == 0 ? 'Freeze' : 'Edit'} />}
     </div>
   );
 };
