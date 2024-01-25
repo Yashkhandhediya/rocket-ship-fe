@@ -31,7 +31,6 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs }) => { // eslint-disab
     axios.get(url, {})
       .then((response) => {
         //count items in each status
-        console.log("Response", response.data);
         const count = response.data.reduce((acc, item) => {
           if (item.status_id == 1) {
             acc.accepted++;
