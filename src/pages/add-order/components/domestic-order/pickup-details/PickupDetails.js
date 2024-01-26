@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
+import { BACKEND_URL } from '../../../../../common/utils/env.config';
 
 export default function PickupDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ export default function PickupDetails({ currentStep, handleChangeStep }) {
 
   const fetchUserAddressList = () => {
     axios
-      .get('http://43.252.197.60:8030/address', {
+      .get(BACKEND_URL+'/address', {
         params: {
           user_id: 1,
         },

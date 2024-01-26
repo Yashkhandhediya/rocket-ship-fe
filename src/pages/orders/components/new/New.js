@@ -17,6 +17,7 @@ import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
 import { CommonBadge } from '../../../../common/components/common-badge';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
 
 export const New = () => {
   const dispatch = useDispatch();
@@ -185,7 +186,7 @@ export const New = () => {
                   id={row?.original?.id}
                   className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
                   onClick={() => {
-                    axios.get('http://43.252.197.60:8030/order/track?order_id=' + row?.original?.id);
+                    axios.get(BACKEND_URL+'/order/track?order_id=' + row?.original?.id);
                     let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent('15')}`;
                     let newTab = window.open(newURL, '_blank');
                     if (newTab) {

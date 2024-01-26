@@ -13,6 +13,7 @@ import { MoreFiltersDrawer } from '../more-filters-drawer';
 import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
 
 export const All = () => {
   const dispatch = useDispatch();
@@ -178,7 +179,7 @@ export const All = () => {
 
   function cancelOrder(orderDetails) {
     axios
-      .put(`http://43.252.197.60:8030/order/?id=${orderDetails?.id}`, {
+      .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}`, {
         ...orderDetails,
         status: 'cancelled',
       })
