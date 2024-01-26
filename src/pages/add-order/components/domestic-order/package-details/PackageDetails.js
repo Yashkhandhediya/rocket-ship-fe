@@ -69,6 +69,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
       ...domesticOrderFormValues,
       ...formDirectField,
       date: date,
+      order_type: "domestic"
     });
     if (resp.status == 200) {
       toast('Order Placed Successfully', { type: 'success' });
