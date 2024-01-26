@@ -4,11 +4,13 @@ import { returnsTabs } from './duck';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllReturns } from '../../redux';
+import { setAllReturns, setAllWeightDiscrepancies } from '../../redux';
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 import Loader from '../../common/loader/Loader';
 import { BACKEND_URL } from '../../common/utils/env.config';
+import { DiscrepancyTable } from './components'
+
 
 const WeightDiscrepancy = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,33 +25,33 @@ const WeightDiscrepancy = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const allReturnsList = useSelector((state) => state?.ordersList);
+  const allWeightDiscrepanciesList = useSelector((state) => state?.weightDiscrepanciesList);
 
-  const fetchNewReturns = () => {
+  const fetchWeightDiscrepancies = () => {
     axios
-      .get(BACKEND_URL + '/return/get_filtered_returns')
+      .get(BACKEND_URL + '/weight_discrepancy/get_weight_discrepancy')
       .then(async (resp) => {
         if (resp.status === 200) {
-          dispatch(setAllReturns(resp?.data || []));
+          dispatch(setAllWeightDiscrepancies(resp?.data || []));
           setIsLoading(false);
         } else {
-          toast('There is some error while fetching returns.', { type: 'error' });
+          toast('There is some error while fetching weight discrepancies.', { type: 'error' });
           setIsLoading(false);
         }
       })
       .catch(() => {
-        toast('There is some error while fetching returns.', { type: 'error' });
+        toast('There is some error while fetching weight discrepancies.', { type: 'error' });
         setIsLoading(false);
       });
   };
 
   useEffect(() => {
-    if (!allReturnsList) {
-      fetchNewReturns();
+    if (!allWeightDiscrepanciesList) {
+      fetchWeightDiscrepancies();
     } else {
       setIsLoading(false);
     }
-  }, [allReturnsList]);
+  }, [allWeightDiscrepanciesList]);
 
   const checkDate = (fromDate, toDate) => {
     const from = new Date(fromDate);
@@ -116,7 +118,7 @@ const WeightDiscrepancy = () => {
           <div className='flex flex-col gap-2 border border-rose-700 bg-pink-50 flex-1 basis-full md:basis-2/5 xl:basis-1/5 rounded-xl p-4'>
             <div className='text-sm'>Total Weight Discrepancies</div>
             <div className='flex justify-between items-end'>
-              <strong className='text-2xl'>0</strong>
+              <strong className='text-2xl'>{allWeightDiscrepanciesList?.length}</strong>
               <div className='text-gray-500 text-sm align-baseline'>Last 30 Days</div>
             </div>
           </div>
@@ -144,7 +146,7 @@ const WeightDiscrepancy = () => {
         </div>
 
         <div className='flex justify-between px-5 py-2 ml-2 border-b'>
-          <div className='flex items-center gap-3'>
+          <div className='flex flex-wrap items-center gap-3'>
             <div className='order-input px-3 py-1 flex items-center gap-1 rounded-md border overflow-hidden'>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -167,7 +169,7 @@ const WeightDiscrepancy = () => {
               </svg>
               <input name='order-id' placeholder='Order Id or AWB No.' title='Enter to search' style={{ border: 'none', outline: 'none', width: '100px' }} />
             </div>
-            <div className='flexorder-input flex gap-1 border'>
+            <div className='flex-wrap flexorder-input flex gap-1 border'>
               {/* From Date */}
               <div>
                 <div className="group relative">
@@ -269,17 +271,11 @@ const WeightDiscrepancy = () => {
           </div>
         </div>
 
-        <div className='flex flex-col items-center py-24 px-10'>
-          <div>
-            <img src='https://app.shiprocket.in/app/img/no_data/weight_discrepancy_0.png' />
-          </div>
-          <div className='text-3xl text-violet-900 font-semibold'>Great! You have 0 weight discrepancies</div>
-          <div>Hey Abhishek, Read more about weight discrepancy and how to avoid it by clicking the button below</div>
-          <button className='mt-5 px-12 py-2 text-slate-300 bg-violet-900 rounded-3xl'>Learn More</button>
-        </div>
-
+        
       </div>
-      <div></div>
+      <div>
+        <DiscrepancyTable data={allWeightDiscrepanciesList} setLoading={setIsLoading} />
+      </div>
     </PageWithSidebar>
   );
 };
