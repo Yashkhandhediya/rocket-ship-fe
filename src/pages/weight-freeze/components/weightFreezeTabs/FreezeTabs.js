@@ -19,15 +19,14 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs }) => { // eslint-disab
   const search = searchParams.get('search');
   const page = parseInt(searchParams.get('page'), 10);
   const perPage = parseInt(searchParams.get('per_page'), 10) || 15;
-  const channel_code = searchParams.get('channel_code');
 
   const dataGet = (param_name, param_value) => { //eslint-disable-line
     setData([]);
     //API to get data
     setLoading(true);
     const url = fromDateURL && toDateURL && freezeStatus != 5 && freezeStatus != 0
-      ? `http://43.252.197.60:8050/weight_freeze/get_weight_freeze?search=${search}&per_page=${perPage}&page=${page}&from=${fromDateURL}&to=${toDateURL}&channel_code=${channel_code}`
-      : `http://43.252.197.60:8050/weight_freeze/get_weight_freeze?search=${search}&per_page=${perPage}&page=${page}&channel_code=${channel_code}`
+      ? `http://43.252.197.60:8050/weight_freeze/get_weight_freeze?${search!==null&&`search=${search}`}&per_page=${perPage}&page=${page}&from=${fromDateURL}&to=${toDateURL}`
+      : `http://43.252.197.60:8050/weight_freeze/get_weight_freeze?${search!==null&&`search=${search}`}&per_page=${perPage}&page=${page}`
     axios.get(url, {})
       .then((response) => {
         //count items in each status
