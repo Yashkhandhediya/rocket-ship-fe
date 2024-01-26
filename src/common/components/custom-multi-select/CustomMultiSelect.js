@@ -92,9 +92,7 @@ const CustomMultiSelect = ({
       }
     }
 
-    return onChange(
-      isMulti ? onChange(selectedOption.map((obj) => obj.value)) : onChange(selectedOption.value),
-    );
+    return isMulti ? onChange(selectedOption.map((obj) => obj.value)) : onChange(selectedOption.value);
   };
 
   const checkboxOptionStyles = (state) => {

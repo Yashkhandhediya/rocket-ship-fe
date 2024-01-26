@@ -9,6 +9,7 @@ import './ShipmentCourierPartnersTable.css';
 import { SchedulePickupModal } from '../../schedule-pickup-modal';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Button } from 'flowbite-react';
+import { BACKEND_URL } from '../../../../../common/utils/env.config';
 
 const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentDrawer }) => {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
     setIsLoading(true);
     if (orderId) {
       axios
-        .post(`http://43.252.197.60:8030/order/${orderId}/shipment`)
+        .post(`${BACKEND_URL}/order/${orderId}/shipment`)
         .then((resp) => {
           if (resp?.status === 200) {
             setIsLoading(false);

@@ -3,6 +3,7 @@ import './Tracking.css'
 import axios from "axios";
 import { toast } from "react-toastify";
 import moment from "moment";
+import { BACKEND_URL } from "../../common/utils/env.config";
 
 export default function Tracking() {
     const [shipmentData, setShipmentData] = useState();
@@ -16,7 +17,7 @@ export default function Tracking() {
 
     // Set the received string value in the component state
         axios
-            .get('http://43.252.197.60:8030/order/track?order_id='+stringValue)
+            .get(BACKEND_URL+'/order/track?order_id='+stringValue)
             .then(async (resp) => {
                 if (resp.status === 200) {
                     const data = resp?.data?.ShipmentData?.[0]?.Shipment;

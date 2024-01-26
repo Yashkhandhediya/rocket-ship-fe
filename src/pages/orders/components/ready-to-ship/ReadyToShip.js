@@ -187,7 +187,7 @@ export const ReadyToShip = () => {
                   pickupDetails: row?.original,
 
                 });
-                // const resp = axios.get('http://43.252.197.60:8030/order/track?order_id=' + row.id);
+                // const resp = axios.get(BACKEND_URL+'/order/track?order_id=' + row.id);
                 // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
                 // let newTab = window.open(newURL, '_blank');
                 // if (newTab) {

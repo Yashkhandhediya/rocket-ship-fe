@@ -6,6 +6,7 @@ import { Modal } from 'flowbite-react';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
 
 const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
   const [datesToMap, seDatesToMap] = useState([]);
@@ -26,7 +27,7 @@ const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
   const schedulePickup = () => {
     const formattedDate = moment(scheduleDetails.pickup_date).format('YYYY-MM-DD');
     axios
-      .post(`http://43.252.197.60:8030/order/${pickupDetails?.id}/pickup`, {
+      .post(`${BACKEND_URL}/order/${pickupDetails?.id}/pickup`, {
         pickup_date: formattedDate,
         pickup_time: scheduleDetails.pickup_time,
       })

@@ -22,7 +22,7 @@ export const sidebarLinks = [
   },
   {
     title: 'Returns',
-    path: '/',
+    path: '/returns',
     icon: home,
     hoverIcon: homeActive,
   },

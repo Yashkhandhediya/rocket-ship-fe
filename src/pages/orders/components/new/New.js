@@ -214,7 +214,7 @@ export const New = () => {
 
   function cancelOrder(orderDetails) {
     axios
-      .put(`http://43.252.197.60:8030/order/?id=${orderDetails?.id}`, {
+      .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}`, {
         ...orderDetails,
         status: 'cancelled',
         status_name: 'cancelled',
