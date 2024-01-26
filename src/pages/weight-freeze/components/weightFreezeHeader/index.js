@@ -1,0 +1,1 @@
+export {default as WeightFreezeHeader} from './Freeze_Header';

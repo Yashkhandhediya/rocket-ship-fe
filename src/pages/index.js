@@ -5,3 +5,5 @@ export * from './orders';
 export * from './add-order';
 export * from './order-track-details';
 export * from './return';
+export * from './kyc';
+export * from './weight-freeze';

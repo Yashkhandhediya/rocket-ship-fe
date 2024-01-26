@@ -1,0 +1,1 @@
+export {default as Completed_KYC} from './Completed_KYC';
