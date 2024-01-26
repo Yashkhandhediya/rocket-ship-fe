@@ -46,7 +46,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
         const { id, value, type } = event.target;
         setFormDirectField({
             ...formDirectField,
-            [id]: type === 'number' ? parseInt(value, 10) : value,
+            [id]: type === 'number' ? parseFloat(value, 10) : value,
         });
     };
 

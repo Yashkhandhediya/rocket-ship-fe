@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import { CustomMultiSelect, Field, FieldAccordion, FieldTextArea } from '../../../../../common/components';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import { setSingleReturn } from '../../../../../redux/actions/addReturnAction';
+import { deleteIcon } from '../../../../../common/icons';
 
 const ReturnDetails = ({ currentStep, handleChangeStep }) => {
   const dispatch = useDispatch();
@@ -74,11 +75,70 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
 
   const otherCharges =
     Number(paymentDetails?.gift_wrap || 0) +
-      Number(paymentDetails?.shipping_charges || 0) +
-      Number(paymentDetails?.transaction_fee || 0) || 0;
+    Number(paymentDetails?.shipping_charges || 0) +
+    Number(paymentDetails?.transaction_fee || 0) || 0;
 
   const totalOrderValue =
     Number(subProductTotal || 0) + Number(otherCharges || 0) - Number(paymentDetails?.discount || 0);
+
+  const checkIsProductValid = () => {
+    const errors = {
+      productName: 'Please enter product name',
+      unitPrice: 'Product unit price should be greter than 0',
+      quantity: 'Product quantity should be greter than 0',
+    };
+    const isValidProductName = productFields?.every((product) => {
+      return product.name;
+    });
+    const isValidProductUnitPrice = productFields?.every((product) => {
+      return product.unit_price > 0;
+    });
+    const isValidProductQuantity = productFields?.every((product) => {
+      return product.unit_price > 0;
+    });
+    if (!productFields?.length) {
+      toast('Please add product name, unit price and quantity', { type: 'error' });
+    }
+    if (!isValidProductName) {
+      toast(errors['productName'], { type: 'error' });
+      return false;
+    }
+    if (!isValidProductUnitPrice) {
+      toast(errors['unitPrice'], { type: 'error' });
+      return false;
+    }
+    if (!isValidProductQuantity) {
+      toast(errors['quantity'], { type: 'error' });
+      return false;
+    }
+    return true;
+  };
+
+  const handleAddProductField = () => {
+    if (checkIsProductValid()) {
+      setProductFields([...productFields, defaultProductField]);
+    }
+  };
+
+  const handleDeleteProductField = (index) => {
+    const allFields = [...productFields];
+    allFields.splice(index, 1);
+    setProductFields(allFields);
+  };
+
+  const handleSetProductFields = (event, index) => {
+    const { id, value } = event.target;
+
+    const allFields = [...productFields];
+    allFields[index][id] = value;
+    setProductFields(allFields);
+  };
+
+  const handleQuantityCounter = (value, index) => {
+    const allFields = [...productFields];
+    allFields[index]['quantity'] = value;
+    setProductFields(allFields);
+  };
 
   const setDirectKeysInForm = (event) => {
     const { id, value } = event.target;
@@ -90,7 +150,6 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
 
   const handleChangeValues = (e) => {
     const { id, value } = e.target;
-    console.log(id)
     if (id !== 'securedShipments') {
       setFilterSelection({
         ...filterSelection,
@@ -98,7 +157,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
       });
       setFormDirectField({
         ...formDirectField,
-        [id]: value.join(','),
+        [id]: value,
       });
     } else if (id === 'securedShipments') {
       setFilterSelection({
@@ -110,9 +169,8 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
 
   const fetchReturnId = () => {
     axios
-      .get(BACKEND_URL+'/return/get_return_id')
+      .get(BACKEND_URL + '/return/get_return_id')
       .then((resp) => {
-        console.log('return response',resp);
         if (resp?.status == 200 && resp?.data?.return_id) {
           setFormDirectField({
             ...formDirectField,
@@ -133,7 +191,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
       const isValidProducts = productFields?.every((product) => {
         return product.name && product.unit_price > 0 && product.quantity > 0;
       });
-      if (!productFields?.length || !formDirectField?.channel || !formDirectField?.date) {
+      if (!productFields?.length ||!isValidProducts || !formDirectField?.channel || !formDirectField?.date) {
         toast('Please enter all required fields', { type: 'error' });
       } else {
         dispatch(
@@ -250,15 +308,25 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
         <div className="mb-6 mt-4 w-full border border-gray-200" />
         <div className="mb-3 px-2 pb-2 md:w-1/3 md:pb-0">
           <CustomMultiSelect
+            isMulti={false}
             id={'return_reason'}
             label={'Return Reason'}
             placeholder="Select reason for return"
             options={[
-              { label: 'Damaged', value: 'damaged' },
-              { label: 'Reason 2', value: 'Reason 2' },
-              { label: 'Reason 3', value: 'Reason 3' },
+              { label: 'Item is damaged', value: 'damaged' },
+              { label: 'Received wrong item', value: 'wrong_item' },
+              { label: 'Parcel damaged on arrival', value: 'parcel_damaged' },
+              { label: 'Quality not as expected', value: 'quality_not_expected' },
+              { label: 'Missing Item or accessories', value: 'missing_item' },
+              { label: 'Performance not adequate', value: 'inadequate_performance' },
+              { label: 'Size not as expected', value: 'size_not_expected' },
+              { label: 'Does not fit', value: 'does_not_fit' },
+              { label: 'Not as described', value: 'not_as_described' },
+              { label: 'Arrived too late', value: 'arrived_too_late' },
+              { label: 'Changed my mind', value: 'changed_my_mind' },
+              { label: 'Other', value: 'other' },
             ]}
-            withCheckbox={true}
+            withCheckbox={false}
             displayValuesAsStrings
             onChange={(val) =>
               handleChangeValues({
@@ -308,6 +376,182 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
             </div>
           </div>
         </FieldAccordion>
+        <div className="mb-6 mt-4 w-full border border-gray-200" />
+        <div>
+          <div className="mb-3 text-sm font-medium">{'Product Details'}</div>
+          {productFields.map((field, index) => {
+            return (
+              <div className="mb-4 border-b border-gray-200" key={index}>
+                <div className="mb-3 w-full md:flex">
+                  <div className="w-full px-2 pb-2 xl:w-4/12">
+                    <Field
+                      id={'name'}
+                      label={`Product ${index + 1} Name`}
+                      inputClassNames={'text-xs'}
+                      labelClassNames={'text-xs'}
+                      placeHolder={'Enter or search your product name'}
+                      required={true}
+                      value={field?.name || ''}
+                      onChange={(e) => handleSetProductFields(e, index)}
+                    />
+                    {productValidation && !field?.name?.length && (
+                      <p className="mt-1 text-xs text-red-500">Product Name is required.</p>
+                    )}
+                  </div>
+                  <div className="w-full px-2 pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
+                    <Field
+                      type={'number'}
+                      id={'unit_price'}
+                      label={'Unit Price'}
+                      inputClassNames={'text-xs'}
+                      labelClassNames={'text-xs'}
+                      placeHolder={'0.00'}
+                      leftAddOn="₹"
+                      required={true}
+                      value={field?.unit_price || ''}
+                      onChange={(e) => handleSetProductFields(e, index)}
+                    />
+                    {productValidation && (!field?.unit_price || field?.unit_price < 1) && (
+                      <p className="mt-1 text-xs text-red-500">Unit price should be greter than 0.</p>
+                    )}
+                  </div>
+                  <div className="w-full px-2  pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
+                    <Field
+                      type={'number'}
+                      id={'quantity'}
+                      label={'Quatity'}
+                      inputClassNames={'text-xs'}
+                      labelClassNames={'text-xs'}
+                      placeHolder={'0'}
+                      required={true}
+                      value={field?.quantity || ''}
+                      counterField={true}
+                      onIncrease={() => handleQuantityCounter(Number(field?.quantity || 0) + 1, index)}
+                      onDecrease={() => handleQuantityCounter(Number(field?.quantity || 0) - 1, index)}
+                      onChange={(e) => handleSetProductFields(e, index)}
+                    />
+                    {productValidation && (!field?.quantity || field?.quantity < 1) && (
+                      <p className="mt-1 text-xs text-red-500">Quantity should be greter than 0.</p>
+                    )}
+                  </div>
+                  <div className="w-10/12 px-2 pb-2 md:w-4/12 md:pb-0 xl:w-3/12">
+                    <Field
+                      id={'category'}
+                      label={'Product Category'}
+                      showOptional
+                      inputClassNames={'text-xs'}
+                      labelClassNames={'text-xs'}
+                      placeHolder={'Edit Product Category'}
+                      required={true}
+                      value={field?.category || ''}
+                      onChange={(e) => handleSetProductFields(e, index)}
+                    />
+                  </div>
+                  <div className="self-center">
+                    <button
+                      disabled={productFields.length === 1}
+                      className="mt-4 px-2 py-1 disabled:opacity-50"
+                      onClick={() => handleDeleteProductField(index)}
+                    >
+                      <img src={deleteIcon} className="w-4" />
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <FieldAccordion
+                    id={'product-details'}
+                    label={'+ Add HSN Code, SKU, Tax Rate and Discount'}
+                    showOptional>
+                    <div className="mb-3 w-full pr-[200px] md:flex">
+                      <div className="w-full px-2 pb-2 lg:w-3/12">
+                        <Field
+                          type={'number'}
+                          id={'hsn_code'}
+                          label={'HSN Code'}
+                          inputClassNames={'text-xs'}
+                          labelClassNames={'text-xs'}
+                          placeHolder={'Enter your product HSN code'}
+                          tooltip={
+                            'HSN code is a 6-digit uniform code that classifies 5000+ products and is accepted worldwide.'
+                          }
+                          value={field?.hsn_code || ''}
+                          onChange={(e) => handleSetProductFields(e, index)}
+                        />
+                      </div>
+                      <div className="w-full px-2 pb-2 lg:w-4/12">
+                        <Field
+                          id={'sku'}
+                          label={'SKU'}
+                          inputClassNames={'text-xs'}
+                          labelClassNames={'text-xs'}
+                          placeHolder={'Enter Product SKU'}
+                          tooltip={'Stock Keeping Unit, used for inventory management.'}
+                          value={field?.sku || ''}
+                          onChange={(e) => handleSetProductFields(e, index)}
+                        />
+                      </div>
+                      <div className="w-full px-2 pb-2 lg:w-2/12">
+                        {/* missing field in API */}
+                        <Field
+                          type={'number'}
+                          id={'tax_rate'}
+                          label={'Tax Rate'}
+                          inputClassNames={'text-xs'}
+                          labelClassNames={'text-xs'}
+                          placeHolder={'0'}
+                          value={field?.tax_rate || ''}
+                          onChange={(e) => handleSetProductFields(e, index)}
+                        />
+                      </div>
+                      <div className="w-full px-2 pb-2 lg:w-3/12">
+                        <Field
+                          type={'number'}
+                          id={'discount'}
+                          label={'Product Discount'}
+                          inputClassNames={'text-xs'}
+                          labelClassNames={'text-xs'}
+                          placeHolder={'0.00'}
+                          tooltip={'Discount given to the buyer on this product'}
+                          value={field?.discount || 0}
+                          onChange={(e) => handleSetProductFields(e, index)}
+                        />
+                      </div>
+                    </div>
+                  </FieldAccordion>
+                </div>
+              </div>
+            );
+          })}
+          <div>
+            <button
+              className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-xs text-indigo-700'}
+              onClick={handleAddProductField}
+            >
+              + Add Another Product
+            </button>
+          </div>
+        </div>
+        <div className="mb-6 mt-4 w-full border border-gray-200" />
+        <div className="my-5 rounded-md bg-[#ecf2fe99] p-5 text-sm">
+          <div className="mb-1 flex justify-between">
+            <p className="w-6/12 text-gray-600">{'Sub-total for Product'}</p>
+            <p className="w-6/12 text-end">{'₹ ' + formDirectField?.sub_total || 0}</p>
+          </div>
+          <div className="mb-1 flex justify-between">
+            <p className="w-6/12 text-gray-600">{'Other Charges'}</p>
+            <p className="w-6/12 text-end">{'₹ ' + formDirectField?.other_charges || 0}</p>
+          </div>
+          <div className="mb-1 flex justify-between">
+            <p className="w-6/12 text-gray-600">{'Discounts'}</p>
+            <p className="w-6/12 text-end">
+              {'₹ ' + (paymentDetails?.discount ? Number(paymentDetails?.discount) : 0)}
+            </p>
+          </div>
+          <div className="mt-4 flex justify-between">
+            <p className="w-6/12 font-medium">{'Total Order Value'}</p>
+            <p className="w-6/12 text-end font-medium">{'₹ ' + formDirectField?.total_amount || 0}</p>
+          </div>
+        </div>
       </div>
 
       <div className="flex justify-end gap-4">
