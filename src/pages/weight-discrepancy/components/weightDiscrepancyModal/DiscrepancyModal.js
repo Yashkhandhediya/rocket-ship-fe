@@ -27,6 +27,9 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
   const [images, setImages] = useState({
     img_1: null,
     img_2: null,
+    img_3: null,
+    img_4: null,
+    img_5: null,
     length_img: null,
     width_img: null,
     height_img: null,
@@ -173,60 +176,31 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
           <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
             {/*header*/}
             <div className="border-blueGray-200 flex w-full items-center justify-center rounded-t border-b border-solid p-5">
-              <h3 className="text-2xl font-semibold">{type == 'Freeze' ? 'Add Product and Package Details' : 'Edit Product and Package Details'}</h3>
+              <h3 className="text-2xl font-semibold">Please share the following details to help us resolve the discrepancy.</h3>
               <button
                 className="border-0 bg-transparent p-1 text-2xl font-semibold leading-none text-black opacity-100 outline-none focus:outline-none"
                 onClick={() => setShow(false)}>
                 <span className="block h-6 w-6 bg-transparent text-black opacity-50 outline-none focus:outline-none">
-                  ×
+                  x
                 </span>
               </button>
               {/* To do : Active this button and move it to the right corner */}
             </div>
             {/*body*/}
             <div className="relative flex-auto p-6">
+            {console.log(data)}
 
-              <p className="text-lg font-semibold">Product Details</p>
+              <p className="text-lg font-semibold">Upload Shipment Images</p>
               <div className="m-1 flex flex-col rounded-md border border-gray-200">
                 {/* Product Information */}
-                <div className="gap-8 h-52 flex flex-row p-4 px-8">
-
-                  {/* Product Name and Category Section */}
-                  <div className="flex w-[55%] flex-col gap-4">
-                    {/* Product Name */}
-                    <div>
-                      <p className="w-full">Product Name</p>
-                      <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        value={data.name}
-                        className="mt-2 h-8 w-full rounded-lg text-black text-[12px] font-normal border-gray-300 bg-[#ECF1F2] focus:border-gray-300 focus:ring-0"
-                        readOnly
-                      />
-                    </div>
-                    {/* Product Category */}
-                    <div>
-                      <p>Product Category</p>
-                      <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        placeholder="Product Category"
-                        className="mt-2 h-8 w-full rounded-lg border-gray-300 text-[12px] font-normal focus:border-gray-300 focus:ring-0"
-                        value={weightDiscrepancyData.product_category}
-                        onChange={(e) => setWeightDiscrepancyData({ ...weightDiscrepancyData, product_category: e.target.value })}
-                      />
-                      {/* Todo : Give auto suggestion filtered on the basis of user input */}
-                    </div>
-                  </div>
+                <div className="gap-8 flex flex-row p-4 px-8">
 
                   {/* Product Image Section */}
-                  <div className="flex w-[45%] flex-col">
+                  <div className="flex w-[60%] flex-col">
                     <p>Product Images </p>
-                    <div className="mt-2 flex flex-row gap-8 rounded-lg">
+                    <div className="mt-2 flex flex-row flex-wrap gap-8 rounded-lg">
                       {/* Image 1 */}
-                      <div className='flex h-32 flex-col w-[40%]'>
+                      <div className='flex h-32 flex-col w-[28%]'>
                         <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
                           <label htmlFor="img_1" className="w-full">
                             <div className="flex cursor-pointer flex-col items-center justify-center">
@@ -256,7 +230,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                         )}
                       </div>
                       {/* Image 2 */}
-                      <div className='flex h-32 flex-col w-[40%]'>
+                      <div className='flex h-32 flex-col w-[28%]'>
                         <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
                           <label htmlFor="img_2" className="w-full">
                             <div className="flex cursor-pointer flex-col items-center justify-center">
@@ -285,7 +259,102 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                           </button>
                         )}
                       </div>
+                      {/* Image 3 */}
+                      <div className='flex h-32 flex-col w-[28%]'>
+                        <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
+                          <label htmlFor="img_3" className="w-full">
+                            <div className="flex cursor-pointer flex-col items-center justify-center">
+                              {images.img_3 ? (
+                                <div className='flex justify-center w-[90%] h-[90%]'>
+                                  <img src={images.img_3} alt="" className='object-fill h-28' />
+                                </div>
+                              ) : (
+                                <>
+                                  {/* <img src={upload} alt="" /> */}
+                                  <p>Upload Image</p>
+                                  <input type="file" className="hidden" name="img_3" accept=".jpg,.png,.gif,.jpeg" id="img_3" onChange={handleFileChange}
+                                  />
+                                </>
+                              )}
+                            </div>
+                          </label>
+                        </div>
+                        {images.img_3 && (
+                          <button className='border border-blue-400 text-blue-400 mt-2 py-1 rounded-md hover:bg-blue-600 hover:text-white'>
+                            <label htmlFor="img_3">
+                              Change image
+                              <input type="file" className="hidden" name="img_3" accept=".jpg,.png,.gif,.jpeg" id="img_3" onChange={handleFileChange}
+                              />
+                            </label>
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Image 4 */}
+                      <div className='flex h-32 flex-col w-[28%]'>
+                        <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
+                          <label htmlFor="img_4" className="w-full">
+                            <div className="flex cursor-pointer flex-col items-center justify-center">
+                              {images.img_4 ? (
+                                <div className='flex justify-center w-[90%] h-[90%]'>
+                                  <img src={images.img_4} alt="" className='object-fill h-28' />
+                                </div>
+                              ) : (
+                                <>
+                                  {/* <img src={upload} alt="" /> */}
+                                  <p>Upload Image</p>
+                                  <input type="file" className="hidden" name="img_4" accept=".jpg,.png,.gif,.jpeg" id="img_4" onChange={handleFileChange}
+                                  />
+                                </>
+                              )}
+                            </div>
+                          </label>
+                        </div>
+                        {images.img_4 && (
+                          <button className='border border-blue-400 text-blue-400 mt-2 py-1 rounded-md hover:bg-blue-600 hover:text-white'>
+                            <label htmlFor="img_4">
+                              Change image
+                              <input type="file" className="hidden" name="img_4" accept=".jpg,.png,.gif,.jpeg" id="img_4" onChange={handleFileChange}
+                              />
+                            </label>
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Image 5 */}
+                      <div className='flex h-32 flex-col w-[28%]'>
+                        <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
+                          <label htmlFor="img_5" className="w-full">
+                            <div className="flex cursor-pointer flex-col items-center justify-center">
+                              {images.img_5 ? (
+                                <div className='flex justify-center w-[90%] h-[90%]'>
+                                  <img src={images.img_5} alt="" className='object-fill h-28' />
+                                </div>
+                              ) : (
+                                <>
+                                  {/* <img src={upload} alt="" /> */}
+                                  <p>Upload Image</p>
+                                  <input type="file" className="hidden" name="img_5" accept=".jpg,.png,.gif,.jpeg" id="img_5" onChange={handleFileChange}
+                                  />
+                                </>
+                              )}
+                            </div>
+                          </label>
+                        </div>
+                        {images.img_5 && (
+                          <button className='border border-blue-400 text-blue-400 mt-2 py-1 rounded-md hover:bg-blue-600 hover:text-white'>
+                            <label htmlFor="img_5">
+                              Change image
+                              <input type="file" className="hidden" name="img_5" accept=".jpg,.png,.gif,.jpeg" id="img_5" onChange={handleFileChange}
+                              />
+                            </label>
+                          </button>
+                        )}
+                      </div>
                     </div>
+                  </div>
+                  <div className='flex w-[40%]'>
+                    <img className='bg-gray-400 rounded' style={{ backgroundColor: 'grey', width: '100%', height: '1005' }} />
                   </div>
                 </div>
                 <div className="flex justify-center items-center w-full border-0 text-[12px] border-t-2 bg-[#f8f8f892] py-2">
@@ -294,87 +363,40 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
               </div>
 
 
-              <p className='text-lg font-semibold'>Package Details</p>
+              <p className='text-lg font-semibold'>View Images shared by the courier</p>
               <div className="m-1 flex flex-col rounded-md border border-gray-200">
-                {/* Package Information */}
-                <div className="gap-8 flex flex-row p-4 px-8">
-                  {packageData.map((item, key) => {
-                    return (
-                      <div key={key} className="flex flex-col">
-                        <p>
-                          {item.label}
-                          {item.name !== 'chargableWeight' && <span className='text-red-500'>*</span>}
-                        </p>
-                        <div>
-                          <input type="number" name={item.name} id={item.id}
-                            className={`mt-2 h-8 w-3/4 rounded-l-lg border border-gray-300 text-[12px] font-normal focus:border-gray-300 focus:ring-0 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${item.name === 'chargableWeight' && 'bg-[#ECF1F2]'}`}
-                            onChange={(e) => setWeightDiscrepancyData({ ...weightDiscrepancyData, [item.name]: e.target.value })}
-                            placeholder={item.name !== 'chargableWeight' ? 'Enter ' + item.label : '0'}
-                            readOnly={item.name === 'chargableWeight'}
-                            required={item.name !== 'chargableWeight'}
-                            value={item.value}
-                          />
-                          <button className='h-8 w-1/4 rounded-r-lg text-white bg-blue-600 focus:outline-none focus:ring-0'>
-                            {item.unit}
-                          </button>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-                <div className="flex justify-center items-center w-full border-0 text-[12px] border-t-2 bg-[#f8f8f892] py-2">
-                  Notes :&nbsp;
-                  <span className='font-normal'>
-                    Chargable weight is the higher between entered weight and volumetric weight
-                  </span>
-                </div>
+                <img className='m-2 w-32 h-32' alt='product image' />
               </div>
 
               <p className='text-lg font-semibold'>Package Images</p>
               <div className="m-1 flex flex-col rounded-md border border-gray-200">
-                {/* Package Images */}
-                <div className="gap-8 flex flex-row p-4 h-44 px-8">
-                  {packageImagesData.map((item, key) => {
-                    return (
-                      <div className='flex h-40 flex-col w-[40%]' key={key}>
-                        <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
-                          <label htmlFor={item.id} className="w-full">
-                            <div className="flex cursor-pointer flex-col items-center justify-center">
-                              {item.value ? (
-                                <div className='flex justify-center w-[90%] h-[90%]'>
-                                  <img src={item.value} alt="" className='object-fill h-28' />
-                                </div>
-                              ) : (
-                                <>
-                                  {/* <img src={upload} alt="" /> */}
-                                  <p>Upload Image</p>
-                                  <input type="file" className="hidden" name={item.name} accept=".jpg,.png,.gif,.jpeg" id={item.id} onChange={handleFileChange}
-                                  />
-                                </>
-                              )}
-                            </div>
-                          </label>
-                        </div>
-                        {item.value ? (
-                          <button className='border border-blue-400 text-blue-400 py-1 mt-2 rounded-md hover:bg-blue-600 hover:text-white'>
-                            <label htmlFor={item.id}>
-                              Change image
-                              <input type="file" className="hidden" name={item.name} accept=".jpg,.png,.gif,.jpeg" id={item.id} onChange={handleFileChange}
-                              />
-                            </label>
-                          </button>
-                        ) : (
-                          <p className='text-center py-1 mt-2'>Package {item.label}</p>
-                        )}
-                      </div>
-                    )
-                  })}
+                <div className='flex'>
+                  <div className='w-[60%]'>
+                    <div>Product</div>
+                  </div>
+                  <div className='w-[40%] flex justify-between'>
+                    <div>Product Category*</div>
+                    <div>Product Url</div>
+                    <div>Product Remark</div>
+                  </div>
                 </div>
-                <div className="flex justify-center items-center w-full border-0 text-[12px] border-t-2 bg-[#f8f8f892] py-2">
-                  Notes :&nbsp;
-                  <span className='font-normal'>
-                    Uploaded images should be less than 5mb
-                  </span>
+                <div className='flex'>
+                  <div className='w-[60%] text-gray-400 border-2'>
+                    <div>Product Id: { data?.product_info?.[0]?.id }</div>
+                    <div>Name: { data?.product_info?.[0]?.name }</div>
+                    <div>SKU Id: { data?.product_info?.[0]?.sku }</div>
+                  </div>
+                  <div className='flex items-center gap-2 px-2 w-[40%] border-2'>
+                    <div className='w-[33.33%]'>
+                      <input className='rounded border-2 w-full' placeholder='Enter Product Category'/>
+                    </div>
+                    <div className='w-[33.33%]'>
+                      <input className='rounded border-2 w-full' placeholder='Product Url'/>
+                    </div>
+                    <div className='w-[33.33%]'>
+                      <input className='rounded border-2 w-full' placeholder='Product Remark'/>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -384,22 +406,16 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
             {/*footer*/}
             <div className="border-blueGray-200 flex items-center justify-center rounded-b border-t border-solid p-6">
               <button
-                className="mb-1 mr-1 px-12 rounded-lg py-2 text-sm border border-blue-400 text-blue-400 outline-none transition-all duration-150 ease-linear focus:outline-none hover:shadow-lg font-semibold"
-                type="button"
-                onClick={() => setShow(false)}>
-                Cancel
-              </button>
-              <button
                 className="mb-1 mr-1 rounded-lg bg-blue-600 px-6 py-2 text-sm text-white shadow outline-none transition-all duration-150 border ease-linear hover:shadow-lg focus:outline-none font-semibold"
                 type="button"
                 onClick={() => handleWeightFreezeSubmit()}
                 disabled={type != 'Freeze' || weightDiscrepancyData.status_id == 1}
               >
-                {type == 'Freeze' ? 'Request Weight Freeze' : 'Request in process'}
+                Submit
               </button>
             </div>
 
-          </div>
+          </div >
         </div >
       </div >
       <div className="fixed inset-0 z-40 bg-black opacity-25"></div>
