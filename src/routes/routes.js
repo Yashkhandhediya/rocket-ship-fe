@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails } from '../pages';
 import Tracking from '../pages/tracking/Tracking';
 import PrivateRoute from './private-route/PrivateRoute';
+import Billing from '../pages/billing/Billing';
 
 const routes = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const routes = createBrowserRouter([
   {
     path: '/track-order/:orderId',
     element: <PrivateRoute component={<OrderTrackDetails />} />,
+  },
+  {
+    path: '/billing',
+    element: <PrivateRoute component={<Billing />} />,
   },
   {
     path: '/tracking',

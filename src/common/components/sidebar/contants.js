@@ -95,7 +95,7 @@ export const sidebarLinks = [
   },
   {
     title: 'Billing',
-    path: '/',
+    path: '/billing',
     icon: home,
     hoverIcon: homeActive,
   },
