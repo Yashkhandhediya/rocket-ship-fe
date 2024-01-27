@@ -15,7 +15,7 @@ const SingleReturn = () => {
 
     return (
         <div className="mb-8 pt-8 md:flex">
-            <div className="form-step pl-2 pr-4 md:min-w-[158px]">
+            <div className="form-step pl-2 pr-4 md:min-w-[200px]">
                 <Stepper step={state} />
             </div>
             <div className="grow px-6 pb-4">

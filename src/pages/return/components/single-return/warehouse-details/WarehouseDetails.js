@@ -84,7 +84,7 @@ const WarehouseDetails = ({ currentStep, handleChangeStep }) => {
 
     return (
         <div>
-            <div className="mb-6 text-xl font-bold"> {'Pickup Address'} </div>
+            <div className="mb-6 text-xl font-bold"> {'Warehouse Address'} </div>
             <div className="mb-3.5 rounded-xl bg-white p-9">
                 <div className="mb-3 text-sm font-medium">
                     {'Where is the order being sent from?'}
@@ -93,8 +93,9 @@ const WarehouseDetails = ({ currentStep, handleChangeStep }) => {
                 <div className="xxl:-6/12 w-full md:w-8/12 ">
                     <Field
                         id={'searchAdress'}
-                        placeHolder={'Search your pick up address here by nickname or phone number'}
+                        placeHolder={'Search your RTO address here by nickname or phone number'}
                         value={searchAddress}
+                        inputClassNames={'h-4 focus:ring-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md bg-gray-200 text-black'}
                         onChange={(e) => setSearchAddress(e?.target?.value)}
                     />
                 </div>
