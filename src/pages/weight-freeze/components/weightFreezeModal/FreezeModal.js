@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { upload } from '../../../../common/icons';
+import { infoIcon, upload } from '../../../../common/icons';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { CustomTooltip } from '../../../../common/components';
 
 const FreezeModal = ({ setShow, data, setLoading, type }) => {
     const [weightFreezeData, setWeightFreezeData] = useState({
@@ -10,7 +11,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
         width: data.package_details.width,
         height: data.package_details.height,
         weight: data.package_details.dead_weight,
-        chargable_weight: '0',
+        chargeable_weight: '0',
         status_name: 'Request Raised',
         status_id: 2,
         product_category: '',
@@ -69,10 +70,10 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
             value: weightFreezeData.weight,
             unit: 'KG',
         }, {
-            label: 'Chargable Weight',
+            label: 'Chargeable Weight',
             name: 'chargableWeight',
             id: 'chargableWeight',
-            value: weightFreezeData.chargableWeight,
+            value: weightFreezeData.chargeable_weight,
             unit: 'KG',
         }
     ]
@@ -108,6 +109,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
     ]
 
     const handleFileChange = (e) => {
+        setLoading(true);
         const { name } = e.target;
         const file = e.target.files[0];
         if (file) {
@@ -121,17 +123,17 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
     };
 
     const handleUpload = (name, file) => {
-        setLoading(true);
         const formData = new FormData();
         formData.append('file', file);
         axios.post(`http://43.252.197.60:8050/image/upload_image?product_id=${data.id}`, { file: file }, { headers: { 'Content-Type': 'multipart/form-data' } })
             .then((response) => {
                 setWeightFreezeData({ ...weightFreezeData, images: { ...weightFreezeData.images, [name]: response.data.filepath } })
+                setLoading(false);
             }).catch((error) => {
                 toast('Something went wrong while uploading image', { type: 'error' })
                 console.log(error); //eslint-disable-line
+                setLoading(false);
             })
-        setLoading(false);
     }
 
 
@@ -143,10 +145,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
             return toast('Please upload all the images', { type: 'error' })
         }
         const headers = { 'Content-Type': 'application/json' };
-        const url = type === 'Freeze'
-            ? 'http://43.252.197.60:8050/weight_freeze/'
-            : `http://43.252.197.60:8050/weight_freeze/update?id=${data.id}`
-        axios.post(url, weightFreezeData, { headers })
+        axios.post('http://43.252.197.60:8050/weight_freeze/', weightFreezeData, { headers })
             .then((response) => {
                 if (response.status === 200) {
                     toast('Request submitted successfully', { type: 'success' })
@@ -160,9 +159,9 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
     }
 
     useEffect(() => {
-        if (weightFreezeData.length != 0 && weightFreezeData.width != 0 && weightFreezeData.height != 0 && weightFreezeData.weight != 0) {
-            const chargableWeight = Math.max(weightFreezeData.weight, ((weightFreezeData.length * weightFreezeData.width * weightFreezeData.height) / 5000));
-            setWeightFreezeData({ ...weightFreezeData, chargable_weight: chargableWeight })
+        if (weightFreezeData.length !== 0 && weightFreezeData.width !== 0 && weightFreezeData.height !== 0 && weightFreezeData.weight !== 0) {
+            const chargeableWeight = Math.max(weightFreezeData.weight, ((weightFreezeData.length * weightFreezeData.width * weightFreezeData.height) / 5000));
+            setWeightFreezeData({ ...weightFreezeData, chargeable_weight: chargeableWeight })
         }
     }, [weightFreezeData.length, weightFreezeData.width, weightFreezeData.height, weightFreezeData.weight])
     return (
@@ -223,7 +222,14 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
 
                                     {/* Product Image Section */}
                                     <div className="flex w-[45%] flex-col">
-                                        <p>Product Images </p>
+                                        <p className='flex flex-row items-center'>
+                                            <div>Product Images</div>
+                                            <CustomTooltip
+                                                style='dark'
+                                                text={'Take different pictures of your product with a ruler to show the correct length, width and height Place your product on a weighing scale to show its actual weight.'} placement='right'>
+                                                <img src={infoIcon} className="ms-2" />
+                                            </CustomTooltip>
+                                        </p>
                                         <div className="mt-2 flex flex-row gap-8 rounded-lg">
                                             {/* Image 1 */}
                                             <div className='flex h-32 flex-col w-[40%]'>
@@ -289,7 +295,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                                     </div>
                                 </div>
                                 <div className="flex justify-center items-center w-full border-0 text-[12px] border-t-2 bg-[#f8f8f892] py-2">
-                                    Notes :&nbsp;<span className='font-normal'> Uploaded images should be less than 5mb</span>
+                                    Notes :&nbsp;<span className='font-normal'> Uploaded images should be less than 5 MB</span>
                                 </div>
                             </div>
 
@@ -312,9 +318,9 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                                                         placeholder={item.name !== 'chargableWeight' ? 'Enter ' + item.label : '0'}
                                                         readOnly={item.name === 'chargableWeight'}
                                                         required={item.name !== 'chargableWeight'}
-                                                        value={item.value}
+                                                        value={item.name !== 'chargableWeight' ? (item.value === 0 ? '' : item.value) : item.value}
                                                     />
-                                                    <button className='h-8 w-1/4 rounded-r-lg text-white bg-blue-600 focus:outline-none focus:ring-0'>
+                                                    <button className='h-8 w-1/4 rounded-r-lg text-white bg-blue-600 focus:outline-none focus:ring-0' disabled>
                                                         {item.unit}
                                                     </button>
                                                 </div>
@@ -325,7 +331,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                                 <div className="flex justify-center items-center w-full border-0 text-[12px] border-t-2 bg-[#f8f8f892] py-2">
                                     Notes :&nbsp;
                                     <span className='font-normal'>
-                                        Chargable weight is the higher between entered weight and volumetric weight
+                                        The Chargeable weight is the higher weight between entered and volumetric weights
                                     </span>
                                 </div>
                             </div>
@@ -373,7 +379,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                                 <div className="flex justify-center items-center w-full border-0 text-[12px] border-t-2 bg-[#f8f8f892] py-2">
                                     Notes :&nbsp;
                                     <span className='font-normal'>
-                                        Uploaded images should be less than 5mb
+                                        Uploaded Images should be less than 5 MB
                                     </span>
                                 </div>
                             </div>
@@ -393,8 +399,8 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                                 className="mb-1 mr-1 rounded-lg bg-blue-600 px-6 py-2 text-sm text-white shadow outline-none transition-all duration-150 border ease-linear hover:shadow-lg focus:outline-none font-semibold"
                                 type="button"
                                 onClick={() => handleWeightFreezeSubmit()}
-                                disabled={type!='Freeze' || weightFreezeData.status_id == 1}
-                                >
+                                disabled={type != 'Freeze' || weightFreezeData.status_id == 1}
+                            >
                                 {type == 'Freeze' ? 'Request Weight Freeze' : 'Request in process'}
                             </button>
                         </div>
