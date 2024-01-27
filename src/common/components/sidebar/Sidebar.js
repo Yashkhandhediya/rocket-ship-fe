@@ -45,23 +45,24 @@ const Sidebar = () => {
               >
                 <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" />
                 <img src={nav.hoverIcon} className="hidden h-6 w-6 group-hover/sidebarItem:block" />
-                <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#06064d] ">
-                  {nav.title}
-                </span>
-                <div className="w-auto flex justify-end">
-                  <svg
-                    data-accordion-icon
-                    className={`w-5 h-5 truncate group-hover/sidebarItem:text-[#06064d] shrink-0 rotate-${() => handleAccordionToggle(i)} === ${i} ? '0' : '180'} transform origin-center transition-transform duration-300 ease-in-out shrink-0`}
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                  </svg>
+                <div className="ml-3 w-full flex justify-between truncate text-xs group-hover/sidebarItem:text-[#06064d] ">
+                  <span>{nav.title}</span>
+                  <span className="w-full flex justify-end">
+                    <svg
+                      data-accordion-icon
+                      className={`w-5 h-5 truncate group-hover/sidebarItem:text-[#06064d] shrink-0 rotate-${() => handleAccordionToggle(i)} === ${i} ? '0' : '180'} transform origin-center transition-transform duration-300 ease-in-out shrink-0`}
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </span>
                 </div>
+
               </div>
               <div id={'accordion-collapse-body-1'} className={`${openAccordion === i ? 'block' : 'hidden'}`} aria-labelledby={'accordion-collapse-heading-1'}>
                 <div className="ml-6 font-normal">
