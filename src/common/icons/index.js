@@ -13,3 +13,4 @@ export { default as moreAction } from './more-action.svg';
 export { default as copyToClipboard } from './copy-to-clipboard.svg';
 export { default as openBox } from './open-box.svg';
 export { default as filterIcon } from './filter.svg';
+export { default as selectPlanIcon} from './select-plan.svg';

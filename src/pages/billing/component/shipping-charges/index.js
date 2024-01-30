@@ -1,0 +1,1 @@
+export { default as ShippingCharges } from './ShippingCharges'
