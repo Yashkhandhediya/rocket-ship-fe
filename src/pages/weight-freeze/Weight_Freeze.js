@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { FreezeTable, FreezeTabs, WeightFreezeHeader } from './components';
 import { Loader } from '../../common/components';
+import { ImageModal } from './components/weightFreezeImageModal';
 
 const Weight_Freeze = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [images, setImages] = useState([]);
+  const [showImages, setShowImages] = useState(false);
   const [tabs, setTabs] = useState([
     {
       title: 'Action required',
@@ -46,6 +49,7 @@ const Weight_Freeze = () => {
   return (
     <PageWithSidebar>
       {loading && <Loader />}
+      {showImages && <ImageModal setShow={setShowImages} images={images} setImages={setImages}/>}
       <div className="h-full bg-[#f8f8f8] pl-4">
         <div className="py-4">
           {/* header-wrapper */}
@@ -57,7 +61,7 @@ const Weight_Freeze = () => {
           <FreezeTabs tabs={tabs} setTabs={setTabs} setData={setData} setLoading={setLoading} />
         </div>
         <div>
-          <FreezeTable data={data} setLoading={setLoading}/>
+          <FreezeTable data={data} setLoading={setLoading} setShowImages={setShowImages} setImages={setImages}/>
         </div>
       </div>
     </PageWithSidebar>

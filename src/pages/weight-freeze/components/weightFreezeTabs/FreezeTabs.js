@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { CustomTooltip } from '../../../../common/components';
 
 const FreezeTabs = ({ tabs, setData, setLoading, setTabs }) => { // eslint-disable-line
   const [searchParams, setSearchParams] = useSearchParams();
@@ -25,8 +26,8 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs }) => { // eslint-disab
     //API to get data
     setLoading(true);
     const url = fromDateURL && toDateURL && freezeStatus != 5 && freezeStatus != 0
-      ? `http://43.252.197.60:8050/weight_freeze/get_weight_freeze?${search!==null&&`search=${search}`}&per_page=${perPage}&page=${page}&from=${fromDateURL}&to=${toDateURL}`
-      : `http://43.252.197.60:8050/weight_freeze/get_weight_freeze?${search!==null&&`search=${search}`}&per_page=${perPage}&page=${page}`
+      ? `http://43.252.197.60:8050/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&from=${fromDateURL}&to=${toDateURL}`
+      : `http://43.252.197.60:8050/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}`
     axios.get(url, {})
       .then((response) => {
         //count items in each status
@@ -117,7 +118,7 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs }) => { // eslint-disab
   const checkDate = (fromDate, toDate) => {
     const from = new Date(fromDate);
     const to = new Date(toDate);
-    return from < to;
+    return from <= to;
   };
 
   const handleDateChange = () => {
@@ -181,8 +182,8 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs }) => { // eslint-disab
             <div
               key={item.freezeStatus}
               className={`mb-2 flex w-full flex-row items-center justify-center gap-3 rounded-lg border px-4 py-4 text-[16px] font-[400] hover:cursor-pointer hover:bg-[#e1e1e122] lg:mb-0 lg:w-auto lg:rounded-none lg:border-0 lg:border-b-8 lg:px-6 lg:py-2 ${freezeStatus == item.freezeStatus
-                  ? 'w-full border-b-8 border-[#7664e8] font-bold text-[#7664e8] lg:border-b-8'
-                  : 'font-[400] lg:border-white'
+                ? 'w-full border-b-8 border-[#7664e8] font-bold text-[#7664e8] lg:border-b-8'
+                : 'font-[400] lg:border-transparent'
                 }`}
               onClick={() => handleTabChange(item.freezeStatus)}>
               <div className={``}>{item.title}</div>
@@ -201,122 +202,126 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs }) => { // eslint-disab
 
       {/* filter section */}
       <div className="mt-4 flex flex-row gap-4 lg:flex-nowrap flex-wrap">
-        {/* Search */}
-        <div>
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
-              <svg
-                className="dark:text-gray-400 h-3 w-3 text-gray-500"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 20">
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                />
-              </svg>
+        <div className="w-3/4 flex flex-row lg:flex-nowrap flex-wrap">
+          {/* Search */}
+          <div>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
+                <svg
+                  className="dark:text-gray-400 h-3 w-3 text-gray-500"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 20">
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                  />
+                </svg>
+              </div>
+
+              <CustomTooltip text="Enter to search" placement="top" style='dark'>
+                <input
+                  type="search"
+                  id="default-search"
+                  className="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 block w-full rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                  placeholder="Name or SKU"
+                  onKeyDown={(ev) => { ev.key === 'Enter' && handleSearchInput(ev) }}
+                  required
+                /></CustomTooltip>
             </div>
-            <input
-              type="search"
-              id="default-search"
-              className="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 block w-full rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-              placeholder="Name or SKU"
-              onChange={(ev) => { handleSearchInput(ev) }}
-              required
-            />
           </div>
-        </div>
-        {/* From Date */}
-        <div>
-          <div className="group relative">
-            {!enableDate && (
-              <div
-                className="absolute bottom-full left-1/2 mb-2 hidden w-full -translate-x-1/2 transform rounded-md bg-black p-2 text-center text-sm text-white group-hover:block"
-                style={{ fontSize: '12px' }}>
-                Select any status other than “Action Required” or “Not requested” to filter by date
-                <div className="absolute left-[40%] z-[10000000] mt-2 h-2 w-2 border-8 border-b-0 border-black border-l-transparent border-r-transparent"></div>
-              </div>
-            )}
-            <input
-              type={`${enableDate ? 'date' : 'text'}`}
-              id="default-search"
-              className={`block w-[200px] rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-blue-500 focus:ring-blue-500 
+          {/* From Date */}
+          <div>
+            <div className="group relative">
+              {!enableDate && (
+                <div
+                  className="absolute bottom-full left-1/2 mb-2 hidden w-full -translate-x-1/2 transform rounded-md bg-black p-2 text-center text-sm text-white group-hover:block"
+                  style={{ fontSize: '12px' }}>
+                  Select any status other than “Action Required” or “Not requested” to filter by date
+                  <div className="absolute left-[40%] z-[10000000] mt-2 h-2 w-2 border-8 border-b-0 border-black border-l-transparent border-r-transparent"></div>
+                </div>
+              )}
+              <input
+                type={`${enableDate ? 'date' : 'text'}`}
+                id="default-search"
+                className={`block w-[200px] rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-blue-500 focus:ring-blue-500 
               ${enableDate ? '' : 'cursor-not-allowed opacity-50'}`}
-              required
-              onChange={(ev) => {
-                setFromDate(ev.target.value);
-              }}
-              value={enableDate ? fromDate : 'N/A'}
-              disabled={!enableDate}
-            />
+                required
+                onChange={(ev) => {
+                  setFromDate(ev.target.value);
+                }}
+                value={enableDate ? fromDate : 'N/A'}
+                disabled={!enableDate}
+              />
+            </div>
           </div>
-        </div>
-        {/* To date */}
-        <div>
-          <div className="group relative">
-            {!enableDate && (
-              <div
-                className="absolute bottom-full left-1/2 mb-2 hidden w-full -translate-x-1/2 transform rounded-md bg-black p-2 text-center text-sm text-white group-hover:block"
-                style={{ fontSize: '12px' }}>
-                Select any status other than “Action Required” or “Not requested” to filter by date
-                <div className="absolute left-[40%] z-[10000000] mt-2 h-2 w-2 border-8 border-b-0 border-black border-l-transparent border-r-transparent"></div>
-              </div>
-            )}
-            <input
-              type={`${enableDate ? 'date' : 'text'}`}
-              id="default-search"
-              className={`dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 block w-[200px] rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-blue-500 focus:ring-blue-500 
+          {/* To date */}
+          <div>
+            <div className="group relative">
+              {!enableDate && (
+                <div
+                  className="absolute bottom-full left-1/2 mb-2 hidden w-full -translate-x-1/2 transform rounded-md bg-black p-2 text-center text-sm text-white group-hover:block"
+                  style={{ fontSize: '12px' }}>
+                  Select any status other than “Action Required” or “Not requested” to filter by date
+                  <div className="absolute left-[40%] z-[10000000] mt-2 h-2 w-2 border-8 border-b-0 border-black border-l-transparent border-r-transparent"></div>
+                </div>
+              )}
+              <input
+                type={`${enableDate ? 'date' : 'text'}`}
+                id="default-search"
+                className={`dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 block w-[200px] rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-blue-500 focus:ring-blue-500 
               ${enableDate ? '' : 'opacity-50'}`}
-              placeholder="Channel"
-              required
-              onChange={(ev) => {
-                setToDate(ev.target.value);
-              }}
-              value={enableDate ? toDate : 'N/A'}
-              disabled={!enableDate}
-            />
+                placeholder="Channel"
+                required
+                onChange={(ev) => {
+                  setToDate(ev.target.value);
+                }}
+                value={enableDate ? toDate : 'N/A'}
+                disabled={!enableDate}
+              />
+            </div>
           </div>
-        </div>
-        {/* Apply Button */}
-        <div>
-          {/* Apply button for dates */}
-          <button
-            className={`border-1 h-[33px] w-[100px] rounded-[4px] border-[#7664e8] bg-[#7664e8] text-[12px] leading-[30px] text-white hover:bg-[#7664e8] hover:text-white ${enableDate
+          {/* Apply Button */}
+          <div>
+            {/* Apply button for dates */}
+            <button
+              className={`border-1 h-[33px] w-[100px] rounded-[4px] border-[#7664e8] bg-[#7664e8] text-[12px] leading-[30px] text-white hover:bg-[#7664e8] hover:text-white ${enableDate
                 ? ''
                 : 'cursor-not-allowed border-[#e1e1e1] bg-[#e1e1e1] hover:bg-[#e1e1e1] hover:text-black'
-              }'}}`}
-            onClick={() => {
-              handleDateChange();
-            }}
-            disabled={!enableDate}>
-            Apply
-          </button>
-        </div>
-        {/* SR suggested */}
-        {showToggleButton && (
-          <div>
-            <div className="relative flex items-center gap-3">
-              <span className="dark:text-gray-300 ms-3 text-[16px] text-gray-900">SR Suggested</span>
-              <label className="relative inline-flex cursor-pointer items-center">
-                <input
-                  type="checkbox"
-                  value=""
-                  className="peer sr-only"
-                  checked={SRSuggested}
-                  onChange={(ev) => {
-                    handleSRSuggested(ev);
-                  }}
-                />
-                <div className="peer h-6 w-11 rounded-full bg-blue-600 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-gray-200 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rtl:peer-checked:after:-translate-x-full"></div>
-              </label>
-            </div>
+                }'}}`}
+              onClick={() => {
+                handleDateChange();
+              }}
+              disabled={!enableDate}>
+              Apply
+            </button>
           </div>
-        )}
-        <div className="flex justify-end w-2/5 items-center">
+          {/* SR suggested */}
+          {showToggleButton && (
+            <div>
+              <div className="relative flex items-center gap-3">
+                <span className="dark:text-gray-300 ms-3 text-[16px] text-gray-900">SR Suggested</span>
+                <label className="relative inline-flex cursor-pointer items-center">
+                  <input
+                    type="checkbox"
+                    value=""
+                    className="peer sr-only"
+                    checked={SRSuggested}
+                    onChange={(ev) => {
+                      handleSRSuggested(ev);
+                    }}
+                  />
+                  <div className="peer h-6 w-11 rounded-full bg-blue-600 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-gray-200 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rtl:peer-checked:after:-translate-x-full"></div>
+                </label>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="flex justify-end w-1/2 items-center">
           <button className='border text-[14px] flex justify-center items-center gap-2 text-[#7664E8] hover:text-black lg:h-8 h-auto px-[5px] w-[150px] border-[#7664E8] rounded-[4px]'>
             {/* <img src={} alt="" width={'14px'} /> */}
             {/* Todo: Upload image add */}
