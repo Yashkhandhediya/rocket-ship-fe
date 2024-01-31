@@ -202,7 +202,7 @@ export const New = () => {
                   renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                   options={moreActionOptions({
                     cloneOrder: () => cloneOrder(row),
-                    cancelOrder: () => cancelOrder(row),
+                    cancelOrder: () => cancelOrder(row?.original?.id),
                   })}
                 />
               </div>
@@ -215,7 +215,7 @@ export const New = () => {
 
   function cancelOrder(orderDetails) {
     axios
-      .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}`, {
+      .put(`${BACKEND_URL}/order/?id=${orderDetails}`, {
         ...orderDetails,
         status: 'cancelled',
         status_name: 'cancelled',
@@ -229,6 +229,7 @@ export const New = () => {
       .catch(() => {
         toast('Unable to cancel Order', { type: 'error' });
       });
+      window.location.reload();
   }
 
   function cloneOrder(orderDetails) {
