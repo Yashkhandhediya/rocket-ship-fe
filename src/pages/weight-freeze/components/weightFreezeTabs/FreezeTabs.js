@@ -43,12 +43,12 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
       .then((res) => {
         console.log(res.data); //eslint-disable-line
         const newTabs = [...tabs];
-        newTabs[0].items = res.data['Action Required']||0;
-        newTabs[1].items = res.data['Request Raised']||0;
-        newTabs[2].items = res.data['Request Accepted']||0;
-        newTabs[3].items = res.data['Request Rejected']||0;
-        newTabs[4].items = res.data['Not Requested']||0;
-        newTabs[5].items = res.data['Unfreezed']||0;
+        newTabs[0].items = res.data['Action Required'] || 0;
+        newTabs[1].items = res.data['Request Raised'] || 0;
+        newTabs[2].items = res.data['Request Accepted'] || 0;
+        newTabs[3].items = res.data['Request Rejected'] || 0;
+        newTabs[4].items = res.data['Not Requested'] || 0;
+        newTabs[5].items = res.data['Unfreezed'] || 0;
         setTabs(newTabs);
       })
       .catch((err) => {
@@ -62,7 +62,7 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
     const currentSearchParams = new URLSearchParams(searchParams);
     // Update the desired parameter
     currentSearchParams.set('freeze_status', status_name);
-    currentSearchParams.set('page', page);
+    currentSearchParams.set('page', 1);
     currentSearchParams.set('per_page', perPage);
     currentSearchParams.set('from', '');
     currentSearchParams.set('to', '');
@@ -140,7 +140,10 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
                 ? 'w-full border-b-8 border-[#7664e8] font-bold text-[#7664e8] lg:border-b-8'
                 : 'font-[400] lg:border-transparent'
                 }`}
-              onClick={() => handleTabChange(item.title)}>
+              onClick={() => {
+                handleTabChange(item.title)
+                window.location.reload();
+              }}>
               <div className={``}>{item.title}</div>
               <div className="flex items-center justify-center rounded-[40px] border border-[#57B960] bg-[#EBF7E8] px-[10px] text-sm text-[#57B960]">
                 {item.items}

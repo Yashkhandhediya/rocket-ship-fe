@@ -30,6 +30,7 @@ const DiscrepancyTable = ({ data, setLoading }) => {
     axios.put(`http://43.252.197.60:8050/weight_discrepancy/update?id=${id}`, { "status_name": "Discrepancy Accepted" }, { headers: { 'Content-Type': 'application/json' } })
       .then(res => {
         toast('Discrepancy Accepted Successfully', { type: 'success' });
+        window.location.reload();
         console.log(res); // eslint-disable-line
       })
       .catch(err => {

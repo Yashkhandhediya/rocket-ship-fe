@@ -63,7 +63,7 @@ const FreezeTable = ({ data, setLoading, setShowImages, setImages }) => {
                 </div>
               </div>
               <div className="flex h-full w-1/12 items-center border-r-2">
-                {freezeStatus == '0' ? '' : (
+                {freezeStatus == 'Not Requested' ? '' : (
                   <div className='flex flex-row w-full justify-center items-baseline'>
                     {/* <img src={`http://43.252.197.60:8050/image/get_image?file_path=${item.images[0]}`} alt="" className='w-[45%] mx-2 border border-black border-dashed' />
                     <img src={`http://43.252.197.60:8050/image/get_image?file_path=${item.images[1]}`} alt="" className='w-[45%] mx-2 border border-black border-dashed' /> */}
@@ -78,21 +78,21 @@ const FreezeTable = ({ data, setLoading, setShowImages, setImages }) => {
                 )}
               </div>
               <div className="flex h-full w-2/12 items-center justify-center border-r-2">
-                {freezeStatus == '0' && ('Not Requested')}
-                {freezeStatus == '1' && (<span className='w-[90%] bg-green-200 text-green-700 text-center py-1 rounded-sm text-[12px]'>Accepted</span>)}
-                {freezeStatus == '2' && (<span className='w-[90%] bg-red-200 text-red-700 text-center py-1 rounded-sm text-[12px]'>Requested</span>)}
+                {freezeStatus == 'Not Requested' && ('Not Requested')}
+                {freezeStatus == 'Request Accepted' && (<span className='w-[90%] bg-green-200 text-green-700 text-center py-1 rounded-sm text-[12px]'>Accepted</span>)}
+                {freezeStatus == 'Request Raised' && (<span className='w-[90%] bg-red-200 text-red-700 text-center py-1 rounded-sm text-[12px]'>Requested</span>)}
               </div>
               <div className="flex flex-col gap-2 h-full w-[14%] justify-center items-center border-r-2">
-                <button className={`rounded-sm border px-4 py-2 ${freezeStatus == 0 ? 'bg-white text-blue-500 border-blue-500' : 'bg-gray-200 text-gray-500 border-blue-400 cursor-not-allowed'}`}
+                <button className={`rounded-sm border px-4 py-2 ${freezeStatus == 'Not Requested' ? 'bg-white text-blue-500 border-blue-500' : 'bg-gray-200 text-gray-500 border-blue-400 cursor-not-allowed'}`}
                   onClick={() => {
                     setSelectedIndex(key);
                     setShow(true);
                   }}
-                  disabled={freezeStatus == 0 ? false : true}
+                  disabled={freezeStatus == 'Not Requested' ? false : true}
                 >
                   {'Request Weight Freeze'}
                 </button>
-                {freezeStatus != 0 &&
+                {freezeStatus != 'Not Requested' &&
                   <span className='text-[10px]'>
                     View more info
                   </span>
@@ -109,7 +109,7 @@ const FreezeTable = ({ data, setLoading, setShowImages, setImages }) => {
         )}
       </div>
       {/* Modal for Weight Free */}
-      {show && selectedIndex !== null && <FreezeModal show={show} setShow={setShow} data={data[selectedIndex]} setLoading={setLoading} type={freezeStatus == 0 ? 'Freeze' : 'Edit'} />}
+      {show && selectedIndex !== null && <FreezeModal show={show} setShow={setShow} data={data[selectedIndex]} setLoading={setLoading} type={freezeStatus == 'Not Requested' ? 'Freeze' : 'Edit'} />}
     </div>
   );
 };

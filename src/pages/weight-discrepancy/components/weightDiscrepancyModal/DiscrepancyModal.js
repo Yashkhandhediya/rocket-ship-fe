@@ -295,10 +295,10 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                   <div className='flex items-center gap-2 px-2 w-[40%] border-2'>
                     <div className='w-[33.33%]'>
                       <input className='rounded border-2 w-full' placeholder='Enter Product Category'
-                        // onChange={(e) => {
-                        //   setWeightDiscrepancyData({ ...weightDiscrepancyData, category: e.target.value })
-                        // }} 
-                        value={data.product_info[0].category}/>
+                        onChange={(e) => {
+                          setWeightDiscrepancyData({ ...weightDiscrepancyData, category: e.target.value })
+                        }}
+                        value={weightDiscrepancyData.category} />
                     </div>
                     <div className='w-[33.33%]'>
                       <input className='rounded border-2 w-full' placeholder='Product Url' />
@@ -318,7 +318,10 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
               <button
                 className="mb-1 mr-1 rounded-lg bg-blue-600 px-6 py-2 text-sm text-white shadow outline-none transition-all duration-150 border ease-linear hover:shadow-lg focus:outline-none font-semibold"
                 type="button"
-                onClick={() => handleWeightFreezeSubmit()}
+                onClick={() => {
+                  handleWeightFreezeSubmit()
+                  window.location.reload()
+                }}
               >
                 Submit
               </button>
