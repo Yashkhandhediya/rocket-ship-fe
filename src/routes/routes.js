@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails, Return, Weight_Freeze } from '../pages';
+import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails, Return, Weight_Freeze, WeightDiscrepancy } from '../pages';
 import Tracking from '../pages/tracking/Tracking';
 import PrivateRoute from './private-route/PrivateRoute';
 import { SellerKYC } from '../pages/kyc';
@@ -43,16 +43,15 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<Returns />} />,
   },
   {
+    path: '/billing-charge-details',
+    element: <PrivateRoute component={<WeightDiscrepancy />} />,
+
     path: '/seller/kyc',
     element: <PrivateRoute component={<SellerKYC />} />,
   },
   {
     path: '/request-weight-freeze',
     element: <PrivateRoute component={<Weight_Freeze />} />,
-  },
-  {
-    path: '/billing-charge-details',
-    element: <PrivateRoute component={<SellerKYC />} />,
   },
 ]);
 

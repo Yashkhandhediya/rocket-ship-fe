@@ -69,6 +69,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     let resp = await axios.post(BACKEND_URL+'/order', {
       ...domesticOrderFormValues,
       ...formDirectField,
+      order_type: 'domestic',
       date: date,
       order_type: "domestic"
     });
