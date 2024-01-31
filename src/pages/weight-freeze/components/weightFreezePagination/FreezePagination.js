@@ -10,7 +10,7 @@ const FreezePagination = ({ page, perPage, handlePerPageChange, handlePageChange
     } else {
       setPreviosEnabled(true);
     }
-    if (page >= Math.ceil(totalData.length / perPage)) {
+    if (page >= Math.ceil(totalData / perPage)) {
       setNextEnabled(false);
     } else {
       setNextEnabled(true);
@@ -57,7 +57,7 @@ const FreezePagination = ({ page, perPage, handlePerPageChange, handlePageChange
           onClick={() => {
             handleNext();
           }}>{'Next>>'}</button>
-        <div className='text-[12px] text-[#707070] pl-12'>1-{data.length} of {totalData.length}</div>
+        <div className='text-[12px] text-[#707070] pl-12'>1-{data.length} of {totalData}</div>
       </div>
 
       <div className='flex items-center w-1/3'>

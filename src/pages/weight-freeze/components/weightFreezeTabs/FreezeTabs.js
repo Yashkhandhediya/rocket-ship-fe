@@ -29,7 +29,8 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
     axios.get(url, {})
       .then((response) => {
         //count items in each status
-        const count = response.data.reduce((acc, item) => {
+        console.log(response.data); //eslint-disable-line
+        const count = response.data.data.reduce((acc, item) => {
           if (item.status_id == 1) {
             acc.accepted++;
           }
@@ -80,7 +81,7 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
           return item;
         });
 
-        const filteredData = response.data.filter((item) => {
+        const filteredData = response.data.data.filter((item) => {
           if (item[param_name] == null) {
             item[param_name] = 0;
           }
@@ -89,20 +90,13 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
           }
         });
         setData(filteredData);
+        setTotalData(response.data.total_rows);
         setLoading(false);
       })
       .catch((error) => {
         console.log(error); //eslint-disable-line
         setLoading(false);
       })
-
-    //API to get total data
-    axios.get('http://43.252.197.60:8050/weight_freeze/get_weight_freeze?per_page=100',{})
-    .then((response) => {
-      setTotalData(response.data);
-    }).catch((error) => {
-      console.log(error); //eslint-disable-line
-    })
   };
 
   //get freeze_status from url

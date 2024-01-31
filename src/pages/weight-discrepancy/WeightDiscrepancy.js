@@ -32,7 +32,7 @@ const WeightDiscrepancy = () => {
       .get(BACKEND_URL + '/weight_discrepancy/get_weight_discrepancy')
       .then(async (resp) => {
         if (resp.status === 200) {
-          dispatch(setAllWeightDiscrepancies(resp?.data || []));
+          dispatch(setAllWeightDiscrepancies(resp?.data.data || []));
           setIsLoading(false);
         } else {
           toast('There is some error while fetching weight discrepancies.', { type: 'error' });
