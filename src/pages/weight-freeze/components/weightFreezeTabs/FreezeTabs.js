@@ -14,82 +14,22 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
   const [showToggleButton, setShowToggleButton] = useState(false);
   const [SRSuggested, setSRSuggested] = useState(true);
 
-  const freezeStatus = parseInt(searchParams.get('freeze_status'), 10);
+  const freezeStatus = searchParams.get('freeze_status');
   const fromDateURL = searchParams.get('from');
   const toDateURL = searchParams.get('to') || null;
   const search = searchParams.get('search');
 
-  const dataGet = (param_name, param_value) => { //eslint-disable-line
+  const dataGet = () => { //eslint-disable-line
     setData([]);
     //API to get data
     setLoading(true);
     const url = fromDateURL && toDateURL && freezeStatus != 5 && freezeStatus != 0
-      ? `http://43.252.197.60:8050/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&from=${fromDateURL}&to=${toDateURL}`
-      : `http://43.252.197.60:8050/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}`
+      ? `http://43.252.197.60:8050/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&from=${fromDateURL}&to=${toDateURL}&status_name=${freezeStatus}`
+      : `http://43.252.197.60:8050/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&status_name=${freezeStatus}`
     axios.get(url, {})
       .then((response) => {
-        //count items in each status
-        console.log(response.data); //eslint-disable-line
-        const count = response.data.data.reduce((acc, item) => {
-          if (item.status_id == 1) {
-            acc.accepted++;
-          }
-          if (item.status_id == 2) {
-            acc.requested++;
-          }
-          if (item.status_id == 3) {
-            acc.rejected++;
-          }
-          if (item.status_id == 4) {
-            acc.unfreezed++;
-          }
-          if (item.status_id == 5) {
-            acc.action_required++;
-          }
-          if (item.status_id == 0 || item.status_id == null) {
-            acc.not_requested++;
-          }
-          return acc;
-        }, {
-          accepted: 0,
-          requested: 0,
-          rejected: 0,
-          unfreezed: 0,
-          action_required: 0,
-          not_requested: 0,
-        });
-        //update the count in tabs using setTabs
-        tabs.map((item) => {
-          if (item.freezeStatus == 1) {
-            item.items = count.accepted;
-          }
-          if (item.freezeStatus == 2) {
-            item.items = count.requested;
-          }
-          if (item.freezeStatus == 3) {
-            item.items = count.rejected;
-          }
-          if (item.freezeStatus == 4) {
-            item.items = count.unfreezed;
-          }
-          if (item.freezeStatus == 5) {
-            item.items = count.action_required;
-          }
-          if (item.freezeStatus == 0 || item.freezeStatus == null) {
-            item.items = count.not_requested;
-          }
-          return item;
-        });
-
-        const filteredData = response.data.data.filter((item) => {
-          if (item[param_name] == null) {
-            item[param_name] = 0;
-          }
-          if (item[param_name] == param_value) {
-            return item;
-          }
-        });
-        setData(filteredData);
+        console.log("asdkjfhsdkjfgbdasfjhyg",response.data); //eslint-disable-line
+        setData(response.data.data);
         setTotalData(response.data.total_rows);
         setLoading(false);
       })
@@ -97,22 +37,37 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
         console.log(error); //eslint-disable-line
         setLoading(false);
       })
+
+    //get status count
+    axios.get('http://43.252.197.60:8050/weight_freeze/get_status_counts', {})
+      .then((res) => {
+        console.log(res.data); //eslint-disable-line
+        const newTabs = [...tabs];
+        newTabs[0].items = res.data['Action Required']||0;
+        newTabs[1].items = res.data['Request Raised']||0;
+        newTabs[2].items = res.data['Request Accepted']||0;
+        newTabs[3].items = res.data['Request Rejected']||0;
+        newTabs[4].items = res.data['Not Requested']||0;
+        newTabs[5].items = res.data['Unfreezed']||0;
+        setTabs(newTabs);
+      })
+      .catch((err) => {
+        console.log(err); //eslint-disable-line
+      })
   };
 
   //get freeze_status from url
-  const handleTabChange = (freezeStatus) => {
+  const handleTabChange = (status_name) => {
     setData([]);
     const currentSearchParams = new URLSearchParams(searchParams);
     // Update the desired parameter
-    currentSearchParams.set('freeze_status', freezeStatus);
+    currentSearchParams.set('freeze_status', status_name);
     currentSearchParams.set('page', page);
     currentSearchParams.set('per_page', perPage);
     currentSearchParams.set('from', '');
     currentSearchParams.set('to', '');
     // Update the search params
     setSearchParams(currentSearchParams);
-    //filter the data on the basis of freeze_status
-    dataGet('status_id', freezeStatus);
   };
 
   const checkDate = (fromDate, toDate) => {
@@ -170,7 +125,7 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
   }, [freezeStatus]);
 
   useEffect(() => {
-    dataGet('status_id', freezeStatus);
+    dataGet();
   }, [searchParams]);
 
 
@@ -181,11 +136,11 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
           return (
             <div
               key={item.freezeStatus}
-              className={`mb-2 flex w-full flex-row items-center justify-center gap-3 rounded-lg border px-4 py-4 text-[16px] font-[400] hover:cursor-pointer hover:bg-[#e1e1e122] lg:mb-0 lg:w-auto lg:rounded-none lg:border-0 lg:border-b-8 lg:px-6 lg:py-2 ${freezeStatus == item.freezeStatus
+              className={`mb-2 flex w-full flex-row items-center justify-center gap-3 rounded-lg border px-4 py-4 text-[16px] font-[400] hover:cursor-pointer hover:bg-[#e1e1e122] lg:mb-0 lg:w-auto lg:rounded-none lg:border-0 lg:border-b-8 lg:px-6 lg:py-2 ${freezeStatus == item.title
                 ? 'w-full border-b-8 border-[#7664e8] font-bold text-[#7664e8] lg:border-b-8'
                 : 'font-[400] lg:border-transparent'
                 }`}
-              onClick={() => handleTabChange(item.freezeStatus)}>
+              onClick={() => handleTabChange(item.title)}>
               <div className={``}>{item.title}</div>
               <div className="flex items-center justify-center rounded-[40px] border border-[#57B960] bg-[#EBF7E8] px-[10px] text-sm text-[#57B960]">
                 {item.items}

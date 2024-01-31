@@ -43,7 +43,7 @@ export const sidebarLinks = [
       },
       {
         title: 'Weight Freeze',
-        path: '/request-weight-freeze?freeze_status=0&serach=&per_page=&page=1&from=&to=&channel_code=',
+        path: '/request-weight-freeze?freeze_status=Not%20Requested&serach=&per_page=&page=1&from=&to=&channel_code=',
       },
     ],
   },

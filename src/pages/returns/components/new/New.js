@@ -52,8 +52,8 @@ export const New = () => {
               <div className="text-[11px]">{formattedDate}</div>
               <div>{(row?.original?.channel || '')?.toUpperCase()}</div>
               <div>
-                <CustomTooltip
-                  text={[row?.original?.product_infom, row?.original?.product_info].map((product, i) => {
+              <CustomTooltip
+                  text={row?.original?.product_info.map((product, i) => {
                     return (
                       <Fragment key={`${product?.id}-${i}`}>
                         {i !== 0 && <div className="my-2 h-[1px] w-full bg-gray-500" />}

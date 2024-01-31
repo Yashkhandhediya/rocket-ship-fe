@@ -2,113 +2,26 @@ import { useEffect, useState } from 'react';
 // import { upload } from '../../../../common/icons';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { freezeGuide } from '../../../../common/images';
 
 const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
   const [weightDiscrepancyData, setWeightDiscrepancyData] = useState({
-    product_id: data.id,
-    length: data.length,
-    width: data.width,
-    height: data.height,
-    weight: data.dead_weight,
-    chargable_weight: '0',
-    status_name: 'Request Raised',
-    status_id: 2,
-    product_category: '',
-    images: {
-      img_1: null,
-      img_2: null,
-      length_img: null,
-      width_img: null,
-      height_img: null,
-      weight_img: null
-    }
-  })
-
-  const [images, setImages] = useState({
-    img_1: null,
-    img_2: null,
-    img_3: null,
-    img_4: null,
-    img_5: null,
+    product_id: data.product_info[0].id,
+    category: data.product_info[0].category,
     length_img: null,
     width_img: null,
     height_img: null,
     weight_img: null,
-    label_img: null,
+    with_label_img: null,
+  })
+
+  const [images, setImages] = useState({
+    length_img: null,
+    width_img: null,
+    height_img: null,
+    weight_img: null,
+    with_label_img: null,
   });
-
-  // const [packageDetails, setPackageDetails] = useState({
-  //     length: data.package_details.length,
-  //     width: data.package_details.width,
-  //     height: data.package_details.height,
-  //     weight: data.package_details.dead_weight,
-  //     chargableWeight: '0',
-  // })
-
-  const packageData = [
-    {
-      label: 'Length',
-      name: 'length',
-      id: 'length',
-      value: weightDiscrepancyData.length,
-      unit: 'CM',
-    },
-    {
-      label: 'Width',
-      name: 'width',
-      id: 'width',
-      value: weightDiscrepancyData.width,
-      unit: 'CM',
-    }, {
-      label: 'Height',
-      name: 'height',
-      id: 'height',
-      value: weightDiscrepancyData.height,
-      unit: 'CM',
-    }, {
-      label: 'Weight',
-      name: 'weight',
-      id: 'weight',
-      value: weightDiscrepancyData.weight,
-      unit: 'KG',
-    }, {
-      label: 'Chargable Weight',
-      name: 'chargableWeight',
-      id: 'chargableWeight',
-      value: weightDiscrepancyData.chargableWeight,
-      unit: 'KG',
-    }
-  ]
-
-  const packageImagesData = [
-    {
-      label: 'Length',
-      name: 'length_img',
-      id: 'length_image',
-      value: images.length_img,
-    },
-    {
-      label: 'Width',
-      name: 'width_img',
-      id: 'width_image',
-      value: images.width_img,
-    }, {
-      label: 'Height',
-      name: 'height_img',
-      id: 'height_image',
-      value: images.height_img,
-    }, {
-      label: 'Weight',
-      name: 'weight_img',
-      id: 'weight_image',
-      value: images.weight_img,
-    }, {
-      label: 'with Label',
-      name: 'label',
-      id: 'label_image',
-      value: images.label,
-    }
-  ]
 
   const handleFileChange = (e) => {
     const { name } = e.target;
@@ -129,7 +42,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
     formData.append('file', file);
     axios.post(`http://43.252.197.60:8050/image/upload_image?product_id=${data.id}`, { file: file }, { headers: { 'Content-Type': 'multipart/form-data' } })
       .then((response) => {
-        setWeightDiscrepancyData({ ...weightDiscrepancyData, images: { ...weightDiscrepancyData.images, [name]: response.data.filepath } })
+        setWeightDiscrepancyData({ ...weightDiscrepancyData, [name]: response.data.filepath })
       }).catch((error) => {
         toast('Something went wrong while uploading image', { type: 'error' })
         console.log(error); //eslint-disable-line
@@ -139,17 +52,15 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
 
 
   const handleWeightFreezeSubmit = () => {
-    if (weightDiscrepancyData.product_category === '' || weightDiscrepancyData.width === 0 || weightDiscrepancyData.height === 0 || weightDiscrepancyData.length === 0 || weightDiscrepancyData.dead_weight === 0) {
-      return toast('Please fill all the details', { type: 'error' })
-    }
-    if (weightDiscrepancyData.images.img_1 === null || weightDiscrepancyData.images.img_2 === null || weightDiscrepancyData.images.length_img === null || weightDiscrepancyData.images.width_img === null || weightDiscrepancyData.images.height_img === null || weightDiscrepancyData.images.weight_img === null) {
+    if (weightDiscrepancyData.length_img === null || weightDiscrepancyData.width_img === null || weightDiscrepancyData.height_img === null || weightDiscrepancyData.weight_img === null || weightDiscrepancyData.with_label_img === null) {
       return toast('Please upload all the images', { type: 'error' })
     }
+    if (weightDiscrepancyData.category === '') {
+      return toast('Please enter product category', { type: 'error' })
+    }
     const headers = { 'Content-Type': 'application/json' };
-    const url = type === 'Freeze'
-      ? 'http://43.252.197.60:8050/weight_freeze/'
-      : `http://43.252.197.60:8050/weight_freeze/update?id=${data.id}`
-    axios.post(url, weightDiscrepancyData, { headers })
+    const url = `http://43.252.197.60:8050/weight_discrepancy/dispute?id=${data.id}`
+    axios.put(url, weightDiscrepancyData, { headers })
       .then((response) => {
         if (response.status === 200) {
           toast('Request submitted successfully', { type: 'success' })
@@ -160,14 +71,10 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
         setShow(false);
         console.log(error); //eslint-disable-line
       })
+
+    console.log(weightDiscrepancyData); //eslint-disable-line
   }
 
-  useEffect(() => {
-    if (weightDiscrepancyData.length != 0 && weightDiscrepancyData.width != 0 && weightDiscrepancyData.height != 0 && weightDiscrepancyData.weight != 0) {
-      const chargableWeight = Math.max(weightDiscrepancyData.weight, ((weightDiscrepancyData.length * weightDiscrepancyData.width * weightDiscrepancyData.height) / 5000));
-      setWeightDiscrepancyData({ ...weightDiscrepancyData, chargable_weight: chargableWeight })
-    }
-  }, [weightDiscrepancyData.length, weightDiscrepancyData.width, weightDiscrepancyData.height, weightDiscrepancyData.weight])
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
@@ -189,8 +96,6 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
             </div>
             {/*body*/}
             <div className="relative flex-auto p-6">
-            {console.log(data)}
-
               <p className="text-lg font-semibold">Upload Shipment Images</p>
               <div className="m-1 flex flex-col rounded-md border border-gray-200">
                 {/* Product Information */}
@@ -203,28 +108,28 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                       {/* Image 1 */}
                       <div className='flex h-32 flex-col w-[28%]'>
                         <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
-                          <label htmlFor="img_1" className="w-full">
+                          <label htmlFor="length_img" className="w-full">
                             <div className="flex cursor-pointer flex-col items-center justify-center">
-                              {images.img_1 ? (
+                              {images.length_img ? (
                                 <div className='flex justify-center w-[90%] h-[90%]'>
-                                  <img src={images.img_1} alt="" className='object-fill h-28' />
+                                  <img src={images.length_img} alt="" className='object-fill h-28' />
                                 </div>
                               ) : (
                                 <>
                                   {/* <img src={upload} alt="" /> */}
-                                  <p>Upload Image</p>
-                                  <input type="file" className="hidden" name="img_1" accept=".jpg,.png,.gif,.jpeg" id="img_1" onChange={handleFileChange}
+                                  <p>Upload Length Image</p>
+                                  <input type="file" className="hidden" name="length_img" accept=".jpg,.png,.gif,.jpeg" id="length_img" onChange={handleFileChange}
                                   />
                                 </>
                               )}
                             </div>
                           </label>
                         </div>
-                        {images.img_1 && (
+                        {images.length_img && (
                           <button className='border border-blue-400 text-blue-400 mt-2 py-1 rounded-md hover:bg-blue-600 hover:text-white'>
-                            <label htmlFor="img_1">
+                            <label htmlFor="length_img">
                               Change image
-                              <input type="file" className="hidden" name="img_1" accept=".jpg,.png,.gif,.jpeg" id="img_1" onChange={handleFileChange}
+                              <input type="file" className="hidden" name="length_img" accept=".jpg,.png,.gif,.jpeg" id="length_img" onChange={handleFileChange}
                               />
                             </label>
                           </button>
@@ -233,28 +138,28 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                       {/* Image 2 */}
                       <div className='flex h-32 flex-col w-[28%]'>
                         <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
-                          <label htmlFor="img_2" className="w-full">
+                          <label htmlFor="width_img" className="w-full">
                             <div className="flex cursor-pointer flex-col items-center justify-center">
-                              {images.img_2 ? (
+                              {images.width_img ? (
                                 <div className='flex justify-center w-[90%] h-[90%]'>
-                                  <img src={images.img_2} alt="" className='object-fill h-28' />
+                                  <img src={images.width_img} alt="" className='object-fill h-28' />
                                 </div>
                               ) : (
                                 <>
                                   {/* <img src={upload} alt="" /> */}
-                                  <p>Upload Image</p>
-                                  <input type="file" className="hidden" name="img_2" accept=".jpg,.png,.gif,.jpeg" id="img_2" onChange={handleFileChange}
+                                  <p>Upload Width Image</p>
+                                  <input type="file" className="hidden" name="width_img" accept=".jpg,.png,.gif,.jpeg" id="width_img" onChange={handleFileChange}
                                   />
                                 </>
                               )}
                             </div>
                           </label>
                         </div>
-                        {images.img_2 && (
+                        {images.width_img && (
                           <button className='border border-blue-400 text-blue-400 mt-2 py-1 rounded-md hover:bg-blue-600 hover:text-white'>
-                            <label htmlFor="img_2">
+                            <label htmlFor="width_img">
                               Change image
-                              <input type="file" className="hidden" name="img_2" accept=".jpg,.png,.gif,.jpeg" id="img_2" onChange={handleFileChange}
+                              <input type="file" className="hidden" name="width_img" accept=".jpg,.png,.gif,.jpeg" id="width_img" onChange={handleFileChange}
                               />
                             </label>
                           </button>
@@ -263,28 +168,28 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                       {/* Image 3 */}
                       <div className='flex h-32 flex-col w-[28%]'>
                         <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
-                          <label htmlFor="img_3" className="w-full">
+                          <label htmlFor="height_img" className="w-full">
                             <div className="flex cursor-pointer flex-col items-center justify-center">
-                              {images.img_3 ? (
+                              {images.height_img ? (
                                 <div className='flex justify-center w-[90%] h-[90%]'>
-                                  <img src={images.img_3} alt="" className='object-fill h-28' />
+                                  <img src={images.height_img} alt="" className='object-fill h-28' />
                                 </div>
                               ) : (
                                 <>
                                   {/* <img src={upload} alt="" /> */}
-                                  <p>Upload Image</p>
-                                  <input type="file" className="hidden" name="img_3" accept=".jpg,.png,.gif,.jpeg" id="img_3" onChange={handleFileChange}
+                                  <p>Upload Height Image</p>
+                                  <input type="file" className="hidden" name="height_img" accept=".jpg,.png,.gif,.jpeg" id="height_img" onChange={handleFileChange}
                                   />
                                 </>
                               )}
                             </div>
                           </label>
                         </div>
-                        {images.img_3 && (
+                        {images.height_img && (
                           <button className='border border-blue-400 text-blue-400 mt-2 py-1 rounded-md hover:bg-blue-600 hover:text-white'>
-                            <label htmlFor="img_3">
+                            <label htmlFor="height_img">
                               Change image
-                              <input type="file" className="hidden" name="img_3" accept=".jpg,.png,.gif,.jpeg" id="img_3" onChange={handleFileChange}
+                              <input type="file" className="hidden" name="height_img" accept=".jpg,.png,.gif,.jpeg" id="height_img" onChange={handleFileChange}
                               />
                             </label>
                           </button>
@@ -294,28 +199,28 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                       {/* Image 4 */}
                       <div className='flex h-32 flex-col w-[28%]'>
                         <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
-                          <label htmlFor="img_4" className="w-full">
+                          <label htmlFor="weight_img" className="w-full">
                             <div className="flex cursor-pointer flex-col items-center justify-center">
-                              {images.img_4 ? (
+                              {images.weight_img ? (
                                 <div className='flex justify-center w-[90%] h-[90%]'>
-                                  <img src={images.img_4} alt="" className='object-fill h-28' />
+                                  <img src={images.weight_img} alt="" className='object-fill h-28' />
                                 </div>
                               ) : (
                                 <>
                                   {/* <img src={upload} alt="" /> */}
-                                  <p>Upload Image</p>
-                                  <input type="file" className="hidden" name="img_4" accept=".jpg,.png,.gif,.jpeg" id="img_4" onChange={handleFileChange}
+                                  <p>Upload Weight Image</p>
+                                  <input type="file" className="hidden" name="weight_img" accept=".jpg,.png,.gif,.jpeg" id="weight_img" onChange={handleFileChange}
                                   />
                                 </>
                               )}
                             </div>
                           </label>
                         </div>
-                        {images.img_4 && (
+                        {images.weight_img && (
                           <button className='border border-blue-400 text-blue-400 mt-2 py-1 rounded-md hover:bg-blue-600 hover:text-white'>
-                            <label htmlFor="img_4">
+                            <label htmlFor="weight_img">
                               Change image
-                              <input type="file" className="hidden" name="img_4" accept=".jpg,.png,.gif,.jpeg" id="img_4" onChange={handleFileChange}
+                              <input type="file" className="hidden" name="weight_img" accept=".jpg,.png,.gif,.jpeg" id="weight_img" onChange={handleFileChange}
                               />
                             </label>
                           </button>
@@ -325,28 +230,28 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                       {/* Image 5 */}
                       <div className='flex h-32 flex-col w-[28%]'>
                         <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
-                          <label htmlFor="img_5" className="w-full">
+                          <label htmlFor="with_label_img" className="w-full">
                             <div className="flex cursor-pointer flex-col items-center justify-center">
-                              {images.img_5 ? (
+                              {images.with_label_img ? (
                                 <div className='flex justify-center w-[90%] h-[90%]'>
-                                  <img src={images.img_5} alt="" className='object-fill h-28' />
+                                  <img src={images.with_label_img} alt="" className='object-fill h-28' />
                                 </div>
                               ) : (
                                 <>
                                   {/* <img src={upload} alt="" /> */}
-                                  <p>Upload Image</p>
-                                  <input type="file" className="hidden" name="img_5" accept=".jpg,.png,.gif,.jpeg" id="img_5" onChange={handleFileChange}
+                                  <p>Upload Label Image</p>
+                                  <input type="file" className="hidden" name="with_label_img" accept=".jpg,.png,.gif,.jpeg" id="with_label_img" onChange={handleFileChange}
                                   />
                                 </>
                               )}
                             </div>
                           </label>
                         </div>
-                        {images.img_5 && (
+                        {images.with_label_img && (
                           <button className='border border-blue-400 text-blue-400 mt-2 py-1 rounded-md hover:bg-blue-600 hover:text-white'>
-                            <label htmlFor="img_5">
+                            <label htmlFor="with_label_img">
                               Change image
-                              <input type="file" className="hidden" name="img_5" accept=".jpg,.png,.gif,.jpeg" id="img_5" onChange={handleFileChange}
+                              <input type="file" className="hidden" name="with_label_img" accept=".jpg,.png,.gif,.jpeg" id="with_label_img" onChange={handleFileChange}
                               />
                             </label>
                           </button>
@@ -355,11 +260,11 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                     </div>
                   </div>
                   <div className='flex w-[40%]'>
-                    <img className='bg-gray-400 rounded' style={{ backgroundColor: 'grey', width: '100%', height: '1005' }} />
+                    <img src={freezeGuide} className='bg-gray-400 rounded' style={{ backgroundColor: 'grey', width: '100%' }} />
                   </div>
                 </div>
                 <div className="flex justify-center items-center w-full border-0 text-[12px] border-t-2 bg-[#f8f8f892] py-2">
-                  Notes :&nbsp;<span className='font-normal'> Uploaded images should be less than 5mb</span>
+                  Note :&nbsp;<span className='font-normal'> Uploaded images should be less than 5 MB</span>
                 </div>
               </div>
 
@@ -375,7 +280,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                   <div className='w-[60%]'>
                     <div>Product</div>
                   </div>
-                  <div className='w-[40%] flex justify-between'>
+                  <div className='w-[40%] pl-4 flex gap-8'>
                     <div>Product Category*</div>
                     <div>Product Url</div>
                     <div>Product Remark</div>
@@ -383,19 +288,23 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                 </div>
                 <div className='flex'>
                   <div className='w-[60%] text-gray-400 border-2'>
-                    <div>Product Id: { data?.product_info?.[0]?.id }</div>
-                    <div>Name: { data?.product_info?.[0]?.name }</div>
-                    <div>SKU Id: { data?.product_info?.[0]?.sku }</div>
+                    <div>Product Id: {data?.product_info?.[0]?.id}</div>
+                    <div>Name: {data?.product_info?.[0]?.name}</div>
+                    <div>SKU Id: {data?.product_info?.[0]?.sku}</div>
                   </div>
                   <div className='flex items-center gap-2 px-2 w-[40%] border-2'>
                     <div className='w-[33.33%]'>
-                      <input className='rounded border-2 w-full' placeholder='Enter Product Category'/>
+                      <input className='rounded border-2 w-full' placeholder='Enter Product Category'
+                        // onChange={(e) => {
+                        //   setWeightDiscrepancyData({ ...weightDiscrepancyData, category: e.target.value })
+                        // }} 
+                        value={data.product_info[0].category}/>
                     </div>
                     <div className='w-[33.33%]'>
-                      <input className='rounded border-2 w-full' placeholder='Product Url'/>
+                      <input className='rounded border-2 w-full' placeholder='Product Url' />
                     </div>
                     <div className='w-[33.33%]'>
-                      <input className='rounded border-2 w-full' placeholder='Product Remark'/>
+                      <input className='rounded border-2 w-full' placeholder='Product Remark' />
                     </div>
                   </div>
                 </div>
@@ -410,7 +319,6 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                 className="mb-1 mr-1 rounded-lg bg-blue-600 px-6 py-2 text-sm text-white shadow outline-none transition-all duration-150 border ease-linear hover:shadow-lg focus:outline-none font-semibold"
                 type="button"
                 onClick={() => handleWeightFreezeSubmit()}
-                disabled={type != 'Freeze' || weightDiscrepancyData.status_id == 1}
               >
                 Submit
               </button>

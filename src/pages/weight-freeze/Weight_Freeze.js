@@ -27,7 +27,7 @@ const Weight_Freeze = () => {
       items: 0
     },
     {
-      title: 'Request Aceepted',
+      title: 'Request Accepted',
       freezeStatus: 1,
       items: 0
     },
@@ -59,6 +59,7 @@ const Weight_Freeze = () => {
     const currentSearchParams = new URLSearchParams(searchParams);
     setPerPage(perPage);
     currentSearchParams.set('per_page', perPage);
+    console.log(currentSearchParams.toString());
     setSearchParams(currentSearchParams);
   }
 
@@ -85,7 +86,7 @@ const Weight_Freeze = () => {
         </div>
         {data.length &&
           <div>
-            <FreezePagination page={page} totalData={totalData} perPage={per_page} data={data} handlePageChange={handlePageChange} handlePerPageChange={handlePerPageChange} />
+            <FreezePagination page={page} totalData={totalData} setPage={setPage} perPage={per_page} data={data} handlePageChange={handlePageChange} handlePerPageChange={handlePerPageChange} />
           </div>
           }
       </div>

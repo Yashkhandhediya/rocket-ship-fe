@@ -23,11 +23,11 @@ const DiscrepancyTable = ({ data, setLoading }) => {
     const remainingHours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const remainingMinutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
     const remainingSeconds = Math.floor((timeDifference % (1000 * 60)) / 1000);// eslint-disable-line
-    return `${remainingDays} days ${remainingHours} hours ${remainingMinutes} minutes remaining`
+    return remainingDays;
   }
 
   const updateStatus = (id) => {
-    axios.put(`http://43.252.197.60:8050/weight_discrepancy/update?id=${id}`, { "status_name": "Discrepancy Accepted" })
+    axios.put(`http://43.252.197.60:8050/weight_discrepancy/update?id=${id}`, { "status_name": "Discrepancy Accepted" }, { headers: { 'Content-Type': 'application/json' } })
       .then(res => {
         toast('Discrepancy Accepted Successfully', { type: 'success' });
         console.log(res); // eslint-disable-line
@@ -60,7 +60,7 @@ const DiscrepancyTable = ({ data, setLoading }) => {
       </div>
       {/* table data */}
       <div className="flex flex-col items-center justify-center">
-        {console.log(data) } {/* eslint-disable-line */}
+        {console.log(data)} {/* eslint-disable-line */}
         {Array.isArray(data) && data.length > 0 ? data.map((item, key) => {
           return (
             <div
@@ -99,21 +99,28 @@ const DiscrepancyTable = ({ data, setLoading }) => {
               <div className="px-2 flex item-center h-full w-[10.66%] items-center border-r-2 pl-2 font-normal">
                 <div className='rounded basis-full font-semibold bg-red-100 text-red-700 text-center'>{item.discrepancy_status_name}</div>
               </div>
-              <div className="p-1 flex flex-col gap-2 h-full w-[10.66%] items-center border-r-2 font-normal">
-                <button className='border-2 p-1 border-sky-600 rounded font-semibold text-sky-600'
-                  onClick={() => {
-                    updateStatus(item.id);
-                  }}>Accept Discrepancy</button>
-                <button
-                  className='border-2 p-1 border-sky-600 rounded font-semibold text-sky-600'
-                  onClick={() => {
-                    setSelectedIndex(key);
-                    setShow(true);
-                  }}
-                >Dispute Discrepancy</button>
-                <div className='text-center'>
-                  {getRemainingTime(item?.status_updated_on)}
-                </div>
+              <div className="p-1 flex flex-col gap-2 h-full w-[10.66%] items-center justify-center border-r-2 font-normal">
+                {item.discrepancy_status_name == 'New Discrepancy' && getRemainingTime(item?.status_updated_on) > 0 &&
+                  <>
+                    <button className='border-2 p-1 border-sky-600 rounded font-semibold text-sky-600'
+                      onClick={() => {
+                        updateStatus(item.id);
+                      }}>Accept Discrepancy</button>
+                    <button
+                      className='border-2 p-1 border-sky-600 rounded font-semibold text-sky-600'
+                      onClick={() => {
+                        setSelectedIndex(key);
+                        setShow(true);
+                      }}
+                    >Dispute Discrepancy</button>
+                    <div className='text-center text-red-600 font-bold'>
+                      {getRemainingTime(item?.status_updated_on)} working days remaining
+                    </div>
+                  </>}
+                {item.discrepancy_status_name == 'Dispute Raised' &&
+                  <>
+                    <button className='border-2 p-1 border-sky-600 rounded font-semibold text-sky-600 opacity-45' disabled>Dispute Discrepancy</button>
+                  </>}
               </div>
               {/* <div className="flex h-full w-2/12 items-center border-r-2">
                 <div className="flex flex-col gap-2">
@@ -153,14 +160,14 @@ const DiscrepancyTable = ({ data, setLoading }) => {
               <img src='https://app.shiprocket.in/app/img/no_data/weight_discrepancy_0.png' />
             </div>
             <div className='text-3xl text-violet-900 font-semibold'>Great! You have 0 weight discrepancies</div>
-            <div>Hey Abhishek, Read more about weight discrepancy and how to avoid it by clicking the button below</div>
+            <div>Hey user, Read more about weight discrepancy and how to avoid it by clicking the button below</div>
             <button className='mt-5 px-12 py-2 text-slate-300 bg-violet-900 rounded-3xl'>Learn More</button>
           </div>
         )}
       </div>
       {/* Modal for Weight Discrepancy */}
       {show && selectedIndex !== null && <DiscrepancyModal show={show} setShow={setShow} data={data[selectedIndex]} setLoading={setLoading} type={freezeStatus == 0 ? 'Freeze' : 'Edit'} />}
-    </div>
+    </div >
   );
 };
 

@@ -3,6 +3,7 @@ import { infoIcon, upload } from '../../../../common/icons';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { CustomTooltip } from '../../../../common/components';
+import { freezeGuide } from '../../../../common/images';
 
 const FreezeModal = ({ setShow, data, setLoading, type }) => {
     const [weightFreezeData, setWeightFreezeData] = useState({
@@ -296,7 +297,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                                     </div>
                                 </div>
                                 <div className="flex justify-center items-center w-full border-0 text-[12px] border-t-2 bg-[#f8f8f892] py-2">
-                                    Notes :&nbsp;<span className='font-normal'> Uploaded images should be less than 5 MB</span>
+                                    Note :&nbsp;<span className='font-normal'> Uploaded images should be less than 5 MB</span>
                                 </div>
                             </div>
 
@@ -330,14 +331,22 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                                     })}
                                 </div>
                                 <div className="flex justify-center items-center w-full border-0 text-[12px] border-t-2 bg-[#f8f8f892] py-2">
-                                    Notes :&nbsp;
+                                    Note :&nbsp;
                                     <span className='font-normal'>
                                         The Chargeable weight is the higher weight between entered and volumetric weights
                                     </span>
                                 </div>
                             </div>
 
-                            <p className='text-lg font-semibold'>Package Images</p>
+                            <p className='text-lg font-semibold flex flex-row gap-4'>
+                                Package Images
+                                <CustomTooltip
+                                    style='light'
+                                    text={<img src={freezeGuide}/>} placement='right'
+                                    wrapperClassNames={'shadow-none p-0 max-w-[400px]'}>
+                                    <span className='underline text-[12px]'>Know more about measuring packages</span>
+                                </CustomTooltip>
+                            </p>
                             <div className="m-1 flex flex-col rounded-md border border-gray-200">
                                 {/* Package Images */}
                                 <div className="gap-8 flex flex-row p-4 h-44 px-8">
@@ -378,7 +387,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                                     })}
                                 </div>
                                 <div className="flex justify-center items-center w-full border-0 text-[12px] border-t-2 bg-[#f8f8f892] py-2">
-                                    Notes :&nbsp;
+                                    Note :&nbsp;
                                     <span className='font-normal'>
                                         Uploaded Images should be less than 5 MB
                                     </span>
