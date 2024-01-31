@@ -66,7 +66,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
 
     const placeOrder = async () => {
         const date = getFullDateForPayload(domesticReturnFormValues?.date);
-        let resp = await axios.post(BACKEND_URL+'/return', {
+        let resp = await axios.post(BACKEND_URL + '/return', {
             ...domesticReturnFormValues,
             ...formDirectField,
             date: date,
@@ -286,7 +286,10 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
                 <button
                     type="button"
                     className="dark:focus:ring-purple-900 rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
-                    onClick={() => changeNextStep('NEXT')}>
+                    onClick={() => {
+                        changeNextStep('NEXT');
+                        window.location.reload();
+                    }}>
                     {'Place Return'}
                 </button>
             </div>
