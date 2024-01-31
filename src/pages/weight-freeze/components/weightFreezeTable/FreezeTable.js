@@ -20,16 +20,16 @@ const FreezeTable = ({ data, setLoading, setShowImages, setImages }) => {
         <div className="w-[4%] border-r-2 py-2.5 text-center">
           <input type="checkbox" />
         </div>
-        <div className="w-1/12 border-r-2 py-2.5 flex flex-row items-center">
+        <div className="w-1/12 border-r-2 py-2.5 pl-2 flex flex-row items-center">
           <span>PID</span>
           <CustomTooltip text={'PID is a product ID that uniquely identifies a SKU for each channel'} style='dark' placement='right'>
             <img src={infoIcon} className="ms-2" />
           </CustomTooltip>
         </div>
-        <div className="w-1/12 border-r-2 py-2.5">Produt Name</div>
-        <div className="w-2/12 border-r-2 py-2.5">SKU Summary</div>
-        <div className="w-1/12 border-r-2 py-2.5">Channel</div>
-        <div className="w-2/12 border-r-2 py-2.5">Package Details</div>
+        <div className="w-1/12 border-r-2 py-2.5 pl-2">Produt Name</div>
+        <div className="w-2/12 border-r-2 py-2.5 pl-2">SKU Summary</div>
+        <div className="w-1/12 border-r-2 py-2.5 pl-2">Channel</div>
+        <div className="w-2/12 border-r-2 py-2.5 pl-2">Package Details</div>
         <div className="w-1/12 border-r-2 py-2.5 text-center">Images</div>
         <div className="w-2/12 border-r-2 py-2.5 text-center">Weight Freeze Status</div>
         <div className="w-[14%] border-r-2 py-2.5 text-center">Action</div>
@@ -44,14 +44,14 @@ const FreezeTable = ({ data, setLoading, setShowImages, setImages }) => {
               <div className="flex h-full w-[4%] items-center justify-center border-r-2">
                 <input type="checkbox" />
               </div>
-              <div className="flex h-full w-1/12 items-center border-r-2 text-blue-600">{item.id}</div>
-              <div className="flex h-full w-1/12 items-center border-r-2 font-normal">{item.name}</div>
-              <div className="flex h-full w-2/12 flex-col justify-center gap-4 border-r-2 text-left">
+              <div className="flex h-full w-1/12 items-center border-r-2 pl-2 text-blue-600">{item.id}</div>
+              <div className="flex h-full w-1/12 items-center border-r-2 pl-2 font-normal">{item.name}</div>
+              <div className="flex h-full w-2/12 flex-col justify-center gap-4 border-r-2 pl-2 text-left">
                 <div>Channel SKU : {item.sku}</div>
                 <div>Channel Product ID : {item.sku}</div>
               </div>
-              <div className="flex h-full w-1/12 items-center border-r-2">{item.channel_name}</div>
-              <div className="flex h-full w-2/12 items-center border-r-2">
+              <div className="flex h-full w-1/12 items-center border-r-2 pl-2">{item.channel_name}</div>
+              <div className="flex h-full w-2/12 items-center border-r-2 pl-2">
                 <div className="flex flex-col gap-2">
                   <div>Dimension :</div>
                   <div className="font-normal">

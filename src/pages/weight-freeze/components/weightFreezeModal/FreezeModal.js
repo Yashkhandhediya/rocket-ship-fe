@@ -388,21 +388,26 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
 
 
                         {/*footer*/}
-                        <div className="border-blueGray-200 flex items-center justify-center rounded-b border-t border-solid p-6">
-                            <button
-                                className="mb-1 mr-1 px-12 rounded-lg py-2 text-sm border border-blue-400 text-blue-400 outline-none transition-all duration-150 ease-linear focus:outline-none hover:shadow-lg font-semibold"
-                                type="button"
-                                onClick={() => setShow(false)}>
-                                Cancel
-                            </button>
-                            <button
-                                className="mb-1 mr-1 rounded-lg bg-blue-600 px-6 py-2 text-sm text-white shadow outline-none transition-all duration-150 border ease-linear hover:shadow-lg focus:outline-none font-semibold"
-                                type="button"
-                                onClick={() => handleWeightFreezeSubmit()}
-                                disabled={type != 'Freeze' || weightFreezeData.status_id == 1}
-                            >
-                                {type == 'Freeze' ? 'Request Weight Freeze' : 'Request in process'}
-                            </button>
+                        <div className="flex flex-col items-center justify-center rounded-b-md">
+                            <div className="flex items-center justify-center px-6">
+                                <button
+                                    className="mb-1 mr-1 px-12 rounded-lg py-2 text-sm border border-blue-400 text-blue-400 outline-none transition-all duration-150 ease-linear focus:outline-none hover:shadow-lg font-semibold"
+                                    type="button"
+                                    onClick={() => setShow(false)}>
+                                    Cancel
+                                </button>
+                                <button
+                                    className="mb-1 mr-1 rounded-lg bg-blue-600 px-6 py-2 text-sm text-white shadow outline-none transition-all duration-150 border ease-linear hover:shadow-lg focus:outline-none font-semibold"
+                                    type="button"
+                                    onClick={() => handleWeightFreezeSubmit()}
+                                    disabled={type != 'Freeze' || weightFreezeData.status_id == 1}
+                                >
+                                    {type == 'Freeze' ? 'Request Weight Freeze' : 'Request in process'}
+                                </button>
+                            </div>
+                            <div className='bg-[#DAE5FF] text-[#525252] font-[400] w-full text-center py-3 rounded-b-md'>
+                                Our team will validate the details provided and confirm the status of weight freeze request accordingly.
+                            </div>
                         </div>
 
                     </div>

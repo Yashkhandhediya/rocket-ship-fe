@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { CustomTooltip } from '../../../../common/components';
 
-const FreezeTabs = ({ tabs, setData, setLoading, setTabs }) => { // eslint-disable-line
+const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTotalData }) => { // eslint-disable-line
   const [searchParams, setSearchParams] = useSearchParams();
   const oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().slice(0, 10);
   const todayDate = new Date().toISOString().slice(0, 10);
@@ -18,8 +18,6 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs }) => { // eslint-disab
   const fromDateURL = searchParams.get('from');
   const toDateURL = searchParams.get('to') || null;
   const search = searchParams.get('search');
-  const page = parseInt(searchParams.get('page'), 10);
-  const perPage = parseInt(searchParams.get('per_page'), 10) || 15;
 
   const dataGet = (param_name, param_value) => { //eslint-disable-line
     setData([]);
@@ -97,6 +95,14 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs }) => { // eslint-disab
         console.log(error); //eslint-disable-line
         setLoading(false);
       })
+
+    //API to get total data
+    axios.get('http://43.252.197.60:8050/weight_freeze/get_weight_freeze?per_page=100',{})
+    .then((response) => {
+      setTotalData(response.data);
+    }).catch((error) => {
+      console.log(error); //eslint-disable-line
+    })
   };
 
   //get freeze_status from url
@@ -105,8 +111,8 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs }) => { // eslint-disab
     const currentSearchParams = new URLSearchParams(searchParams);
     // Update the desired parameter
     currentSearchParams.set('freeze_status', freezeStatus);
-    currentSearchParams.set('page', 1);
-    currentSearchParams.set('per_page', 15);
+    currentSearchParams.set('page', page);
+    currentSearchParams.set('per_page', perPage);
     currentSearchParams.set('from', '');
     currentSearchParams.set('to', '');
     // Update the search params
@@ -202,7 +208,7 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs }) => { // eslint-disab
 
       {/* filter section */}
       <div className="mt-4 flex flex-row gap-4 lg:flex-nowrap flex-wrap">
-        <div className="w-3/4 flex flex-row lg:flex-nowrap flex-wrap">
+        <div className="w-3/4 gap-2 flex flex-row lg:flex-nowrap flex-wrap">
           {/* Search */}
           <div>
             <div className="relative">
