@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const FreezePagination = ({ page, perPage, handlePerPageChange, handlePageChange, totalData }) => {
+const FreezePagination = ({ page, perPage, handlePerPageChange, handlePageChange, totalData, data }) => {
 
   const [previosEnabled, setPreviosEnabled] = useState(false);
   const [nextEnabled, setNextEnabled] = useState(true);
@@ -57,7 +57,7 @@ const FreezePagination = ({ page, perPage, handlePerPageChange, handlePageChange
           onClick={() => {
             handleNext();
           }}>{'Next>>'}</button>
-        <div className='text-[12px] text-[#707070] pl-12'>1-{perPage} of total</div>
+        <div className='text-[12px] text-[#707070] pl-12'>1-{data.length} of {totalData.length}</div>
       </div>
 
       <div className='flex items-center w-1/3'>

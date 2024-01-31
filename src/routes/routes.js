@@ -45,7 +45,8 @@ const routes = createBrowserRouter([
   {
     path: '/billing-charge-details',
     element: <PrivateRoute component={<WeightDiscrepancy />} />,
-
+  },
+  {
     path: '/seller/kyc',
     element: <PrivateRoute component={<SellerKYC />} />,
   },

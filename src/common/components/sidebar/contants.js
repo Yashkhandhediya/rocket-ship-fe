@@ -39,7 +39,7 @@ export const sidebarLinks = [
     subMenuOptions: [
       {
         title: 'Weight Discrepancy',
-        path: '/',
+        path: '/billing-charge-details?page=1&perPage=15&to=&from=&status=0&search=&courier_id=',
       },
       {
         title: 'Weight Freeze',

@@ -171,7 +171,8 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                     {/*content*/}
                     <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
                         {/*header*/}
-                        <div className="border-blueGray-200 flex w-full items-center justify-center rounded-t border-b border-solid p-5">
+                        <div className="border-blueGray-200 flex w-full items-center justify-between rounded-t border-b border-solid p-5">
+                            <div></div>
                             <h3 className="text-2xl font-semibold">{type == 'Freeze' ? 'Add Product and Package Details' : 'Edit Product and Package Details'}</h3>
                             <button
                                 className="border-0 bg-transparent p-1 text-2xl font-semibold leading-none text-black opacity-100 outline-none focus:outline-none"

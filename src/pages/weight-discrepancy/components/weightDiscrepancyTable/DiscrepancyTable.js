@@ -22,7 +22,7 @@ const DiscrepancyTable = ({ data, setLoading }) => {
     const remainingDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
     const remainingHours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const remainingMinutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-    const remainingSeconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+    const remainingSeconds = Math.floor((timeDifference % (1000 * 60)) / 1000);// eslint-disable-line
     return `${remainingDays} days ${remainingHours} hours ${remainingMinutes} minutes remaining`
   }
 
@@ -60,7 +60,7 @@ const DiscrepancyTable = ({ data, setLoading }) => {
       </div>
       {/* table data */}
       <div className="flex flex-col items-center justify-center">
-        {console.log(data)}
+        {console.log(data) } {/* eslint-disable-line */}
         {Array.isArray(data) && data.length > 0 ? data.map((item, key) => {
           return (
             <div
