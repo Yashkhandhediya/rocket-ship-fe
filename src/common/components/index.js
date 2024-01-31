@@ -10,3 +10,4 @@ export * from './right-drawer';
 export * from './common-badge';
 export * from './custom-multi-select';
 export * from './custom-data-table';
+export * from './loader';

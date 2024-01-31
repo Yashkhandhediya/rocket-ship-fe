@@ -28,6 +28,8 @@ const Field = ({
   onIncrease,
   onDecrease,
   tooltip,
+  autoComplete='on',
+  readOnly = false,
 }) => {
   useEffect(() => {
     if (triggerValidation && onBlur) {
@@ -55,7 +57,7 @@ const Field = ({
         {leftAddOn && (
           <button
             className="z-1 inline-flex flex-shrink-0 items-center rounded-s-md border border-r-0 border-gray-300 bg-[#f3f7fe] px-2.5 py-1.5 text-center text-sm font-medium text-gray-400"
-            type="button">
+            type="button" disabled>
             {leftAddOn}
           </button>
         )}
@@ -90,6 +92,8 @@ const Field = ({
           max={maxDate || ''}
           maxLength={maxLength}
           minLength={minLength}
+          autoComplete={autoComplete}
+          readOnly={readOnly}
         />
         {counterField && onIncrease && (
           <button
@@ -102,7 +106,7 @@ const Field = ({
         {rightAddOn && (
           <button
             className="z-1 inline-flex flex-shrink-0 items-center rounded-e-md border border-l-0 border-gray-300 bg-[#f3f7fe] px-2.5 py-1.5 text-center text-sm font-medium text-gray-400"
-            type="button">
+            type="button" disabled>
             {rightAddOn}
           </button>
         )}

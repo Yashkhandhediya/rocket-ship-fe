@@ -15,6 +15,8 @@ const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
     pickup_date: '',
   });
 
+  console.log('in schwdule pickup', pickupDetails);
+
   const handleSelectDate = (date) => {
     setScheduleDetails({
       pickup_date: date,
@@ -23,22 +25,20 @@ const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
   };
 
   const schedulePickup = () => {
+    const formattedDate = moment(scheduleDetails.pickup_date).format('YYYY-MM-DD');
     axios
-      .post(`${BACKEND_URL}/order/${pickupDetails.id}/pickup`, {
-        pickup_date: moment(scheduleDetails.pickup_date).format('YYYY-MM-DD'),
+      .post(`${BACKEND_URL}/order/${pickupDetails?.id}/pickup`, {
+        pickup_date: formattedDate,
         pickup_time: scheduleDetails.pickup_time,
       })
       .then((resp) => {
         if (resp.status === 200) {
-          toast(
-            `pickup scheduled successfully on date ${moment(scheduleDetails.pickup_date).format(
-              'YYYY-MM-DD',
-            ), {type: "success"}}`,
-          );
+          toast(`pickup scheduled successfully on date ${formattedDate}`, { type: 'success' });
           onClose();
         }
-      }).catch(() => {
-        toast("Unable to schedule pickup", {type: "error"})
+      })
+      .catch(() => {
+        toast('Unable to schedule pickup', { type: 'error' });
       });
   };
 
@@ -56,7 +56,7 @@ const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
   }, [isOpen]);
 
   return (
-    <Modal dismissible show={isOpen} onClose={onClose} className="min-w-[700px]">
+    <Modal show={isOpen} onClose={onClose} className="min-w-[700px]">
       <Modal.Header className="p-4 pb-2">{'Schedule Your Pickup'}</Modal.Header>
       <Modal.Body className="px-4 py-4">
         <div className="mb-4 flex items-center rounded-md bg-green-100 px-2 py-1.5">

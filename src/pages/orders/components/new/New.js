@@ -53,7 +53,7 @@ export const New = () => {
               <div>{(row?.original?.channel || '')?.toUpperCase()}</div>
               <div>
                 <CustomTooltip
-                  text={[row?.original?.product_infom, row?.original?.product_info].map((product, i) => {
+                  text={row?.original?.product_info.map((product, i) => {
                     return (
                       <Fragment key={`${product?.id}-${i}`}>
                         {i !== 0 && <div className="my-2 h-[1px] w-full bg-gray-500" />}
@@ -176,7 +176,7 @@ export const New = () => {
                   onClick={() => {
                     setSelectShipmentDrawer({
                       isOpen: true,
-                      orderDetails: row,
+                      orderDetails: row.original,
                     });
                   }}>
                   {'Ship Now'}
@@ -200,8 +200,8 @@ export const New = () => {
                 <MoreDropdown
                   renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                   options={moreActionOptions({
-                    cloneOrder: () => cloneOrder(row),
-                    cancelOrder: () => cancelOrder(row),
+                    cloneOrder: () => cloneOrder(row?.original),
+                    cancelOrder: () => cancelOrder(row?.original),
                   })}
                 />
               </div>

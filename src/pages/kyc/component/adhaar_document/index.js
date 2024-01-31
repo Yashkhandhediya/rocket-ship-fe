@@ -1,0 +1,1 @@
+export {default as Adhaar_Document} from './Adhaar_Document';

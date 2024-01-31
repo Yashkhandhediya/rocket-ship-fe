@@ -1,14 +1,16 @@
 import { Tooltip as FlowbiteTooltip } from 'flowbite-react';
 
-const CustomTooltip = ({ children, text, wrapperClassNames, width, ...rest }) => {
+const CustomTooltip = ({ children, text, wrapperClassNames, width,style='light',placement='top', ...rest }) => {
   return (
     <FlowbiteTooltip
-      style="light"
+      style={style}
       content={text}
       className={`inline-flex ${
         width ? `min-w-[${width}]` : 'min-w-[150px]'
-      } max-w-[250px] text-xs font-normal text-gray-700 shadow-xl [&>*:first-child]:w-full ${wrapperClassNames}`}
-      {...rest}>
+      } max-w-[250px] text-xs font-normal shadow-xl [&>*:first-child]:w-full ${wrapperClassNames}`}
+      {...rest}
+      placement={placement}
+      >
       {children}
     </FlowbiteTooltip>
   );

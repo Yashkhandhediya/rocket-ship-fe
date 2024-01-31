@@ -1,6 +1,5 @@
-import DataTable from 'react-data-table-component';
 import { infoIcon } from '../../../../../common/icons';
-import { CustomTooltip, RatingProgressBar } from '../../../../../common/components';
+import { CustomDataTable, CustomTooltip, RatingProgressBar } from '../../../../../common/components';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { setAllOrders } from '../../../../../redux';
@@ -8,6 +7,8 @@ import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import './ShipmentCourierPartnersTable.css';
 import { SchedulePickupModal } from '../../schedule-pickup-modal';
+import { createColumnHelper } from '@tanstack/react-table';
+import { Button } from 'flowbite-react';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 
 const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentDrawer }) => {
@@ -27,7 +28,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
               resp?.data?.success ? (
                 <div>
                   <div className="font-medium">{'Success'}</div>
-                  <div>{'AWB assignedsuccessfully'}</div>
+                  <div>{'AWB assigned successfully'}</div>
                 </div>
               ) : (
                 resp?.data?.error
@@ -55,101 +56,116 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
     }
   };
 
-  const columns = [
-    {
-      name: 'Courier Partner',
-      selector: (row) => (
-        <div className="flex gap-1 pb-4 pt-7 text-left">
-          <div>{/* <img src={''} className="h-10 w-10 rounded-full bg-gray-400" /> */}</div>
-          <div>
-            <h4 className="pb-1.5 text-xs font-medium text-[#555]">{row?.partner_name || 'Delhivery'}</h4>
-            <div className="pb-1.5 text-xs text-[#555]">
-              {`${Number(row?.surface_max_weight || 0) ? 'Surface ' : 'Air'} | Min-weight: `}
-              <span className="font-medium">
-                {Number(row?.surface_max_weight || 0) ? row?.surface_max_weight : row?.air_max_weight || 0}
-              </span>
+  const getColumns = () => {
+    const columnHelper = createColumnHelper()
+    return [
+      columnHelper.accessor('courierPartner',{
+        header: 'Courier Partner',
+        cell: ({row}) => (
+          <div className="flex gap-1 text-left">
+            <div>{/* <img src={''} className="h-10 w-10 rounded-full bg-gray-400" /> */}</div>
+            <div>
+              <h4 className="pb-1.5 text-xs font-medium text-[#555]">{row?.original?.partner_name || 'Delhivery'}</h4>
+              <div className="pb-1.5 text-xs text-[#555]">
+                {`${Number(row?.original?.surface_max_weight || 0) ? 'Surface ' : 'Air'} | Min-weight: `}
+                <span className="font-medium">
+                  {Number(row?.original?.surface_max_weight || 0) ? row?.original?.surface_max_weight : row?.original?.air_max_weight || 0}
+                </span>
+              </div>
+              <div className="pb-1.5 text-xs text-[#555]">
+                {`RTO Charges: ₹`}
+                <span className="font-medium">{row?.original?.charge_RTO}</span>
+              </div>
             </div>
-            <div className="pb-1.5 text-xs text-[#555]">
-              {`RTO Charges: ₹`}
-              <span className="font-medium">{row?.charge_RTO}</span>
+          </div>
+        ),
+      }),
+      columnHelper.accessor('rating',{
+        header: 'Rating',
+        cell: ({row}) => (
+          <div className="flex flex-col gap-1 text-left">
+            <div className="relative h-12 w-12 text-sm font-medium">
+              <RatingProgressBar rating={row?.original?.rating || 0} />
             </div>
           </div>
-        </div>
-      ),
-    },
-    {
-      name: 'Rating',
-      selector: (row) => (
-        <div className="flex flex-col gap-1 py-2 text-left">
-          <div className="relative h-12 w-12 text-sm font-medium">
-            <RatingProgressBar rating={row?.rating || 0} />
+        ),
+      }),
+      columnHelper.accessor('expectedPickup',{
+        header: 'Expected Pickup',
+        cell: ({row}) => (
+          <div className="flex flex-col gap-1 text-left">
+            <div className="text-xs text-[#555]">{row?.original?.expected_pickup || '-'}</div>
           </div>
-        </div>
-      ),
-    },
-    {
-      name: 'Expected Pickup',
-      selector: (row) => (
-        <div className="flex flex-col gap-1 py-2 text-left">
-          <div className="text-xs text-[#555]">{row?.expected_pickup || '-'}</div>
-        </div>
-      ),
-    },
-    {
-      name: 'Estimated Delivery',
-      selector: (row) => (
-        <div className="flex flex-col gap-1 py-2 text-left">
-          <div className="text-xs text-[#555]">{row?.estimated_delivery || '-'}</div>
-        </div>
-      ),
-    },
-    {
-      name: 'Chargeable Weight',
-      selector: (row) => (
-        <div className="flex h-full w-full flex-col gap-1 py-2 text-center">
-          <div className="text-xs text-[#555]">{`${row?.charged_weight || ''} Kg`}</div>
-        </div>
-      ),
-    },
-    {
-      name: 'Charges',
-      selector: (row) => (
-        <div className="flex flex-col gap-1 py-2 text-left">
-          <div className="flex items-center">
-            <div className="text-base font-bold text-[gray]">{`₹${row?.total_amount || ''}`}</div>
-            <CustomTooltip
-              text={
-                <>
-                  <div className="mb-1.5">
-                    {`Freight Charge: `}
-                    <span className="font-bold">{`₹ ${row?.charge_freight || ''}`}</span>
-                  </div>
-                  <div className="">
-                    {`Cod Charges: `}
-                    <span className="font-bold">{`₹ ${row?.charge_COD || ''}`}</span>
-                  </div>
-                </>
-              }>
-              <img src={infoIcon} className="ml-1" />
-            </CustomTooltip>
+        ),
+      }),
+      columnHelper.accessor('estimatedDelivery',{
+        header: 'Estimated Delivery',
+        cell: ({row}) => (
+          <div className="flex flex-col gap-1 text-left">
+            <div className="text-xs text-[#555]">{row?.original?.estimated_delivery || '-'}</div>
           </div>
-        </div>
-      ),
-    },
-    {
-      name: 'Action',
-      selector: (row) => (
-        <div className="flex flex-col gap-1 py-2 text-left">
-          <button
-            id={row.id}
-            className="min-w-fit rounded bg-indigo-600 px-5 py-2 text-white"
-            onClick={handleShipOrder}>
-            {'Ship Now'}
-          </button>
-        </div>
-      ),
-    },
-  ];
+        ),
+      }),
+      columnHelper.accessor('chargebleWeight',{
+        header: 'Chargeable Weight',
+        cell: ({row}) => (
+          <div className="flex flex-col gap-1 text-center justify-center">
+            <div className="text-xs text-[#555]">{`${row?.original?.charged_weight || ''} Kg`}</div>
+          </div>
+        ),
+      }),
+      columnHelper.accessor('charges',{
+        header: 'Charges',
+        cell: ({row}) => (
+          <div className="flex flex-col gap-1 py-2 text-left">
+            <div className="flex items-center">
+              <div className="text-base font-bold text-[gray]">{`₹${row?.original?.total_amount || ''}`}</div>
+              <CustomTooltip
+                text={
+                  <>
+                    <div className="mb-1.5">
+                      {`Freight Charge: `}
+                      <span className="font-bold">{`₹ ${row?.original?.charge_freight || ''}`}</span>
+                    </div>
+                    <div className="">
+                      {`Cod Charges: `}
+                      <span className="font-bold">{`₹ ${row?.original?.charge_COD || ''}`}</span>
+                    </div>
+                  </>
+                }>
+                <img src={infoIcon} className="ml-1" />
+              </CustomTooltip>
+            </div>
+          </div>
+        ),
+      }),
+      columnHelper.accessor('action',{
+        header: 'Action',
+        cell: ({row}) => (
+          <div className="flex flex-col gap-1 py-2 text-left">
+            <Button
+              id={row?.original?.id}
+              className="rounded bg-indigo-600 w-[104px] h-[34px] text-white"
+              onClick={handleShipOrder}>
+              {'Ship Now'}
+            </Button>
+          </div>
+        ),
+      }),
+    ];
+  }
+
+  const rowSubComponent = () => {
+    const services = []
+    return (
+      <div className='flex text-[10px] p-1'>
+        <div className='text-black'>{"Availale Services:"}</div>
+        {["Call before delivery", "Instant POD", "Delivery personn contact no.", "Real Time Tracking"].map((service, i) => {
+          return (<div key={i} className={`px-3 text-[#888] ${i+1 !== services?.length ? 'border-r-2 border-[#dbdbdb]': ''}`}>{service}</div>)
+        })}
+      </div>
+    );
+  };
 
   return (
     <div className="mt-3 h-full w-full text-left">
@@ -158,25 +174,26 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           <div className="loader"></div>
         </div>
       )}
-      <div className="text-xs text-[rgb(136,136,136)]">{`${
+      <div className="text-xs mb-4 text-[rgb(136,136,136)]">{`${
         shipmentDetails?.length || 0
       } Couriers Found`}</div>
-      <div className="mt-4 h-full w-full">
-        <DataTable
-          columns={columns}
-          data={shipmentDetails || []}
-          sortActive={false}
-          fixedHeader={true}
-          fixedHeaderScrollHeight={"calc(100vh - 10rem)"}
-        />
-      </div>
+      <CustomDataTable
+        columns={getColumns()}
+        rowData={shipmentDetails}
+        shouldRenderRowSubComponent={() => true}
+        rowSubComponent={rowSubComponent}
+        tableWrapperStyles={{ height: '78vh' }}
+      />
+
       <SchedulePickupModal
         isOpen={scheduleModal.isOpen}
-        onClose={() =>
+        onClose={() =>{
           setScheduleModal({
             isOpen: false,
             pickupDetails: {},
           })
+          closeShipmentDrawer()
+        }
         }
         pickupDetails={scheduleModal.pickupDetails}
       />
