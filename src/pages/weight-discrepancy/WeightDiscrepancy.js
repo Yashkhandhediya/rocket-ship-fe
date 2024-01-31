@@ -167,7 +167,7 @@ const WeightDiscrepancy = () => {
                   transform="scale(8.53333)"
                 ></path>
               </svg>
-              <input name='order-id' placeholder='Order Id or AWB No.' title='Enter to search' style={{ border: 'none', outline: 'none', width: '100px' }} />
+              <input name='order-id' placeholder='Order Id or AWB No.' title='Enter to search' style={{ border: 'none', outline: 'none', width: '130px',fontSize:'13px' }} />
             </div>
             <div className='flex-wrap flexorder-input flex gap-1 border'>
               {/* From Date */}
@@ -247,7 +247,7 @@ const WeightDiscrepancy = () => {
             {/* <div className='order-input flex gap-1 py-1 px-2 rounded-md border overflow-hidden'> */}
             <select name='date-range' className='outline-none border-0 rounded-md h-8 text-sm'>
               <option value='all-statuses' className=''>All Statuses</option>
-              <option value='new-discrepancy' className=''>New Discrepancy</option>
+              <option value='new' className=''>New Discrepancy</option>
               <option value='auto-accepted-discrepancy' className=''>Auto Accepted Discrepancy</option>
               <option value='discrepancy-accepted' className=''>Discrepancy Accepted</option>
               <option value='dispute-raise' className=''>Dispute Raise</option>

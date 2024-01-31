@@ -42,7 +42,7 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<Returns />} />,
   },
   {
-    path: '/weight-discrepancy',
+    path: '/billing-charge-details',
     element: <PrivateRoute component={<WeightDiscrepancy />} />,
   },
 ]);

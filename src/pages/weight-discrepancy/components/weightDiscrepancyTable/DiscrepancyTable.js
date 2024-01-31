@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 // import { FreezeModal } from '../weightFreezeModal';
 import { useSearchParams } from 'react-router-dom';
 import { DiscrepancyModal } from '../weightDiscrepancyModal';
@@ -10,6 +12,32 @@ const DiscrepancyTable = ({ data, setLoading }) => {
   const [searchParams, setSearchParams] = useSearchParams();  // eslint-disable-line
   const freezeStatus = searchParams.get('freeze_status');
 
+  const getRemainingTime = (date) => {
+    const statusDate = new Date(date);
+    const today = new Date();
+    const weekLater = new Date(statusDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+    if (today.getTime() > weekLater.getTime()) return `Discrepancy is accepted automatically on ${weekLater.toLocaleDateString()}`;
+    const timeDifference = weekLater.getTime() - today.getTime();
+    // Calculate the remaining days, hours, minutes, and seconds
+    const remainingDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    const remainingHours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const remainingMinutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+    const remainingSeconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+    return `${remainingDays} days ${remainingHours} hours ${remainingMinutes} minutes remaining`
+  }
+
+  const updateStatus = (id) => {
+    axios.put(`http://43.252.197.60:8050/weight_discrepancy/update?id=${id}`, { "status_name": "Discrepancy Accepted" })
+      .then(res => {
+        toast('Discrepancy Accepted Successfully', { type: 'success' });
+        console.log(res); // eslint-disable-line
+      })
+      .catch(err => {
+        toast('Something went wrong', { type: 'error' });
+        console.log(err); // eslint-disable-line
+      })
+  }
+
   useEffect(() => {
   }, []);
 
@@ -20,66 +48,72 @@ const DiscrepancyTable = ({ data, setLoading }) => {
         <div className="w-[4%] border-r-2 py-2.5 text-center">
           <input type="checkbox" />
         </div>
-        <div className="w-[10.66%] border-r-2 py-2.5">Status Updated On</div>
-        <div className="w-[10.66%] border-r-2 py-2.5">Product Details</div>
-        <div className="w-[10.66%] border-r-2 py-2.5">Shipping Details</div>
-        <div className="w-[10.66%] border-r-2 py-2.5">Applied Weight</div>
-        <div className="w-[10.66%] border-r-2 py-2.5">Charged Weight</div>
-        <div className="w-[10.66%] border-r-2 py-2.5">Excess Weight</div>
-        <div className="w-[10.66%] border-r-2 py-2.5">Courier Images</div>
-        <div className="w-[10.66%] border-r-2 py-2.5">Status</div>
-        <div className="w-[10.66%] border-r-2 py-2.5">Actions</div>
+        <div className="w-[10.66%] border-r-2 py-2.5 pl-2">Status Updated On</div>
+        <div className="w-[10.66%] border-r-2 py-2.5 pl-2">Product Details</div>
+        <div className="w-[10.66%] border-r-2 py-2.5 pl-2">Shipping Details</div>
+        <div className="w-[10.66%] border-r-2 py-2.5 pl-2">Applied Weight</div>
+        <div className="w-[10.66%] border-r-2 py-2.5 pl-2">Charged Weight</div>
+        <div className="w-[10.66%] border-r-2 py-2.5 pl-2">Excess Weight</div>
+        <div className="w-[10.66%] border-r-2 py-2.5 pl-2">Courier Images</div>
+        <div className="w-[10.66%] border-r-2 py-2.5 pl-2">Status</div>
+        <div className="w-[10.66%] border-r-2 py-2.5 pl-2">Actions</div>
       </div>
       {/* table data */}
       <div className="flex flex-col items-center justify-center">
-      {console.log(data)}
+        {console.log(data)}
         {Array.isArray(data) && data.length > 0 ? data.map((item, key) => {
           return (
             <div
               className="flex h-32 w-full flex-row items-center border border-b-[#E5E7EB] text-left"
               key={key}
             >
-              <div className="flex h-full w-[4%] items-center justify-center border-r-2">
+              <div className="flex h-full w-[4%] items-center justify-center border-r-2 pl-2">
                 <input type="checkbox" />
               </div>
-              <div className="flex h-full w-[10.66%] items-center border-r-2 font-normal">{item.status_updated_on}</div>
-              <div className="h-full w-[10.66%] items-center border-r-2 font-normal">
+              <div className="flex h-full w-[10.66%] items-center border-r-2 pl-2 font-normal">{item.status_updated_on}</div>
+              <div className="flex flex-col h-full w-[10.66%] justify-center border-r-2 pl-2 font-normal">
                 <div><strong>Product Name:</strong> {item.product_info[0].name}</div>
                 <div><strong>PID:</strong> {item.product_info[0].id}</div>
                 <div><strong>SKU:</strong> {item.product_info[0].sku}</div>
                 <div><strong>QTY:</strong> {item.product_info[0].quantity}</div>
               </div>
-              <div className="flex h-full w-[10.66%] flex-col justify-center gap-4 border-r-2 text-left">
+              <div className="flex h-full w-[10.66%] flex-col justify-center gap-4 border-r-2 pl-2 text-left">
                 <div>AWB: {item.waybill_no}</div>
               </div>
-              <div className="h-full w-[10.66%] border-r-2 font-normal">
-               <div><strong>{`${item.applicable_weight} Kg`}</strong></div>
-               <div>Dead weight: {item.dead_weight}</div>
-               <div>Volumetric Weight: {item.volumatric_weight}({item.length}x{item.width}x{item.height} cm)</div>
+              <div className="h-full flex justify-center flex-col w-[10.66%] border-r-2 pl-2 font-normal">
+                <div><strong>{`${item.applicable_weight} Kg`}</strong></div>
+                <div>Dead weight: {item.dead_weight} Kg</div>
+                <div>Volumetric Weight: {item.volumatric_weight}({item.length}x{item.width}x{item.height} cm)</div>
               </div>
-              <div className="h-full w-[10.66%] border-r-2 font-normal">
-               <div><strong>{`${item.charged_weight} Kg`}</strong></div>
-               <div>Dead weight: {item.dead_weight}</div>
-               <div>Volumetric Weight: {item.volumatric_weight}({item.length}x{item.width}x{item.height} cm)</div>
+              <div className="h-full flex justify-center flex-col w-[10.66%] border-r-2 pl-2 font-normal">
+                <div><strong>{`${item.charged_weight} Kg`}</strong></div>
+                <div>Dead weight: {item.dead_weight} Kg</div>
+                <div>Volumetric Weight: {item.volumatric_weight}({item.length}x{item.width}x{item.height} cm)</div>
               </div>
-              <div className="h-full w-[10.66%] items-center border-r-2 font-normal">
+              <div className="h-full flex justify-center flex-col w-[10.66%] border-r-2 pl-2 font-normal">
                 <div><strong>Excess Weight: </strong><span className='text-red-800'>{item.excess_weight} kg</span></div>
                 <div><strong>Excess Charges: </strong><span className='text-red-800'>Rs{item.excess_rate}</span></div>
               </div>
-              <div className="h-full w-[10.66%] items-center border-r-2 font-normal">
+              <div className="h-full flex justify-center flex-col w-[10.66%] items-center border-r-2 pl-2 font-normal">
               </div>
-              <div className="px-2 flex item-center h-full w-[10.66%] items-center border-r-2 font-normal">
+              <div className="px-2 flex item-center h-full w-[10.66%] items-center border-r-2 pl-2 font-normal">
                 <div className='rounded basis-full font-semibold bg-red-100 text-red-700 text-center'>{item.discrepancy_status_name}</div>
               </div>
               <div className="p-1 flex flex-col gap-2 h-full w-[10.66%] items-center border-r-2 font-normal">
-                <button className='border-2 p-1 border-sky-600 rounded font-semibold text-sky-600'>Accept Discrepancy</button>
-                <button 
+                <button className='border-2 p-1 border-sky-600 rounded font-semibold text-sky-600'
+                  onClick={() => {
+                    updateStatus(item.id);
+                  }}>Accept Discrepancy</button>
+                <button
                   className='border-2 p-1 border-sky-600 rounded font-semibold text-sky-600'
                   onClick={() => {
                     setSelectedIndex(key);
                     setShow(true);
                   }}
                 >Dispute Discrepancy</button>
+                <div className='text-center'>
+                  {getRemainingTime(item?.status_updated_on)}
+                </div>
               </div>
               {/* <div className="flex h-full w-2/12 items-center border-r-2">
                 <div className="flex flex-col gap-2">
