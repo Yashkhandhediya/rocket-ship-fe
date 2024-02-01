@@ -5,7 +5,7 @@ import { Badge } from 'flowbite-react';
 import { filterIcon, moreAction } from '../../../../common/icons';
 import { filterAllOrders, moreActionOptions } from '../utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllOrders, setClonedOrder } from '../../../../redux';
+import { setAllReturns, setClonedOrder } from '../../../../redux';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Fragment, useState } from 'react';
@@ -18,7 +18,7 @@ import { BACKEND_URL } from '../../../../common/utils/env.config';
 export const All = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const allOrdersList = useSelector((state) => state?.ordersList) || [];
+  const allOrdersList = useSelector((state) => state?.returnsList) || [];
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
 
   const getColumns = () => {
@@ -132,7 +132,7 @@ export const All = () => {
                   'Not Assigned'
                 ) : (
                   <Link
-                  to={generatePath(`/tracking/:orderId`, { orderId: row?.original?.id || 1 })}
+                  to={generatePath(`/return-tracking/:orderId`, { orderId: row?.original?.id || 1 })}
                   className="border-b-2 border-b-purple-700 text-purple-700">
                   {'Track order'}
                 </Link>
@@ -185,7 +185,7 @@ export const All = () => {
       })
       .then((resp) => {
         if (resp?.status === 200) {
-          dispatch(setAllOrders(null));
+          dispatch(setAllReturns(null));
           toast('Order cancelled successfully', { type: 'success' });
         }
       })

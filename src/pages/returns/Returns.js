@@ -15,11 +15,11 @@ const Returns = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const allReturnsList = useSelector((state) => state?.ordersList);
+  const allReturnsList = useSelector((state) => state?.returnsList);
 
   const fetchNewReturns = () => {
     axios
-      .get(BACKEND_URL+'/return/get_filtered_returns')
+      .get(BACKEND_URL+'/return/get_filtered_returns?page=1&per_page=100')
       .then(async (resp) => {
         if (resp.status === 200) {
           dispatch(setAllReturns(resp?.data || []));

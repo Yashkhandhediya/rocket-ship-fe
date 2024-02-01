@@ -30,7 +30,7 @@ const LogIn = () => {
         if (response.data.access_token){
           localStorage.setItem('access_token',response.data.access_token)
           toast('Login Success',{type:'success'})
-          navigate('/orders')
+          navigate('/')
         }
         else if(response.data.msg){
           toast(response.data.msg,{type:'error'})

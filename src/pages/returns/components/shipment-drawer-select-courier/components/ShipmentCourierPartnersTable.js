@@ -3,7 +3,7 @@ import { infoIcon } from '../../../../../common/icons';
 import { CustomTooltip, RatingProgressBar } from '../../../../../common/components';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { setAllOrders } from '../../../../../redux';
+import { setAllReturns } from '../../../../../redux';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import './ShipmentCourierPartnersTable.css';
@@ -40,7 +40,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
               isOpen: true,
               pickupDetails: { id: orderId },
             });
-            dispatch(setAllOrders(null));
+            dispatch(setAllReturns(null));
             if (resp?.data?.success) {
               closeShipmentDrawer();
             }

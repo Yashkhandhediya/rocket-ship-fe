@@ -19,7 +19,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 export const ReadyToShip = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const allOrdersList = useSelector((state) => state?.ordersList);
+  const allOrdersList = useSelector((state) => state?.returnsList);
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   const readyShipOrdersList = allOrdersList?.filter(
     (order) => (order?.status_name || '')?.toLowerCase() !== 'new',
@@ -132,7 +132,7 @@ export const ReadyToShip = () => {
       }),
       columnHelper.accessor('shippingDetails', {
         header: 'Shipping Details',
-        cell: (row) => {
+        cell: ({row}) => {
           return (
             <div className="flex flex-col gap-1 text-left text-xs">
               <div>{row?.courier_name}</div>
@@ -141,13 +141,11 @@ export const ReadyToShip = () => {
                 {(row?.status_name || '')?.toLowerCase() === 'new' ? (
                   'Not Assigned'
                 ) : (
-                  <a
-                    href={`http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`}
-                    target="_blank"
-                    style={{ color: 'blue', textDecoration: 'underline' }}
-                    rel="noopener noreferrer">
-                    Track Order
-                  </a>
+                    <Link
+                    to={generatePath(`/return-tracking/:orderId`, { orderId: row?.original?.id || 1 })}
+                    className="border-b-2 border-b-purple-700 text-purple-700">
+                    {'Track order'}
+                  </Link>
                   // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
                   // let newTab = window.open(newURL, '_blank');
                   // if (newTab) {
@@ -176,15 +174,15 @@ export const ReadyToShip = () => {
       }), 
       columnHelper.accessor('action', {
         header: 'Action',
-        cell: (row) => (
+        cell: ({row}) => (
           <div className="flex gap-2 text-left text-xs">
             <button
-              id={row.id}
+              id={row?.original?.id}
               className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
               onClick={() => {
                 setScheduleModal({
                   isOpen: true,
-                  pickupDetails: row,
+                  pickupDetails: row?.original,
                 });
                 // const resp = axios.get(BACKEND_URL+'/order/track?order_id=' + row.id);
                 // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;

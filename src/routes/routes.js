@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails, Return, Weight_Freeze, WeightDiscrepancy } from '../pages';
 import Tracking from '../pages/tracking/Tracking';
+import ReturnTracking from '../pages/return-tracking/ReturnTracking';
 import PrivateRoute from './private-route/PrivateRoute';
 import { SellerKYC } from '../pages/kyc';
 import { Returns } from '../pages/returns';
@@ -33,6 +34,10 @@ const routes = createBrowserRouter([
   {
     path: '/tracking/:orderId',
     element: <PrivateRoute component={<Tracking />} />,
+  },
+  {
+    path: '/return-tracking/:orderId',
+    element: <PrivateRoute component={<ReturnTracking />} />,
   },
   {
     path: '/add-return',
