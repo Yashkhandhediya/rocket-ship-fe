@@ -122,7 +122,7 @@ export const All = () => {
       }),
       columnHelper.accessor('shippingDetails', {
         header: 'Shipping Details',
-        cell: (row) => {
+        cell: ({ row }) => {
           return (
             <div className="flex flex-col gap-1 text-left text-xs">
               <div>{row?.original?.courier_name}</div>

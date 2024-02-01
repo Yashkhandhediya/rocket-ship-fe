@@ -31,7 +31,7 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<OrderTrackDetails />} />,
   },
   {
-    path: '/tracking',
+    path: '/tracking/:orderId',
     element: <PrivateRoute component={<Tracking />} />,
   },
   {
