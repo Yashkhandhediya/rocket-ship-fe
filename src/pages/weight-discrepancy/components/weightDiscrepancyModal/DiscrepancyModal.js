@@ -59,7 +59,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
       return toast('Please enter product category', { type: 'error' })
     }
     const headers = { 'Content-Type': 'application/json' };
-    const url = `http://43.252.197.60:8050/weight_discrepancy/dispute?id=${data.id}`
+    const url = `http://43.252.197.60:8050/weight_discrepancy/dispute?id=${data.discrepancy_id}`
     axios.put(url, weightDiscrepancyData, { headers })
       .then((response) => {
         if (response.status === 200) {
