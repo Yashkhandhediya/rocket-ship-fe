@@ -215,7 +215,7 @@ export const New = () => {
 
   function cancelOrder(orderDetails) {
     axios
-      .put(`${BACKEND_URL}/order/?id=${orderDetails}`, {
+      .put(`${BACKEND_URL}/return/?id=${orderDetails}`, {
         ...orderDetails,
         status: 'cancelled',
         status_name: 'cancelled',
@@ -223,11 +223,11 @@ export const New = () => {
       .then((resp) => {
         if (resp?.status === 200) {
           dispatch(setAllReturns(null));
-          toast('Order cancelled successfully', { type: 'success' });
+          toast('Return cancelled successfully', { type: 'success' });
         }
       })
       .catch(() => {
-        toast('Unable to cancel Order', { type: 'error' });
+        toast('Unable to cancel Return', { type: 'error' });
       });
       window.location.reload();
   }

@@ -75,6 +75,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
             toast('Return Placed Successfully', { type: 'success' });
             dispatch(resetDomesticOrder());
             navigate('/returns');
+            window.location.reload();
         } else {
             toast('There is some error please check your network or contact support', { type: 'error' });
         }
@@ -288,7 +289,6 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
                     className="dark:focus:ring-purple-900 rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
                     onClick={() => {
                         changeNextStep('NEXT');
-                        window.location.reload();
                     }}>
                     {'Place Return'}
                 </button>
