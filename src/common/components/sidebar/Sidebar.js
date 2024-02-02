@@ -1,8 +1,16 @@
 import { shipRocket, shortShipRocket } from '../../icons';
 import { Link } from 'react-router-dom';
 import { sidebarLinks } from './contants';
+import { useState } from 'react';
 
 const Sidebar = () => {
+
+  const [openAccordion, setOpenAccordion] = useState(0);
+  const handleAccordionToggle = (index) => {
+    setOpenAccordion((prev) => (prev === index ? 0 : index));
+    return index;
+  };
+
   return (
     <div
       id="mySidebar"
@@ -28,16 +36,62 @@ const Sidebar = () => {
               </div>
             </Link>
           ) : (
-            <div
-              key={i}
-              className="group/sidebarItem mx-3.5 mb-3 flex cursor-pointer items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#06064d]"
-              onClick={nav?.onClick}>
-              <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" />
-              <img src={nav.hoverIcon} className="hidden h-6 w-6 group-hover/sidebarItem:block" />
-              <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#06064d] ">
-                {nav.title}
-              </span>
-            </div>
+            nav.subMenuOptions ? (
+              <>
+                <div
+                  key={i}
+                  className="group/sidebarItem mx-3.5 mb-3 flex cursor-pointer items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#06064d]"
+                  onClick={() => handleAccordionToggle(i)}
+                  aria-expanded={openAccordion === i}
+                >
+                  <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" />
+                  <img src={nav.hoverIcon} className="hidden h-6 w-6 group-hover/sidebarItem:block" />
+                  <div className="ml-3 w-full flex justify-between truncate text-xs group-hover/sidebarItem:text-[#06064d] ">
+                    <span>{nav.title}</span>
+                    <span className="w-full flex justify-end">
+                      <svg
+                        data-accordion-icon
+                        className={`w-5 h-5 truncate group-hover/sidebarItem:text-[#06064d] shrink-0 rotate-${() => handleAccordionToggle(i)} === ${i} ? '0' : '180'} transform origin-center transition-transform duration-300 ease-in-out shrink-0`}
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                      </svg>
+                    </span>
+                  </div>
+
+                </div>
+                <div id={'accordion-collapse-body-1'} className={`${openAccordion === i ? 'block' : 'hidden'}`} aria-labelledby={'accordion-collapse-heading-1'}>
+                  <div className="ml-6 font-normal">
+                    {nav.subMenuOptions && nav.subMenuOptions.map((subNav, i) => {
+                      return (
+                        <Link to={subNav.path} key={i} className="translate-y-0">
+                          <div className="group/sidebarItem mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#06064d]">
+                            <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#06064d] ">
+                              {subNav.title}
+                            </span>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div key={i} className="translate-y-0" onClick={nav?.onClick}>
+                <div className="group/sidebarItem mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#06064d]">
+                  <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" />
+                  <img src={nav.hoverIcon} className="hidden h-6 w-6 group-hover/sidebarItem:block" />
+                  <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#06064d] ">
+                    {nav.title}
+                  </span>
+                </div>
+              </div>
+            )
           );
         })}
       </div>

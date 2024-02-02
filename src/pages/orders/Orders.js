@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 import Loader from '../../common/loader/Loader';
 import { isEmpty } from 'lodash';
+import { BACKEND_URL } from '../../common/utils/env.config';
 
 const Orders = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -19,7 +20,7 @@ const Orders = () => {
 
   const fetchNewOrders = () => {
     axios
-      .get('http://43.252.197.60:8030/order/get_filtered_orders')
+      .get(BACKEND_URL+'/order/get_filtered_orders?page=1&per_page=100')
       .then(async (resp) => {
         if (resp.status === 200) {
           dispatch(setAllOrders(resp?.data || []));

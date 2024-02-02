@@ -22,7 +22,7 @@ export const sidebarLinks = [
   },
   {
     title: 'Returns',
-    path: '/',
+    path: '/returns',
     icon: home,
     hoverIcon: homeActive,
   },
@@ -39,11 +39,11 @@ export const sidebarLinks = [
     subMenuOptions: [
       {
         title: 'Weight Discrepancy',
-        path: '/',
+        path: '/billing-charge-details?page=1&perPage=15&to=&from=&status=0&search=&courier_id=',
       },
       {
         title: 'Weight Freeze',
-        path: '/',
+        path: '/request-weight-freeze?freeze_status=Not%20Requested&serach=&per_page=&page=1&from=&to=&channel_code=',
       },
     ],
   },

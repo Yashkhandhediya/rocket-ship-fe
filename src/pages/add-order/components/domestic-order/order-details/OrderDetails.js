@@ -7,6 +7,7 @@ import moment from 'moment';
 import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { cloneDeep, isEmpty } from 'lodash';
+import { BACKEND_URL } from '../../../../../common/utils/env.config';
 
 export default function OrderDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
@@ -146,7 +147,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
 
   const fetchOrderId = () => {
     axios
-      .get('http://43.252.197.60:8030/order/get_order_id')
+      .get(BACKEND_URL+'/order/get_order_id')
       .then((resp) => {
         if (resp?.status == 200 && resp?.data?.order_id) {
           setFormDirectField({

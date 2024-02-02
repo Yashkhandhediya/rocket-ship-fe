@@ -2,13 +2,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { Field, CustomTooltip } from '../../../../../common/components';
 import { infoIcon } from '../../../../../common/icons';
 import { resetDomesticOrder, setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
+import { setAllOrders } from '../../../../../redux';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
-import { setAllOrders } from '../../../../../redux';
+import { BACKEND_URL } from '../../../../../common/utils/env.config';
 
 export default function PackageDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
@@ -65,7 +66,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
 
   const placeOrder = async () => {
     const date = getFullDateForPayload(domesticOrderFormValues?.date);
-    let resp = await axios.post('http://43.252.197.60:8030/order', {
+    let resp = await axios.post(BACKEND_URL+'/order', {
       ...domesticOrderFormValues,
       ...formDirectField,
       order_type: 'domestic',

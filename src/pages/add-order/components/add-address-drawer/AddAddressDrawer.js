@@ -5,6 +5,7 @@ import { editIcon, infoIcon, locationPin } from '../../../../common/icons';
 import { BuyerAddressFields } from '../buyer-address-fields';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
 
 const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress }) => {
   const [isAddSupplier, setIsAddSupplier] = useState(false);
@@ -80,7 +81,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
       return;
     }
     axios
-      .post('http://43.252.197.60:8030/address', addressInfo)
+      .post(BACKEND_URL+'/address', addressInfo)
       .then((resp) => {
         if (resp.status == 200) {
           toast('Pickup details saved successfully', { type: 'success' });

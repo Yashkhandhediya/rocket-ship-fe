@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ShipmentDrawerOrderDetails } from '../orders/components/shipment-drawer-order-details';
 import ShipmentDrawerSelectCourier from '../orders/components/shipment-drawer-select-courier/ShipmentDrawerSelectCourier';
+import { BACKEND_URL } from '../../common/utils/env.config';
 
 const OrderTrackDetails = () => {
   const { orderId } = useParams();
@@ -31,7 +32,7 @@ const OrderTrackDetails = () => {
 
   const fetchOrderDetails = async () => {
     await axios
-      .get('http://43.252.197.60:8030/order/get_order_detail', {
+      .get(BACKEND_URL+'/order/get_order_detail', {
         params: {
           id: orderId,
         },

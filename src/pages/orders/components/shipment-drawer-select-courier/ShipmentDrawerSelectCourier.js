@@ -5,6 +5,7 @@ import ShipmentSelfFullfiled from './components/ShipmentSelfFullfiled';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Loader from '../../../../common/loader/Loader';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
 
 const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
   const [shipmentsDetails, setShipmentDetails] = useState(null);
@@ -62,7 +63,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
   ];
   const fetchShipmentDetails = () => {
     axios
-      .get(`http://43.252.197.60:8030/order/${orderDetails?.id}/estimate`)
+      .get(`${BACKEND_URL}/order/${orderDetails?.id}/estimate`)
       .then((resp) => {
         if (resp.status === 200) {
           setShipmentDetails(resp?.data);

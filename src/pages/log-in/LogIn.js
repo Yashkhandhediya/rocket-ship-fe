@@ -4,6 +4,7 @@ import { Field } from '../../common/components';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { type } from '@testing-library/user-event/dist/type';
+import { BACKEND_URL } from '../../common/utils/env.config';
 
 const LogIn = () => {
   const navigate = useNavigate();
@@ -23,13 +24,13 @@ const LogIn = () => {
   const handleSubmit = () => {
     const headers={'Content-Type': 'application/x-www-form-urlencoded'};
     console.log('username pass', loginInput.username, loginInput.password);
-    axios.post('http://43.252.197.60:8030/login/access-token',{username:loginInput.username, password:loginInput.password}, {headers}).then(
+    axios.post(BACKEND_URL+'/login/access-token',{username:loginInput.username, password:loginInput.password}, {headers}).then(
       (response)=>{
         console.log(response);
         if (response.data.access_token){
           localStorage.setItem('access_token',response.data.access_token)
           toast('Login Success',{type:'success'})
-          navigate('/orders')
+          navigate('/')
         }
         else if(response.data.msg){
           toast(response.data.msg,{type:'error'})

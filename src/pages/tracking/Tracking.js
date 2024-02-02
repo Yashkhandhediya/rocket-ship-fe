@@ -1,22 +1,26 @@
 import { useEffect, useState } from "react";
+import { Link, useParams } from 'react-router-dom';
 import './Tracking.css'
 import axios from "axios";
 import { toast } from "react-toastify";
 import moment from "moment";
+import { BACKEND_URL } from "../../common/utils/env.config";
 
 export default function Tracking() {
     const [shipmentData, setShipmentData] = useState();
+    const { orderId } = useParams();
 
     const fetchTrackShipmentOrder = () => {
     // Parse query parameters from the URL
-    const queryParams = new URLSearchParams(window.location.search);
+    // const queryParams = new URLSearchParams(window.location.search);
 
-    // Get the value of the 'stringValue' parameter
-    const stringValue = queryParams.get('data');
+    // // Get the value of the 'stringValue' parameter
+    // const stringValue = queryParams.get('data');
+    
 
     // Set the received string value in the component state
         axios
-            .get('http://43.252.197.60:8030/order/track?order_id='+stringValue)
+            .get(BACKEND_URL+'/order/track?order_id='+orderId)
             .then(async (resp) => {
                 if (resp.status === 200) {
                     const data = resp?.data?.ShipmentData?.[0]?.Shipment;

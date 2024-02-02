@@ -141,13 +141,11 @@ export const ReadyToShip = () => {
                 {(row?.original?.status_name || '')?.toLowerCase() === 'new' ? (
                   'Not Assigned'
                 ) : (
-                  <a
-                    href={`http://${window.location.host}/tracking?data=${encodeURIComponent(row?.original?.id)}`}
-                    target="_blank"
-                    style={{ color: 'blue', textDecoration: 'underline' }}
-                    rel="noopener noreferrer">
-                    Track Order
-                  </a>
+                  <Link
+                  to={generatePath(`/tracking/:orderId`, { orderId: row?.original?.id || 1 })}
+                  className="border-b-2 border-b-purple-700 text-purple-700">
+                  {'Track order'}
+                </Link>
                   // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
                   // let newTab = window.open(newURL, '_blank');
                   // if (newTab) {
@@ -187,7 +185,7 @@ export const ReadyToShip = () => {
                   pickupDetails: row?.original,
 
                 });
-                // const resp = axios.get('http://43.252.197.60:8030/order/track?order_id=' + row.id);
+                // const resp = axios.get(BACKEND_URL+'/order/track?order_id=' + row.id);
                 // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
                 // let newTab = window.open(newURL, '_blank');
                 // if (newTab) {
