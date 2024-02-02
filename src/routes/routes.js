@@ -37,7 +37,6 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<Billing />} />,
   },
   {
-    path: '/tracking',
     path: '/tracking/:orderId',
     element: <PrivateRoute component={<Tracking />} />,
   },

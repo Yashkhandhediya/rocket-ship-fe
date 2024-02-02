@@ -29,6 +29,7 @@ const LogIn = () => {
         console.log(response);
         if (response.data.access_token){
           localStorage.setItem('access_token',response.data.access_token)
+          localStorage.setItem('user_name',response.data?.user_name?.split(' ')[0])
           toast('Login Success',{type:'success'})
           navigate('/')
         }

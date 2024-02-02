@@ -1,0 +1,1 @@
+export { default as COD_Remittance } from './COD_Remittance'

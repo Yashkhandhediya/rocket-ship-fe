@@ -1,5 +1,3 @@
-import { earlyCodIcon } from "../../../../common/images"
-
 const BillingTabs = ({ tabs, activeTab, handleTabClick }) => {
 
     return (
@@ -8,7 +6,7 @@ const BillingTabs = ({ tabs, activeTab, handleTabClick }) => {
                 <div className='flex flex-row gap-1 items-center lg:flex-nowrap flex-wrap'>
                     <div className="px-2 text-[20px]">Billing</div>
                     {tabs.map((tab, index) => (
-                        <button key={index} className={`-mb-[0.10rem] px-2 flex flex-row gap-2 text-[#959595] items-center text-[13px] py-4 ${activeTab === index && 'rounded-t-md border-x-[1px] border-t-2 border-b-[2px] border-t-[#01a0e0] border-x-[#b3b3b3] border-b-white text-[#004989]'}`}
+                        <button key={index} className={`-mb-[0.10rem] px-2 flex flex-row gap-2 items-center text-[13px] py-4 ${activeTab === index ? 'rounded-t-md border-x-[1px] border-t-2 border-b-[2px] border-t-[#01a0e0] border-x-[#b3b3b3] border-b-white text-[#004989]':'text-[#959595]'}`}
                             onClick={() => handleTabClick(index)}
                         >
                             {tab.icon}

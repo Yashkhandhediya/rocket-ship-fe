@@ -1,11 +1,9 @@
-import React from 'react'
-
 const ShippingTable = () => {
   return (
     <div>
-      asdfasdf
+      Shipping Table Data
     </div>
   )
 }
 
-export default ShippingTable
+export default ShippingTable;

@@ -1,10 +1,10 @@
 import { useState } from "react"
 import PageWithSidebar from "../../common/components/page-with-sidebar/PageWithSidebar"
 import { BillingTabs } from "./component/billing-tabs"
-import { ShippingCharges } from "./component"
+import { COD_Remittance, ShippingCharges } from "./component"
 
 const Billing = () => {
-  const [activeTab, setActiveTab] = useState(0)
+  const [activeTab, setActiveTab] = useState(1)
 
   const tabs = [
     {
@@ -18,7 +18,8 @@ const Billing = () => {
       name: 'COD Remittance',
       icon: <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-      </svg>
+      </svg>,
+      panel : <COD_Remittance />
     },
     {
       name: 'Wallet History',
