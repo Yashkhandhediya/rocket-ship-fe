@@ -1,6 +1,7 @@
-import Feild from '../../../../common/components/field/Field'
+import { useState } from 'react'
 
 const ShippingCharges = () => {
+    const [data , setData] = useState([]);
 
     const charges = [
         {
@@ -39,7 +40,7 @@ const ShippingCharges = () => {
 
             {/* Search Input */}
             <div className="flex flex-row w-full my-4 px-7">
-                <input type="text" name="search" id="search" className='text-[13px] w-[20rem] h-[2rem] text-[#959595] border border-[#CFD4D6] focus:border-gray-300 focus:ring-0 rounded-l-[0.2rem]'
+                <input type="text" name="search_order" id="search_order" className='text-[13px] w-[20rem] h-[2rem] text-[#959595] border border-[#CFD4D6] focus:border-gray-300 focus:ring-0 rounded-l-[0.2rem]'
                     placeholder='Search by Order Id or AWB No.' autoComplete={false} />
                 <button className='bg-[#FAFAFA] border-l-0 border border-[#CFD4D6] px-2' disabled>
                     <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -69,6 +70,14 @@ const ShippingCharges = () => {
                     <div className='pl-2 border-r-2  pr-8 w-36 py-2'>
                         View Transactions Details
                     </div>
+                </div>
+                <div>
+                    {/* Table Data */}
+                    {data.length === 0 ? (
+                        'no data available'
+                    ):(
+                        'data available'
+                    )}
                 </div>
             </div>
         </>

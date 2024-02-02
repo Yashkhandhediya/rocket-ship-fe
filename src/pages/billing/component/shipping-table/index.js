@@ -1,0 +1,1 @@
+export { default as ShippingTable } from './ShippingTable'
