@@ -235,7 +235,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                                         <div className="mt-2 flex flex-row gap-8 rounded-lg">
                                             {/* Image 1 */}
                                             <div className='flex h-32 flex-col w-[40%]'>
-                                                <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
+                                                <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-[#B02828]">
                                                     <label htmlFor="img_1" className="w-full">
                                                         <div className="flex cursor-pointer flex-col items-center justify-center">
                                                             {images.img_1 ? (
@@ -254,7 +254,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                                                     </label>
                                                 </div>
                                                 {images.img_1 && (
-                                                    <button className='border border-blue-400 text-blue-400 mt-2 py-1 rounded-md hover:bg-blue-600 hover:text-white'>
+                                                    <button className='border border-red-400 text-red-400 mt-2 py-1 rounded-md hover:bg-red-600 hover:text-white'>
                                                         <label htmlFor="img_1">
                                                             Change image
                                                             <input type="file" className="hidden" name="img_1" accept=".jpg,.png,.gif,.jpeg" id="img_1" onChange={handleFileChange}
@@ -265,7 +265,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                                             </div>
                                             {/* Image 2 */}
                                             <div className='flex h-32 flex-col w-[40%]'>
-                                                <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
+                                                <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-[#B02828]">
                                                     <label htmlFor="img_2" className="w-full">
                                                         <div className="flex cursor-pointer flex-col items-center justify-center">
                                                             {images.img_2 ? (
@@ -284,7 +284,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                                                     </label>
                                                 </div>
                                                 {images.img_2 && (
-                                                    <button className='border border-blue-400 text-blue-400 mt-2 py-1 rounded-md hover:bg-blue-600 hover:text-white'>
+                                                    <button className='border border-red-400 text-red-400 mt-2 py-1 rounded-md hover:bg-red-600 hover:text-white'>
                                                         <label htmlFor="img_2">
                                                             Change image
                                                             <input type="file" className="hidden" name="img_2" accept=".jpg,.png,.gif,.jpeg" id="img_2" onChange={handleFileChange}
@@ -322,7 +322,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                                                         required={item.name !== 'chargableWeight'}
                                                         value={item.name !== 'chargableWeight' ? (item.value === 0 ? '' : item.value) : item.value}
                                                     />
-                                                    <button className='h-8 w-1/4 rounded-r-lg text-white bg-blue-600 focus:outline-none focus:ring-0' disabled>
+                                                    <button className='h-8 w-1/4 rounded-r-lg text-white bg-[#B07828] focus:outline-none focus:ring-0' disabled>
                                                         {item.unit}
                                                     </button>
                                                 </div>
@@ -353,7 +353,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                                     {packageImagesData.map((item, key) => {
                                         return (
                                             <div className='flex h-40 flex-col w-[40%]' key={key}>
-                                                <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
+                                                <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-[#B02828]">
                                                     <label htmlFor={item.id} className="w-full">
                                                         <div className="flex cursor-pointer flex-col items-center justify-center">
                                                             {item.value ? (
@@ -372,7 +372,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                                                     </label>
                                                 </div>
                                                 {item.value ? (
-                                                    <button className='border border-blue-400 text-blue-400 py-1 mt-2 rounded-md hover:bg-blue-600 hover:text-white'>
+                                                    <button className='border border-red-400 text-red-400 py-1 mt-2 rounded-md hover:bg-red-600 hover:text-white'>
                                                         <label htmlFor={item.id}>
                                                             Change image
                                                             <input type="file" className="hidden" name={item.name} accept=".jpg,.png,.gif,.jpeg" id={item.id} onChange={handleFileChange}
@@ -401,13 +401,13 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                         <div className="flex flex-col items-center justify-center rounded-b-md">
                             <div className="flex items-center justify-center px-6">
                                 <button
-                                    className="mb-1 mr-1 px-12 rounded-lg py-2 text-sm border border-blue-400 text-blue-400 outline-none transition-all duration-150 ease-linear focus:outline-none hover:shadow-lg font-semibold"
+                                    className="mb-1 mr-1 px-12 rounded-lg py-2 text-sm border border-[#B07828] text-[#B07828] outline-none transition-all duration-150 ease-linear focus:outline-none hover:shadow-lg font-semibold"
                                     type="button"
                                     onClick={() => setShow(false)}>
                                     Cancel
                                 </button>
                                 <button
-                                    className="mb-1 mr-1 rounded-lg bg-blue-600 px-6 py-2 text-sm text-white shadow outline-none transition-all duration-150 border ease-linear hover:shadow-lg focus:outline-none font-semibold"
+                                    className="mb-1 mr-1 rounded-lg bg-[#B07828] px-6 py-2 text-sm text-white shadow outline-none transition-all duration-150 border ease-linear hover:shadow-lg focus:outline-none font-semibold"
                                     type="button"
                                     onClick={() => handleWeightFreezeSubmit()}
                                     disabled={type != 'Freeze' || weightFreezeData.status_id == 1}

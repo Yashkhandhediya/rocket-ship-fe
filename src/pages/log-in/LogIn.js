@@ -71,13 +71,13 @@ const LogIn = () => {
             onChange={handleChangeInput}
           />
           <div className="mb-3 text-sm">
-            <Link to={'/'} className="text-decoration-none text-blue-700">
+            <Link to={'/'} className="text-decoration-none text-red-700">
               Forgot Password?
             </Link>
           </div>
           <button
             type="button"
-            className="dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 mb-2 w-full rounded-lg bg-purple-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
+            className="dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 mb-2 w-full rounded-lg bg-red-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300"
             onClick={handleSubmit}
           >
             Login
@@ -85,7 +85,7 @@ const LogIn = () => {
           <div className="text-center">
             <p className="text-sm">
               New to Shiprocket?{' '}
-              <Link to={'/signup'} className="text-decoration-none text-blue-700">
+              <Link to={'/signup'} className="text-decoration-none text-red-700">
                 Sign Up Now
               </Link>
             </p>

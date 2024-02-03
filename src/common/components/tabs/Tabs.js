@@ -15,7 +15,7 @@ const Tabs = ({ tabs, tabClassNames, panelClassNames }) => {
             <button
               key={tab.id}
               className={`me-2 inline-flex items-center rounded-t-lg border-b-4 p-2 ${
-                i === activeTab ? 'border-indigo-600 text-indigo-600' : 'text-[#9CA3AF] border-transparent'
+                i === activeTab ? 'border-red-600 text-rose-500' : 'text-[#9CA3AF] border-transparent'
               } ${tabClassNames}`}
               id={`${tab.id}-tab`}
               type="button"

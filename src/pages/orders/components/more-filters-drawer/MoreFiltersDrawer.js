@@ -442,8 +442,8 @@ const MoreFiltersDrawer = ({ isOpen, onClose, fieldNames = [] }) => {
       width={'340px'}
       footer={
         <div className="flex justify-end bg-white pb-1 pt-2">
-          <button className="rounded-md px-4 py-2 text-sm font-medium text-indigo-700">{'Reset All'}</button>
-          <button className="rounded-md bg-indigo-700 px-4 py-2 text-sm font-medium text-white">
+          <button className="rounded-md px-4 py-2 text-sm font-medium text-orange-700">{'Reset All'}</button>
+          <button className="rounded-md bg-orange-700 px-4 py-2 text-sm font-medium text-white">
             {'Apply Filters'}
           </button>
         </div>

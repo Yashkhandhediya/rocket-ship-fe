@@ -1,7 +1,7 @@
-import { shipRocket, shortShipRocket } from '../../icons';
 import { Link } from 'react-router-dom';
 import { sidebarLinks } from './contants';
 import { useState } from 'react';
+import { logo, logo_main } from '../../images';
 
 const Sidebar = () => {
 
@@ -14,23 +14,23 @@ const Sidebar = () => {
   return (
     <div
       id="mySidebar"
-      className="group/sidebar hover:z-100 fixed left-0 top-0 z-10 h-full w-[70px] overflow-x-hidden overflow-y-hidden bg-[#06064d] text-white transition-all duration-500 hover:w-[218px] hover:overflow-y-auto [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar]:w-1">
-      <div className="z-100 sticky top-0 h-[62px] w-full translate-y-0 bg-[#06064d] pb-4 pl-5 pr-3.5 pt-2.5">
-        <img src={shortShipRocket} className="h-[34px] object-contain group-hover/sidebar:hidden" />
+      className="group/sidebar hover:z-100 fixed left-0 top-0 z-10 h-full w-[70px] overflow-x-hidden overflow-y-hidden bg-[#912517] text-white transition-all duration-500 hover:w-[218px] hover:overflow-y-auto [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar]:w-1">
+      <div className="z-100 sticky top-0 h-[62px] w-full translate-y-0 bg-[#912517] pb-4 pl-5 pr-3.5 pt-2.5">
+        <img src={logo_main} className="h-[34px] object-contain group-hover/sidebar:hidden" />
         <img
-          src={shipRocket}
-          className="hidden h-[34px] min-w-[158px] object-contain group-hover/sidebar:block "
+          src={logo}
+          className="hidden h-[34px] min-w-[155px] object-contain group-hover/sidebar:block "
         />
       </div>
-      <hr className="mb-4 border-[#06064d] text-[#0000001a] md:hidden" />
+      <hr className="mb-4 border-[#c] text-[#0000001a] md:hidden" />
       <div>
         {sidebarLinks.map((nav, i) => {
           return nav.path ? (
             <Link to={nav?.path} key={i} className="translate-y-0">
-              <div className="group/sidebarItem mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#06064d]">
+              <div className="group/sidebarItem mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#c38d8d]">
                 <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" />
                 <img src={nav.hoverIcon} className="hidden h-6 w-6 group-hover/sidebarItem:block" />
-                <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#06064d] ">
+                <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#912517] ">
                   {nav.title}
                 </span>
               </div>
@@ -40,18 +40,18 @@ const Sidebar = () => {
               <>
                 <div
                   key={i}
-                  className="group/sidebarItem mx-3.5 mb-3 flex cursor-pointer items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#06064d]"
+                  className="group/sidebarItem mx-3.5 mb-3 flex cursor-pointer items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#980909]"
                   onClick={() => handleAccordionToggle(i)}
                   aria-expanded={openAccordion === i}
                 >
                   <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" />
                   <img src={nav.hoverIcon} className="hidden h-6 w-6 group-hover/sidebarItem:block" />
-                  <div className="ml-3 w-full flex justify-between truncate text-xs group-hover/sidebarItem:text-[#06064d] ">
+                  <div className="ml-3 w-full flex justify-between truncate text-xs group-hover/sidebarItem:text-[#980909] ">
                     <span>{nav.title}</span>
                     <span className="w-full flex justify-end">
                       <svg
                         data-accordion-icon
-                        className={`w-5 h-5 truncate group-hover/sidebarItem:text-[#06064d] shrink-0 rotate-${() => handleAccordionToggle(i)} === ${i} ? '0' : '180'} transform origin-center transition-transform duration-300 ease-in-out shrink-0`}
+                        className={`w-5 h-5 truncate group-hover/sidebarItem:text-[#980909] shrink-0 rotate-${() => handleAccordionToggle(i)} === ${i} ? '0' : '180'} transform origin-center transition-transform duration-300 ease-in-out shrink-0`}
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         strokeWidth="1.5"
@@ -70,8 +70,8 @@ const Sidebar = () => {
                     {nav.subMenuOptions && nav.subMenuOptions.map((subNav, i) => {
                       return (
                         <Link to={subNav.path} key={i} className="translate-y-0">
-                          <div className="group/sidebarItem mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#06064d]">
-                            <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#06064d] ">
+                          <div className="group/sidebarItem mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#980909]">
+                            <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#980909] ">
                               {subNav.title}
                             </span>
                           </div>
@@ -83,10 +83,10 @@ const Sidebar = () => {
               </>
             ) : (
               <div key={i} className="translate-y-0" onClick={nav?.onClick}>
-                <div className="group/sidebarItem mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#06064d]">
+                <div className="group/sidebarItem mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#980909]">
                   <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" />
                   <img src={nav.hoverIcon} className="hidden h-6 w-6 group-hover/sidebarItem:block" />
-                  <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#06064d] ">
+                  <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#980909] ">
                     {nav.title}
                   </span>
                 </div>

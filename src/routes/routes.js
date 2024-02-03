@@ -3,9 +3,9 @@ import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails, Return, 
 import Tracking from '../pages/tracking/Tracking';
 import ReturnTracking from '../pages/return-tracking/ReturnTracking';
 import PrivateRoute from './private-route/PrivateRoute';
-import Billing from '../pages/billing/Billing';
 import { SellerKYC } from '../pages/kyc';
 import { Returns } from '../pages/returns';
+import { COD_Remittance, ShippingCharges, Wallet_history } from '../pages/billing/component';
 
 const routes = createBrowserRouter([
   {
@@ -31,10 +31,6 @@ const routes = createBrowserRouter([
   {
     path: '/track-order/:orderId',
     element: <PrivateRoute component={<OrderTrackDetails />} />,
-  },
-  {
-    path: '/billing',
-    element: <PrivateRoute component={<Billing />} />,
   },
   {
     path: '/tracking/:orderId',
@@ -64,6 +60,27 @@ const routes = createBrowserRouter([
     path: '/request-weight-freeze',
     element: <PrivateRoute component={<Weight_Freeze />} />,
   },
+  {
+    path: '/statement',
+    element: <PrivateRoute component={<ShippingCharges />} />,
+  },
+  {
+    path: '/remittance-logs',
+    element: <PrivateRoute component={<COD_Remittance />} />,
+  },
+  {
+    path: 'future-cod',
+    element: <PrivateRoute component={<COD_Remittance />} />,
+  },
+  {
+    path :'/billing-credit-details',
+    element: <PrivateRoute component={<Wallet_history />} />,
+  },
+  {
+
+    path:'/recharge-status',
+    element: <PrivateRoute component={<Wallet_history />} />,
+  }
 ]);
 
 export default routes;

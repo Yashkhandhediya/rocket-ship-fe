@@ -142,7 +142,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         <div className="flex flex-col gap-1 py-2 text-left">
           <button
             id={row.id}
-            className="min-w-fit rounded bg-indigo-600 px-5 py-2 text-white"
+            className="min-w-fit rounded bg-orange-600 px-5 py-2 text-white"
             onClick={handleShipOrder}>
             {'Ship Now'}
           </button>

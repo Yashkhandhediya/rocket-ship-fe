@@ -85,7 +85,7 @@ const WeightDiscrepancy = () => {
               <p className="type-header-2" style={{ marginBottom: '0' }}>Take action on your pending weight discrepancies, track weight disputes, and view history.</p>
             </div>
             <div className='flex items-center'>
-              <div className="flex items-center gap-2 rounded bg-blue-300 px-8 border border-blue-400">
+              <div className="flex items-center gap-2 rounded bg-red-300 px-8 border border-red-400">
                 <span>Learn More in 2 Minutes</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -184,7 +184,7 @@ const WeightDiscrepancy = () => {
                   <input
                     type={`${enableDate ? 'date' : 'text'}`}
                     id="default-search"
-                    className={`block w-[200px] rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-blue-500 focus:ring-blue-500 ${enableDate ? '' : 'cursor-not-allowed opacity-50'}`}
+                    className={`block w-[200px] rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-red-500 focus:ring-red-500 ${enableDate ? '' : 'cursor-not-allowed opacity-50'}`}
                     required
                     onChange={(ev) => {
                       setFromDate(ev.target.value);
@@ -208,7 +208,7 @@ const WeightDiscrepancy = () => {
                   <input
                     type={`${enableDate ? 'date' : 'text'}`}
                     id="default-search"
-                    className={`dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 block w-[200px] rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-blue-500 focus:ring-blue-500 
+                    className={`dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500 block w-[200px] rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-red-500 focus:ring-red-500 
               ${enableDate ? '' : 'opacity-50'}`}
                     placeholder="Channel"
                     required
@@ -222,9 +222,8 @@ const WeightDiscrepancy = () => {
               </div>
               {/* Apply Button */}
               <div>
-                {/* Apply button for dates */}
                 <button
-                  className={`border-1 h-[33px] w-[100px] rounded-[4px] border-[#7664e8] bg-[#7664e8] text-[12px] leading-[30px] text-white hover:bg-[#7664e8] hover:text-white ${enableDate
+                  className={`border-1 h-[33px] w-[100px] rounded-[4px] border-[#B07828] bg-[#B07828] text-[12px] leading-[30px] text-white hover:bg-[#B07828] hover:text-white ${enableDate
                     ? ''
                     : 'cursor-not-allowed border-[#e1e1e1] bg-[#e1e1e1] hover:bg-[#e1e1e1] hover:text-black'
                     }'}}`}

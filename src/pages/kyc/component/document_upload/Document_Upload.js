@@ -257,7 +257,7 @@ const Document_Upload = ({ setIsKYCCompleted }) => {
                     {!showDocument1Info ?
                         <div className="flex justify-start gap-4 mt-6">
                             <button
-                                className={`px-12 text-[12px] py-2 w-full ${isSumbit1Disabled() ? "bg-white border text-purple-600 border-purple-600" : "bg-[#FAFAFA] border text-purple-400 border-[#e5e5e5]"} transition-colors duration-200 rounded-md`}
+                                className={`px-12 text-[12px] py-2 w-full ${isSumbit1Disabled() ? "bg-white border text-red-600 border-red-600" : "bg-[#FAFAFA] border text-red-400 border-[#e5e5e5]"} transition-colors duration-200 rounded-md`}
                                 disabled={!isSumbit1Disabled()}
                                 onClick={() => { handleDocument1Submission() }}
                             >
@@ -391,7 +391,7 @@ const Document_Upload = ({ setIsKYCCompleted }) => {
                     {!showDocument2Info ?
                         <div className="flex justify-start gap-4 mt-6">
                             <button
-                                className={`px-12 text-[12px] py-2 w-full ${isSumbit2Disabled() ? "bg-white border text-purple-600 border-purple-600" : "bg-[#FAFAFA] border text-purple-400 border-[#e5e5e5]"} transition-colors duration-200 rounded-md`}
+                                className={`px-12 text-[12px] py-2 w-full ${isSumbit2Disabled() ? "bg-white border text-red-600 border-red-600" : "bg-[#FAFAFA] border text-red-400 border-[#e5e5e5]"} transition-colors duration-200 rounded-md`}
                                 disabled={!isSumbit2Disabled()}
                                 onClick={() => { handleDocument2Submission() }}
                             >
@@ -431,7 +431,7 @@ const Document_Upload = ({ setIsKYCCompleted }) => {
 
             <div className="flex justify-start gap-4 mt-6">
                 <button
-                    className={`px-12 text-[12px] py-2 w-4/12 ${isCompleteKYC() ? "bg-white border text-purple-600 border-purple-600" : "bg-[#FAFAFA] border text-purple-400 border-[#e5e5e5] cursor-not-allowed"} transition-colors duration-200 rounded-md`}
+                    className={`px-12 text-[12px] py-2 w-4/12 ${isCompleteKYC() ? "bg-white border text-red-600 border-red-600" : "bg-[#FAFAFA] border text-red-400 border-[#e5e5e5] cursor-not-allowed"} transition-colors duration-200 rounded-md`}
                     disabled={!isCompleteKYC()}
                     onClick={() => { completeKYC() }}
                 >

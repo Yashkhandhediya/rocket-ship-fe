@@ -103,12 +103,12 @@ const DiscrepancyTable = ({ data, setLoading }) => {
               <div className="p-1 flex flex-col gap-2 h-full w-[10.66%] items-center justify-center border-r-2 font-normal">
                 {item.discrepancy_status_name == 'New Discrepancy' && getRemainingTime(item?.status_updated_on) > 0 &&
                   <>
-                    <button className='border-2 p-1 border-sky-600 rounded font-semibold text-sky-600'
+                    <button className='border-2 p-1 border-red-600 rounded font-semibold text-red-600'
                       onClick={() => {
                         updateStatus(item.discrepancy_id);
                       }}>Accept Discrepancy</button>
                     <button
-                      className='border-2 p-1 border-sky-600 rounded font-semibold text-sky-600'
+                      className='border-2 p-1 border-red-600 rounded font-semibold text-red-600'
                       onClick={() => {
                         setSelectedIndex(key);
                         setShow(true);
@@ -120,7 +120,7 @@ const DiscrepancyTable = ({ data, setLoading }) => {
                   </>}
                 {item.discrepancy_status_name == 'Dispute Raised' &&
                   <>
-                    <button className='border-2 p-1 border-sky-600 rounded font-semibold text-sky-600 opacity-45' disabled>Dispute Discrepancy</button>
+                    <button className='border-2 p-1 border-red-600 rounded font-semibold text-red-600 opacity-45' disabled>Dispute Discrepancy</button>
                   </>}
               </div>
               {/* <div className="flex h-full w-2/12 items-center border-r-2">
@@ -144,7 +144,7 @@ const DiscrepancyTable = ({ data, setLoading }) => {
               </div> */}
               {/* <div className="flex h-full w-1/12 items-center border-r-2">{item?.status_name}</div>
               <div className="flex h-full w-[10%] items-center border-r-2">
-                <button className="rounded-md border border-blue-500 bg-white px-4 py-1 text-blue-500"
+                <button className="rounded-md border border-red-500 bg-white px-4 py-1 text-red-500"
                   onClick={() => {
                     setSelectedIndex(key);
                     setShow(true);

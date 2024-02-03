@@ -65,7 +65,7 @@ const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
             {'Your package has been assigned to '}
             <p className="mx-0.5 inline-flex font-semibold">{'Delhivery'}</p>
             {' successfully. The AWB number of the same is '}
-            <p className="inline-flex px-0.5 font-semibold text-indigo-700">{'4658461858515'}</p>
+            <p className="inline-flex px-0.5 font-semibold text-orange-700">{'4658461858515'}</p>
           </div>
         </div>
         <div className="mb-4 flex items-center gap-2 rounded-md bg-gray-100 p-2 text-xs">
@@ -75,7 +75,7 @@ const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
             <div>{'Home, 02253 mock Address to display UI purpose'}</div>
           </div>
         </div>
-        <div className="rounded-md border-2 border-gray-300 bg-blue-50 px-2 py-2">
+        <div className="rounded-md border-2 border-gray-300 bg-red-50 px-2 py-2">
           <div className="mb-1 flex py-2 text-xs font-medium">
             <FontAwesomeIcon icon={faCalendarDays} className="mr-2 h-5 w-5" />
             <label>{'Please select a suitable date for your order to be picked up'}</label>
@@ -85,7 +85,7 @@ const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
               let displayFormat = day;
               let datePillClassNames = 'border-gray-400 bg-white text-black';
               if (scheduleDetails?.pickup_date && moment(scheduleDetails?.pickup_date).isSame(day, 'day')) {
-                datePillClassNames = 'border-blue-400 bg-blue-100 text-indigo-700';
+                datePillClassNames = 'border-red-400 bg-red-100 text-orange-700';
               }
               if (moment(day).isSame(moment(), 'day')) {
                 displayFormat = 'Today';
@@ -119,10 +119,10 @@ const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
         </div>
       </Modal.Body>
       <Modal.Footer className="flex justify-center gap-4 pb-5 pt-3">
-        <button className="rounded-md px-4 py-2 text-xs text-indigo-700" onClick={onClose}>
+        <button className="rounded-md px-4 py-2 text-xs text-orange-700" onClick={onClose}>
           {"I'll do it later"}
         </button>
-        <button className="rounded-md bg-indigo-700 px-4 py-2 text-xs text-white" onClick={schedulePickup}>
+        <button className="rounded-md bg-orange-700 px-4 py-2 text-xs text-white" onClick={schedulePickup}>
           {'Schedule Pick Up'}
         </button>
       </Modal.Footer>

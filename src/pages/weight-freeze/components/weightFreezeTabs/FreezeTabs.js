@@ -137,7 +137,7 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
             <div
               key={item.freezeStatus}
               className={`mb-2 flex w-full flex-row items-center justify-center gap-3 rounded-lg border px-4 py-4 text-[16px] font-[400] hover:cursor-pointer hover:bg-[#e1e1e122] lg:mb-0 lg:w-auto lg:rounded-none lg:border-0 lg:border-b-8 lg:px-6 lg:py-2 ${freezeStatus == item.title
-                ? 'w-full border-b-8 border-[#7664e8] font-bold text-[#7664e8] lg:border-b-8'
+                ? 'w-full border-b-8 border-[#B07828] font-bold text-[#B07828] lg:border-b-8'
                 : 'font-[400] lg:border-transparent'
                 }`}
               onClick={() => {
@@ -185,7 +185,7 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
                 <input
                   type="search"
                   id="default-search"
-                  className="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 block w-full rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                  className="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500 block w-full rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-red-500 focus:ring-red-500"
                   placeholder="Name or SKU"
                   onKeyDown={(ev) => { ev.key === 'Enter' && handleSearchInput(ev) }}
                   required
@@ -206,7 +206,7 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
               <input
                 type={`${enableDate ? 'date' : 'text'}`}
                 id="default-search"
-                className={`block w-[200px] rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-blue-500 focus:ring-blue-500 
+                className={`block w-[200px] rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-red-500 focus:ring-red-500 
               ${enableDate ? '' : 'cursor-not-allowed opacity-50'}`}
                 required
                 onChange={(ev) => {
@@ -231,7 +231,7 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
               <input
                 type={`${enableDate ? 'date' : 'text'}`}
                 id="default-search"
-                className={`dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 block w-[200px] rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-blue-500 focus:ring-blue-500 
+                className={`dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500 block w-[200px] rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-red-500 focus:ring-red-500 
               ${enableDate ? '' : 'opacity-50'}`}
                 placeholder="Channel"
                 required
@@ -247,7 +247,7 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
           <div>
             {/* Apply button for dates */}
             <button
-              className={`border-1 h-[33px] w-[100px] rounded-[4px] border-[#7664e8] bg-[#7664e8] text-[12px] leading-[30px] text-white hover:bg-[#7664e8] hover:text-white ${enableDate
+              className={`border-1 h-[33px] w-[100px] rounded-[4px] border-[#B07828] bg-[#B07828] text-[12px] leading-[30px] text-white hover:bg-[#B07828] hover:text-white ${enableDate
                 ? ''
                 : 'cursor-not-allowed border-[#e1e1e1] bg-[#e1e1e1] hover:bg-[#e1e1e1] hover:text-black'
                 }'}}`}
@@ -273,20 +273,20 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
                       handleSRSuggested(ev);
                     }}
                   />
-                  <div className="peer h-6 w-11 rounded-full bg-blue-600 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-gray-200 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rtl:peer-checked:after:-translate-x-full"></div>
+                  <div className="peer h-6 w-11 rounded-full bg-red-600 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-gray-200 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rtl:peer-checked:after:-translate-x-full"></div>
                 </label>
               </div>
             </div>
           )}
         </div>
         <div className="flex justify-end w-1/2 items-center">
-          <button className='border text-[14px] flex justify-center items-center gap-2 text-[#7664E8] hover:text-black lg:h-8 h-auto px-[5px] w-[150px] border-[#7664E8] rounded-[4px]'>
+          <button className='border text-[14px] flex justify-center items-center gap-2 text-[#B02828] hover:text-black lg:h-8 h-auto px-[5px] w-[150px] border-[#B02828] rounded-[4px]'>
             {/* <img src={} alt="" width={'14px'} /> */}
             {/* Todo: Upload image add */}
             Import Products
           </button>
-          <button className='border text-[14px] text-[#7664E8] hover:text-black lg:h-8 h-auto px-[5px] w-[150px] border-[#7664E8] rounded-[4px]'>Export products</button>
-          <button className='border text-[14px] text-[#7664E8] hover:text-black lg:h-8 h-auto px-[5px] w-[150px] border-[#7664E8] rounded-[4px]'>Export Order List</button>
+          <button className='border text-[14px] text-[#B02828] hover:text-black lg:h-8 h-auto px-[5px] w-[150px] border-[#B02828] rounded-[4px]'>Export products</button>
+          <button className='border text-[14px] text-[#B02828] hover:text-black lg:h-8 h-auto px-[5px] w-[150px] border-[#B02828] rounded-[4px]'>Export Order List</button>
         </div>
       </div>
     </>

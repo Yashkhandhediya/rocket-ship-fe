@@ -361,12 +361,12 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
                 <span className="pl-1 text-[10px] text-gray-400">Upto 3</span>
               </p>
               <Label htmlFor="bulkOrderDropZone">
-                <div className="grid h-[98px] place-items-center rounded-[10px] border border-dashed border-indigo-700 bg-[#f4f8ff99]">
+                <div className="grid h-[98px] place-items-center rounded-[10px] border border-dashed border-orange-700 bg-[#f4f8ff99]">
                   <div className="flex flex-col items-center gap-1.5">
-                    <FontAwesomeIcon icon={faCloudArrowUp} className="h-6 w-8 text-indigo-700" />
+                    <FontAwesomeIcon icon={faCloudArrowUp} className="h-6 w-8 text-orange-700" />
                     <Label
                       htmlFor="bulkOrderDropZone"
-                      className="cursor-pointer rounded-md px-5 py-0 text-[10px] font-medium text-indigo-500 ">
+                      className="cursor-pointer rounded-md px-5 py-0 text-[10px] font-medium text-orange-500 ">
                       {'Add Image(s)'}
                     </Label>
                   </div>
@@ -524,7 +524,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
           })}
           <div>
             <button
-              className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-xs text-indigo-700'}
+              className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-xs text-orange-700'}
               onClick={handleAddProductField}
             >
               + Add Another Product
@@ -558,14 +558,14 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
         {currentStep !== 0 && (
           <button
             type="button"
-            className="dark:focus:ring-purple-900 rounded-lg border border-purple-600 px-8 py-2 text-sm font-medium text-purple-600 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-purple-300"
+            className="dark:focus:ring-red-900 rounded-lg border border-red-600 px-8 py-2 text-sm font-medium text-red-600 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-red-300"
             onClick={() => changeNextStep('BACK')}>
             {'Back'}
           </button>
         )}
         <button
           type="button"
-          className="dark:focus:ring-purple-900 rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
+          className="dark:focus:ring-red-900 rounded-lg bg-red-600 px-8 py-2 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300"
           onClick={() => changeNextStep('NEXT')}>
           {'Next'}
         </button>

@@ -91,7 +91,7 @@ export default function Tracking() {
                                 </div>
                                 <div className="font-0.8">
                                     <div>Tracking ID</div>
-                                    <div style={{ color: 'blue' }}>{shipmentData && shipmentData.AWB ? shipmentData.AWB : 'N.A.'}</div>
+                                    <div style={{ color: 'red' }}>{shipmentData && shipmentData.AWB ? shipmentData.AWB : 'N.A.'}</div>
                                 </div>
                             </div>
                             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginTop: '2.5rem' }}>

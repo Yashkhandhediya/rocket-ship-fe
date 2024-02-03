@@ -460,7 +460,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
           })}
           <div>
             <button
-              className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-xs text-indigo-700'}
+              className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-xs text-orange-700'}
               onClick={handleAddProductField}>
               + Add Another Product
             </button>
@@ -605,14 +605,14 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
         {currentStep !== 0 && (
           <button
             type="button"
-            className="dark:focus:ring-purple-900 rounded-lg border border-purple-600 px-8 py-2 text-sm font-medium text-purple-600 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-purple-300"
+            className="dark:focus:ring-red-900 rounded-lg border border-red-600 px-8 py-2 text-sm font-medium text-red-600 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-red-300"
             onClick={() => changeNextStep('BACK')}>
             {'Back'}
           </button>
         )}
         <button
           type="button"
-          className="dark:focus:ring-purple-900 rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
+          className="dark:focus:ring-red-900 rounded-lg bg-red-600 px-8 py-2 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300"
           onClick={() => changeNextStep('NEXT')}>
           {'Next'}
         </button>

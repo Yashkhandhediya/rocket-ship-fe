@@ -68,7 +68,7 @@ const Completed_KYC = () => {
                 <div className="text-[12px]">
                     Upgraded your bussiness type ?  Do KYC as a Sole Proprietorship or Company by clicking upgrade your KYC
                 </div>
-                <button className="px-8 py-1 text-[14px] w-48 text-white bg-purple-600 transition-colors duration-200 rounded-md">Upgrade Your KYC</button>
+                <button className="px-8 py-1 text-[14px] w-48 text-white bg-red-600 transition-colors duration-200 rounded-md">Upgrade Your KYC</button>
             </div>
         </div>
     )

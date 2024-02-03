@@ -50,7 +50,7 @@ const Returns = () => {
         <div className="flex items-center justify-between px-1.5 pb-3 pt-4">
           <h1 className="text-xl font-bold">Returns</h1>
           <button
-            className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-sm font-medium text-indigo-600'}
+            className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-sm font-medium text-orange-600'}
             onClick={() => navigate('/add-return')}>
             + Add Return
           </button>

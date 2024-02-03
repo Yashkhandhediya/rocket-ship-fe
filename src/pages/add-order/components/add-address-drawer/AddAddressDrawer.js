@@ -37,7 +37,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
 
   const tagClasses = (tag) => {
     return tag === addressTag
-      ? 'text-indigo-700 border-indigo-700 bg-[#e5e0ff] mx-2.5 h-6 w-[92px] rounded-xl border text-center text-xs font-normal'
+      ? 'text-orange-700 border-orange-700 bg-[#e5e0ff] mx-2.5 h-6 w-[92px] rounded-xl border text-center text-xs font-normal'
       : 'text-gray-800 border-gray-300 bg-transparent mx-2.5 h-6 w-[92px] rounded-xl border text-center text-xs font-normal';
   };
 
@@ -332,7 +332,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
       <div className="mb-4 mt-5 w-full border border-gray-100" />
       <div>
         <div
-          className="flex cursor-pointer items-center text-xs text-indigo-700"
+          className="flex cursor-pointer items-center text-xs text-orange-700"
           onClick={() => {
             // open map modal to select location
           }}>
@@ -421,12 +421,12 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
       </FieldAccordion>
       <div className="my-6 flex justify-end gap-5">
         <button
-          className="rounded border border-indigo-700 px-4 py-1.5 text-sm text-indigo-700"
+          className="rounded border border-orange-700 px-4 py-1.5 text-sm text-orange-700"
           onClick={handleCloseDrawer}>
           Cancel
         </button>
         <button
-          className="rounded bg-indigo-700 px-4 py-1.5 text-sm text-white"
+          className="rounded bg-orange-700 px-4 py-1.5 text-sm text-white"
           onClick={handleSaveAddressInRedux}>
           Verify And Save Address
         </button>

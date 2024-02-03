@@ -12,7 +12,7 @@ const Checkbox = ({ id, label, checked, value="",  tooltip, onChange }) => {
       >
         <span className="absolute left-0 top-0 h-[18px] w-[18px] rounded border border-gray-300 bg-transparent">
           {checked && (
-            <span className="grid h-full w-full place-content-center rounded border border-indigo-700 fill-indigo-700 text-indigo-700">
+            <span className="grid h-full w-full place-content-center rounded border border-orange-700 fill-orange-700 text-orange-700">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 x="0px"

@@ -48,7 +48,7 @@ const ShipmentDrawerOrderDetails = ({ orderDetails }) => {
             <span className="mb-3 ml-2.5 inline-flex">{'No Orders'}</span>
           </div>
           <button
-            className="text-wrap rounded-md border border-indigo-700 bg-transparent px-6 py-2 text-xs text-indigo-700"
+            className="text-wrap rounded-md border border-orange-700 bg-transparent px-6 py-2 text-xs text-orange-700"
             onClick={() => setOpenMoreDetails(true)}>
             {'View All Details'}
           </button>

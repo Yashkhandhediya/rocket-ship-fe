@@ -97,7 +97,7 @@ const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
                 Photo Identification
             </div>
             <div className="w-[85%] h-2/3 bg-white rounded-md shadow-md flex flex-col items-center justify-center py-12 mb-6">
-                <div className={`video_div w-1/2 border-dashed bg-[#FAFAFA] border-purple-200 rounded-2xl border-2 h-full flex justify-center items-center ${videoInitialized ? '' : 'py-24'} mb-6`}>
+                <div className={`video_div w-1/2 border-dashed bg-[#FAFAFA] border-red-200 rounded-2xl border-2 h-full flex justify-center items-center ${videoInitialized ? '' : 'py-24'} mb-6`}>
                     {capturedImage ? (
                         <img src={capturedImage} alt="Captured" width={'100%'} className="rounded-2xl" />
                     ) :
@@ -108,7 +108,7 @@ const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
                 <div>
                     <button
                         type="button"
-                        className="dark:focus:ring-purple-900 rounded-lg bg-white px-14 py-1.5 text-sm font-medium text-purple-500 border-2 border-purple-500 hover:bg-purple-500 hover:text-white focus:outline-none focus:ring-4 focus:ring-purple-300"
+                        className="dark:focus:ring-red-900 rounded-lg bg-white px-14 py-1.5 text-sm font-medium text-red-500 border-2 border-red-500 hover:bg-red-500 hover:text-white focus:outline-none focus:ring-4 focus:ring-red-300"
                         onClick={() => handleCamera(type)}
                     >
                         {selfieText}
@@ -124,7 +124,7 @@ const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
                 <div className="flex justify-start gap-4">
                     <button
                         type="button"
-                        className="dark:focus:ring-purple-900 rounded-lg bg-purple-600 px-10 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
+                        className="dark:focus:ring-red-900 rounded-lg bg-red-600 px-10 py-2 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300"
                         onClick={() => changeNextStep('NEXT')}
                     >
                         {'Next'}

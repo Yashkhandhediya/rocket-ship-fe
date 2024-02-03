@@ -83,7 +83,7 @@ const OrderTrackDetails = () => {
               </div>
               <div className="flex gap-1.5">
                 <button
-                  className="min-w-fit rounded bg-indigo-700 px-6 py-2 text-xs font-medium text-white"
+                  className="min-w-fit rounded bg-orange-700 px-6 py-2 text-xs font-medium text-white"
                   onClick={() => setShipmentDrawerOpen(true)}>
                   {'Ship Now'}
                 </button>

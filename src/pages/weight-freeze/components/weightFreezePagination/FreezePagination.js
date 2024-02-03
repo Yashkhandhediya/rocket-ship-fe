@@ -54,11 +54,11 @@ const FreezePagination = ({ page, perPage, handlePerPageChange, handlePageChange
       </div>
 
       <div className='flex items-center w-1/3 gap-16 pl-8'>
-        <button className={`rounded-2xl border border-[#c1c1c144] text-[12px] px-3 py-1 ${previosEnabled ? 'text-[#285FDB]' : 'text-[#707070] text-opacity-25'}`}
+        <button className={`rounded-2xl border border-[#c1c1c144] text-[12px] px-3 py-1 ${previosEnabled ? 'text-[#159700]' : 'text-[#707070] text-opacity-25'}`}
           onClick={() => {
             handlePrevios();
           }}>{'<< Previos'}</button>
-        <button className={`rounded-2xl border border-[#c1c1c144] text-[12px] px-3 py-1 ${nextEnabled ? 'text-[#285FDB]' : 'text-[#707070] text-opacity-25'}`}
+        <button className={`rounded-2xl border border-[#c1c1c144] text-[12px] px-3 py-1 ${nextEnabled ? 'text-[#159700]' : 'text-[#707070] text-opacity-25'}`}
           onClick={() => {
             handleNext();
           }}>{'Next>>'}</button>

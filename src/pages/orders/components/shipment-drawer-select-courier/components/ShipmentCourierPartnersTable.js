@@ -145,8 +145,9 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           <div className="flex flex-col gap-1 py-2 text-left">
             <Button
               id={row?.original?.id}
-              className="rounded bg-indigo-600 w-[104px] h-[34px] text-white"
-              onClick={handleShipOrder}>
+              className="rounded bg-red-600 w-[104px] h-[34px] text-white"
+              onClick={handleShipOrder}
+              style={{':hover':{backgroundColor:'#DB5711'}}}>
               {'Ship Now'}
             </Button>
           </div>

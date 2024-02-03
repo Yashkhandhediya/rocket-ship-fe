@@ -46,7 +46,7 @@ export const ReadyToShip = () => {
               <div className="pb-0.5">
                 <Link
                   to={generatePath(`/track-order/:orderId`, { orderId: row?.original?.id || 1})}
-                  className="border-b-2 border-b-purple-700 text-purple-700">
+                  className="border-b-2 border-b-orange-600 text-orange-600">
                   {row?.original?.id}
                 </Link>
               </div>
@@ -67,7 +67,7 @@ export const ReadyToShip = () => {
                     );
                   })}
                   wrapperClassNames={'whitespace-pre-wrap '}>
-                  <div className="relative cursor-pointer pb-0.5 text-purple-700 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-purple-700">
+                  <div className="relative cursor-pointer pb-0.5 text-orange-600 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-red-700">
                     {'View Products'}
                   </div>
                 </CustomTooltip>
@@ -143,7 +143,7 @@ export const ReadyToShip = () => {
                 ) : (
                   <Link
                   to={generatePath(`/tracking/:orderId`, { orderId: row?.original?.id || 1 })}
-                  className="border-b-2 border-b-purple-700 text-purple-700">
+                  className="border-b-2 border-b-red-700 text-orange-600">
                   {'Track order'}
                 </Link>
                   // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
@@ -153,7 +153,7 @@ export const ReadyToShip = () => {
                   // }
                   // <Link
                   //   to={generatePath(`/tracking/:orderId`, { orderId: row?.id })}
-                  //   className="border-b-2 border-b-purple-700 text-purple-700">
+                  //   className="border-b-2 border-b-red-700 text-red-700">
                   //   {'Track order'}
                   // </Link>
                 )}
@@ -178,7 +178,7 @@ export const ReadyToShip = () => {
           <div className="flex gap-2 text-left text-xs">
             <button
               id={row?.original?.id}
-              className="min-w-fit rounded bg-indigo-700 px-4 py-1.5 text-white"
+              className="min-w-fit rounded bg-red-700 px-4 py-1.5 text-white"
               onClick={() => {
                 setScheduleModal({
                   isOpen: true,
@@ -224,7 +224,7 @@ export const ReadyToShip = () => {
 
   const rowSubComponent = () => {
     return (
-      <Badge className="flex w-fit items-center rounded-lg bg-sky-200 text-[8px]">
+      <Badge className="flex w-fit items-center rounded-lg bg-red-200 text-[8px]">
         <div className="flex items-center">
           <span className="mr-1 inline-flex h-4 w-4 rounded-full border-4 border-black"></span>
           {'Secured'}
@@ -238,7 +238,7 @@ export const ReadyToShip = () => {
       <div className="mb-4 flex w-full">
         <div>
           <button
-            className="inline-flex items-center rounded-sm border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-indigo-700"
+            className="inline-flex items-center rounded-sm border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-orange-700"
             onClick={() => setOpenFilterDrawer(true)}>
             <img src={filterIcon} className="mr-2 w-4" />
             {'More Filters'}

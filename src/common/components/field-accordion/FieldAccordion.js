@@ -11,13 +11,13 @@ const FieldAccordion = ({ id, children, label, showOptional }) => {
       data-accordion="open"
     >
       <div
-        className="flex items-center bg-transparent pb-4 text-xs text-blue-700"
+        className="flex items-center bg-transparent pb-4 text-xs text-red-700"
         data-accordion-target={`#${id}-accordion`}
         aria-controls={`${id}-accordion`}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className="text-blue-700">{label}</span>
-        <img className="accordion-icon shrink-0 text-indigo-700" data-accordion-icon src={downArrow} />
+        <span className="text-red-700">{label}</span>
+        <img className="accordion-icon shrink-0 text-orange-700" data-accordion-icon src={downArrow} />
         {showOptional && <span className="ml-2 text-[10px] text-gray-400">{'(Optional)'}</span>}
       </div>
       <div

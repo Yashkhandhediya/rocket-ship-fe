@@ -59,7 +59,7 @@ const TextArea = ({
                     onWheel={(e) => e.target.blur()}
                     className={`block min-h-[36px] w-full rounded-md border 
           ${leftAddOn && 'rounded-l-none rounded-r-md'} ${rightAddOn && 'rounded-l-md rounded-r-none'} ${counterField && 'rounded-none text-center'
-                        } border-gray-300 px-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 disabled:bg-neutral-300 ${inputClassNames} `}
+                        } border-gray-300 px-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 disabled:bg-neutral-300 ${inputClassNames} `}
                     placeholder={placeHolder}
                     required={required}
                     onBlur={onBlur}

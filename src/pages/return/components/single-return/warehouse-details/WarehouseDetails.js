@@ -95,23 +95,23 @@ const WarehouseDetails = ({ currentStep, handleChangeStep }) => {
                         id={'searchAdress'}
                         placeHolder={'Search your RTO address here by nickname or phone number'}
                         value={searchAddress}
-                        inputClassNames={'h-4 focus:ring-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md bg-gray-200 text-black'}
+                        inputClassNames={'h-4 focus:ring-orange-500 block w-full sm:text-sm border-gray-300 rounded-md bg-gray-200 text-black'}
                         onChange={(e) => setSearchAddress(e?.target?.value)}
                     />
                 </div>
                 <div className="mb-6 mt-6 w-full border border-gray-100" />
                 <div>
                     <div className="mb-3 text-sm font-medium">{'Recently Used Addresses'}</div>
-                    <div className="text-xs text-indigo-700">{'No Recent Found!'}</div>
+                    <div className="text-xs text-orange-700">{'No Recent Found!'}</div>
                 </div>
                 <div className="mb-4 mt-6 w-full border border-gray-100" />
                 <div>
                     <div className="mb-3 text-sm font-medium">{'Other Addresses'}</div>
                     <div className="block flex-wrap md:flex">
                         <div className="md:w-/12 mb-3 px-2 lg:w-3/12" onClick={() => setAddAddressDrawerOpen(true)}>
-                            <div className="h-[11.5rem] w-full cursor-pointer rounded-2xl border border-dashed border-indigo-700 bg-white px-6 py-14 text-center">
+                            <div className="h-[11.5rem] w-full cursor-pointer rounded-2xl border border-dashed border-orange-700 bg-white px-6 py-14 text-center">
                                 <img src={addAdressIcon} className="m-auto align-middle" />
-                                <p className="mb-0.5 mt-3 text-xs text-indigo-700">{' Add New Pickup Address '}</p>
+                                <p className="mb-0.5 mt-3 text-xs text-orange-700">{' Add New Pickup Address '}</p>
                             </div>
                         </div>
                         {/* card with Address */}
@@ -148,7 +148,7 @@ const WarehouseDetails = ({ currentStep, handleChangeStep }) => {
                                         </div>
                                         <div className="py-auto w-full py-2.5">
                                             <button
-                                                className="flex items-center text-xs leading-4 text-indigo-700"
+                                                className="flex items-center text-xs leading-4 text-orange-700"
                                                 onClick={() => {
                                                     setEditAddressDrawerOpen(true);
                                                     setSelectedAddress(address);
@@ -168,14 +168,14 @@ const WarehouseDetails = ({ currentStep, handleChangeStep }) => {
                 {currentStep !== 0 && (
                     <button
                         type="button"
-                        className="dark:focus:ring-purple-900 rounded-lg border border-purple-600 px-8 py-2 text-sm font-medium text-purple-600 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-purple-300"
+                        className="dark:focus:ring-red-900 rounded-lg border border-red-600 px-8 py-2 text-sm font-medium text-red-600 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-red-300"
                         onClick={() => changeNextStep('BACK')}>
                         {'Back'}
                     </button>
                 )}
                 <button
                     type="button"
-                    className="dark:focus:ring-purple-900 rounded-lg bg-purple-600 px-8 py-2 text-sm font-medium text-white hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
+                    className="dark:focus:ring-red-900 rounded-lg bg-red-600 px-8 py-2 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300"
                     onClick={() => changeNextStep('NEXT')}>
                     {'Next'}
                 </button>

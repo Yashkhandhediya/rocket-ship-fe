@@ -21,7 +21,7 @@ const Stepper = ({ step }) => {
                 className={`mb-4 flex text-center text-sm  ${isDisabled ? 'text-[#00000061]' : 'text-gray-800'} ${step + 1 == count ? 'font-medium' : ''
                     }`}>
                 <div
-                    className={`mr-2.5 h-[22px] w-[22px] rounded-full border ${isDisabled ? 'border-[#d3d3d3s] opacity-60' : 'border-blue-700'
+                    className={`mr-2.5 h-[22px] w-[22px] rounded-full border ${isDisabled ? 'border-[#d3d3d3s] opacity-60' : 'border-red-700'
                         } bg-white`}>
                     {count}
                 </div>

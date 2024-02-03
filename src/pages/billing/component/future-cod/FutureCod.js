@@ -28,7 +28,7 @@ const FutureCod = () => {
             {data.length > 0 ? ('ashjgfdsy') : (
                 <div className='pt-16 mb-12 w-full flex justify-center items-center flex-col'>
                     <img src={noData} alt="" width={'200px'} />
-                    <div className='text-3xl mt-10 text-[#6457B6] font-bold'>We could not find any data.</div>
+                    <div className='text-3xl mt-10 text-[#b54040] font-bold'>We could not find any data.</div>
                 </div>
             )}
         </div>

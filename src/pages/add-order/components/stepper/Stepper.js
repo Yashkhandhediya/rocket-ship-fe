@@ -23,7 +23,7 @@ const Stepper = ({ step }) => {
         }`}>
         <div
           className={`mr-2.5 h-[22px] w-[22px] rounded-full border ${
-            isDisabled ? 'border-[#d3d3d3s] opacity-60' : 'border-blue-700'
+            isDisabled ? 'border-[#d3d3d3s] opacity-60' : 'border-red-700'
           } bg-white`}>
           {count}
         </div>

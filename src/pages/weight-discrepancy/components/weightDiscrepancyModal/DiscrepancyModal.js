@@ -107,7 +107,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                     <div className="mt-2 flex flex-row flex-wrap gap-8 rounded-lg">
                       {/* Image 1 */}
                       <div className='flex h-32 flex-col w-[28%]'>
-                        <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
+                        <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-red-500">
                           <label htmlFor="length_img" className="w-full">
                             <div className="flex cursor-pointer flex-col items-center justify-center">
                               {images.length_img ? (
@@ -126,7 +126,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                           </label>
                         </div>
                         {images.length_img && (
-                          <button className='border border-blue-400 text-blue-400 mt-2 py-1 rounded-md hover:bg-blue-600 hover:text-white'>
+                          <button className='border border-red-400 text-red-400 mt-2 py-1 rounded-md hover:bg-red-600 hover:text-white'>
                             <label htmlFor="length_img">
                               Change image
                               <input type="file" className="hidden" name="length_img" accept=".jpg,.png,.gif,.jpeg" id="length_img" onChange={handleFileChange}
@@ -137,7 +137,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                       </div>
                       {/* Image 2 */}
                       <div className='flex h-32 flex-col w-[28%]'>
-                        <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
+                        <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-red-500">
                           <label htmlFor="width_img" className="w-full">
                             <div className="flex cursor-pointer flex-col items-center justify-center">
                               {images.width_img ? (
@@ -156,7 +156,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                           </label>
                         </div>
                         {images.width_img && (
-                          <button className='border border-blue-400 text-blue-400 mt-2 py-1 rounded-md hover:bg-blue-600 hover:text-white'>
+                          <button className='border border-red-400 text-red-400 mt-2 py-1 rounded-md hover:bg-red-600 hover:text-white'>
                             <label htmlFor="width_img">
                               Change image
                               <input type="file" className="hidden" name="width_img" accept=".jpg,.png,.gif,.jpeg" id="width_img" onChange={handleFileChange}
@@ -167,7 +167,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                       </div>
                       {/* Image 3 */}
                       <div className='flex h-32 flex-col w-[28%]'>
-                        <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
+                        <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-red-500">
                           <label htmlFor="height_img" className="w-full">
                             <div className="flex cursor-pointer flex-col items-center justify-center">
                               {images.height_img ? (
@@ -186,7 +186,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                           </label>
                         </div>
                         {images.height_img && (
-                          <button className='border border-blue-400 text-blue-400 mt-2 py-1 rounded-md hover:bg-blue-600 hover:text-white'>
+                          <button className='border border-red-400 text-red-400 mt-2 py-1 rounded-md hover:bg-red-600 hover:text-white'>
                             <label htmlFor="height_img">
                               Change image
                               <input type="file" className="hidden" name="height_img" accept=".jpg,.png,.gif,.jpeg" id="height_img" onChange={handleFileChange}
@@ -198,7 +198,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
 
                       {/* Image 4 */}
                       <div className='flex h-32 flex-col w-[28%]'>
-                        <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
+                        <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-red-500">
                           <label htmlFor="weight_img" className="w-full">
                             <div className="flex cursor-pointer flex-col items-center justify-center">
                               {images.weight_img ? (
@@ -217,7 +217,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                           </label>
                         </div>
                         {images.weight_img && (
-                          <button className='border border-blue-400 text-blue-400 mt-2 py-1 rounded-md hover:bg-blue-600 hover:text-white'>
+                          <button className='border border-red-400 text-red-400 mt-2 py-1 rounded-md hover:bg-red-600 hover:text-white'>
                             <label htmlFor="weight_img">
                               Change image
                               <input type="file" className="hidden" name="weight_img" accept=".jpg,.png,.gif,.jpeg" id="weight_img" onChange={handleFileChange}
@@ -229,7 +229,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
 
                       {/* Image 5 */}
                       <div className='flex h-32 flex-col w-[28%]'>
-                        <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-blue-500">
+                        <div className="flex h-32 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-red-500">
                           <label htmlFor="with_label_img" className="w-full">
                             <div className="flex cursor-pointer flex-col items-center justify-center">
                               {images.with_label_img ? (
@@ -248,7 +248,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                           </label>
                         </div>
                         {images.with_label_img && (
-                          <button className='border border-blue-400 text-blue-400 mt-2 py-1 rounded-md hover:bg-blue-600 hover:text-white'>
+                          <button className='border border-red-400 text-red-400 mt-2 py-1 rounded-md hover:bg-red-600 hover:text-white'>
                             <label htmlFor="with_label_img">
                               Change image
                               <input type="file" className="hidden" name="with_label_img" accept=".jpg,.png,.gif,.jpeg" id="with_label_img" onChange={handleFileChange}
@@ -316,7 +316,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
             {/*footer*/}
             <div className="border-blueGray-200 flex items-center justify-center rounded-b border-t border-solid p-6">
               <button
-                className="mb-1 mr-1 rounded-lg bg-blue-600 px-6 py-2 text-sm text-white shadow outline-none transition-all duration-150 border ease-linear hover:shadow-lg focus:outline-none font-semibold"
+                className="mb-1 mr-1 rounded-lg bg-[#B07828] px-6 py-2 text-sm text-white shadow outline-none transition-all duration-150 border ease-linear hover:shadow-lg focus:outline-none font-semibold"
                 type="button"
                 onClick={() => {
                   handleWeightFreezeSubmit()

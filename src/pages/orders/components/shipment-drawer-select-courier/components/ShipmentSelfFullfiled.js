@@ -51,7 +51,7 @@ const ShipmentSelfFullfiled = () => {
           />
         </div>
         <div className='mt-4 text-left'>
-          <button className="min-w-fit rounded bg-indigo-600 px-5 py-2 text-white text-xs" onClick={onSubmit}>{"Mark as Self Fulfilled"}</button>
+          <button className="min-w-fit rounded bg-red-700 hover:bg-green-700 px-5 py-2 text-white text-xs" onClick={onSubmit}>{"Mark as Self Fulfilled"}</button>
         </div>
       </div>
     </div>

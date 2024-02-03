@@ -44,7 +44,7 @@ const FreezeTable = ({ data, setLoading, setShowImages, setImages }) => {
               <div className="flex h-full w-[4%] items-center justify-center border-r-2">
                 <input type="checkbox" />
               </div>
-              <div className="flex h-full w-1/12 items-center border-r-2 pl-2 text-blue-600">{item.id}</div>
+              <div className="flex h-full w-1/12 items-center border-r-2 pl-2 text-red-600">{item.id}</div>
               <div className="flex h-full w-1/12 items-center border-r-2 pl-2 font-normal">{item.name}</div>
               <div className="flex h-full w-2/12 flex-col justify-center gap-4 border-r-2 pl-2 text-left">
                 <div>Channel SKU : {item.sku}</div>
@@ -68,7 +68,7 @@ const FreezeTable = ({ data, setLoading, setShowImages, setImages }) => {
                     {/* <img src={`http://43.252.197.60:8050/image/get_image?file_path=${item.images[0]}`} alt="" className='w-[45%] mx-2 border border-black border-dashed' />
                     <img src={`http://43.252.197.60:8050/image/get_image?file_path=${item.images[1]}`} alt="" className='w-[45%] mx-2 border border-black border-dashed' /> */}
                     <span
-                      className='font-normal text-blue-700 text-decoration-underline cursor-pointer'
+                      className='font-normal text-[#B02828] text-decoration-underline cursor-pointer'
                       onClick={() => {
                         setImages(item.images);
                         setShowImages(true);
@@ -83,7 +83,7 @@ const FreezeTable = ({ data, setLoading, setShowImages, setImages }) => {
                 {freezeStatus == 'Request Raised' && (<span className='w-[90%] bg-red-200 text-red-700 text-center py-1 rounded-sm text-[12px]'>Requested</span>)}
               </div>
               <div className="flex flex-col gap-2 h-full w-[14%] justify-center items-center border-r-2">
-                <button className={`rounded-sm border px-4 py-2 ${freezeStatus == 'Not Requested' ? 'bg-white text-blue-500 border-blue-500' : 'bg-gray-200 text-gray-500 border-blue-400 cursor-not-allowed'}`}
+                <button className={`rounded-sm border px-4 py-2 ${freezeStatus == 'Not Requested' ? 'bg-white text-[#B02828] border-[#B02828]' : 'bg-gray-200 text-gray-500 border-[#eb7b7b] cursor-not-allowed'}`}
                   onClick={() => {
                     setSelectedIndex(key);
                     setShow(true);
@@ -103,7 +103,7 @@ const FreezeTable = ({ data, setLoading, setShowImages, setImages }) => {
         }) : (
           <div className='pt-12 mb-12 w-full flex justify-center items-center flex-col'>
             <img src={noData} alt="" width={'230px'} />
-            <div className='text-3xl mt-10 text-[#6457B6]'>We could not find any data for the applied filters.</div>
+            <div className='text-3xl mt-10 text-[#B02828]'>We could not find any data for the applied filters.</div>
             <div className='text-[14px] mt-2 font-normal opacity-80'>Please change filters and retry.</div>
           </div>
         )}

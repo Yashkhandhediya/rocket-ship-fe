@@ -6,7 +6,7 @@ const COD_Reconciliation = ({ charges, data }) => {
         <>
             <div className="flex flex-row w-full justify-evenly my-4 px-6">
                 {charges.map((charge, index) => (
-                    <div key={index} className="flex flex-col gap-1 font-semibold bg-[#285FDB] text-white justify-between text-center w-[17rem] py-1">
+                    <div key={index} className="flex flex-col gap-1 font-semibold bg-[#159700] text-white justify-between text-center w-[17rem] py-1">
                         <div className="text-[14px] flex flex-row justify-center items-center gap-1">
                             {charge.label}
                             {charge.tooltip &&
@@ -26,12 +26,12 @@ const COD_Reconciliation = ({ charges, data }) => {
                 {data.length > 0 ? ('ashjgfdsy') : (
                     <div className='pt-16 mb-12 w-full flex justify-center items-center flex-col'>
                         <img src={remitance} alt="" width={'200px'} />
-                        <div className='text-3xl mt-10 text-[#6457B6] font-bold'>Your remittance is on its way.</div>
+                        <div className='text-3xl mt-10 text-[#b54040] font-bold'>Your remittance is on its way.</div>
                         <div className='text-[15px] text-[#313131] mt-2 font-semibold opacity-80'>
                             Hey {localStorage.getItem('user_name')}, We release COD remittance 3 times in a week and on the 8th day from the date of delivery.
                         </div>
                         <div className="mt-8">
-                            <button className="bg-[#4E4298] px-16 py-3 rounded-3xl text-white text-[13px]">
+                            <button className="bg-[#b54040] px-16 py-3 rounded-3xl text-white text-[13px]">
                                 Learn More
                             </button>
                         </div>

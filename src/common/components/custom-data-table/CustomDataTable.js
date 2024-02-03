@@ -27,7 +27,7 @@ const CustomDataTable = ({
         id: 'select',
         header: ({ table }) => (
           <FlowbiteCheckbox
-            color={'indigo'}
+            color={'red'}
             className="px-0"
             checked={table.getIsAllRowsSelected()}
             onChange={table.getToggleAllRowsSelectedHandler()}
@@ -35,7 +35,7 @@ const CustomDataTable = ({
         ),
         cell: ({ row }) => (
           <FlowbiteCheckbox
-            color={'indigo'}
+            color={'red'}
             checked={row.getIsSelected()}
             disabled={!row.getCanSelect()}
             onChange={row.getToggleSelectedHandler()}
