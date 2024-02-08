@@ -1,0 +1,1 @@
+export {default as OTP_Modal} from './OTP_Modal';

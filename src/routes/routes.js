@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails, Return, Weight_Freeze, WeightDiscrepancy } from '../pages';
+import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails, Return, Weight_Freeze, WeightDiscrepancy, Settings, Bank_details, Manage_pickup_add, Change_password, Company_Profile } from '../pages';
 import Tracking from '../pages/tracking/Tracking';
 import ReturnTracking from '../pages/return-tracking/ReturnTracking';
 import PrivateRoute from './private-route/PrivateRoute';
@@ -73,14 +73,35 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<COD_Remittance />} />,
   },
   {
-    path :'/billing-credit-details',
+    path: '/billing-credit-details',
     element: <PrivateRoute component={<Wallet_history />} />,
   },
   {
 
-    path:'/recharge-status',
+    path: '/recharge-status',
     element: <PrivateRoute component={<Wallet_history />} />,
-  }
+  },
+  {
+    path: '/settings',
+    element: <PrivateRoute component={<Settings />} />,
+  },
+  {
+    path: '/company-bank-details',
+    element: <PrivateRoute component={<Bank_details />} />,
+  },
+  {
+    path: '/company-pickup-location',
+    element: <PrivateRoute component={<Manage_pickup_add />} />,
+  },
+  {
+    path: '/change-password',
+    element: <PrivateRoute component={<Change_password />} />,
+  },
+  {
+    path: '/company-general-details',
+    element: <PrivateRoute component={<Company_Profile />} />,
+  },
+
 ]);
 
 export default routes;

@@ -20,6 +20,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
 
   const [isValidFirstName, setIsValidFirstName] = useState(true);
   const [isValidNumber, setIsValidNumber] = useState(true);
+  const [isValidAlternateNumber, setIsValidAlternateNumber] = useState(true);
   const [isValidEmailAddress, setIsValidEmailAddress] = useState(true);
   const [triggerValidations, setTriggerValidations] = useState(false);
 
@@ -297,9 +298,13 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
               labelClassNames={'text-xs'}
               placeHolder={'Enter 10 digit mobile number'}
               required={true}
-              value={''}
-              onChange={() => {}}
+              value={addressInfo?.alternameMobileNo || ''}
+              onBlur={() => setIsValidAlternateNumber(/^\d{10}$/.test(addressInfo?.alternameMobileNo))}
+              onChange={handleSetAddressInfo}
             />
+            {!isValidAlternateNumber && (
+              <p className="mt-1 text-xs text-red-500">Please enter valid 10 digit phone number.</p>
+            )}
           </div>
         </div>
       </div>

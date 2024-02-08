@@ -1,0 +1,1 @@
+export { default as Change_password } from './Change_password';

@@ -132,7 +132,7 @@ export const sidebarLinks = [
   },
   {
     title: 'Settings',
-    path: '/',
+    path: '/settings',
     icon: home,
     hoverIcon: homeActive,
   },

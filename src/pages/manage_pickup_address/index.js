@@ -1,0 +1,1 @@
+export { default as Manage_pickup_add } from './Manage_pickup_add.js';

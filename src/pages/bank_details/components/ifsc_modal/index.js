@@ -1,0 +1,1 @@
+export { default as IFSC_modal } from './IFSC_modal';
