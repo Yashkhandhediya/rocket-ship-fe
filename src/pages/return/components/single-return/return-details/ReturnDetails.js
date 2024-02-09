@@ -328,6 +328,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
             ]}
             withCheckbox={false}
             displayValuesAsStrings
+            closeMenuOnSelect={true}
             onChange={(val) =>
               handleChangeValues({
                 target: {

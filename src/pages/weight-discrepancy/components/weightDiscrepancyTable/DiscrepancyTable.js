@@ -16,7 +16,7 @@ const DiscrepancyTable = ({ data, setLoading }) => {
     const statusDate = new Date(date);
     const today = new Date();
     const weekLater = new Date(statusDate.getTime() + 7 * 24 * 60 * 60 * 1000);
-    if (today.getTime() > weekLater.getTime()) return `Discrepancy is accepted automatically on ${weekLater.toLocaleDateString()}`;
+    if (today.getTime() > weekLater.getTime()) return 2;
     const timeDifference = weekLater.getTime() - today.getTime();
     // Calculate the remaining days, hours, minutes, and seconds
     const remainingDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
@@ -102,6 +102,7 @@ const DiscrepancyTable = ({ data, setLoading }) => {
               </div>
               <div className="p-1 flex flex-col gap-2 h-full w-[10.66%] items-center justify-center border-r-2 font-normal">
                 {item.discrepancy_status_name == 'New Discrepancy' && getRemainingTime(item?.status_updated_on) > 0 &&
+                // {item.discrepancy_status_name == 'New Discrepancy'  &&
                   <>
                     <button className='border-2 p-1 border-red-600 rounded font-semibold text-red-600'
                       onClick={() => {
@@ -114,6 +115,16 @@ const DiscrepancyTable = ({ data, setLoading }) => {
                         setShow(true);
                       }}
                     >Dispute Discrepancy</button>
+                    <div className='text-center text-red-600 font-bold'>
+                      {getRemainingTime(item?.status_updated_on)} working days remaining
+                    </div>
+                  </>}
+                {item.discrepancy_status_name == 'New Discrepancy' && getRemainingTime(item?.status_updated_on) == 0 &&
+                  <>
+                    <button
+                      className='border-2 p-1 border-red-600 rounded font-semibold text-red-600 opacity-45 cursor-not-allowed'
+                      disabled
+                    >Discrepancy Accepted Automatically</button>
                     <div className='text-center text-red-600 font-bold'>
                       {getRemainingTime(item?.status_updated_on)} working days remaining
                     </div>
