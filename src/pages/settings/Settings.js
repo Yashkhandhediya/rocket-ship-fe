@@ -12,7 +12,7 @@ const Settings = () => {
         },
         {
           title: 'KYC',
-          link: '/'
+          link: '/seller/kyc'
         },
         {
           title: 'Change Password',

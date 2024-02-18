@@ -4,7 +4,7 @@ import { logout } from './utils';
 export const sidebarLinks = [
   {
     title: 'Home',
-    path: '/',
+    path: '/seller/home',
     icon: home,
     hoverIcon: homeActive,
   },

@@ -13,4 +13,5 @@ export * from './company-profile'
 export * from './change-password'
 export * from './manage_pickup_address'
 export * from './bank_details'
+export * from './home'
 
