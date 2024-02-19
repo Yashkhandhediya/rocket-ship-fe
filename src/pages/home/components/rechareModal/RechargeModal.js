@@ -10,17 +10,22 @@ const RechargeModal = ({ setShowRechargeModal }) => {
   const [couponCodeAmount, setCouponCodeAmount] = useState(0); // eslint-disable-line
 
   const formData = new FormData();
-  formData.append('amount', amount);
+  formData.append('amount', amount * 100);
 
   const handlePayment = async (response) => {
     const formData = new FormData();
     formData.append("razorpay_payment_id", response.razorpay_payment_id);
     formData.append("razorpay_order_id", response.razorpay_order_id);
     formData.append("razorpay_signature", response.razorpay_signature);
-    const data = await axios.post(`${BACKEND_URL}/payment/verify-payment`, formData);
-    if (data.message === "Payment Successful") {
-      toast("Payment Successful", { type: "success" });
-      setShowRechargeModal(false);
+    try {
+      const data = await axios.post(`${BACKEND_URL}/payment/verify-payment`, formData);
+      if (data.message === "Payment Successful") {
+        toast("Payment Successful", { type: "success" });
+        setShowRechargeModal(false);
+      }
+    } catch (error) {
+      console.log(error); // eslint-disable-line
+      toast("Payment Failed", { type: "error" });
     }
   };
 
@@ -31,26 +36,31 @@ const RechargeModal = ({ setShowRechargeModal }) => {
   };
 
   const handleCreatePayment = async () => {
-    const response = await axios.post(`${BACKEND_URL}/payment/razorpay`, formData);
-    const options = {
-      key: "rzp_live_Rdekve3rpZ5hXx",
-      amount: amount,
-      currency: "INR",
-      name: "Cargo Cloud",
-      description: `Recharge Wallet Amount ${amount}`,
-      image: logo_main,
-      order_id: response.data.id,
-      handler: handlePayment,
-      theme: {
-        color: "#3399cc",
-      },
-    };
+    try {
+      const response = await axios.post(`${BACKEND_URL}/payment/razorpay`, formData);
+      const options = {
+        key: "rzp_live_Rdekve3rpZ5hXx",
+        amount: amount,
+        currency: "INR",
+        name: "Cargo Cloud",
+        description: `Recharge Wallet Amount ${amount}`,
+        image: logo_main,
+        order_id: response.data.id,
+        handler: handlePayment,
+        theme: {
+          color: "#3399cc",
+        },
+      };
 
-    const rzp1 = new window.Razorpay(options);
+      const rzp1 = new window.Razorpay(options);
 
-    rzp1.on("payment.failed", handlePaymentFailed);
+      rzp1.on("payment.failed", handlePaymentFailed);
 
-    rzp1.open();
+      rzp1.open();
+    } catch (error) {
+      console.log(error); // eslint-disable-line
+      toast("Payment Failed", { type: "error" });
+    }
   }
 
   return (

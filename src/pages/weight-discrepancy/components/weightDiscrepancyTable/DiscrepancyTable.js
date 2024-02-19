@@ -16,7 +16,7 @@ const DiscrepancyTable = ({ data, setLoading }) => {
     const statusDate = new Date(date);
     const today = new Date();
     const weekLater = new Date(statusDate.getTime() + 7 * 24 * 60 * 60 * 1000);
-    if (today.getTime() > weekLater.getTime()) return 2;
+    if (today.getTime() > weekLater.getTime()) return 0;
     const timeDifference = weekLater.getTime() - today.getTime();
     // Calculate the remaining days, hours, minutes, and seconds
     const remainingDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
