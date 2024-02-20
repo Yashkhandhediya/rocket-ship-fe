@@ -19,7 +19,7 @@ const RechargeModal = ({ setShowRechargeModal }) => {
     formData.append("razorpay_signature", response.razorpay_signature);
     try {
       const data = await axios.post(`${BACKEND_URL}/payment/verify-payment`, formData);
-      if (data.message === "Payment Successful") {
+      if (data.data.status === "Payment Verified") {
         toast("Payment Successful", { type: "success" });
         setShowRechargeModal(false);
       }
