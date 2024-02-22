@@ -39,7 +39,7 @@ const RechargeModal = ({ setShowRechargeModal }) => {
     try {
       const response = await axios.post(`${BACKEND_URL}/payment/razorpay`, formData);
       const options = {
-        key: "rzp_live_Rdekve3rpZ5hXx",
+        key: process.env.RAZORPAY_API_KEY,
         amount: amount,
         currency: "INR",
         name: "Cargo Cloud",
