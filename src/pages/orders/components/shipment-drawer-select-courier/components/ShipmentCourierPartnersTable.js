@@ -16,11 +16,24 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
   const [isLoading, setIsLoading] = useState(false);
   const [scheduleModal, setScheduleModal] = useState({ isOpen: false, pickupDetails: {} });
 
-  const handleShipOrder = () => {
+  const handleShipOrder = (data) => {
+    let requestData;
+    if (data?.partner_name === 'Delhivery') {
+      requestData = {
+        "partner_id": 1,
+        "amount": data?.total_charge,
+      }
+    }
+    else if (data?.partner_name === 'DTDC') {
+      requestData = {
+        "partner_id": 2,
+        "amount": data?.total_charge,
+      }
+    }
     setIsLoading(true);
     if (orderId) {
       axios
-        .post(`${BACKEND_URL}/order/${orderId}/shipment`)
+        .post(`${BACKEND_URL}/order/${orderId}/shipment`, requestData)
         .then((resp) => {
           if (resp?.status === 200) {
             setIsLoading(false);
@@ -37,7 +50,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
                 type: resp?.data?.success ? 'success' : 'error',
               },
             );
-            setScheduleModal({
+            requestData.partner_id === 1 && setScheduleModal({
               isOpen: true,
               pickupDetails: { id: orderId },
             });
@@ -119,7 +132,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         cell: ({row}) => (
           <div className="flex flex-col gap-1 py-2 text-left">
             <div className="flex items-center">
-              <div className="text-base font-bold text-[gray]">{`₹${row?.original?.total_amount || ''}`}</div>
+              <div className="text-base font-bold text-[gray]">{`₹${row?.original?.total_charge || ''}`}</div>
               <CustomTooltip
                 text={
                   <>
@@ -146,7 +159,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
             <Button
               id={row?.original?.id}
               className="rounded bg-red-600 w-[104px] h-[34px] text-white"
-              onClick={handleShipOrder}
+              onClick={() => handleShipOrder(row?.original)}
               style={{':hover':{backgroundColor:'#DB5711'}}}>
               {'Ship Now'}
             </Button>

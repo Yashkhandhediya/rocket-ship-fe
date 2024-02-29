@@ -20,10 +20,10 @@ export default function Tracking() {
 
     // Set the received string value in the component state
         axios
-            .get(BACKEND_URL+'/order/track?order_id='+orderId)
+            .get(BACKEND_URL+`/order/${orderId}/track`)
             .then(async (resp) => {
                 if (resp.status === 200) {
-                    const data = resp?.data?.ShipmentData?.[0]?.Shipment;
+                    const data = resp?.data;
 
                     setShipmentData(data);
                 } else {
@@ -74,7 +74,7 @@ export default function Tracking() {
                                 <span onClick={copyToClipboard} style={{ cursor: 'pointer' }}>Copy</span>
                             </div>
                             <div className="status-val">
-                                {shipmentData && shipmentData.Status && shipmentData.Status.Status ? shipmentData.Status.Status : 'N.A.'}
+                                {shipmentData && shipmentData.status ? shipmentData.status : 'N.A.'}
                             </div>
                         </div>
 
@@ -87,11 +87,11 @@ export default function Tracking() {
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <div className="font-0.8" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
                                     <img style={{ width: '50px', height: '50px', borderRadius: '50%' }} src='https://images.pexels.com/photos/11422442/pexels-photo-11422442.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load' />
-                                    <div>{shipmentData && shipmentData.CourierName ? shipmentData.CourierName : 'N.A.'}</div>
+                                    <div>{shipmentData && shipmentData.partner_name ? shipmentData.partner_name : 'N.A.'}</div>
                                 </div>
                                 <div className="font-0.8">
                                     <div>Tracking ID</div>
-                                    <div style={{ color: 'red' }}>{shipmentData && shipmentData.AWB ? shipmentData.AWB : 'N.A.'}</div>
+                                    <div style={{ color: 'red' }}>{shipmentData && shipmentData.waybilll_no ? shipmentData.waybilll_no : 'N.A.'}</div>
                                 </div>
                             </div>
                             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginTop: '2.5rem' }}>
@@ -117,7 +117,7 @@ export default function Tracking() {
                                     <strong className="font-0.8">Order ID</strong>
                                 </div>
                                 <div className="order-grid-item font-0.8">
-                                    <span>60332858138</span>
+                                    <span>{shipmentData && shipmentData.order_id ? shipmentData.order_id : 'N.A.'}</span>
                                 </div>
                             </div>
                             <div className="order-grid-container font-0.8">
@@ -125,7 +125,7 @@ export default function Tracking() {
                                     <strong className="font-0.8">Order Placed On</strong>
                                 </div>
                                 <div className="order-grid-item">
-                                    <span>{shipmentData && shipmentData.OrderDate ? shipmentData.OrderDate : 'N.A.'}</span>
+                                    <span>{shipmentData && shipmentData.order_date ? shipmentData.order_date.split('T')[0] : 'N.A.'}</span>
                                 </div>
                             </div>
                         </div>

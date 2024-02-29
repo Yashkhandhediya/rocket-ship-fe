@@ -62,6 +62,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
     },
   ];
   const fetchShipmentDetails = () => {
+    setIsLoading(true);
     axios
       .get(`${BACKEND_URL}/order/${orderDetails?.id}/estimate`)
       .then((resp) => {
@@ -80,7 +81,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
   };
 
   useEffect(() => {
-    if (!shipmentsDetails && orderDetails?.id && isOpen) {
+    if (orderDetails?.id && isOpen) {
       fetchShipmentDetails();
     }
   }, [orderDetails?.id, isOpen]);
