@@ -1,21 +1,28 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Tooltip, Dropdown, DropdownItem } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
 import QuickActions from './components/QuickActions';
+import axios from 'axios';
+import { BACKEND_URL } from '../../utils/env.config';
+import { toast } from 'react-toastify';
+import RechargeModal from '../../../pages/home/components/rechareModal/RechargeModal';
+
 
 const Navbar = () => {
 
     const user = localStorage.getItem('user_name') ? localStorage.getItem('user_name') : null;
     const navigate = useNavigate();
+    const [userData, setUserData] = useState({});
+    const [showRechargeModal, setShowRechargeModal] = useState(false);
 
     const navbarLinks = [
         {
-            label: user ? user : 'User',
+            label: userData ? user : 'User',
             icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="w-6 h-6">
                 <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
             </svg>,
             onClick: () => {
-                console.log('User')
+                console.log('User') //eslint-disable-line
             }
         },
         {
@@ -24,7 +31,7 @@ const Navbar = () => {
                 <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
             </svg>,
             onClick: () => {
-                console.log('Current Plan')
+                console.log('Current Plan') //eslint-disable-line
             }
         },
         {
@@ -33,7 +40,7 @@ const Navbar = () => {
                 <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
             </svg>,
             onClick: () => {
-                console.log('Refer and Earn')
+                console.log('Refer and Earn') //eslint-disable-line
             }
         },
         {
@@ -42,7 +49,7 @@ const Navbar = () => {
                 <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
             </svg>,
             onClick: () => {
-                console.log('Rate Us')
+                console.log('Rate Us') //eslint-disable-line
             }
         },
         {
@@ -51,7 +58,7 @@ const Navbar = () => {
                 <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
             </svg>,
             onClick: () => {
-                console.log('Terms & Conditions')
+                console.log('Terms & Conditions') //eslint-disable-line
             }
         },
         {
@@ -76,30 +83,62 @@ const Navbar = () => {
         },
     ]
 
+    const handleRefresh = () => {
+        getUser();
+        toast("Wallet Balance Refreshed", { type: "success" });
+    }
+
+    const getUser = async () => {
+        try {
+            const response = await axios.get(`${BACKEND_URL}/users/1`);
+            console.log(response); //eslint-disable-line
+            setUserData(response.data);
+        } catch (error) {
+            console.log(error); //eslint-disable-line
+        }
+    }
+
+    useEffect(() => {
+        getUser();
+    }, []);
+
     return (
         <div className='flex flex-row text-[13px] font-medium justify-end w-full gap-3 bg-white shadow py-3'>
             <div className='flex flex-row items-center gap-2 px-3 border-r-[1px]'>
                 <Tooltip content={<QuickActions />} style='light' className='shadow'>
-                    <div className='flex flex-row items-center gap-2'>
+                    <button className='flex flex-row items-center gap-2 cursor-pointer'>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#E02424" className="w-5 h-5">
                             <path fillRule="evenodd" d="M14.615 1.595a.75.75 0 0 1 .359.852L12.982 9.75h7.268a.75.75 0 0 1 .548 1.262l-10.5 11.25a.75.75 0 0 1-1.272-.71l1.992-7.302H3.75a.75.75 0 0 1-.548-1.262l10.5-11.25a.75.75 0 0 1 .913-.143Z" clipRule="evenodd" />
                         </svg>
                         <p className='text-[#E02424] text-[14px]'>Quick Actions</p>
-                    </div>
+                    </button>
                 </Tooltip>
             </div>
             <div className="flex flex-row items-center gap-3 px-3 border-r-[1px]">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="w-5 h-5">
-                    <path d="M2.273 5.625A4.483 4.483 0 0 1 5.25 4.5h13.5c1.141 0 2.183.425 2.977 1.125A3 3 0 0 0 18.75 3H5.25a3 3 0 0 0-2.977 2.625ZM2.273 8.625A4.483 4.483 0 0 1 5.25 7.5h13.5c1.141 0 2.183.425 2.977 1.125A3 3 0 0 0 18.75 6H5.25a3 3 0 0 0-2.977 2.625ZM5.25 9a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h13.5a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3H15a.75.75 0 0 0-.75.75 2.25 2.25 0 0 1-4.5 0A.75.75 0 0 0 9 9H5.25Z" />
-                </svg>
-                <p className='text-[14px]'>
-                    ₹0
-                </p>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="w-4 h-5">
-                    <path fillRule="evenodd" d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z" clipRule="evenodd" />
-                </svg>
-                <button className='ml-2 text-[#E02424] text-[14px]'>
+                <Tooltip
+                    style='light'
+                    content={
+                        <p className='p-3'>
+                            <span className='text-[#707070] '>Usable Amount :</span> ₹{userData.wallet_balance && userData.wallet_balance}
+                        </p>}
+                >
+                    <div className="flex flex-row items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="w-5 h-5 cursor-pointer">
+                            <path d="M2.273 5.625A4.483 4.483 0 0 1 5.25 4.5h13.5c1.141 0 2.183.425 2.977 1.125A3 3 0 0 0 18.75 3H5.25a3 3 0 0 0-2.977 2.625ZM2.273 8.625A4.483 4.483 0 0 1 5.25 7.5h13.5c1.141 0 2.183.425 2.977 1.125A3 3 0 0 0 18.75 6H5.25a3 3 0 0 0-2.977 2.625ZM5.25 9a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h13.5a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3H15a.75.75 0 0 0-.75.75 2.25 2.25 0 0 1-4.5 0A.75.75 0 0 0 9 9H5.25Z" />
+                        </svg>
+                        <p className='text-[14px] cursor-pointer'>
+                            ₹{userData.wallet_balance ? userData.wallet_balance : '0.00'}
+                        </p>
+                        <button onClick={handleRefresh}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="w-4 h-5">
+                                <path fillRule="evenodd" d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z" clipRule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </Tooltip>
+                <button className='ml-2 text-[#E02424] text-[14px]' onClick={()=>setShowRechargeModal(true)}>
                     Recharge Wallet
+                    {showRechargeModal && <RechargeModal setShowRechargeModal={setShowRechargeModal} />}
                 </button>
             </div>
             <div className="flex flex-row items-center gap-2">
