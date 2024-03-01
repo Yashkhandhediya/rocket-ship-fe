@@ -11,3 +11,4 @@ export * from './common-badge';
 export * from './custom-multi-select';
 export * from './custom-data-table';
 export * from './loader';
+export * from './navbar'

@@ -1,3 +1,4 @@
+import { Navbar } from '../navbar';
 import Sidebar from '../sidebar/Sidebar';
 
 const PageWithSidebar = ({ children }) => {
@@ -7,6 +8,7 @@ const PageWithSidebar = ({ children }) => {
         <Sidebar />
       </aside>
       <main className="ml-[70px] h-full overflow-auto" style={{ scrollbarGutter: 'stable' }}>
+        <Navbar />
         {children}
       </main>
     </div>

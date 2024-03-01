@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 // import { FreezeModal } from '../weightFreezeModal';
 import { useSearchParams } from 'react-router-dom';
 import { DiscrepancyModal } from '../weightDiscrepancyModal';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
 // import { noData } from '../../../../common/images';
 
 const DiscrepancyTable = ({ data, setLoading }) => {
@@ -16,7 +17,7 @@ const DiscrepancyTable = ({ data, setLoading }) => {
     const statusDate = new Date(date);
     const today = new Date();
     const weekLater = new Date(statusDate.getTime() + 7 * 24 * 60 * 60 * 1000);
-    if (today.getTime() > weekLater.getTime()) return 0;
+    if (today.getTime() > weekLater.getTime()) return 2;
     const timeDifference = weekLater.getTime() - today.getTime();
     // Calculate the remaining days, hours, minutes, and seconds
     const remainingDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
@@ -27,7 +28,7 @@ const DiscrepancyTable = ({ data, setLoading }) => {
   }
 
   const updateStatus = (id) => {
-    axios.put(`http://43.252.197.60:8050/weight_discrepancy/update?id=${id}`, { "status_name": "Discrepancy Accepted" }, { headers: { 'Content-Type': 'application/json' } })
+    axios.put(`${BACKEND_URL}/weight_discrepancy/update?id=${id}`, { "status_name": "Discrepancy Accepted" }, { headers: { 'Content-Type': 'application/json' } })
       .then(res => {
         toast('Discrepancy Accepted Successfully', { type: 'success' });
         window.location.reload();

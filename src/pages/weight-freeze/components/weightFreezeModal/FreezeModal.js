@@ -4,6 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { CustomTooltip } from '../../../../common/components';
 import { freezeGuide } from '../../../../common/images';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
 
 const FreezeModal = ({ setShow, data, setLoading, type }) => {
     const [weightFreezeData, setWeightFreezeData] = useState({
@@ -126,7 +127,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
     const handleUpload = (name, file) => {
         const formData = new FormData();
         formData.append('file', file);
-        axios.post(`http://43.252.197.60:8050/image/upload_image?product_id=${data.id}`, { file: file }, { headers: { 'Content-Type': 'multipart/form-data' } })
+        axios.post(`${BACKEND_URL}/image/upload_image?product_id=${data.id}`, { file: file }, { headers: { 'Content-Type': 'multipart/form-data' } })
             .then((response) => {
                 setWeightFreezeData({ ...weightFreezeData, images: { ...weightFreezeData.images, [name]: response.data.filepath } })
                 setLoading(false);
@@ -146,7 +147,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
             return toast('Please upload all the images', { type: 'error' })
         }
         const headers = { 'Content-Type': 'application/json' };
-        axios.post('http://43.252.197.60:8050/weight_freeze/', weightFreezeData, { headers })
+        axios.post(`${BACKEND_URL}/weight_freeze/`, weightFreezeData, { headers })
             .then((response) => {
                 if (response.status === 200) {
                     toast('Request submitted successfully', { type: 'success' })
@@ -342,7 +343,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                                 Package Images
                                 <CustomTooltip
                                     style='light'
-                                    text={<img src={freezeGuide}/>} placement='right'
+                                    text={<img src={freezeGuide} />} placement='right'
                                     wrapperClassNames={'shadow-none p-0 max-w-[400px]'}>
                                     <span className='underline text-[12px]'>Know more about measuring packages</span>
                                 </CustomTooltip>

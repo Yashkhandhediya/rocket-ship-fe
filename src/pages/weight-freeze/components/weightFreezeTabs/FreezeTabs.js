@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { CustomTooltip } from '../../../../common/components';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
 
 const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTotalData }) => { // eslint-disable-line
   const [searchParams, setSearchParams] = useSearchParams();
@@ -24,11 +25,11 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
     //API to get data
     setLoading(true);
     const url = fromDateURL && toDateURL && freezeStatus != 5 && freezeStatus != 0
-      ? `http://43.252.197.60:8050/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&from=${fromDateURL}&to=${toDateURL}&status_name=${freezeStatus}`
-      : `http://43.252.197.60:8050/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&status_name=${freezeStatus}`
+      ? `${BACKEND_URL}/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&from=${fromDateURL}&to=${toDateURL}&status_name=${freezeStatus}`
+      : `${BACKEND_URL}/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&status_name=${freezeStatus}`
     axios.get(url, {})
       .then((response) => {
-        console.log("asdkjfhsdkjfgbdasfjhyg",response.data); //eslint-disable-line
+        console.log("asdkjfhsdkjfgbdasfjhyg", response.data); //eslint-disable-line
         setData(response.data.data);
         setTotalData(response.data.total_rows);
         setLoading(false);
@@ -39,7 +40,7 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
       })
 
     //get status count
-    axios.get('http://43.252.197.60:8050/weight_freeze/get_status_counts', {})
+    axios.get(`${BACKEND_URL}/weight_freeze/get_status_counts`, {})
       .then((res) => {
         console.log(res.data); //eslint-disable-line
         const newTabs = [...tabs];

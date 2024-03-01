@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { freezeGuide } from '../../../../common/images';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
 
 const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
   const [weightDiscrepancyData, setWeightDiscrepancyData] = useState({
@@ -40,7 +41,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
     setLoading(true);
     const formData = new FormData();
     formData.append('file', file);
-    axios.post(`http://43.252.197.60:8050/image/upload_image?product_id=${data.id}`, { file: file }, { headers: { 'Content-Type': 'multipart/form-data' } })
+    axios.post(`${BACKEND_URL}/image/upload_image?product_id=${data.id}`, { file: file }, { headers: { 'Content-Type': 'multipart/form-data' } })
       .then((response) => {
         setWeightDiscrepancyData({ ...weightDiscrepancyData, [name]: response.data.filepath })
       }).catch((error) => {
@@ -59,7 +60,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
       return toast('Please enter product category', { type: 'error' })
     }
     const headers = { 'Content-Type': 'application/json' };
-    const url = `http://43.252.197.60:8050/weight_discrepancy/dispute?id=${data.discrepancy_id}`
+    const url = `${BACKEND_URL}/weight_discrepancy/dispute?id=${data.discrepancy_id}`
     axios.put(url, weightDiscrepancyData, { headers })
       .then((response) => {
         if (response.status === 200) {
