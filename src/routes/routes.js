@@ -5,7 +5,7 @@ import ReturnTracking from '../pages/return-tracking/ReturnTracking';
 import PrivateRoute from './private-route/PrivateRoute';
 import { SellerKYC } from '../pages/kyc';
 import { Returns } from '../pages/returns';
-import { COD_Remittance, ShippingCharges, Wallet_history } from '../pages/billing/component';
+import { COD_Remittance, Passbook, ShippingCharges, Wallet_history } from '../pages/billing/component';
 
 const routes = createBrowserRouter([
   {
@@ -84,6 +84,11 @@ const routes = createBrowserRouter([
 
     path: '/recharge-status',
     element: <PrivateRoute component={<Wallet_history />} />,
+  },
+  {
+
+    path: '/passbook',
+    element: <PrivateRoute component={<Passbook />} />,
   },
   {
     path: '/settings',
