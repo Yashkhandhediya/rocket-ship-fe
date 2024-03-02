@@ -91,7 +91,6 @@ const Navbar = () => {
     const getUser = async () => {
         try {
             const response = await axios.get(`${BACKEND_URL}/users/1`);
-            console.log(response); //eslint-disable-line
             setUserData(response.data);
         } catch (error) {
             console.log(error); //eslint-disable-line

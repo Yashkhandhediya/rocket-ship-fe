@@ -16,6 +16,7 @@ const Passbook = () => {
     const [fromDate, setFromDate] = useState(oneMonthAgo);
     const [toDate, setToDate] = useState(todayDate);
     const [isLoading, setIsLoading] = useState(false);
+    const [usableAmount, setUsableAmount] = useState(0);
 
     const checkDate = (fromDate, toDate) => {
         const from = new Date(fromDate);
@@ -39,8 +40,7 @@ const Passbook = () => {
     const charges = [
         {
             label: 'Current Usable Balance',
-            value: '₹ 0.00',
-            tooltip: 'Amount to be remitted in next cycle.'
+            value: '₹ ' + usableAmount,
         },
         {
             label: 'Balance On Hold',
@@ -56,8 +56,8 @@ const Passbook = () => {
         setIsLoading(true);
         try {
             const response = await axios.post(`${BACKEND_URL}/account_transaction/account_report`, { date_from: fromDate, date_to: toDate, user_id: 1 });
-            console.log('Passbook data', response.data.report); //eslint-disable-line
             setData(response.data.report);
+            getUsableAmount();
             setIsLoading(false);
         } catch (error) {
             toast.error('Something went wrong while fetching passbook data');
@@ -79,6 +79,27 @@ const Passbook = () => {
 
         return `${day}-${month}-${year}`;
     }
+
+    const getUsableAmount = () => {
+        setIsLoading(true);
+        let amount = 0;
+        data.length !== 0 && data.map((item) => {
+            if (item.credit) {
+                amount = amount + item.credit;
+            } else if (item.debit) {
+                amount = amount - item.debit;
+            }
+        }, 0);
+        data.length !== 0 && setUsableAmount(amount !== 0 && amount.toFixed(2));
+        setIsLoading(false);
+        return amount.toFixed(2);
+    }
+
+    useEffect(() => {
+        if (usableAmount === 0) {
+            getUsableAmount();
+        }
+    });
 
     return (
         <PageWithSidebar>
@@ -158,14 +179,6 @@ const Passbook = () => {
                         <div key={index} className="flex flex-col mx-1 font-semibold bg-[#159700] text-white justify-between text-center w-full py-1">
                             <div className="text-[14px] flex flex-row justify-center items-center gap-3">
                                 {charge.label}
-                                {charge.tooltip &&
-                                    <CustomTooltip text={charge.tooltip} style="dark" placement="right">
-                                        {/* info svg */}
-                                        <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="#ffffff" viewBox="0 0 24 24">
-                                            <path fillRule="evenodd" d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm11-4a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0V8Zm-1 7a1 1 0 1 0 0 2 1 1 0 1 0 0-2Z" clipRule="evenodd" />
-                                        </svg>
-                                    </CustomTooltip>
-                                }
                             </div>
                             <div className="text-[14px]">{charge.value}</div>
                         </div>
