@@ -178,7 +178,7 @@ export const ReadyToShip = () => {
           <div className="flex gap-2 text-left text-xs">
             <button
               id={row?.original?.id}
-              className="min-w-fit rounded bg-red-700 px-4 py-1.5 text-white"
+              className={`min-w-fit rounded px-4 py-1.5 text-white ${row.original.partner_id === 2 ? 'disabled cursor-not-allowed bg-red-400' : 'bg-red-700'}`}
               onClick={() => {
                 setScheduleModal({
                   isOpen: true,
@@ -191,7 +191,9 @@ export const ReadyToShip = () => {
                 // if (newTab) {
                 //   newTab.focus();
                 // }
-              }}>
+              }}
+              disabled={row.original.partner_id === 2}
+              >
               {'Schedule Pickup'}
             </button>
             <div className="min-h-[32px] min-w-[32px]">

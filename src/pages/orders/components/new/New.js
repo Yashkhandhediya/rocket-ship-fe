@@ -24,7 +24,7 @@ export const New = () => {
   const navigate = useNavigate();
   const allOrdersList = useSelector((state) => state?.ordersList);
   const newOrdersList =
-    allOrdersList?.filter((order) => (order?.status_name || '')?.toLowerCase() === 'new') || [];
+    allOrdersList?.filter((order) => (order?.status_id) === 1) || [];
   const [selectShipmentDrawer, setSelectShipmentDrawer] = useState({
     isOpen: false,
     orderDetails: {},
