@@ -22,6 +22,13 @@ const PickupMenifests = () => {
     allOrdersList?.filter((order) => (order?.status_id) === 3) || [];
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
 
+
+  function formatDate(dateString) {
+    const options = { day: 'numeric', month: 'short', year: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  }
+
+
   const getColumns = () => {
     const columnHelper = createColumnHelper();
 
@@ -125,7 +132,7 @@ const PickupMenifests = () => {
         cell: ({ row }) => {
           return (
             <div className="flex flex-col gap-1 text-left text-xs">
-              <div>{row?.original?.courier_name}</div>
+              <div>{row?.original?.partner_name}</div>
               <div>{'AWB#'}</div>
               <div className="pb-0.5">
                 {(row?.original?.status_name || '')?.toLowerCase() === 'new' ? (
@@ -148,6 +155,7 @@ const PickupMenifests = () => {
           return (
             <div className="flex flex-col gap-1 text-left text-xs">
               <CommonBadge type={'SUCCESS'} text={row?.original?.status_name} />
+              <div>On {formatDate(row?.original?.modified_date)}</div>
             </div>
           );
         },

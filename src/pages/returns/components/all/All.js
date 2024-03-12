@@ -125,7 +125,7 @@ export const All = () => {
         cell: (row) => {
           return (
             <div className="flex flex-col gap-1 text-left text-xs">
-              <div>{row?.original?.courier_name}</div>
+              <div>{row?.original?.partner_name}</div>
               <div>{'AWB#'}</div>
               <div className="pb-0.5">
                 {(row?.original?.status_name || '')?.toLowerCase() === 'new' ? (

@@ -24,6 +24,11 @@ export const All = () => {
   const getColumns = () => {
     const columnHelper = createColumnHelper();
 
+    function formatDate(dateString) {
+      const options = { day: 'numeric', month: 'short', year: 'numeric' };
+      return new Date(dateString).toLocaleDateString(undefined, options);
+    }
+
     return [
       columnHelper.accessor('orderDetails', {
         header: 'Order Details',
@@ -102,9 +107,8 @@ export const All = () => {
               <CustomTooltip
                 text={
                   <>
-                    <div className='text-wrap'>{`${row?.original?.user_info?.address_line1 ?? ''} ${
-                      row?.original?.user_info?.address_line2 ?? ''
-                    }`}</div>
+                    <div className='text-wrap'>{`${row?.original?.user_info?.address_line1 ?? ''} ${row?.original?.user_info?.address_line2 ?? ''
+                      }`}</div>
                     <div>{row?.original?.user_info?.city ?? ''}</div>
                     <div>
                       {row?.original?.user_info?.state ?? ''}-{row?.original?.user_info?.pincode}
@@ -125,17 +129,17 @@ export const All = () => {
         cell: ({ row }) => {
           return (
             <div className="flex flex-col gap-1 text-left text-xs">
-              <div>{row?.original?.courier_name}</div>
+              <div>{row?.original?.partner_name}</div>
               <div>{'AWB#'}</div>
               <div className="pb-0.5">
                 {(row?.original?.status_name || '')?.toLowerCase() === 'new' ? (
                   'Not Assigned'
                 ) : (
                   <Link
-                  to={generatePath(`/tracking/:orderId`, { orderId: row?.original?.id || 1 })}
-                  className="border-b-2 border-b-orange-600 text-orange-600">
-                  {'Track order'}
-                </Link>
+                    to={generatePath(`/tracking/:orderId`, { orderId: row?.original?.id || 1 })}
+                    className="border-b-2 border-b-orange-600 text-orange-600">
+                    {'Track order'}
+                  </Link>
                 )}
               </div>
             </div>
@@ -148,10 +152,11 @@ export const All = () => {
           return (
             <div className="flex flex-col gap-1 text-left text-xs">
               <CommonBadge type={'SUCCESS'} text={row?.original?.status_name} />
+              {row.original.status_id !== 1 && <div>On {formatDate(row?.original?.modified_date)}</div>}
             </div>
           );
         },
-      }), 
+      }),
       columnHelper.accessor('action', {
         header: 'Action',
         cell: (row) => (
@@ -159,8 +164,8 @@ export const All = () => {
             <button
               id={row.id}
               className="min-w-fit rounded bg-red-700 hover:bg-green-700 px-4 py-1.5 text-white"
-              onClick={() => {}}>
-            {(row?.original?.status_name || '')?.toLowerCase() == 'new' ? 'Ship Now' : 'Download Menifest'}
+              onClick={() => { }}>
+              {(row?.original?.status_name || '')?.toLowerCase() == 'new' ? 'Ship Now' : 'Download Menifest'}
             </button>
             <div className="min-h-[32px] min-w-[32px]">
               <MoreDropdown

@@ -23,6 +23,13 @@ const Delivered = () => {
     allOrdersList?.filter((order) => (order?.status_id) === 6) || [];
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
 
+
+  function formatDate(dateString) {
+    const options = { day: 'numeric', month: 'short', year: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  }
+
+
   const getColumns = () => {
     const columnHelper = createColumnHelper();
 
@@ -126,7 +133,7 @@ const Delivered = () => {
         cell: ({ row }) => {
           return (
             <div className="flex flex-col gap-1 text-left text-xs">
-              <div>{row?.original?.courier_name}</div>
+              <div>{row?.original?.partner_name}</div>
               <div>{'AWB#'}</div>
               <div className="pb-0.5">
                 {(row?.original?.status_name || '')?.toLowerCase() === 'new' ? (
@@ -149,6 +156,7 @@ const Delivered = () => {
           return (
             <div className="flex flex-col gap-1 text-left text-xs">
               <CommonBadge type={'SUCCESS'} text={row?.original?.status_name} />
+              <div>On {formatDate(row?.original?.modified_date)}</div>
             </div>
           );
         },
@@ -161,7 +169,7 @@ const Delivered = () => {
               id={row.id}
               className="min-w-fit rounded bg-red-700 hover:bg-green-700 px-4 py-1.5 text-white"
               onClick={() => { }}>
-              {(row?.original?.status_name || '')?.toLowerCase() == 'new' ? 'Ship Now' : 'Download Menifest'}
+              {(row?.row?.original?.status_id) === 6 ? 'Create Return' : 'Ship Now'}
             </button>
             <div className="min-h-[32px] min-w-[32px]">
               <MoreDropdown
