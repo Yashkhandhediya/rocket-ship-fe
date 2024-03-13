@@ -1,8 +1,33 @@
 import { faAngleDown, faCloudArrowUp, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FileInput, Label } from 'flowbite-react';
+import { useState } from 'react';
+import axios from 'axios';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { toast } from 'react-toastify';
 
 const BulkOrder = () => {
+
+    const [selectedFile, setSelectedFile] = useState(null)
+
+    const handleFileSelect = async (e) => {
+        const formData = new FormData();
+        formData.append('file', e.target.files[0]);
+        setSelectedFile(formData);
+        try {
+            const response = await axios.post(`${BACKEND_URL}/order/bulk_orders`, formData)
+            if (!response?.data[0]?.success) {
+                setSelectedFile(null)
+                return toast.error(response?.data[0]?.error)
+            }
+            toast.success('File uploaded successfully')
+            setSelectedFile(null)
+        } catch (error) {
+            toast.error('Something went wrong while uploading the file. Please try again.')
+            setSelectedFile(null)
+        }
+    }
+
     return (
         <div>
             <div className="px-4 lg:pl-[100px] lg:pr-[120px]">
@@ -44,7 +69,7 @@ const BulkOrder = () => {
                                     </div>
                                 </div>
                             </div>
-                            <FileInput id="bulkOrderDropZone" className="hidden" />
+                            <FileInput id="bulkOrderDropZone" className="hidden" onChange={handleFileSelect} />
                         </Label>
                     </div>
                 </div>
