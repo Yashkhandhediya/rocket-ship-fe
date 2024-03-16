@@ -15,6 +15,12 @@ export const sidebarLinks = [
     hoverIcon: homeActive,
   },
   {
+    title: 'Book',
+    path: '/book',
+    icon: home,
+    hoverIcon: homeActive,
+  },
+  {
     title: 'Orders',
     path: '/orders',
     icon: home,
