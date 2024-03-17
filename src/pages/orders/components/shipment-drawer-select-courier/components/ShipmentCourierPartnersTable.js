@@ -18,6 +18,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
 
   const handleShipOrder = (data) => {
     let requestData;
+    console.log("Yash")
     if (data?.partner_name === 'Delhivery') {
       requestData = {
         "partner_id": 1,
@@ -27,6 +28,12 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
     else if (data?.partner_name === 'DTDC') {
       requestData = {
         "partner_id": 2,
+        "amount": data?.total_charge,
+      }
+    }
+    else if (data?.partner_name === "XPRESSEES") {
+      requestData = {
+        "partner_id": 3,
         "amount": data?.total_charge,
       }
     }
