@@ -24,8 +24,7 @@ const LogIn = () => {
   const handleSubmit = () => {
     const headers={'Content-Type': 'application/x-www-form-urlencoded'};
     console.log('username pass', loginInput.username, loginInput.password);
-    console.log('backend url', BACKEND_URL);
-    debugger
+    console.log('backend url', BACKEND_URL);    
     axios.post(BACKEND_URL+'/login/access-token',{username:loginInput.username, password:loginInput.password}, {headers}).then(
       (response)=>{
         console.log(response);

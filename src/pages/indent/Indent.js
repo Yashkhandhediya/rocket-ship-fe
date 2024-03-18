@@ -3,15 +3,21 @@ import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithS
 import { cityList } from '../book-truck/cities';
 import { CustomMultiSelect, Field } from '../../common/components';
 import { materialTypes, truckTypes, weights } from './data';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { BACKEND_URL } from '../../common/utils/env.config';
 
 const Indent = () => {
 
     const inputRef = useRef(null);
     const dropdownRef = useRef(null);
-
+    const [id,setId] = useState(3)
     const [selectedCity, setSelectedCity] = useState({
         source: '',
-        destination: ''
+        destination: '',
+        source_id:'',
+        destination_id:''
     })
     const [isDropdownOpen, setIsDropdownOpen] = useState({
         source: false,
@@ -35,15 +41,20 @@ const Indent = () => {
             <div className="absolute flex flex-row z-[1000000] bg-white shadow-md h-36 p-4 gap-2 overflow-y-scroll rounded mt-20 flex-wrap w-64" ref={dropdownRef}>
                 {cityList.map((city) => (
                     <div
-                        key={city}
+                        key={city.city_id}
                         className={`px-1.5 text-[12px] cursor-pointer border rounded border-gray-500 hover:border-red-500 hover:text-red-500 ${city === selectedCity.city1 && 'bg-red-500 text-white'}`}
                         onClick={(event) => {
                             event.stopPropagation();
-                            setSelectedCity({ ...selectedCity, [type]: city });
+                            if(type == "source"){
+                                setSelectedCity({ ...selectedCity, [type]: city.name,source_id:city.city_id });
+                            }else{
+                                setSelectedCity({ ...selectedCity, [type]: city.name,destination_id:city.city_id });
+                            }
                             setIsDropdownOpen({ ...isDropdownOpen, [type]: false });
+                            console.log("Jayyyyyyy",selectedCity)
                         }}
                     >
-                        {city}
+                        {city.name}
                     </div>
                 ))}
             </div>
@@ -66,6 +77,43 @@ const Indent = () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+
+    const handleSubmit = () => {
+        console.log("Handling Create Indent API Here")
+        setId(id + 1)
+        const headers={'Content-Type': 'application/json'};
+        console.log("Jayyyyyyy",selectedCity,materialType)
+        axios.post(BACKEND_URL+'/indent/create_indent',
+        {
+        id:id,
+        source_id:parseInt(selectedCity.source_id),
+        end_customer_loading_point_id:null,
+        loading_point_id:null,
+        destination_id:parseInt(selectedCity.destination_id),
+        customer_id:1,
+        end_customer_uploading_point_id:null,
+        uploading_point_id:null,
+        end_customer_id: null,
+        customer_user_id: 1,
+        truck_type_id: truckType,
+        ton: parseInt(tons),
+        created_by: "1",
+        material_type_id: materialType,
+        customer_price: parseInt(targetPrice),
+        trip_status_id: 1,
+        origin_id: 10
+    },
+         {headers}).then(
+            (response)=>{
+              console.log("General",response);
+              toast('Indent Created Successfully',{type:'success'})
+            }
+          ) .catch((error) => {
+            console.error("Error:", error);
+            toast('Error in Create Indent',{type:'error'})
+        });
+    }
 
     return (
         <PageWithSidebar>
@@ -125,7 +173,7 @@ const Indent = () => {
                         <CustomMultiSelect
                             isMulti={false}
                             placeholder={userOptions[0].label}
-                            label={'Truck Type'}
+                            label={'Contact Person'}
                             options={userOptions}
                             closeMenuOnSelect={true}
                             onChange={() => {
@@ -177,6 +225,9 @@ const Indent = () => {
                         </button>
                     </div>
                 </div>
+                <button className='md:w-1/2 ml-10 bottom-4 fixed text-white text-lg font-semibold bg-blue-600 rounded-full p-2 hover:bg-blue-800'
+                onClick={handleSubmit}
+                >+ Create Indent</button>
             </div>
         </PageWithSidebar>
     )
