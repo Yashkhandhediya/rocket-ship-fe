@@ -9,23 +9,85 @@ import { filterPickupMenifests, moreActionOptions } from "../utils";
 import { createColumnHelper } from '@tanstack/react-table';
 import moment from 'moment';
 import { CommonBadge, CustomDataTable, CustomTooltip, MoreDropdown } from '../../../../common/components';
-import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { setAllOrders, setClonedOrder } from '../../../../redux';
 import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
+import { resData } from '../../Orders';
 
 const PickupMenifests = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  console.log("daklfmdsf",typeof resData,resData)
+  const flattened = {};
   const allOrdersList = useSelector((state) => state?.ordersList) || [];
   const newOrdersList =
     allOrdersList?.filter((order) => (order?.status_id) === 3) || [];
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
 
 
+  function flattenObject(obj, id) {
+    const keyCounts = {};
+    for(let i=0;i<resData.length;i++){
+          if(resData[i].id == id){
+            obj = resData[i];
+            break;
+          }
+        }
+  
+    function flatten(obj, parentKey = '') {
+            for (let key in obj) {
+                let propName = parentKey ? `${key}` : key;
+                
+                // Check if the key already exists, if yes, increment count
+                if (flattened[propName] !== undefined) {
+                    keyCounts[propName] = (keyCounts[propName] || 0) + 1;
+                    propName = `${propName}${keyCounts[propName]}`;
+                }
+                
+                if (typeof obj[key] === 'object' && obj[key] !== null) {
+                    flatten(obj[key], propName);
+                } else {
+                    flattened[propName] = obj[key];
+                }
+            }
+        
+    }
+  
+    flatten(obj);
+    return flattened;
+}
+
+
+
+
   function formatDate(dateString) {
     const options = { day: 'numeric', month: 'short', year: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
+  }
+
+  const handleMenifest = (id) => {
+    let temp_payload = flattenObject(resData,id)
+    console.log("kkkkkkkkkk",temp_payload)
+    const headers={'Content-Type': 'application/json'};
+
+    // temp_payload['client_name']="cloud_cargo"
+    // temp_payload['file_name']="manifest"
+
+    axios.post(MENIFEST_URL +'/bilty/print/',
+    {flattened,
+    'client_name':'cloud_cargo',
+  'file_name':'manifest'
+},
+     {headers}).then(
+        (response)=>{
+          console.log("General",response);
+          toast('Menifest Download Successfully',{type:'success'})
+        }
+      ) .catch((error) => {
+        console.error("Error:", error);
+        toast('Error in Menifest Download',{type:'error'})
+    });
   }
 
 
@@ -36,6 +98,7 @@ const PickupMenifests = () => {
       columnHelper.accessor('orderDetails', {
         header: 'Order Details',
         cell: ({ row }) => {
+          console.log("hellooooo",row)
           const formattedDate = row?.original?.created_date
             ? moment(row?.original?.created_date).format('DD MMM YYYY | hh:mm A')
             : 'No date available.';
@@ -167,7 +230,10 @@ const PickupMenifests = () => {
             <button
               id={row.id}
               className="min-w-fit rounded bg-red-700 hover:bg-green-700 px-4 py-1.5 text-white"
-              onClick={() => { }}>
+              onClick={(e) => { 
+                console.log(row.row.original.id)
+                handleMenifest(row.row.original.id)
+              }}>
               {(row?.original?.status_name || '')?.toLowerCase() == 'new' ? 'Ship Now' : 'Download Menifest'}
             </button>
             <div className="min-h-[32px] min-w-[32px]">
