@@ -2,7 +2,7 @@ export const moreActionOptions = (actions) => [
   {
     label: 'Download Invoice',
     key: 'downloadInvoice',
-    onClick: () => {},
+    onClick: actions?.downloadInvoice,
   },
   {
     label: 'Edit Order',

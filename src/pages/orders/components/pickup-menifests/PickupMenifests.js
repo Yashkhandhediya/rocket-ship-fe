@@ -87,6 +87,27 @@ const PickupMenifests = () => {
     });
   }
 
+  const handleInvoice = (id) => {
+    let temp_payload = flattenObject(resData,id)
+    console.log("kkkkkkkkkk",temp_payload)
+    const headers={'Content-Type': 'application/json'};
+
+    temp_payload['client_name']="cloud_cargo"
+    temp_payload['file_name']="invoice"
+
+    axios.post(MENIFEST_URL +'/bilty/print/',
+    temp_payload,
+     {headers}).then(
+        (response)=>{
+          console.log("General",response);
+          toast('Invoice Download Successfully',{type:'success'})
+        }
+      ) .catch((error) => {
+        console.error("Error:", error);
+        toast('Error in Invoice Download',{type:'error'})
+    });
+  }
+
 
   const getColumns = () => {
     const columnHelper = createColumnHelper();
@@ -237,6 +258,7 @@ const PickupMenifests = () => {
               <MoreDropdown
                 renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                 options={moreActionOptions({
+                  downloadInvoice : () => handleInvoice(row?.row?.original?.id),
                   cloneOrder: () => cloneOrder(row?.original),
                   cancelOrder: () => cancelOrder(row?.original),
                 })}
