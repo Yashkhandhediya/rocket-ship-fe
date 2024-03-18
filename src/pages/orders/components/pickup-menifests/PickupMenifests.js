@@ -93,7 +93,7 @@ const PickupMenifests = () => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)
-    const headers={'Content-Type': 'application/octet-stream'};
+    const headers={'Content-Type': 'application/json'};
 
     temp_payload['client_name']="cloud_cargo"
     temp_payload['file_name']="invoice"
