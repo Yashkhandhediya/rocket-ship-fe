@@ -71,14 +71,11 @@ const PickupMenifests = () => {
     console.log("kkkkkkkkkk",temp_payload)
     const headers={'Content-Type': 'application/json'};
 
-    // temp_payload['client_name']="cloud_cargo"
-    // temp_payload['file_name']="manifest"
+    temp_payload['client_name']="cloud_cargo"
+    temp_payload['file_name']="manifest"
 
     axios.post(MENIFEST_URL +'/bilty/print/',
-    {flattened,
-    'client_name':'cloud_cargo',
-  'file_name':'manifest'
-},
+    temp_payload,
      {headers}).then(
         (response)=>{
           console.log("General",response);
