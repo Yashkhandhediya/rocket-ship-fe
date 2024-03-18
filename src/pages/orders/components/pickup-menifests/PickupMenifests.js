@@ -78,6 +78,9 @@ const PickupMenifests = () => {
     temp_payload,
      {headers}).then(
         (response)=>{
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
           console.log("General",response);
           toast('Menifest Download Successfully',{type:'success'})
         }
@@ -90,7 +93,7 @@ const PickupMenifests = () => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)
-    const headers={'Content-Type': 'application/json'};
+    const headers={'Content-Type': 'application/octet-stream'};
 
     temp_payload['client_name']="cloud_cargo"
     temp_payload['file_name']="invoice"
@@ -99,6 +102,9 @@ const PickupMenifests = () => {
     temp_payload,
      {headers}).then(
         (response)=>{
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
           console.log("General",response);
           toast('Invoice Download Successfully',{type:'success'})
         }
