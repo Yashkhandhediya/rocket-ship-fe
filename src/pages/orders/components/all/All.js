@@ -23,6 +23,14 @@ export const All = () => {
   const allOrdersList = useSelector((state) => state?.ordersList) || [];
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
 
+  function splitString(string, length) {
+    let result = [];
+    for (let i = 0; i < string.length; i += length) {
+        result.push(string.substr(i, length));
+    }
+    return result;
+}
+
   const handleMenifest = (id) => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)
@@ -83,6 +91,11 @@ export const All = () => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)
     const headers={'Content-Type': 'application/json'};
+    
+    let temp_str = splitString(temp_payload['complete_address1'],35)
+    for(let i=0;i<temp_str.length;i++){
+      temp_payload[`complete_address1_${i+1}`] = temp_str[i]
+    }
 
     temp_payload['client_name']="cloud_cargo"
     temp_payload['file_name']="invoice"

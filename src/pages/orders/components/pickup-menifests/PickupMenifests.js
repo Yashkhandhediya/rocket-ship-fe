@@ -69,6 +69,14 @@ const PickupMenifests = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   }
 
+  function splitString(string, length) {
+    let result = [];
+    for (let i = 0; i < string.length; i += length) {
+        result.push(string.substr(i, length));
+    }
+    return result;
+}
+
   const handleMenifest = (id) => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)
@@ -97,10 +105,14 @@ const PickupMenifests = () => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)
     const headers={'Content-Type': 'application/json'};
-
+    // console.log("jtttttttttt",temp_payload['complete_address1'],temp_payload['complete_address1'].length)
+    let temp_str = splitString(temp_payload['complete_address1'],35)
+    for(let i=0;i<temp_str.length;i++){
+      temp_payload[`complete_address1_${i+1}`] = temp_str[i]
+    }
+    // console.log("llljjjjjj",temp_str)
     temp_payload['client_name']="cloud_cargo"
     temp_payload['file_name']="invoice"
-
     axios.post(MENIFEST_URL +'/bilty/print/',
     temp_payload,
      {headers}).then(
