@@ -25,6 +25,30 @@ const Rto = () => {
     allOrdersList?.filter((order) => (order?.status_id) === 7) || [];
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
 
+  const handleMenifest = (id) => {
+    let temp_payload = flattenObject(resData,id)
+    console.log("kkkkkkkkkk",temp_payload)
+    const headers={'Content-Type': 'application/json'};
+
+    temp_payload['client_name']="cloud_cargo"
+    temp_payload['file_name']="manifest"
+
+    axios.post(MENIFEST_URL +'/bilty/print/',
+    temp_payload,
+     {headers}).then(
+        (response)=>{
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+          console.log("General",response);
+          toast('Menifest Download Successfully',{type:'success'})
+        }
+      ) .catch((error) => {
+        console.error("Error:", error);
+        toast('Error in Menifest Download',{type:'error'})
+    });
+  }
+
   function flattenObject(obj, id) {
     const keyCounts = {};
     for(let i=0;i<resData.length;i++){
@@ -216,7 +240,10 @@ const Rto = () => {
             <button
               id={row.id}
               className="min-w-fit rounded bg-red-700 hover:bg-green-700 px-4 py-1.5 text-white"
-              onClick={() => { }}>
+              onClick={(e) => { 
+                console.log(row.row.original.id)
+                handleMenifest(row.row.original.id)
+              }}>
               {(row?.original?.status_name || '')?.toLowerCase() == 'new' ? 'Ship Now' : 'Download Menifest'}
             </button>
             <div className="min-h-[32px] min-w-[32px]">
