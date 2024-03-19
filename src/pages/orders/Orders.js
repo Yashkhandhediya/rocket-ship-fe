@@ -29,8 +29,6 @@ const Orders = () => {
           resData = resp.data
           console.log("REsponseeeeeeee",resData)
         } else {
-          resData = await resp.json();
-          console.log("REsponseeeeeeee",resp)
           toast('There is some error while fetching orders.', { type: 'error' });
           setIsLoading(false);
         }

@@ -17,11 +17,13 @@ import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
 import { CommonBadge } from '../../../../common/components/common-badge';
-import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
+import { resData } from '../../Orders';
 
 export const New = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const flattened = {};
   const allOrdersList = useSelector((state) => state?.ordersList);
   const newOrdersList =
     allOrdersList?.filter((order) => (order?.status_id) === 1) || [];
@@ -30,6 +32,60 @@ export const New = () => {
     orderDetails: {},
   });
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
+
+  function flattenObject(obj, id) {
+    const keyCounts = {};
+    for(let i=0;i<resData.length;i++){
+          if(resData[i].id == id){
+            obj = resData[i];
+            break;
+          }
+        }
+  
+    function flatten(obj, parentKey = '') {
+            for (let key in obj) {
+                let propName = parentKey ? `${key}` : key;
+                
+                // Check if the key already exists, if yes, increment count
+                if (flattened[propName] !== undefined) {
+                    keyCounts[propName] = (keyCounts[propName] || 0) + 1;
+                    propName = `${propName}${keyCounts[propName]}`;
+                }
+                
+                if (typeof obj[key] === 'object' && obj[key] !== null) {
+                    flatten(obj[key], propName);
+                } else {
+                    flattened[propName] = obj[key];
+                }
+            }
+    }
+    flatten(obj);
+    return flattened;
+}
+
+  const handleInvoice = (id) => {
+    let temp_payload = flattenObject(resData,id)
+    console.log("kkkkkkkkkk",temp_payload)
+    const headers={'Content-Type': 'application/json'};
+
+    temp_payload['client_name']="cloud_cargo"
+    temp_payload['file_name']="invoice"
+
+    axios.post(MENIFEST_URL +'/bilty/print/',
+    temp_payload,
+     {headers}).then(
+        (response)=>{
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+          console.log("General",response);
+          toast('Invoice Download Successfully',{type:'success'})
+        }
+      ) .catch((error) => {
+        console.error("Error:", error);
+        toast('Error in Invoice Download',{type:'error'})
+    });
+  }
 
   const getColumns = () => {
     const columnHelper = createColumnHelper();
@@ -200,6 +256,7 @@ export const New = () => {
                 <MoreDropdown
                   renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                   options={moreActionOptions({
+                    downloadInvoice : () => handleInvoice(row?.row?.original?.id),
                     cloneOrder: () => cloneOrder(row?.original),
                     cancelOrder: () => cancelOrder(row?.original?.id),
                   })}
