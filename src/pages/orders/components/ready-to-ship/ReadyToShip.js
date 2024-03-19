@@ -82,6 +82,12 @@ export const ReadyToShip = () => {
     const headers={'Content-Type': 'application/json'};
 
     let temp_str = splitString(temp_payload['complete_address1'],35)
+    let temp1 = splitString(temp_payload['complete_address'],35)
+
+    for (let i = 0; i < temp1.length; i++) {
+      temp_payload[`${i+1}_complete_address_`] = temp1[i];
+    }
+    
     for(let i=0;i<temp_str.length;i++){
       temp_payload[`complete_address1_${i+1}`] = temp_str[i]
     }
@@ -275,7 +281,7 @@ export const ReadyToShip = () => {
               <MoreDropdown
                 renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                 options={moreActionOptions({
-                  downloadInvoice : () => handleInvoice(row?.row?.original?.id),
+                  downloadInvoice : () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row.original),
                 })}
               />
