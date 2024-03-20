@@ -30,6 +30,12 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         "amount": data?.total_charge,
       }
     }
+    else if(data?.partner_name === 'Ecome Xpress'){
+      requestData = {
+        "partner_id":4,
+        "amount":data?.total_charge,
+      }
+    }
     setIsLoading(true);
     if (orderId) {
       axios

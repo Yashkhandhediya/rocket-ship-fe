@@ -213,24 +213,29 @@ const PickupMenifests = () => {
       columnHelper.accessor('pickup/rtoAddress', {
         header: 'Pickup/RTO Address',
         cell: (row) => (
+          
           <div className="flex flex-col gap-1 text-left text-xs">
             <div>
-              <CustomTooltip
-                text={
-                  <>
-                    <div className='text-wrap'>{`${row?.original?.user_info?.address_line1 ?? ''} ${row?.original?.user_info?.address_line2 ?? ''
-                      }`}</div>
-                    <div>{row?.original?.user_info?.city ?? ''}</div>
-                    <div>
-                      {row?.original?.user_info?.state ?? ''}-{row?.original?.user_info?.pincode}
-                    </div>
-                    <div>{row?.original?.user_info?.contact_no}</div>
-                  </>
-                }>
-                <div className="relative cursor-pointer whitespace-pre-wrap pb-0.5 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-[#555]">
-                  {row?.original?.user_info?.tag || 'Primary'}
-                </div>
-              </CustomTooltip>
+            <CustomTooltip
+                  text={
+                    <>
+                      {row?.row?.original?.user_info?.tag && (
+                        <div className="font-medium">{`${row?.row?.original?.user_info?.tag}`}</div>
+                      )}
+                      {row?.row?.original?.user_info?.complete_address && (
+                        <div>{`${row?.row?.original?.user_info?.complete_address ?? ''}`}</div>
+                      )}
+                      {row?.row?.original?.user_info?.city && <div>{row?.row?.original?.user_info?.city ?? ''}</div>}
+                      <div>
+                        {row?.row?.original?.user_info?.state ?? ''}-{row?.row?.original?.user_info?.pincode}
+                      </div>
+                      <div>{row?.row?.original?.user_info?.contact_no}</div>
+                    </>
+                  }>
+                  <div className="relative cursor-pointer whitespace-pre-wrap pb-0.5 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-[#555]">
+                    {row?.original?.user_info?.tag || 'Primary'}
+                  </div>
+                </CustomTooltip>
             </div>
           </div>
         ),

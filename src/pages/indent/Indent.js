@@ -1,17 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar'
 import { cityList } from '../book-truck/cities';
-import { CustomMultiSelect, Field } from '../../common/components';
-import { materialTypes, truckTypes, weights } from './data';
+import { CustomMultiSelect, Field,Loader } from '../../common/components';
+import { materialTypes, truckTypes, weights, weightTypes } from './data';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../common/utils/env.config';
+import moment from 'moment';
+
 
 const Indent = () => {
-
     const inputRef = useRef(null);
     const dropdownRef = useRef(null);
+    const navigate = useNavigate()
     const [id,setId] = useState(0)
     const [selectedCity, setSelectedCity] = useState({
         source: '',
@@ -25,14 +27,39 @@ const Indent = () => {
     });
     const [truckType, setTruckType] = useState('Select Truck Type');
     const [materialType, setMaterialType] = useState('Select Material Type');
-    const [tons, setTons] = useState('Select Tons');
+    const [tons, setTons] = useState('Select Weight Type');
     const [targetPrice, setTargetPrice] = useState(null);
+    const [targetWeight, setTargetWeight] = useState(null);
+    const [pkgs,setPkgs] = useState(null)
+    const [isLoading, setIsLoading] = useState(false);
+    const [pickUpDate,setPickUpDate] = useState({
+        date:moment(new Date()).format('YYYY-MM-DD')
+    })
+    const [shipmentDetails,setShipmentDetails] = useState({
+        type:'ftl'
+    })
 
     const userName = localStorage.getItem('user_name');
     const userOptions = [{
         label: userName + '-' + '1234567890',
         value: userName + '-' + '1234567890'
     }];
+
+    const handlePickUpDate = (event) => {
+        const { id, value } = event.target;
+        setPickUpDate({
+          ...pickUpDate,
+          [id]: value,
+        });
+      };
+
+      const handleShipment = (event) => {
+        const { name, value } = event.target;
+        setShipmentDetails({
+          ...shipmentDetails,
+          [name]: value,
+        });
+      };
 
     function Dropdown({ isOpen, type }) {
         if (!isOpen) return null;
@@ -81,6 +108,7 @@ const Indent = () => {
 
     const handleSubmit = () => {
         console.log("Handling Create Indent API Here")
+        setIsLoading(true)
         setId(id + 1)
         const headers={'Content-Type': 'application/json'};
         console.log("Jayyyyyyy",selectedCity,materialType)
@@ -97,17 +125,22 @@ const Indent = () => {
         end_customer_id: null,
         customer_user_id: 1,
         truck_type_id: truckType,
-        ton: parseInt(tons),
+        weight_type: tons,
         created_by: "1",
         material_type_id: materialType,
         customer_price: parseInt(targetPrice),
         trip_status_id: 1,
-        origin_id: 10
+        origin_id: 10,
+        pkgs:pkgs,
+        weight:parseInt(targetWeight),
+        pickupDate:pickUpDate.date
     },
          {headers}).then(
             (response)=>{
+              setIsLoading(false)
               console.log("General",response);
               toast('Indent Created Successfully',{type:'success'})
+              navigate('/all-indent')
             }
           ) .catch((error) => {
             console.error("Error:", error);
@@ -117,6 +150,7 @@ const Indent = () => {
 
     return (
         <PageWithSidebar>
+        {isLoading && <Loader />}
             <div className="flex flex-col items-center gap-4 justify-center p-3">
                 <div className="flex flex-row shadow gap-8 p-4 justify-between rounded w-[80%]">
                     <div className="flex w-1/2 flex-col">
@@ -155,8 +189,72 @@ const Indent = () => {
                     </div>
                 </div>
 
+                <div className="mb-3 md:flex w-[40%] ml-60">
+                <div className="text-lg font-medium mr-6">{'Type Of Shipment :'}</div>
+                <div className="lg:w-2/12">
+                    <input
+                    type="radio"
+                    id="ftl"
+                    className="mr-3"
+                    value="ftl"
+                    name="type"
+                    checked={shipmentDetails?.type === 'ftl'}
+                    onChange={handleShipment}
+                    />
+                    <label
+                    htmlFor="ftl"
+                    className="mb-2 inline-flex items-center text-xs font-medium text-gray-900">
+                    FTL
+                    </label>
+                </div>
+                <div className="lg:w-2/12">
+                    <input
+                    type="radio"
+                    id="ptl"
+                    className="mr-3"
+                    value="ptl"
+                    name="type"
+                    checked={shipmentDetails?.type === 'ptl'}
+                    onChange={handleShipment}
+                    />
+                    <label
+                    htmlFor="ptl"
+                    className="mb-2 inline-flex items-center text-xs font-medium text-gray-900">
+                    PTL
+                    </label>
+                </div>
+                </div>
+
                 <div className="flex flex-wrap shadow gap-4 p-6 justify-between rounded w-[80%]">
-                    <div className="w-[49%]">
+                <div className="w-[49%]">
+                    <Field
+                    type={'date'}
+                    id={'date'}
+                    label={'PickUp Date'}
+                    inputClassNames={'text-xs'}
+                    labelClassNames={'text-xs'}
+                    placeHolder={'Enter PickUp Date'}
+                    required={true}
+                    maxDate={moment(new Date()).format('YYYY-MM-DD')}
+                    value={pickUpDate.date}
+                    onChange={handlePickUpDate}
+                    />
+                </div>
+
+             
+
+                {shipmentDetails.type == "ptl" && 
+                <div className="w-[49%]">
+                <Field
+                    value={pkgs}
+                    label="No. of Pkgs"
+                    type='number'
+                    onChange={(e) => setPkgs(e.target.value)}
+                />
+                </div>
+                }
+
+                    {shipmentDetails.type == "ftl" && <div className="w-[49%]">
                         <CustomMultiSelect
                             isMulti={false}
                             label={'Truck Type'}
@@ -168,7 +266,7 @@ const Indent = () => {
                             onChange={(value) => {
                                 setTruckType(value)
                             }} />
-                    </div>
+                    </div>}
                     <div className="w-[49%]">
                         <CustomMultiSelect
                             isMulti={false}
@@ -195,10 +293,12 @@ const Indent = () => {
                             }} />
                     </div>
                     <div className="w-[49%]">
+                    <div className="flex w-full">
+                    <div className="flex-grow pr-2">
                         <CustomMultiSelect
                             isMulti={false}
                             label={'Weight'}
-                            options={weights}
+                            options={weightTypes}
                             selected={tons}
                             closeMenuOnSelect={true}
                             placeholder={tons}
@@ -206,6 +306,16 @@ const Indent = () => {
                             onChange={(value) => {
                                 setTons(value)
                             }} />
+                    </div>
+                    <div className="flex-grow pr-4 mt-6" >
+                        <Field
+                            value={targetWeight}
+                            type='number'
+                            placeholder="Enter Weight"
+                            onChange={(e) => setTargetWeight(e.target.value)}
+                        />
+                    </div>
+                    </div>
                     </div>
                     <div className="w-[49%]">
                         <Field

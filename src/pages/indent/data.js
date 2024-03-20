@@ -90,8 +90,14 @@ const weights = [
     { weights_id:"30", label: "32", value: 32 }
 ];
 
+const weightTypes = [
+    {label:"Ton",value:"Ton"},
+    {label:"Kg",value:"Kg"}
+]
+
 module.exports = {
     truckTypes: truckTypes,
     materialTypes: materialTypes,
-    weights: weights
+    weights: weights,
+    weightTypes:weightTypes
 }
