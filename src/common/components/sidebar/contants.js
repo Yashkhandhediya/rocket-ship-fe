@@ -16,9 +16,23 @@ export const sidebarLinks = [
   },
   {
     title: 'Book',
-    path: '/book',
+    // path: '/book',
     icon: home,
     hoverIcon: homeActive,
+    subMenuOptions:[
+      {
+        title:"Book",
+        path:"/book"
+      },
+      {
+        title:"Create Indent",
+        path:"/indent"
+      },
+      {
+        title:"All Indent",
+        path:"/all-indent"
+      }
+    ],
   },
   {
     title: 'Orders',

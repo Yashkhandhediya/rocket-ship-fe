@@ -30,7 +30,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         "amount": data?.total_charge,
       }
     }
-    else if(data?.partner_name === 'Ecome Xpress'){
+    else if(data?.partner_name === 'ECOME XPRESS'){
       requestData = {
         "partner_id":4,
         "amount":data?.total_charge,
@@ -165,7 +165,9 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
             <Button
               id={row?.original?.id}
               className="rounded bg-red-600 w-[104px] h-[34px] text-white"
-              onClick={() => handleShipOrder(row?.original)}
+              onClick={() => {
+                console.log("PARTNER NAME",row?.original)
+                handleShipOrder(row?.original)}}
               style={{':hover':{backgroundColor:'#DB5711'}}}>
               {'Ship Now'}
             </Button>

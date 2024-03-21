@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState,useMemo } from 'react'
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar'
 import { cityList } from '../book-truck/cities';
 import { CustomMultiSelect, Field,Loader } from '../../common/components';
@@ -14,7 +14,8 @@ const Indent = () => {
     const inputRef = useRef(null);
     const dropdownRef = useRef(null);
     const navigate = useNavigate()
-    const [id,setId] = useState(0)
+    const [id,setId] = useState(150)
+    const [info,setInfo] = useState(null)
     const [selectedCity, setSelectedCity] = useState({
         source: '',
         destination: '',
@@ -39,6 +40,30 @@ const Indent = () => {
         type:'ftl'
     })
 
+    const [truckDimention,setTruckDimention] = useState({
+        length:0,
+        width:0,
+        height:0
+    })
+
+    const volumatricWeight =
+    useMemo(
+      () =>
+        (Number(truckDimention?.length || 0) *
+          Number(truckDimention?.width || 0) *
+          Number(truckDimention?.height || 0)) /
+        5000,
+      [truckDimention],
+    ) || 0;
+
+    const handleTruckDimention = (event) => {
+        const { id, value } = event.target;
+        setTruckDimention({
+          ...truckDimention,
+          [id]: value,
+        });
+      };
+
     const userName = localStorage.getItem('user_name');
     const userOptions = [{
         label: userName + '-' + '1234567890',
@@ -60,6 +85,7 @@ const Indent = () => {
           [name]: value,
         });
       };
+
 
     function Dropdown({ isOpen, type }) {
         if (!isOpen) return null;
@@ -109,7 +135,6 @@ const Indent = () => {
     const handleSubmit = () => {
         console.log("Handling Create Indent API Here")
         setIsLoading(true)
-        setId(id + 1)
         const headers={'Content-Type': 'application/json'};
         console.log("Jayyyyyyy",selectedCity,materialType)
         axios.post(BACKEND_URL+'/indent/create_indent',
@@ -133,14 +158,21 @@ const Indent = () => {
         origin_id: 10,
         pkgs:pkgs,
         weight:parseInt(targetWeight),
-        pickupDate:pickUpDate.date
+        pickupDate:pickUpDate.date,
+        volumetric_weight:volumatricWeight
     },
          {headers}).then(
             (response)=>{
               setIsLoading(false)
               console.log("General",response);
               toast('Indent Created Successfully',{type:'success'})
-              navigate('/all-indent')
+              axios.get(BACKEND_URL + `/indent/get_indents?created_by=1`).then((response)=>{
+                console.log("RESPONSE",response)
+              }
+              ).catch((err) => {
+                console.log("ERRRRRRRR",err)
+              })
+            //   navigate('/all-indent')
             }
           ) .catch((error) => {
             console.error("Error:", error);
@@ -244,15 +276,72 @@ const Indent = () => {
              
 
                 {shipmentDetails.type == "ptl" && 
-                <div className="w-[49%]">
-                <Field
-                    value={pkgs}
-                    label="No. of Pkgs"
-                    type='number'
-                    onChange={(e) => setPkgs(e.target.value)}
-                />
+                        <div className="w-[49%]">
+                        <Field
+                            value={pkgs}
+                            label="No. of Pkgs"
+                            type='number'
+                            onChange={(e) => setPkgs(e.target.value)}
+                        />
+                        </div>
+                }
+
+                {shipmentDetails.type == "ptl" && 
+                <div className="w-full md:flex">
+                <div className="w-full gap-4 md:flex">
+                <label className="dark:text-white mb-3 mt-1 block text-base font-medium text-gray-600">
+                  {'Enter Truck dimensions to calculate Volumetric Weight'}
+                </label>
+                  <div className="sm:w-/12 pb-2 md:pb-0">
+                    <Field
+                      type={'number'}
+                      id={'length'}
+                      inputClassNames={'text-xs'}
+                      placeHolder={'0.00'}
+                      required={true}
+                      rightAddOn="CM"
+                      value={truckDimention?.length || ''}
+                      onChange={handleTruckDimention}
+                    />
+                  </div>
+                  <div className="sm:w-/12 pb-2 md:pb-0">
+                    <Field
+                      type={'number'}
+                      id={'width'}
+                      inputClassNames={'text-xs'}
+                      placeHolder={'0.00'}
+                      required={true}
+                      rightAddOn="CM"
+                      value={truckDimention?.width || ''}
+                      onChange={handleTruckDimention}
+                    />
+                  </div>
+                  <div className="sm:w-/12 pb-2 md:pb-0">
+                    <Field
+                      type={'number'}
+                      id={'height'}
+                      inputClassNames={'text-xs'}
+                      placeHolder={'0.00'}
+                      required={true}
+                      rightAddOn="CM"
+                      value={truckDimention?.height || ''}
+                      onChange={handleTruckDimention}
+                    />
+                  </div>
+                </div>
                 </div>
                 }
+
+                {
+                    shipmentDetails.type == "ptl" && 
+                    <div className=" w-[49%] my-5 rounded-md bg-[#ecf2fe99] p-5 text-sm font-medium text-gray-900">
+                    <div className="mb-1 flex">
+                        <p>{'Volumetric Weight'}</p>
+                        <p className="ml-9">{volumatricWeight + 'kg.'}</p>
+                    </div>
+                </div>
+                }
+
 
                     {shipmentDetails.type == "ftl" && <div className="w-[49%]">
                         <CustomMultiSelect
@@ -336,7 +425,10 @@ const Indent = () => {
                     </div>
                 </div>
                 <button className='md:w-1/2 ml-10 bottom-4 fixed text-white text-lg font-semibold bg-blue-600 rounded-full p-2 hover:bg-blue-800'
-                onClick={handleSubmit}
+                onClick={() => {
+                    let upDateId = id + 1;
+                    setId(upDateId);
+                    handleSubmit()}}
                 >+ Create Indent</button>
             </div>
         </PageWithSidebar>
