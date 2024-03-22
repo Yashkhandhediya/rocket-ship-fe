@@ -3,10 +3,16 @@ import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithS
 import { info } from './Indent'
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
+import { useNavigate } from 'react-router-dom';
+
+export let modifyFlag = 0;
+export let modifyId;
 
 const Allindent = () => {
-
+  const navigate = useNavigate();
+  const [dataFetch, setDataFetch] = useState(false)
   useEffect(() => {
+
     const fetchData = async () => {
       try {
         const response = await axios.get(BACKEND_URL + `/indent/get_indents?created_by=1`);
@@ -16,6 +22,7 @@ const Allindent = () => {
             info.push(response.data[i]);
           }
         }
+        setDataFetch(true)
       } catch (err) {
         console.log("ERRRRRRRR", err);
       }
@@ -23,8 +30,23 @@ const Allindent = () => {
 
     if (info.length == 0) {
       fetchData();
+    }else{
+      setDataFetch(true)
     }
   }, []);
+
+
+  const handleModify = (id) => {
+    console.log("Idddddddddddd",id)
+      modifyId = id;
+      modifyFlag = 1;
+      axios.get(BACKEND_URL + `indent/get_indent_by_id?id=${id}`).then((res)=> {
+        console.log("TTTTTTTTT",res)
+      }).catch((err) => {
+        console.log("ERRRRRRRRRRRRR",err)
+      })
+      // navigate('/indent');
+  }
 
   // let timeLeft = Math.ceil((new Date() - new Date(info[0].pickupDate) )/(1000 * 60 * 60).toPrecision(1));
   // console.log("diff",timeLeft)
@@ -32,12 +54,12 @@ const Allindent = () => {
   return (
     <PageWithSidebar>
     {console.log("kkkkkkkkkkkk",info)}
-      <div className="flex flex-wrap">
+      {dataFetch && <div className="flex flex-wrap">
       {info.map((data,index) => (
       <div className="w-1/3 flex flex-row" key={index}>
       <div className="mt-5 mx-5 w-full p-4 bg-white rounded-lg shadow"> 
         <div className="mb-2 flex flex-row items-end justify-between border-b border-gray-200 pb-2">
-          <div>#192039</div>
+          <div className="text-red-500 font-semibold">{data.id}</div>
           <div className='text-red-500 text-xs'>{data.pickupDate} | Time Left : 
           {Math.ceil((new Date() - new Date(data.pickupDate) )/(1000 * 60 * 60).toPrecision(1))}h
           </div>
@@ -66,7 +88,7 @@ const Allindent = () => {
           <div className="w-6/10">
               <p className=' text-xs mb-1 ml-1 w-full text-purple-400 font-semibold'>MATERIAL TYPE</p>
               <p className="text-sm ml-1 text-gray-500">{data.material_type_id}</p>
-              <button className="ml-28">
+          <button className="ml-28" onClick={() => {handleModify(data.id)}}>
             <svg className="h-6 w-6 text-blue-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
             </svg>
@@ -86,7 +108,7 @@ const Allindent = () => {
     </div>
     </div>
       ))}
-      </div>
+      </div>}
     </PageWithSidebar>
   )
 }

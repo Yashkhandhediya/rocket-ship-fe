@@ -30,6 +30,12 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         "amount": data?.total_charge,
       }
     }
+    else if(data?.partner_name === 'XPRESSEES'){
+      requestData = {
+        "partner_id":3,
+        "amount":data?.total_charge,
+      }
+    }
     else if(data?.partner_name === 'ECOME XPRESS'){
       requestData = {
         "partner_id":4,

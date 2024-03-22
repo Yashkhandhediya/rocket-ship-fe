@@ -8,6 +8,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import moment from 'moment';
+import { modifyFlag,modifyId } from './Allindent';
+
 
 export let info = [];
 
@@ -183,6 +185,61 @@ const Indent = () => {
           ) .catch((error) => {
             console.error("Error:", error);
             toast('Error in Create Indent',{type:'error'})
+        });
+    }
+
+
+    const handleModify = () => {
+        console.log("Handling Modify Indent API Here")
+        setIsLoading(true)
+        const headers={'Content-Type': 'application/json'};
+        console.log("Jayyyyyyy",selectedCity,materialType)
+        axios.put(BACKEND_URL+'/indent/modify_indent',
+        {
+        id:modifyId,
+        source_id:parseInt(selectedCity.source_id),
+        end_customer_loading_point_id:null,
+        loading_point_id:null,
+        destination_id:parseInt(selectedCity.destination_id),
+        customer_id:1,
+        end_customer_uploading_point_id:null,
+        uploading_point_id:null,
+        end_customer_id: null,
+        customer_user_id: 1,
+        truck_type_id: truckType,
+        weight_type: tons,
+        created_by: "1",
+        material_type_id: materialType,
+        customer_price: parseInt(targetPrice),
+        trip_status_id: 1,
+        origin_id: 10,
+        pkgs:pkgs,
+        weight:parseInt(targetWeight),
+        pickupDate:pickUpDate.date,
+        volumetric_weight:volumatricWeight
+    },
+         {headers}).then(
+            (response)=>{
+              setIsLoading(false)
+              console.log("General",response);
+              toast('Indent Updated Successfully',{type:'success'})
+              axios.get(BACKEND_URL + `/indent/get_indents?created_by=1`).then((response)=>{
+                console.log("RESPONSE",response);
+                if(response.data.length > 0){
+                    for(let i=0;i<response.data.length;i++){
+                        info.push(response.data[i]);
+                    }
+                }
+                navigate('/all-indent')
+              }
+              ).catch((err) => {
+                console.log("ERRRRRRRR",err)
+              })
+            
+            }
+          ) .catch((error) => {
+            console.error("Error:", error);
+            toast('Error in Update Indent',{type:'error'})
         });
     }
 
@@ -434,8 +491,15 @@ const Indent = () => {
                 onClick={() => {
                     // let upDateId = id + 1;
                     // setId(upDateId);
-                    handleSubmit()}}
-                >+ Create Indent</button>
+                    if(!modifyFlag){
+                        handleSubmit()
+                    }else{
+                        handleModify()
+                    }
+                    }}
+                >
+                {modifyFlag == 0 ? "+ Create Indent" : "+ Modify Indent"}
+                </button>
             </div>
         </PageWithSidebar>
     )
