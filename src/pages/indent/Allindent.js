@@ -4,7 +4,6 @@ import { info } from './Indent'
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { useNavigate } from 'react-router-dom';
-
 export let modifyFlag = 0;
 export let modifyId;
 
@@ -40,12 +39,14 @@ const Allindent = () => {
     console.log("Idddddddddddd",id)
       modifyId = id;
       modifyFlag = 1;
-      axios.get(BACKEND_URL + `indent/get_indent_by_id?id=${id}`).then((res)=> {
+      axios.get(BACKEND_URL + `/indent/get_indents_by_id?id=${id}`).then((res)=> {
         console.log("TTTTTTTTT",res)
+        let data = res.data
+        navigate('/indent',{state:{data:data}});
       }).catch((err) => {
         console.log("ERRRRRRRRRRRRR",err)
       })
-      // navigate('/indent');
+      
   }
 
   // let timeLeft = Math.ceil((new Date() - new Date(info[0].pickupDate) )/(1000 * 60 * 60).toPrecision(1));

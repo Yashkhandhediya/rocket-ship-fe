@@ -3,7 +3,7 @@ import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithS
 import { cityList } from '../book-truck/cities';
 import { CustomMultiSelect, Field,Loader } from '../../common/components';
 import { materialTypes, truckTypes, weights, weightTypes } from './data';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate,useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../common/utils/env.config';
@@ -15,29 +15,33 @@ export let info = [];
 
 
 const Indent = () => {
+    const location = useLocation()
+    const data = location.state?.data || {}
+    // console.log("Dataaaaaa",data)
+    // console.log("Dataaaaaaaa",props.location.state.targetPrice)
     const inputRef = useRef(null);
     const dropdownRef = useRef(null);
     const navigate = useNavigate()
     // const [id,setId] = useState(1)
     const [selectedCity, setSelectedCity] = useState({
-        source: '',
-        destination: '',
-        source_id:'',
-        destination_id:''
+        source: data?.source_id || '',
+        destination: data?.destination_id || '',
+        source_id:data?.source_id || '',
+        destination_id:data?.destination_id || ''
     })
     const [isDropdownOpen, setIsDropdownOpen] = useState({
         source: false,
         destination: false
     });
-    const [truckType, setTruckType] = useState('Select Truck Type');
-    const [materialType, setMaterialType] = useState('Select Material Type');
-    const [tons, setTons] = useState('Select Weight Type');
-    const [targetPrice, setTargetPrice] = useState(null);
-    const [targetWeight, setTargetWeight] = useState(null);
-    const [pkgs,setPkgs] = useState(null)
+    const [truckType, setTruckType] = useState(data?.truck_type_id || 'Select Truck Type');
+    const [materialType, setMaterialType] = useState(data?.material_type_id || 'Select Material Type');
+    const [tons, setTons] = useState(data?.weight_type || 'Select Weight Type');
+    const [targetPrice, setTargetPrice] = useState(data?.customer_price || null);
+    const [targetWeight, setTargetWeight] = useState(data?.weight || null);
+    const [pkgs,setPkgs] = useState(data?.pkgs || null)
     const [isLoading, setIsLoading] = useState(false);
     const [pickUpDate,setPickUpDate] = useState({
-        date:moment(new Date()).format('YYYY-MM-DD')
+        date:data?.pickupDate || moment(new Date()).format('YYYY-MM-DD')
     })
     const [shipmentDetails,setShipmentDetails] = useState({
         type:'ftl'
