@@ -1,13 +1,16 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Field } from '../../common/components';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { type } from '@testing-library/user-event/dist/type';
 import { BACKEND_URL } from '../../common/utils/env.config';
+import OtpPopup from './OtpPopup';
 
 const LogIn = () => {
   const navigate = useNavigate();
+  const [userId,setUserId] = useState(null)
+  const [handlePopup, setHandlePopup] = useState(false)
   const [loginInput, setLoginInput] = useState({
     username: '',
     password: '',
@@ -30,10 +33,19 @@ const LogIn = () => {
       (response)=>{
         console.log(response);
         if (response.data.access_token){
+          setUserId(response.data.user_id)
           localStorage.setItem('access_token',response.data.access_token)
           localStorage.setItem('user_name',response.data?.user_name?.split(' ')[0])
-          toast('Login Success',{type:'success'})
-          navigate('/')
+          axios.post(BACKEND_URL + `/login/generate_otp?email_id=${loginInput.username}&user_id=${response.data.user_id}`, { email_id:String(loginInput.username),user_id: String(response.data.user_id) }, { headers })
+        .then((otpResponse) => {
+          console.log(otpResponse);
+        })
+        .catch((otpError) => {
+          console.error('Error fetching OTP:', otpError);
+        });
+          // toast('Login Success',{type:'success'})
+          // navigate('/')
+          setHandlePopup(true)
         }
         else if(response.data.msg){
           toast(response.data.msg,{type:'error'})
@@ -48,7 +60,7 @@ const LogIn = () => {
       <div className="mb-8 text-center text-4xl font-bold">
         <h1>ShipRocket</h1>
       </div>
-      <div className="bg-body mb-3 w-8/12 rounded-2xl bg-white px-12 py-6 shadow md:w-5/12">
+      {!handlePopup && <div className="bg-body mb-3 w-8/12 rounded-2xl bg-white px-12 py-6 shadow md:w-5/12">
         <div className="mb-2 text-center">
           <h3 className="m-0 text-xl font-medium">Login to ShipRocket</h3>
         </div>
@@ -93,7 +105,8 @@ const LogIn = () => {
             </p>
           </div>
         </form>
-      </div>
+      </div>}
+      {handlePopup && <OtpPopup username={loginInput.username} userId={userId} />}
     </div>
   );
 };
