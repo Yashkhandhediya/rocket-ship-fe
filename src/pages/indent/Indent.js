@@ -9,13 +9,14 @@ import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import moment from 'moment';
 
+export let info = [];
+
 
 const Indent = () => {
     const inputRef = useRef(null);
     const dropdownRef = useRef(null);
     const navigate = useNavigate()
-    const [id,setId] = useState(150)
-    const [info,setInfo] = useState(null)
+    // const [id,setId] = useState(1)
     const [selectedCity, setSelectedCity] = useState({
         source: '',
         destination: '',
@@ -139,7 +140,6 @@ const Indent = () => {
         console.log("Jayyyyyyy",selectedCity,materialType)
         axios.post(BACKEND_URL+'/indent/create_indent',
         {
-        id:id,
         source_id:parseInt(selectedCity.source_id),
         end_customer_loading_point_id:null,
         loading_point_id:null,
@@ -167,12 +167,18 @@ const Indent = () => {
               console.log("General",response);
               toast('Indent Created Successfully',{type:'success'})
               axios.get(BACKEND_URL + `/indent/get_indents?created_by=1`).then((response)=>{
-                console.log("RESPONSE",response)
+                console.log("RESPONSE",response,response.data.length);
+                if(response.data.length > 0){
+                    for(let i=0;i<response.data.length;i++){
+                        info.push(response.data[i]);
+                    }
+                }
+                navigate('/all-indent')
               }
               ).catch((err) => {
                 console.log("ERRRRRRRR",err)
               })
-            //   navigate('/all-indent')
+            
             }
           ) .catch((error) => {
             console.error("Error:", error);
@@ -426,8 +432,8 @@ const Indent = () => {
                 </div>
                 <button className='md:w-1/2 ml-10 bottom-4 fixed text-white text-lg font-semibold bg-blue-600 rounded-full p-2 hover:bg-blue-800'
                 onClick={() => {
-                    let upDateId = id + 1;
-                    setId(upDateId);
+                    // let upDateId = id + 1;
+                    // setId(upDateId);
                     handleSubmit()}}
                 >+ Create Indent</button>
             </div>
