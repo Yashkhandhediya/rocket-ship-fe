@@ -27,6 +27,7 @@ export const New = () => {
   const allOrdersList = useSelector((state) => state?.ordersList);
   const newOrdersList =
     allOrdersList?.filter((order) => (order?.status_id) === 1) || [];
+    console.log("FDAAAAAAAAA",newOrdersList)
   const [selectShipmentDrawer, setSelectShipmentDrawer] = useState({
     isOpen: false,
     orderDetails: {},

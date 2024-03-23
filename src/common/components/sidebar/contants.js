@@ -1,6 +1,7 @@
 import { bill, book, dashboard, help, home, homeActive, manage, order, settings,tool, user,weight,return1, boost, newHome } from '../../icons/sidebar-icons';
 import { logout } from './utils';
 
+const is_admin = 1;
 export const sidebarLinks = [
   {
     title: 'Home',
@@ -31,8 +32,12 @@ export const sidebarLinks = [
       {
         title:"All Indent",
         path:"/all-indent"
+      },
+      is_admin && {
+        title:"Booking Price",
+        path:"/User"
       }
-    ],
+    ].filter(option => option),
   },
   {
     title: 'Orders',

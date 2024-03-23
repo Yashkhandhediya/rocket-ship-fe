@@ -508,13 +508,6 @@ const Indent = () => {
                             leftAddOn='₹'
                         />
                     </div>
-                    <div className="w-[49%]">
-                        <button
-                            className='text-red-500 mt-7 w-full text-left rounded'
-                        >
-                            Check Price
-                        </button>
-                    </div>
                 </div>
                 <button className='md:w-1/2 ml-10 bottom-4 fixed text-white text-lg font-semibold bg-blue-600 rounded-full p-2 hover:bg-blue-800'
                 onClick={() => {

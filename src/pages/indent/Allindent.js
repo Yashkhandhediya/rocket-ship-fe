@@ -4,12 +4,16 @@ import { info } from './Indent'
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { useNavigate } from 'react-router-dom';
+import { Field } from '../../common/components';
 export let modifyFlag = 0;
 export let modifyId;
+
+let is_admin = 0
 
 const Allindent = () => {
   const navigate = useNavigate();
   const [dataFetch, setDataFetch] = useState(false)
+  const [price, setPrice] = useState({})
   useEffect(() => {
 
     const fetchData = async () => {
@@ -46,7 +50,40 @@ const Allindent = () => {
       }).catch((err) => {
         console.log("ERRRRRRRRRRRRR",err)
       })
-      
+  }
+
+  const handlePriceChange = (id,value) => {
+    setPrice({ ...price, [id]: value }); // Update the price for the corresponding card
+  };
+
+
+  const handlePrice = (id) => {
+    const headers={'Content-Type': 'application/json'};
+    console.log("Price",price)
+    axios.post(BACKEND_URL + '/indent/admin_price',
+    {
+      id:id,
+      price:parseInt(price[id]),
+    },{headers}).then((res)=>{
+      console.log("RESPONSEEEEEE11",res);
+    }).catch((err) => {
+      console.log("Errorororor",err);
+    })
+  }
+
+
+  const handleConfirmation = (id,status) => {
+    const headers={'Content-Type': 'application/json'};
+    axios.post(BACKEND_URL + '/indent/booking_confirmation',
+    {
+      id:id,
+      status_code:status
+    },
+    {headers}).then((res)=>{
+      console.log("111111111",res);
+    }).catch((err) => {
+      console.log("222222222",err);
+    })
   }
 
   // let timeLeft = Math.ceil((new Date() - new Date(info[0].pickupDate) )/(1000 * 60 * 60).toPrecision(1));
@@ -79,7 +116,7 @@ const Allindent = () => {
         </div>
         <div className="grid grid-cols-3 divide-x-2">
           <div className="-ml-2 w-1/10">
-            <p className='text-xs mb-1 ml-1 text-purple-400 font-semibold'>PRICE</p>
+            <p className='text-xs mb-1 ml-1 text-purple-400 font-semibold'>TARGET PRICE</p>
             <p className="text-sm ml-1 text-gray-500">{`₹${data.customer_price}`}</p>
           </div>
           <div className="-ml-14 w-3/10">
@@ -106,9 +143,32 @@ const Allindent = () => {
         Sujitkumar Tiwari
       </div>
     </div>
+    {is_admin ? ( // render based on is_admin value
+                  <div className="flex flex-row justify-between items-end">
+                    <div className='mt-4'>
+                      <label className='text-xs text-purple-400 font-semibold'>ACTUAL PRICE</label>
+                      <input type="text" value={price[data.id] || ''} onChange={(e) => handlePriceChange(data.id,e.target.value)} className="border w-36 h-10 mt-2 ml-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-100" />
+                    </div>
+                    <div className='mt-4'>
+                      <button className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg"
+                      onClick={() => {handlePrice(data.id)}}>Save</button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-row justify-between items-end">
+                    <div className='mt-4'>
+                      <label className='text-xs text-purple-400 font-semibold'>ACTUAL PRICE</label>
+                      <input type="text" className="border w-36 h-10 mt-2 ml-2 border-gray-300 rounded-md focus:outline-none bg-gray-100 focus:ring focus:border-blue-100 " disabled value={`₹${data.customer_price}`} />
+                    </div>
+                    <div className='mt-4'>
+                      <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg mr-2" onClick={() => {handleConfirmation(data.id,2)}}>Confirm</button>
+                      <button className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg" onClick={() => {handleConfirmation(data.id,3)}}>Reject</button>
+                    </div>
+                  </div>
+                )}
     </div>
     </div>
-      ))}
+    ))}
       </div>}
     </PageWithSidebar>
   )
