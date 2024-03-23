@@ -17,7 +17,7 @@ export let info = [];
 const Indent = () => {
     const location = useLocation()
     const data = location.state?.data || {}
-    // console.log("Dataaaaaa",data)
+    console.log("Dataaaaaa",data)
     // console.log("Dataaaaaaaa",props.location.state.targetPrice)
     const inputRef = useRef(null);
     const dropdownRef = useRef(null);
@@ -26,8 +26,8 @@ const Indent = () => {
     const [selectedCity, setSelectedCity] = useState({
         source: data?.source_id || '',
         destination: data?.destination_id || '',
-        source_id:data?.source_id || '',
-        destination_id:data?.destination_id || ''
+        source_id:'',
+        destination_id:''
     })
     const [isDropdownOpen, setIsDropdownOpen] = useState({
         source: false,
@@ -141,6 +141,11 @@ const Indent = () => {
 
     const handleSubmit = () => {
         console.log("Handling Create Indent API Here")
+        if (!selectedCity.source_id || !selectedCity.destination_id) {
+            toast("Please Fill Required fields",{type:'error'})
+            console.error('Source and destination must be selected.');
+            return; // Exit the function early if validation fails
+        }
         setIsLoading(true)
         const headers={'Content-Type': 'application/json'};
         console.log("Jayyyyyyy",selectedCity,materialType)
@@ -194,17 +199,37 @@ const Indent = () => {
 
 
     const handleModify = () => {
-        console.log("Handling Modify Indent API Here")
+        console.log("Handling Modify Indent API Here",selectedCity.source)
+        const temp_source = selectedCity.source.charAt(0).toUpperCase() + selectedCity.source.slice(1)
+        const temp_dest = selectedCity.destination.charAt(0).toUpperCase() + selectedCity.destination.slice(1)
+        let temp_source_id;
+        let temp_destination_id;
+        const match_source = cityList.find(city => city.name === temp_source)
+        const match_destination = cityList.find(city => city.name === temp_dest)
+        if(match_source){
+            temp_source_id = match_source.city_id
+        }
+
+        if(match_destination){
+            temp_destination_id = match_destination.city_id
+        }
+
+        if (!temp_source_id || !temp_destination_id) {
+            toast("Please Fill Required fields",{type:'error'})
+            console.error('Source and destination must be selected.');
+            return; // Exit the function early if validation fails
+        }
+
         setIsLoading(true)
         const headers={'Content-Type': 'application/json'};
         console.log("Jayyyyyyy",selectedCity,materialType)
         axios.put(BACKEND_URL+'/indent/modify_indent',
         {
         id:modifyId,
-        source_id:parseInt(selectedCity.source_id),
+        source_id:temp_source_id,
         end_customer_loading_point_id:null,
         loading_point_id:null,
-        destination_id:parseInt(selectedCity.destination_id),
+        destination_id:temp_destination_id,
         customer_id:1,
         end_customer_uploading_point_id:null,
         uploading_point_id:null,
