@@ -1,7 +1,8 @@
 import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { Fragment, useState } from "react";
 import { filterIcon, moreAction } from "../../../../common/icons";
-import { MoreFiltersDrawer } from "../more-filters-drawer"; import axios from 'axios';
+import { MoreFiltersDrawer } from "../more-filters-drawer"; 
+import axios from 'axios';
 import { Badge } from 'flowbite-react';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,23 +10,129 @@ import { filterPickupMenifests, moreActionOptions } from "../utils";
 import { createColumnHelper } from '@tanstack/react-table';
 import moment from 'moment';
 import { CommonBadge, CustomDataTable, CustomTooltip, MoreDropdown } from '../../../../common/components';
-import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { setAllOrders, setClonedOrder } from '../../../../redux';
 import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
+import { resData } from '../../Orders';
+
+
 
 const PickupMenifests = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  console.log("daklfmdsf",typeof resData,resData)
+  const flattened = {};
   const allOrdersList = useSelector((state) => state?.ordersList) || [];
   const newOrdersList =
     allOrdersList?.filter((order) => (order?.status_id) === 3) || [];
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
 
 
+  function flattenObject(obj, id) {
+    const keyCounts = {};
+    for(let i=0;i<resData.length;i++){
+          if(resData[i].id == id){
+            obj = resData[i];
+            break;
+          }
+        }
+  
+    function flatten(obj, parentKey = '') {
+            for (let key in obj) {
+                let propName = parentKey ? `${key}` : key;
+                
+                // Check if the key already exists, if yes, increment count
+                if (flattened[propName] !== undefined) {
+                    keyCounts[propName] = (keyCounts[propName] || 0) + 1;
+                    propName = `${propName}${keyCounts[propName]}`;
+                }
+                
+                if (typeof obj[key] === 'object' && obj[key] !== null) {
+                    flatten(obj[key], propName);
+                } else {
+                    flattened[propName] = obj[key];
+                }
+            }
+        
+    }
+  
+    flatten(obj);
+    return flattened;
+}
+
+
+
+
   function formatDate(dateString) {
     const options = { day: 'numeric', month: 'short', year: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
+  }
+
+  function splitString(string, length) {
+    let result = [];
+    for (let i = 0; i < string.length; i += length) {
+        result.push(string.substr(i, length));
+    }
+    return result;
+}
+
+  const handleMenifest = (id) => {
+    let temp_payload = flattenObject(resData,id)
+    console.log("kkkkkkkkkk",temp_payload)
+    const headers={'Content-Type': 'application/json'};
+
+    temp_payload['client_name']="cloud_cargo"
+    temp_payload['file_name']="manifest"
+
+    axios.post(MENIFEST_URL +'/bilty/print/',
+    temp_payload,
+     {headers}).then(
+        (response)=>{
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+          console.log("General",response);
+          toast('Menifest Download Successfully',{type:'success'})
+        }
+      ) .catch((error) => {
+        console.error("Error:", error);
+        toast('Error in Menifest Download',{type:'error'})
+    });
+  }
+
+  const handleInvoice = (id) => {
+    let temp_payload = flattenObject(resData,id)
+    console.log("kkkkkkkkkk",temp_payload)
+    const headers={'Content-Type': 'application/json'};
+    // console.log("jtttttttttt",temp_payload['complete_address1'],temp_payload['complete_address1'].length)
+    let temp_str = splitString(temp_payload['complete_address1'],35)
+    let temp1 = splitString(temp_payload['complete_address'],35)
+
+    for (let i = 0; i < temp1.length; i++) {
+      temp_payload[`${i+1}_complete_address_`] = temp1[i];
+    }
+    
+    for(let i=0;i<temp_str.length;i++){
+      temp_payload[`complete_address1_${i+1}`] = temp_str[i]
+    }
+    // console.log("llljjjjjj",temp_str)
+    temp_payload['client_name']="cloud_cargo"
+    temp_payload['file_name']="invoice"
+    axios.post(MENIFEST_URL +'/bilty/print/',
+    temp_payload,
+     {headers}).then(
+        (response)=>{
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+          console.log("General",response);
+          toast('Invoice Download Successfully',{type:'success'})
+        }
+      ) .catch((error) => {
+        console.error("Error:", error);
+        toast('Error in Invoice Download',{type:'error'})
+    });
   }
 
 
@@ -36,6 +143,7 @@ const PickupMenifests = () => {
       columnHelper.accessor('orderDetails', {
         header: 'Order Details',
         cell: ({ row }) => {
+          console.log("hellooooo",row)
           const formattedDate = row?.original?.created_date
             ? moment(row?.original?.created_date).format('DD MMM YYYY | hh:mm A')
             : 'No date available.';
@@ -105,24 +213,29 @@ const PickupMenifests = () => {
       columnHelper.accessor('pickup/rtoAddress', {
         header: 'Pickup/RTO Address',
         cell: (row) => (
+          
           <div className="flex flex-col gap-1 text-left text-xs">
             <div>
-              <CustomTooltip
-                text={
-                  <>
-                    <div className='text-wrap'>{`${row?.original?.user_info?.address_line1 ?? ''} ${row?.original?.user_info?.address_line2 ?? ''
-                      }`}</div>
-                    <div>{row?.original?.user_info?.city ?? ''}</div>
-                    <div>
-                      {row?.original?.user_info?.state ?? ''}-{row?.original?.user_info?.pincode}
-                    </div>
-                    <div>{row?.original?.user_info?.contact_no}</div>
-                  </>
-                }>
-                <div className="relative cursor-pointer whitespace-pre-wrap pb-0.5 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-[#555]">
-                  {row?.original?.user_info?.tag || 'Primary'}
-                </div>
-              </CustomTooltip>
+            <CustomTooltip
+                  text={
+                    <>
+                      {row?.row?.original?.user_info?.tag && (
+                        <div className="font-medium">{`${row?.row?.original?.user_info?.tag}`}</div>
+                      )}
+                      {row?.row?.original?.user_info?.complete_address && (
+                        <div>{`${row?.row?.original?.user_info?.complete_address ?? ''}`}</div>
+                      )}
+                      {row?.row?.original?.user_info?.city && <div>{row?.row?.original?.user_info?.city ?? ''}</div>}
+                      <div>
+                        {row?.row?.original?.user_info?.state ?? ''}-{row?.row?.original?.user_info?.pincode}
+                      </div>
+                      <div>{row?.row?.original?.user_info?.contact_no}</div>
+                    </>
+                  }>
+                  <div className="relative cursor-pointer whitespace-pre-wrap pb-0.5 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-[#555]">
+                    {row?.original?.user_info?.tag || 'Primary'}
+                  </div>
+                </CustomTooltip>
             </div>
           </div>
         ),
@@ -167,13 +280,17 @@ const PickupMenifests = () => {
             <button
               id={row.id}
               className="min-w-fit rounded bg-red-700 hover:bg-green-700 px-4 py-1.5 text-white"
-              onClick={() => { }}>
+              onClick={(e) => { 
+                console.log(row.row.original.id)
+                handleMenifest(row.row.original.id)
+              }}>
               {(row?.original?.status_name || '')?.toLowerCase() == 'new' ? 'Ship Now' : 'Download Menifest'}
             </button>
             <div className="min-h-[32px] min-w-[32px]">
               <MoreDropdown
                 renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                 options={moreActionOptions({
+                  downloadInvoice : () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row?.original),
                   cancelOrder: () => cancelOrder(row?.original),
                 })}

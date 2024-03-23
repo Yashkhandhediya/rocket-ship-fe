@@ -11,11 +11,12 @@ import Loader from '../../common/loader/Loader';
 import { isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../common/utils/env.config';
 
+export let resData = []
 const Orders = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  
   const allOrdersList = useSelector((state) => state?.ordersList);
 
   const fetchNewOrders = () => {
@@ -25,6 +26,8 @@ const Orders = () => {
         if (resp.status === 200) {
           dispatch(setAllOrders(resp?.data || []));
           setIsLoading(false);
+          resData = resp.data
+          console.log("REsponseeeeeeee",resData)
         } else {
           toast('There is some error while fetching orders.', { type: 'error' });
           setIsLoading(false);

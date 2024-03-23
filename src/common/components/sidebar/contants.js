@@ -1,47 +1,61 @@
-import { home, homeActive } from '../../icons/sidebar-icons';
+import { bill, book, dashboard, help, home, homeActive, manage, order, settings,tool, user,weight,return1, boost, newHome } from '../../icons/sidebar-icons';
 import { logout } from './utils';
 
 export const sidebarLinks = [
   {
     title: 'Home',
     path: '/seller/home',
-    icon: home,
-    hoverIcon: homeActive,
+    icon: newHome,
+    hoverIcon: newHome,
   },
   {
     title: 'Dashboard',
     path: '/dashboard',
-    icon: home,
-    hoverIcon: homeActive,
+    icon: dashboard,
+    hoverIcon: dashboard,
   },
   {
     title: 'Book',
-    path: '/book',
-    icon: home,
-    hoverIcon: homeActive,
+    // path: '/book',
+    icon: book,
+    hoverIcon: book,
+    subMenuOptions:[
+      {
+        title:"Book",
+        path:"/book"
+      },
+      {
+        title:"Create Indent",
+        path:"/indent"
+      },
+      {
+        title:"All Indent",
+        path:"/all-indent"
+      }
+    ],
   },
   {
     title: 'Orders',
     path: '/orders',
-    icon: home,
-    hoverIcon: homeActive,
+    icon: order,
+    hoverIcon: order,
   },
   {
     title: 'Returns',
     path: '/returns',
-    icon: home,
-    hoverIcon: homeActive,
+    icon: return1,
+    hoverIcon: return1,
   },
   {
     title: 'Delivery Boost',
     path: '/',
-    icon: home,
-    hoverIcon: homeActive,
+    icon: boost,
+    hoverIcon: boost,
   },
   {
     title: 'Weight Management',
-    icon: home,
-    hoverIcon: homeActive,
+    icon: weight,
+    hoverIcon: weight,
     subMenuOptions: [
       {
         title: 'Weight Discrepancy',
@@ -55,8 +69,8 @@ export const sidebarLinks = [
   },
   {
     title: 'Setup & Manage',
-    icon: home,
-    hoverIcon: homeActive,
+    icon: manage,
+    hoverIcon: manage,
     subMenuOptions: [
       {
         title: 'Channels',
@@ -82,8 +96,8 @@ export const sidebarLinks = [
   },
   {
     title: 'Buyer Experiance',
-    icon: home,
-    hoverIcon: homeActive,
+    icon: user,
+    hoverIcon: user,
     subMenuOptions: [
       {
         title: 'Brand Boost',
@@ -102,13 +116,13 @@ export const sidebarLinks = [
   {
     title: 'Billing',
     path: '/statement',
-    icon: home,
-    hoverIcon: homeActive,
+    icon: bill,
+    hoverIcon: bill,
   },
   {
     title: 'Tools',
-    icon: home,
-    hoverIcon: homeActive,
+    icon: tool,
+    hoverIcon: tool,
     subMenuOptions: [
       {
         title: 'Rate Calculator',
@@ -139,14 +153,14 @@ export const sidebarLinks = [
   {
     title: 'Settings',
     path: '/settings',
-    icon: home,
-    hoverIcon: homeActive,
+    icon: settings,
+    hoverIcon: settings,
   },
   {
     title: 'Help & Support',
     path: '/',
-    icon: home,
-    hoverIcon: homeActive,
+    icon: help,
+    hoverIcon: help,
   },
   {
     title: 'Logout',

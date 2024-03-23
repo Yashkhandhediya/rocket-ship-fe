@@ -28,13 +28,13 @@ const Book = () => {
 
     const [selectedCity, setSelectedCity] = useState([
         {
-            city: cityList[43]
+            city: cityList[43].name
         },
         {
-            city: cityList[42]
+            city: cityList[42].name
         },
         {
-            city: cityList[47]
+            city: cityList[47].name
         }
 
     ])
