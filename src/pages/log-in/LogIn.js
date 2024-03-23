@@ -7,6 +7,8 @@ import { type } from '@testing-library/user-event/dist/type';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import OtpPopup from './OtpPopup';
 
+export let is_Admin;
+
 const LogIn = () => {
   const navigate = useNavigate();
   const [userId,setUserId] = useState(null)
@@ -30,7 +32,8 @@ const LogIn = () => {
     console.log('backend url', BACKEND_URL);    
     axios.post(BACKEND_URL+'/login/access-token',{username:loginInput.username, password:loginInput.password}, {headers}).then(
       (response)=>{
-        console.log(response);
+        console.log(response.data.isAdmin);
+        is_Admin = response.data.isAdmin;
         if (response.data.access_token){
           setUserId(response.data.user_id)
           localStorage.setItem('access_token',response.data.access_token)

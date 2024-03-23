@@ -5,10 +5,12 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { useNavigate } from 'react-router-dom';
 import { Field } from '../../common/components';
+import { is_Admin } from '../log-in/LogIn';
+
 export let modifyFlag = 0;
 export let modifyId;
 
-let is_admin = 0
+
 
 const Allindent = () => {
   const navigate = useNavigate();
@@ -143,7 +145,7 @@ const Allindent = () => {
         Sujitkumar Tiwari
       </div>
     </div>
-    {is_admin ? ( // render based on is_admin value
+    {is_Admin ? ( // render based on is_admin value
                   <div className="flex flex-row justify-between items-end">
                     <div className='mt-4'>
                       <label className='text-xs text-purple-400 font-semibold'>ACTUAL PRICE</label>
