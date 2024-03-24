@@ -6,3 +6,5 @@ export {default as remitance} from './remittance0.png';
 export {default as earlyCodIcon} from './earlyCodIcon.png';
 export {default as noData} from './no_data.png'
 export {default as freezeGuide} from './freeze_guide.png'
+export {default as transport } from './transportimage.jpg'
+// export {default as homelogo} from './transport'

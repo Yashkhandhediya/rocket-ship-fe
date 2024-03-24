@@ -71,8 +71,10 @@ const Passbook = () => {
     }, []);
 
     const getDate = (date) => {
-        const d = new Date(date);
-
+        console.log("Dateeeeeee",date)
+        const [da, mon, y] = date.split('-');
+        const d = new Date(y,mon-1,da);
+        console.log("fggggggggggg",d)
         const day = String(d.getDate()).padStart(2, '0');
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const year = d.getFullYear();

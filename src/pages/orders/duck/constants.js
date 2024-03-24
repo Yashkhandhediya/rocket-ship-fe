@@ -37,3 +37,27 @@ export const ordersTabs = [
     panel: <All />,
   },
 ];
+
+
+export const trip_status_filter = [
+  {
+    title:'All',
+    id:'all'
+  },
+  {
+    title:'Booking_Price_Pending',
+    id:'booking_price_pending'
+  },
+  {
+    title:'Booking_Pending',
+    id:'booking_pending'
+  },
+  {
+    title:'Booking_Confirmed',
+    id:'booking_confirmed'
+  },
+  {
+    title:'Booking_Rejected',
+    id:'booking_rejected'
+  }
+];

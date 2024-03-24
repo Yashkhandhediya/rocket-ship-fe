@@ -6,8 +6,11 @@ import { toast } from 'react-toastify';
 import { type } from '@testing-library/user-event/dist/type';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import OtpPopup from './OtpPopup';
+import { transport } from '../../common/images';
+// import { homelogo } from '../../common/images';
 
 export let is_Admin;
+export let id_user;
 
 const LogIn = () => {
   const navigate = useNavigate();
@@ -34,6 +37,9 @@ const LogIn = () => {
       (response)=>{
         console.log(response.data.isAdmin);
         is_Admin = response.data.isAdmin;
+        // id_user = response.data.user_id
+        localStorage.setItem('user_id',response.data.user_id)
+        console.log("USERIDDDDDDDD",id_user)
         if (response.data.access_token){
           setUserId(response.data.user_id)
           localStorage.setItem('access_token',response.data.access_token)
@@ -59,12 +65,13 @@ const LogIn = () => {
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center">
+    {/* <img src={homelogo}></img> */}
       <div className="mb-8 text-center text-4xl font-bold">
-        <h1>ShipRocket</h1>
+        <h1>Cloud Cargo</h1>
       </div>
       {!handlePopup && <div className="bg-body mb-3 w-8/12 rounded-2xl bg-white px-12 py-6 shadow md:w-5/12">
         <div className="mb-2 text-center">
-          <h3 className="m-0 text-xl font-medium">Login to ShipRocket</h3>
+          <h3 className="m-0 text-xl font-medium">Login to Cloud Cargo</h3>
         </div>
         <span className="my-2 inline-flex w-full border border-dashed border-gray-400"></span>
         <form>
@@ -100,15 +107,18 @@ const LogIn = () => {
           </button>
           <div className="text-center">
             <p className="text-sm">
-              New to Shiprocket?{' '}
+              New to Cloud Cargo?{' '}
               <Link to={'/signup'} className="text-decoration-none text-red-700">
                 Sign Up Now
               </Link>
             </p>
           </div>
         </form>
-      </div>}
+      </div>
+      }
       {handlePopup && <OtpPopup username={loginInput.username} userId={userId} />}
+      <h1 className='font-bold text-black ml-auto mx-36'>Powered By</h1>
+      <img src={transport} className='ml-auto mx-16'></img> 
     </div>
   );
 };

@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import moment from 'moment';
 import { modifyFlag,modifyId } from './Allindent';
+import { id_user } from '../log-in/LogIn';
 
 
 export let info = [];
@@ -177,7 +178,7 @@ const Indent = () => {
               setIsLoading(false)
               console.log("General",response);
               toast('Indent Created Successfully',{type:'success'})
-              axios.get(BACKEND_URL + `/indent/get_indents?created_by=1`).then((response)=>{
+              axios.get(BACKEND_URL + `/indent/get_indents?created_by=${id_user}`).then((response)=>{
                 console.log("RESPONSE",response,response.data.length);
                 if(response.data.length > 0){
                     for(let i=0;i<response.data.length;i++){
@@ -252,7 +253,7 @@ const Indent = () => {
               setIsLoading(false)
               console.log("General",response);
               toast('Indent Updated Successfully',{type:'success'})
-              axios.get(BACKEND_URL + `/indent/get_indents?created_by=1`).then((response)=>{
+              axios.get(BACKEND_URL + `/indent/get_indents?created_by=${id_user}`).then((response)=>{
                 console.log("RESPONSE",response);
                 if(response.data.length > 0){
                     for(let i=0;i<response.data.length;i++){
@@ -382,7 +383,7 @@ const Indent = () => {
                 <div className="w-full md:flex">
                 <div className="w-full gap-4 md:flex">
                 <label className="dark:text-white mb-3 mt-1 block text-base font-medium text-gray-600">
-                  {'Enter Truck dimensions to calculate Volumetric Weight'}
+                  {'Enter Package dimensions to calculate Volumetric Weight'}
                 </label>
                   <div className="sm:w-/12 pb-2 md:pb-0">
                     <Field

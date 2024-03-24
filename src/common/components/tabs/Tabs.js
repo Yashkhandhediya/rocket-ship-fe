@@ -2,8 +2,16 @@ import { useState } from 'react';
 import { infoIcon } from '../../icons';
 import { CustomTooltip } from '../custom-tooltip';
 
-const Tabs = ({ tabs, tabClassNames, panelClassNames }) => {
+
+const Tabs = ({ tabs, tabClassNames, panelClassNames,onTabChange = () => {} }) => {
   const [activeTab, setActiveTab] = useState(0);
+  console.log("Activeeeeeeee",activeTab)
+
+  const handleClick = (index) => {
+    setActiveTab(index);
+    onTabChange(index);
+  };
+
   return (
     <div className="mb-4">
       <div
@@ -19,7 +27,7 @@ const Tabs = ({ tabs, tabClassNames, panelClassNames }) => {
               } ${tabClassNames}`}
               id={`${tab.id}-tab`}
               type="button"
-              onClick={() => setActiveTab(i)}>
+              onClick={() => handleClick(i)}>
               {tab.title}
               {tab?.tooltip && (
                 <CustomTooltip text={tab.tooltip}>

@@ -93,7 +93,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
             <div>
               <h4 className="pb-1.5 text-xs font-medium text-[#555]">{row?.original?.partner_name || 'Delhivery'}</h4>
               <div className="pb-1.5 text-xs text-[#555]">
-                {`${Number(row?.original?.surface_max_weight || 0) ? 'Surface ' : 'Air'} | Min-weight: `}
+                {`${row?.original?.charge_type} | Min-weight: `}
                 <span className="font-medium">
                   {Number(row?.original?.surface_max_weight || 0) ? row?.original?.surface_max_weight : row?.original?.air_max_weight || 0}
                 </span>

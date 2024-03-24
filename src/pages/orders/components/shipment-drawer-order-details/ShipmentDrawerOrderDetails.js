@@ -42,7 +42,7 @@ const ShipmentDrawerOrderDetails = ({ orderDetails }) => {
             <img src={openBox} className="inline-flex w-[1.875rem]" />
             <span className="mb-3 ml-2.5 inline-flex">{'No Orders'}</span>
           </div>
-          <div className="text-wrap mb-3 text-xs font-medium">{'On Ship Rocket'}</div>
+          <div className="text-wrap mb-3 text-xs font-medium">{'On Cloud Cargo'}</div>
           <div className="text-wrap mb-3 text-xs font-medium">
             <img src={openBox} className="inline-flex w-[1.875rem]" />
             <span className="mb-3 ml-2.5 inline-flex">{'No Orders'}</span>
@@ -94,7 +94,7 @@ const ShipmentDrawerOrderDetails = ({ orderDetails }) => {
             <img src={openBox} className="inline-flex w-[1.875rem]" />
             <span className="mb-3 ml-2.5 inline-flex">{'No Orders'}</span>
           </div>
-          <div className="text-wrap mb-3 text-xs font-medium">{'On Ship Rocket'}</div>
+          <div className="text-wrap mb-3 text-xs font-medium">{'On Cloud Cargo'}</div>
           <div className="text-wrap mb-3 text-xs font-medium">
             <img src={openBox} className="inline-flex w-[1.875rem]" />
             <span className="mb-3 ml-2.5 inline-flex">{'No Orders'}</span>

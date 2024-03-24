@@ -28,7 +28,7 @@ const SignUp = () => {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center">
       <div className="mb-8 text-center text-4xl font-bold">
-        <h1>ShipRocket</h1>
+        <h1>Cloud Cargo</h1>
       </div>
       <div className="bg-body mb-3 w-8/12 rounded-2xl bg-white px-12 py-6 shadow md:w-5/12">
         <div className="mb-2 text-center">
@@ -84,7 +84,7 @@ const SignUp = () => {
             onChange={handleChangeInput}
           />
           <div className="mb-3 text-sm">
-            {`By clicking Sign up for Free, you agree to Shiprocket's `}
+            {`By clicking Sign up for Free, you agree to Cloud Cargo's `}
             <Link to={'/login'} className="text-decoration-none text-red-700">
               {'Terms Of Service and Privacy Policy.'}
             </Link>

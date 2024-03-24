@@ -44,7 +44,7 @@ useEffect(() => {
         console.log(response)
         if(response.data.flag == 1){
           toast('Login Success',{type:'success'})
-          navigate('/')
+          navigate('/seller/home')
         }else{
           setMessage(true)
           toast('OTP Mismatched',{type:'error'})
