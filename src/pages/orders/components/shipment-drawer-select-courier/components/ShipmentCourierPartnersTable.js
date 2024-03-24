@@ -136,7 +136,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         header: 'Chargeable Weight',
         cell: ({row}) => (
           <div className="flex flex-col gap-1 text-center justify-center">
-            <div className="text-xs text-[#555]">{`${row?.original?.charged_weight || ''} Kg`}</div>
+            <div className="text-xs text-[#555]">{`${row?.original?.chargable_weight || ''} Kg`}</div>
           </div>
         ),
       }),

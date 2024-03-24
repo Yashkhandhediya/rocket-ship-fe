@@ -22,13 +22,14 @@ const Allindent = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [price, setPrice] = useState({})
   console.log("IDFFFFFF",selectedTab)
-  useEffect(() => {
+
 
     const fetchData = async () => {
       try {
         const response = await axios.get(BACKEND_URL + `/indent/get_indents?created_by=${temp}`);
         console.log("RESPONSE", response, response.data.length);
-        if (response.data.length > 0) {
+        if (response.data.length > 0 && info.length == 0) {
+          debugger
           for (let i = 0; i < response.data.length; i++) {
             info.push(response.data[i]);
           }
@@ -40,13 +41,14 @@ const Allindent = () => {
       }
     };
 
-    if (info.length == 0) {
+
+  useEffect(() => {
+    if (info.length === 0 && !dataFetch) {
+      debugger;
       fetchData();
-    }else{
-      setDataFetch(true)
     }
   }, []);
-
+  
 
   const handleModify = (id) => {
     console.log("Idddddddddddd",id)
@@ -101,10 +103,11 @@ const Allindent = () => {
   };
 
   useEffect(() => {
-    if (selectedTab === 0) {
-      setFilteredInfo(info);
+    let filteredData = info;
+    if (selectedTab == 0) {
+      setFilteredInfo(filteredData);
     } else {
-      const filteredData = info.filter(data => data.trip_status_id === selectedTab);
+      filteredData = filteredData.filter(data => data.trip_status == (selectedTab-1));
       setFilteredInfo(filteredData);
       console.log("INFOOOOOOOOO",filteredInfo)
     }
@@ -121,7 +124,7 @@ const Allindent = () => {
     {console.log("kkkkkkkkkkkk",info)}
       {dataFetch && <div className="flex flex-wrap">
       {filteredInfo.map((data,index) => (
-      <div className="w-1/3 flex flex-row" key={index}>
+      <div className="lg:w-1/3 flex flex-row md:w-1/2 sm:w-full" key={index}>
       <div className="mt-5 mx-5 w-full p-4 bg-white rounded-lg shadow"> 
         <div className="mb-2 flex flex-row items-end justify-between border-b border-gray-200 pb-2">
           <div className="text-red-500 font-semibold">{data.id}</div>
@@ -142,11 +145,11 @@ const Allindent = () => {
           </div>
         </div>
         <div className="grid grid-cols-3 divide-x-2">
-          <div className="-ml-2 w-1/10">
-            <p className='text-xs mb-1 ml-1 text-purple-400 font-semibold'>TARGET PRICE</p>
-            <p className="text-sm ml-1 text-gray-500">{`₹${data.customer_price}`}</p>
+          <div className="-ml-2 w-2/10 md:w-24">
+            <p className='lg:text-xs mb-1 ml-1 w-full text-purple-400 font-semibold md:w-1/3'>TARGET PRICE</p>
+            <p className="text-sm ml-1 text-gray-500 whitespace-nowrap overflow-hidden overflow-ellipsis">{`₹${data.customer_price}`}</p>
           </div>
-          <div className="-ml-14 w-3/10">
+          <div className="-ml-14 w-2/10">
             <p className='text-xs mb-1 ml-1 text-purple-400 font-semibold'>TRUCK TYPE & TON</p>
             <p className="text-sm ml-1 text-gray-500">{data.truck_type_id}</p>
           </div>
@@ -172,11 +175,11 @@ const Allindent = () => {
     </div>
     <div className='-ml-2 mt-6'>
     {
-      data.trip_status_id == "0" ? (
+      data.trip_status == 0 ? (
         <span className=" bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">Booking_Price_Pending</span>
-      ) : data.trip_status_id == "1" ? (
+      ) : data.trip_status == 1 ? (
         <span className="bg-purple-100 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">Booking_Pending</span>
-      ) : data.trip_status_id == "2" ? (
+      ) : data.trip_status == 2 ? (
         <span className="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">Booking_confirmed</span>
       ):(
         <span className="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Booking_Rejected</span>
@@ -201,8 +204,8 @@ const Allindent = () => {
                       <input type="text" className="border w-36 h-10 mt-2 ml-2 border-gray-300 rounded-md focus:outline-none bg-gray-100 focus:ring focus:border-blue-100 " disabled value={`₹${data.actual_price ?? 0}`} />
                     </div>
                     <div className='mt-4'>
-                      {(data.trip_status_id !== "2" && data.trip_status_id !== "3") && <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg mr-2" onClick={() => {handleConfirmation(data.id,2)}}>Confirm</button>}
-                      {(data.trip_status_id !== "2" && data.trip_status_id !== "3") && <button className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg" onClick={() => {handleConfirmation(data.id,3)}}>Reject</button>}
+                      {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status != 0) && <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg mr-2" onClick={() => {handleConfirmation(data.id,2)}}>Confirm</button>}
+                      {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status != 0) && <button className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg" onClick={() => {handleConfirmation(data.id,3)}}>Reject</button>}
                     </div>
                   </div>
                 )}

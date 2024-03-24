@@ -17,6 +17,7 @@ export let info = [];
 
 const Indent = () => {
     const location = useLocation()
+    const id_user = localStorage.getItem('user_id')
     const data = location.state?.data || {}
     console.log("Dataaaaaa",data)
     // console.log("Dataaaaaaaa",props.location.state.targetPrice)
@@ -74,8 +75,8 @@ const Indent = () => {
 
     const userName = localStorage.getItem('user_name');
     const userOptions = [{
-        label: userName + '-' + '1234567890',
-        value: userName + '-' + '1234567890'
+        label: "Jay Patel" + '+91 9033871787',
+        value: "Jay Patel" + '+91 9033871787'
     }];
 
     const handlePickUpDate = (event) => {
@@ -163,7 +164,7 @@ const Indent = () => {
         customer_user_id: 1,
         truck_type_id: truckType,
         weight_type: tons,
-        created_by: "1",
+        created_by: id_user,
         material_type_id: materialType,
         customer_price: parseInt(targetPrice),
         trip_status_id: 1,
@@ -171,25 +172,26 @@ const Indent = () => {
         pkgs:pkgs,
         weight:parseInt(targetWeight),
         pickupDate:pickUpDate.date,
-        volumetric_weight:volumatricWeight
+        volumetric_weight:volumatricWeight,
+        trip_status:0
     },
          {headers}).then(
             (response)=>{
               setIsLoading(false)
               console.log("General",response);
               toast('Indent Created Successfully',{type:'success'})
-              axios.get(BACKEND_URL + `/indent/get_indents?created_by=${id_user}`).then((response)=>{
-                console.log("RESPONSE",response,response.data.length);
-                if(response.data.length > 0){
-                    for(let i=0;i<response.data.length;i++){
-                        info.push(response.data[i]);
-                    }
-                }
-                navigate('/all-indent')
-              }
-              ).catch((err) => {
-                console.log("ERRRRRRRR",err)
-              })
+            //   axios.get(BACKEND_URL + `/indent/get_indents?created_by=${id_user}`).then((response)=>{
+            //     console.log("RESPONSE",response,response.data.length);
+            //     if(response.data.length > 0){
+            //         for(let i=0;i<response.data.length;i++){
+            //             info.push(response.data[i]);
+            //         }
+            //     }
+            //     navigate('/all-indent')
+            //   }
+            //   ).catch((err) => {
+            //     console.log("ERRRRRRRR",err)
+            //   })
             
             }
           ) .catch((error) => {
@@ -238,7 +240,7 @@ const Indent = () => {
         customer_user_id: 1,
         truck_type_id: truckType,
         weight_type: tons,
-        created_by: "1",
+        created_by: id_user,
         material_type_id: materialType,
         customer_price: parseInt(targetPrice),
         trip_status_id: 1,
@@ -383,7 +385,7 @@ const Indent = () => {
                 <div className="w-full md:flex">
                 <div className="w-full gap-4 md:flex">
                 <label className="dark:text-white mb-3 mt-1 block text-base font-medium text-gray-600">
-                  {'Enter Package dimensions to calculate Volumetric Weight'}
+                  {'Enter Packages dimensions to calculate Volumetric Weight'}
                 </label>
                   <div className="sm:w-/12 pb-2 md:pb-0">
                     <Field

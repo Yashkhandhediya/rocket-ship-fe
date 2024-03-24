@@ -7,7 +7,7 @@ import { type } from '@testing-library/user-event/dist/type';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import OtpPopup from './OtpPopup';
 import { transport } from '../../common/images';
-// import { homelogo } from '../../common/images';
+import { homelogo } from '../../common/images';
 
 export let is_Admin;
 export let id_user;
@@ -64,12 +64,16 @@ const LogIn = () => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center">
-    {/* <img src={homelogo}></img> */}
+    <>
+    <div className="flex flex-column h-full">
+    <div className="flex h-full w-[49%] flex-col items-center justify-center">
+    <img src={homelogo} className='w-[97%] h-full object-cover'></img>
+    </div>
+    <div className="flex h-full w-[49%] flex-col mt-8 items-center justify-center">
       <div className="mb-8 text-center text-4xl font-bold">
         <h1>Cloud Cargo</h1>
       </div>
-      {!handlePopup && <div className="bg-body mb-3 w-8/12 rounded-2xl bg-white px-12 py-6 shadow md:w-5/12">
+      {!handlePopup && <div className="bg-body mb-3 w-[95%] rounded-2xl bg-white px-12 py-6 shadow md:w-9/12">
         <div className="mb-2 text-center">
           <h3 className="m-0 text-xl font-medium">Login to Cloud Cargo</h3>
         </div>
@@ -117,9 +121,13 @@ const LogIn = () => {
       </div>
       }
       {handlePopup && <OtpPopup username={loginInput.username} userId={userId} />}
-      <h1 className='font-bold text-black ml-auto mx-36'>Powered By</h1>
-      <img src={transport} className='ml-auto mx-16'></img> 
+      <div className="flex flex-row justify-between mt-4 items-end ml-auto">
+        <h1 className='font-bold text-red-700 text-xl ml-auto mr-4'>Powered By</h1>
+        <img src={transport} className='ml-auto mt-10 mx-20 w-76 h-24'></img> 
+      </div>
     </div>
+    </div>
+    </>
   );
 };
 
