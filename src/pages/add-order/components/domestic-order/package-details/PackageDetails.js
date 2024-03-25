@@ -10,12 +10,14 @@ import { useNavigate } from 'react-router-dom';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
+import Loader from '../../../../../common/loader/Loader';
 
 export default function PackageDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order);
   const [validationTriggered, setValidationTriggered] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formDirectField, setFormDirectField] = useState({
     length: 0,
     width: 0,
@@ -65,6 +67,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
   }
 
   const placeOrder = async () => {
+    setIsLoading(true)
     const date = getFullDateForPayload(domesticOrderFormValues?.date);
     let resp = await axios.post(BACKEND_URL+'/order', {
       ...domesticOrderFormValues,
@@ -76,10 +79,12 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
       toast('Order Placed Successfully', { type: 'success' });
       dispatch(resetDomesticOrder());
       dispatch(setAllOrders(null))
+      setIsLoading(false)
       navigate('/orders');
     } else {
       toast('There is some error please check your network or contact support', { type: 'error' });
     }
+    setIsLoading(false)
   };
 
   const changeNextStep = (type) => {
@@ -132,6 +137,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
 
   return (
     <div>
+      {isLoading && <Loader/>}
       <div className="mb-6 text-xl font-bold"> {'Package Details'} </div>
       <div className="mb-3.5 rounded-xl bg-white p-9">
         <div className="w-full md:flex">
