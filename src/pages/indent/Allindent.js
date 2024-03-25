@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { Field } from '../../common/components';
 import { Tabs } from '../../common/components/tabs';
 import { trip_status_filter } from '../orders/duck';
+import { toast } from 'react-toastify';
+import  Loader  from '../../common/loader/Loader';
 
 export let modifyFlag = 0;
 export let modifyId;
@@ -21,6 +23,7 @@ const Allindent = () => {
   const [filteredInfo, setFilteredInfo] = useState([]);
   const [selectedTab, setSelectedTab] = useState(0);
   const [price, setPrice] = useState({})
+  const [loading, setLoading] = useState(false)
   console.log("IDFFFFFF",selectedTab)
 
 
@@ -82,6 +85,7 @@ const Allindent = () => {
 
 
   const handleConfirmation = (id,status) => {
+    setLoading(true)
     const headers={'Content-Type': 'application/json'};
     axios.post(BACKEND_URL + '/indent/booking_confirmation',
     {
@@ -90,8 +94,11 @@ const Allindent = () => {
     },
     {headers}).then((res)=>{
       console.log("111111111",res);
+      status == 2 ? toast('Price Successfully Accepted',{type:'success'}) : toast('Price Successfully Rejected',{type:'error'})
+      setLoading(false)
     }).catch((err) => {
       console.log("222222222",err);
+      setLoading(false)
     })
   }
 
@@ -116,6 +123,7 @@ const Allindent = () => {
   // console.log("Information ",info)
   return (
     <PageWithSidebar>
+    {loading && <Loader />}
      <div>
           <Tabs tabs={trip_status_filter} tabClassNames={'mr-6 px-3 py-3.5 text-[#7f7f7f] font-medium'} onTabChange={handleTabChange} />
     </div>
@@ -198,8 +206,8 @@ const Allindent = () => {
                 ) : (
                   <div className="flex flex-row justify-between items-end">
                     <div className='mt-4'>
-                      <label className='text-xs text-purple-400 font-semibold'>ACTUAL PRICE PENDING</label>
-                      <input type="text" className="border w-36 h-10 mt-2 ml-2 border-gray-300 rounded-md focus:outline-none bg-gray-100 focus:ring focus:border-blue-100 " disabled value={`₹${data.actual_price ?? 0}`} />
+                      <label className='text-xs text-purple-400 font-semibold'>{data.actual_price == null ? 'ACTUAL PRICE PENDING' : 'ACTUAL PRICE'}</label>
+                      {data.actual_price != null && <input type="text" className="border w-36 h-10 mt-2 ml-2 border-gray-300 rounded-md focus:outline-none bg-gray-100 focus:ring focus:border-blue-100 " disabled value={`₹${data.actual_price ?? 0}`} />}
                     </div>
                     <div className='mt-4'>
                       {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status != 0) && <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg mr-2" onClick={() => {handleConfirmation(data.id,2)}}>Confirm</button>}
