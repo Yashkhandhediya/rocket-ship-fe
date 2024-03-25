@@ -39,7 +39,7 @@ const LogIn = () => {
         // is_Admin = response.data.isAdmin;
         // id_user = response.data.user_id
         localStorage.setItem('user_id',response.data.user_id)
-        localStorage.setItem('is_Admin',response.data.isAdmin)
+        localStorage.setItem('is_Admin',response.data.is_admin)
         console.log("USERIDDDDDDDD",id_user)
         if (response.data.access_token){
           setUserId(response.data.user_id)
