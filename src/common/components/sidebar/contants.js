@@ -1,6 +1,7 @@
-import { is_Admin } from '../../../pages/log-in/LogIn';
 import { bill, book, dashboard, help, home, homeActive, manage, order, settings,tool, user,weight,return1, boost, newHome } from '../../icons/sidebar-icons';
 import { logout } from './utils';
+
+const is_Admin = localStorage.getItem('is_Admin')
 
 export const sidebarLinks = [
   {

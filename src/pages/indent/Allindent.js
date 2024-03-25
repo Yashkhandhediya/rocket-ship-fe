@@ -5,7 +5,6 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { useNavigate } from 'react-router-dom';
 import { Field } from '../../common/components';
-import { is_Admin,id_user } from '../log-in/LogIn';
 import { Tabs } from '../../common/components/tabs';
 import { trip_status_filter } from '../orders/duck';
 
@@ -13,6 +12,7 @@ export let modifyFlag = 0;
 export let modifyId;
 
 
+const is_Admin = localStorage.getItem('is_Admin')
 
 const Allindent = () => {
   const temp = localStorage.getItem('user_id');

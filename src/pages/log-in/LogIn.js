@@ -9,8 +9,8 @@ import OtpPopup from './OtpPopup';
 import { transport } from '../../common/images';
 import { homelogo } from '../../common/images';
 
-export let is_Admin;
-export let id_user;
+// export let is_Admin;
+// export let id_user;
 
 const LogIn = () => {
   const navigate = useNavigate();
@@ -36,9 +36,10 @@ const LogIn = () => {
     axios.post(BACKEND_URL+'/login/access-token',{username:loginInput.username, password:loginInput.password}, {headers}).then(
       (response)=>{
         console.log(response.data.isAdmin);
-        is_Admin = response.data.isAdmin;
+        // is_Admin = response.data.isAdmin;
         // id_user = response.data.user_id
         localStorage.setItem('user_id',response.data.user_id)
+        localStorage.setItem('is_Admin',response.data.isAdmin)
         console.log("USERIDDDDDDDD",id_user)
         if (response.data.access_token){
           setUserId(response.data.user_id)
