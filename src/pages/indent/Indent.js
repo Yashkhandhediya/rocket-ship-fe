@@ -75,7 +75,7 @@ const Indent = () => {
 
     const userName = localStorage.getItem('user_name');
     const userOptions = [{
-        label: "Jay Patel" + '+91 9033871787',
+        label: "Yash Khandhediya" + '+91 9033871787',
         value: "Jay Patel" + '+91 9033871787'
     }];
 
@@ -180,7 +180,7 @@ const Indent = () => {
               setIsLoading(false)
               console.log("General",response);
               toast('Indent Created Successfully',{type:'success'})
-              navigate('/all-indent')
+              navigate('/all-indent/'+id_user)
             //   axios.get(BACKEND_URL + `/indent/get_indents?created_by=${id_user}`).then((response)=>{
             //     console.log("RESPONSE",response,response.data.length);
             //     if(response.data.length > 0){

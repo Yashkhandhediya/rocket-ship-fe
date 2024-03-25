@@ -123,10 +123,10 @@ const Book = () => {
     return (
         <PageWithSidebar>
             <div className="flex flex-col items-center w-full justify-center h-full">
-                <p className='text-6xl font-bold'>Best Ahmedabad Transport Services</p>
+                <p className='text-6xl font-bold'>Best Transport Service In India</p>
                 <p className='border-[3px] border-red-500 w-[5%] rounded mt-6 mb-3'></p>
                 <p className='w-[85%] text-center text-lg text-[#707070]'>
-                    Welcome to FR8 Ahmedabad truck transport services, your top choice for truck transport in Ahmedabad. We have container trucks and open trucks from Ahmedabad at competitive rates. Our nearest transport office is in Nagpur, and it serves Ahmedabad and the surrounding areas. Our Ahmedabad transport contact number 8925825497, dial for more information.
+                    Welcome to Cargo Cloud truck transport services, your top choice for truck transport throughout India. We have container trucks and open trucks at competitive rates. Our Ahmedabad transport contact number 8925825497, dial for more information.
                 </p>
                 <div className="flex flex-row w-[88%] mt-5 gap-6 p-4">
                     {tabs.map((tab, index) => (

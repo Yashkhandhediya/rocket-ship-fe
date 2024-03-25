@@ -2,6 +2,7 @@ import { bill, book, dashboard, help, home, homeActive, manage, order, settings,
 import { logout } from './utils';
 
 const is_admin = localStorage.getItem('is_admin')
+const user_id = localStorage.getItem('user_id')
 
 export const sidebarLinks = [
   {
@@ -17,25 +18,25 @@ export const sidebarLinks = [
     hoverIcon: dashboard,
   },
   {
-    title: 'Book',
+    title: 'Truck Booking',
     // path: '/book',
     icon: book,
     hoverIcon: book,
     subMenuOptions:[
-      {
+      !parseInt(is_admin) &&{
         title:"Book",
         path:"/book"
       },
-      {
+      !parseInt(is_admin) &&{
         title:"Create Indent",
         path:"/indent"
       },
-      {
+      !parseInt(is_admin) &&{
         title:"All Indent",
-        path:"/all-indent"
+        path:"/all-indent/"+user_id
       },
-      is_admin && {
-        title:"Booking Price",
+      parseInt(is_admin) && {
+        title:"User Booking",
         path:"/User"
       }
     ].filter(option => option),

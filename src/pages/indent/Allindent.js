@@ -20,6 +20,13 @@ const Allindent = () => {
   const temp = localStorage.getItem('user_id');
   const { url_user_id } = useParams();
   console.log("url_user", url_user_id)
+  let user_name = null;
+  if (parseInt(url_user_id) == 1){
+    user_name = "Yash Khandhediya"
+  }
+  else{
+    user_name = "Shivam Gajjar"
+  }
   const navigate = useNavigate();
   const [dataFetch, setDataFetch] = useState(false)
   const [filteredInfo, setFilteredInfo] = useState([]);
@@ -141,8 +148,8 @@ const Allindent = () => {
       <div className="mt-5 mx-5 w-full p-4 bg-white rounded-lg shadow"> 
         <div className="mb-2 flex flex-row items-end justify-between border-b border-gray-200 pb-2">
           <div className="text-red-500 font-semibold">{data.id}</div>
-          <div className='text-red-500 text-xs'>{data.pickupDate} | Time Left : 
-          {Math.ceil((new Date() - new Date(data.pickupDate) )/(1000 * 60 * 60).toPrecision(1))}h
+          <div className='text-red-500 text-xs'>{data.pickupDate}  
+          {/* {Math.ceil((new Date(data.pickupDate) - new Date() )/(1000 * 60 * 60).toPrecision(1))}h */}
           </div>
         </div>
         <div className="-ml-4 -mr-4 border-b border-gray-200 pb-2">
@@ -178,12 +185,12 @@ const Allindent = () => {
         </div>
     <div className="-ml-4 -mr-4 flex justify-between items-end border-t border-gray-200">
       <div className="text-sm text-gray-500 mr-auto mt-3">  
-      <span className="ml-2 bg-purple-100 text-purple-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">
+      {/* <span className="ml-2 bg-purple-100 text-purple-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">
       12 truck(s) matched
-      </span>
+      </span> */}
       </div>
       <div className="mr-2 text-sm font-medium self-end">
-        Sujitkumar Tiwari
+        {user_name}
       </div>
     </div>
     <div className='-ml-2 mt-6'>
