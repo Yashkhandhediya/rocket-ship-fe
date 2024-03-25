@@ -45,19 +45,19 @@ export const trip_status_filter = [
     id:'all'
   },
   {
-    title:'Booking_Price_Pending',
+    title:'Booking Price Pending',
     id:'booking_price_pending'
   },
   {
-    title:'Booking_Pending',
+    title:'Booking Pending',
     id:'booking_pending'
   },
   {
-    title:'Booking_Confirmed',
+    title:'Booking Confirmed',
     id:'booking_confirmed'
   },
   {
-    title:'Booking_Rejected',
+    title:'Booking Rejected',
     id:'booking_rejected'
   }
 ];

@@ -1,7 +1,7 @@
 import { bill, book, dashboard, help, home, homeActive, manage, order, settings,tool, user,weight,return1, boost, newHome } from '../../icons/sidebar-icons';
 import { logout } from './utils';
 
-const is_Admin = localStorage.getItem('is_Admin')
+const is_admin = localStorage.getItem('is_admin')
 
 export const sidebarLinks = [
   {
@@ -34,7 +34,7 @@ export const sidebarLinks = [
         title:"All Indent",
         path:"/all-indent"
       },
-      is_Admin && {
+      is_admin && {
         title:"Booking Price",
         path:"/User"
       }

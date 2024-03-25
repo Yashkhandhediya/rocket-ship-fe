@@ -180,6 +180,7 @@ const Indent = () => {
               setIsLoading(false)
               console.log("General",response);
               toast('Indent Created Successfully',{type:'success'})
+              navigate('/all-indent')
             //   axios.get(BACKEND_URL + `/indent/get_indents?created_by=${id_user}`).then((response)=>{
             //     console.log("RESPONSE",response,response.data.length);
             //     if(response.data.length > 0){

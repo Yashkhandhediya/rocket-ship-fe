@@ -12,7 +12,7 @@ export let modifyFlag = 0;
 export let modifyId;
 
 
-const is_Admin = localStorage.getItem('is_Admin')
+const is_admin = localStorage.getItem('is_admin')
 
 const Allindent = () => {
   const temp = localStorage.getItem('user_id');
@@ -29,7 +29,6 @@ const Allindent = () => {
         const response = await axios.get(BACKEND_URL + `/indent/get_indents?created_by=${temp}`);
         console.log("RESPONSE", response, response.data.length);
         if (response.data.length > 0 && info.length == 0) {
-          debugger
           for (let i = 0; i < response.data.length; i++) {
             info.push(response.data[i]);
           }
@@ -44,7 +43,6 @@ const Allindent = () => {
 
   useEffect(() => {
     if (info.length === 0 && !dataFetch) {
-      debugger;
       fetchData();
     }
   }, []);
@@ -186,7 +184,7 @@ const Allindent = () => {
       )
     }
     </div>
-    {is_Admin ? ( // render based on is_admin value
+    {is_admin ? ( // render based on is_admin value
                   <div className="flex flex-row justify-between items-end">
                     <div className='mt-4'>
                       <label className='text-xs text-purple-400 font-semibold'>ACTUAL PRICE</label>
@@ -200,7 +198,7 @@ const Allindent = () => {
                 ) : (
                   <div className="flex flex-row justify-between items-end">
                     <div className='mt-4'>
-                      <label className='text-xs text-purple-400 font-semibold'>ACTUAL PRICE</label>
+                      <label className='text-xs text-purple-400 font-semibold'>ACTUAL PRICE PENDING</label>
                       <input type="text" className="border w-36 h-10 mt-2 ml-2 border-gray-300 rounded-md focus:outline-none bg-gray-100 focus:ring focus:border-blue-100 " disabled value={`₹${data.actual_price ?? 0}`} />
                     </div>
                     <div className='mt-4'>
