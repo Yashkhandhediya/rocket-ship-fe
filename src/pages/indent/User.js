@@ -28,8 +28,9 @@ const User = () => {
     }, [])
     
 
-  const handleIndent = () => {
-      navigate('/all-indent')
+  const handleIndent = (row) => {
+    console.log("yash row", row.original)
+      navigate('/all-indent/'+row.original.id)
   }
   
   const getColumns = () => {
@@ -86,7 +87,7 @@ const User = () => {
                 <button
                   id={row?.original?.id}
                   className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
-                  onClick={handleIndent}
+                  onClick={()=>handleIndent(row)}
                   >
                   {'Indent'}
                 </button>

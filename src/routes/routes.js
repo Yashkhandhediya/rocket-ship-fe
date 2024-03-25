@@ -33,7 +33,7 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<Indent />} />,
   },
   {
-    path: '/all-indent',
+    path: '/all-indent/:url_user_id',
     element: <PrivateRoute component={<Allindent />} />,
   },
   {

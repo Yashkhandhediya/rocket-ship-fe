@@ -3,7 +3,7 @@ import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithS
 import { info } from './Indent'
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Field } from '../../common/components';
 import { Tabs } from '../../common/components/tabs';
 import { trip_status_filter } from '../orders/duck';
@@ -18,6 +18,8 @@ const is_admin = localStorage.getItem('is_admin')
 
 const Allindent = () => {
   const temp = localStorage.getItem('user_id');
+  const { url_user_id } = useParams();
+  console.log("url_user", url_user_id)
   const navigate = useNavigate();
   const [dataFetch, setDataFetch] = useState(false)
   const [filteredInfo, setFilteredInfo] = useState([]);
@@ -29,7 +31,7 @@ const Allindent = () => {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get(BACKEND_URL + `/indent/get_indents?created_by=${temp}`);
+        const response = await axios.get(BACKEND_URL + `/indent/get_indents?created_by=${url_user_id}`);
         console.log("RESPONSE", response, response.data.length);
         if (response.data.length > 0 && info.length == 0) {
           for (let i = 0; i < response.data.length; i++) {
@@ -70,6 +72,7 @@ const Allindent = () => {
 
 
   const handlePrice = (id) => {
+    setLoading(true)
     const headers={'Content-Type': 'application/json'};
     console.log("Price",price)
     axios.post(BACKEND_URL + '/indent/admin_price',
@@ -78,6 +81,9 @@ const Allindent = () => {
       price:parseInt(price[id]),
     },{headers}).then((res)=>{
       console.log("RESPONSEEEEEE11",res);
+      toast('Price Successfully Submitted',{type:'success'})
+      setLoading(false)
+      window.location.reload();
     }).catch((err) => {
       console.log("Errorororor",err);
     })
@@ -96,6 +102,7 @@ const Allindent = () => {
       console.log("111111111",res);
       status == 2 ? toast('Price Successfully Accepted',{type:'success'}) : toast('Price Successfully Rejected',{type:'error'})
       setLoading(false)
+      window.location.reload();
     }).catch((err) => {
       console.log("222222222",err);
       setLoading(false)
