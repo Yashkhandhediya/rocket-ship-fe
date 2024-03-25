@@ -34,7 +34,6 @@ const LogIn = () => {
     console.log('backend url', BACKEND_URL);    
     axios.post(BACKEND_URL+'/login/access-token',{username:loginInput.username, password:loginInput.password}, {headers}).then(
       (response)=>{
-        console.log(response.data.isAdmin);
         // id_user = response.data.user_id
         localStorage.setItem('user_id',response.data.user_id)
         localStorage.setItem('is_admin',response.data.is_admin)
