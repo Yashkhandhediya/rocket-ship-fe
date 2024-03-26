@@ -363,7 +363,7 @@ const Indent = () => {
                     labelClassNames={'text-xs'}
                     placeHolder={'Enter PickUp Date'}
                     required={true}
-                    maxDate={moment(new Date()).format('YYYY-MM-DD')}
+                    // maxDate={moment(new Date()).format('YYYY-MM-DD')}
                     value={pickUpDate.date}
                     onChange={handlePickUpDate}
                     />
