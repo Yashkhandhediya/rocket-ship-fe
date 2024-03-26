@@ -36,7 +36,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         "amount":data?.total_charge,
       }
     }
-    else if(data?.partner_name === 'ECOM XPRESS'){
+    else if(data?.partner_name === 'ECOM EXPRESS'){
       requestData = {
         "partner_id":4,
         "amount":data?.total_charge,
