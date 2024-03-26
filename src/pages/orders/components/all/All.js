@@ -315,12 +315,13 @@ export const All = () => {
 
   const rowSubComponent = () => {
     return (
-      <Badge className="flex w-fit items-center rounded-lg bg-red-200 text-[8px]">
-        <div className="flex items-center">
-          <span className="mr-1 inline-flex h-4 w-4 rounded-full border-4 border-black"></span>
-          {'Secured'}
-        </div>
-      </Badge>
+      <></>
+      // <Badge className="flex w-fit items-center rounded-lg bg-red-200 text-[8px]">
+      //   <div className="flex items-center">
+      //     <span className="mr-1 inline-flex h-4 w-4 rounded-full border-4 border-black"></span>
+      //     {'Secured'}
+      //   </div>
+      // </Badge>
     );
   };
 
