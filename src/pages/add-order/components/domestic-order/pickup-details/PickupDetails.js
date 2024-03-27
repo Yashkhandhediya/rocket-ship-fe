@@ -12,7 +12,7 @@ import { BACKEND_URL } from '../../../../../common/utils/env.config';
 
 export default function PickupDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
-
+  const id_user = localStorage.getItem('user_id')
   const domesticOrderPickupAddress =
     useSelector((state) => state?.addOrder?.domestic_order?.pickup_address) || {};
 
@@ -26,7 +26,7 @@ export default function PickupDetails({ currentStep, handleChangeStep }) {
     axios
       .get(BACKEND_URL+'/address', {
         params: {
-          user_id: 1,
+          user_id: id_user,
         },
       })
       .then((resp) => {

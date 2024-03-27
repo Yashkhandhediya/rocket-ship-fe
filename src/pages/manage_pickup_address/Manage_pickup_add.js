@@ -16,12 +16,13 @@ const Manage_pickup_add = () => {
   const [openIndex, setOpenIndex] = useState(null);
   const [openRTOIndex, setOpenRTOIndex] = useState(null);
   const [showAddressModal, setShowAddressModal] = useState(false);
+  const id_user = localStorage.getItem('user_id')
   const fetchUserAddressList = () => {
     setLoading(true);
     axios
       .get(BACKEND_URL + '/address', {
         params: {
-          user_id: 1,
+          user_id: id_user,
         },
       })
       .then((resp) => {

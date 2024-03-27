@@ -23,12 +23,13 @@ const WarehouseDetails = ({ currentStep, handleChangeStep }) => {
     const [searchAddress, setSearchAddress] = useState('');
     const [addressList, setAddressList] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState(addressList.length ? addressList[0] : null);
-
+    const id_user = localStorage.getItem('user_id')
+    
     const fetchUserAddressList = () => {
         axios
             .get(BACKEND_URL+'/address', {
                 params: {
-                    user_id: 1,
+                    user_id: id_user,
                 },
             })
             .then((resp) => {
