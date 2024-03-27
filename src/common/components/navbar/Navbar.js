@@ -14,7 +14,7 @@ const Navbar = () => {
     const navigate = useNavigate();
     const [userData, setUserData] = useState({});
     const [showRechargeModal, setShowRechargeModal] = useState(false);
-
+    const id_user = localStorage.getItem('user_id')
     const navbarLinks = [
         {
             label: userData ? user : 'User',
@@ -90,7 +90,7 @@ const Navbar = () => {
 
     const getUser = async () => {
         try {
-            const response = await axios.get(`${BACKEND_URL}/users/1`);
+            const response = await axios.get(`${BACKEND_URL}/users/${id_user}`);
             setUserData(response.data);
         } catch (error) {
             console.log(error); //eslint-disable-line

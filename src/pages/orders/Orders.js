@@ -22,7 +22,7 @@ const Orders = () => {
 
   const fetchNewOrders = () => {
     axios
-      .get(BACKEND_URL+`/order/get_filtered_orders?page=1&per_page=100&created_by=1`)
+      .get(BACKEND_URL+`/order/get_filtered_orders?page=1&per_page=100&created_by=${id_user}`)
       .then(async (resp) => {
         if (resp.status === 200) {
           dispatch(setAllOrders(resp?.data || []));
