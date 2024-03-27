@@ -13,6 +13,7 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 
 export let resData = []
 const Orders = () => {
+  const id_user = localStorage.getItem('user_id')
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const Orders = () => {
 
   const fetchNewOrders = () => {
     axios
-      .get(BACKEND_URL+'/order/get_filtered_orders?page=1&per_page=100')
+      .get(BACKEND_URL+`/order/get_filtered_orders?page=1&per_page=100&created_by=1`)
       .then(async (resp) => {
         if (resp.status === 200) {
           dispatch(setAllOrders(resp?.data || []));

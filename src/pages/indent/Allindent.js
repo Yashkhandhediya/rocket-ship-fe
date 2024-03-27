@@ -166,7 +166,7 @@ const Allindent = () => {
         </div>
         <div className="grid grid-cols-3 divide-x-2">
           <div className="-ml-2 w-2/10 md:w-24">
-            <p className='lg:text-xs mb-1 ml-1 w-full text-purple-400 font-semibold md:w-1/3'>TARGET PRICE</p>
+            <p className='lg:text-xs mb-1 ml-1 w-full text-purple-400 font-semibold md:w-1/3 text-xs'>TARGET PRICE</p>
             <p className="text-sm ml-1 text-gray-500 whitespace-nowrap overflow-hidden overflow-ellipsis">{`₹${data.customer_price}`}</p>
           </div>
           <div className="-ml-14 w-2/10">

@@ -292,7 +292,7 @@ const PickupMenifests = () => {
                 options={moreActionOptions({
                   downloadInvoice : () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row?.original),
-                  cancelOrder: () => cancelOrder(row?.original),
+                  cancelOrder: () => cancelOrder(row?.row?.original),
                 })}
               />
             </div>
@@ -303,14 +303,15 @@ const PickupMenifests = () => {
   };
 
   function cancelOrder(orderDetails) {
+    const headers={'Content-Type': 'application/json'};
+    console.log("ORDER DETAILSSSSSSSS",orderDetails)
     axios
-      .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}`, {
-        ...orderDetails,
-        status: 'cancelled',
-      })
+      .post(`${BACKEND_URL}/order/${orderDetails?.id}/cancel_shipment`, {
+        partner_id:orderDetails?.partner_id
+      },{headers})
       .then((resp) => {
         if (resp?.status === 200) {
-          dispatch(setAllOrders(null));
+          // dispatch(setAllOrders(null));
           toast('Order cancelled successfully', { type: 'success' });
         }
       })
@@ -318,6 +319,23 @@ const PickupMenifests = () => {
         toast('Unable to cancel Order', { type: 'error' });
       });
   }
+
+  // function cancelOrder(orderDetails) {
+  //   axios
+  //     .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}`, {
+  //       ...orderDetails,
+  //       status: 'cancelled',
+  //     })
+  //     .then((resp) => {
+  //       if (resp?.status === 200) {
+  //         dispatch(setAllOrders(null));
+  //         toast('Order cancelled successfully', { type: 'success' });
+  //       }
+  //     })
+  //     .catch(() => {
+  //       toast('Unable to cancel Order', { type: 'error' });
+  //     });
+  // }
 
   function cloneOrder(orderDetails) {
     const clonedOrder = getClonedOrderFields(orderDetails);
