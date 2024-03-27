@@ -17,6 +17,21 @@ const Passbook = () => {
     const [toDate, setToDate] = useState(todayDate);
     const [isLoading, setIsLoading] = useState(false);
     const [usableAmount, setUsableAmount] = useState(0);
+    const [currentPage, setCurrentPage] = useState(2);
+    const [itemsPerPage,setItemsPerPage] = useState(10);
+    const [currentItems, setCurrentItems] = useState([]);
+
+
+    console.log("Infooooooooooooooo",currentItems,itemsPerPage-10,itemsPerPage)
+    const paginate = (page_item) => {
+        if(page_item > 0){
+            console.log("kdkl",page_item)
+            setItemsPerPage(page_item)
+        }else{
+            setItemsPerPage(10)
+        }
+      };
+    
 
     const checkDate = (fromDate, toDate) => {
         const from = new Date(fromDate);
@@ -53,10 +68,12 @@ const Passbook = () => {
     ]
 
     const getPassbookData = async () => {
+        console.log("PAGEEEEEEE NUM",currentPage)
         setIsLoading(true);
         try {
-            const response = await axios.post(`${BACKEND_URL}/account_transaction/account_report`, { date_from: fromDate, date_to: toDate, user_id: 1 });
+            const response = await axios.post(`${BACKEND_URL}/account_transaction/account_report?page_number=1&page_size=${itemsPerPage}`, { date_from: fromDate, date_to: toDate, user_id: 1 });
             setData(response.data.report);
+            setCurrentItems(response.data.report.slice(itemsPerPage-10, itemsPerPage));
             getUsableAmount();
             setIsLoading(false);
         } catch (error) {
@@ -68,7 +85,12 @@ const Passbook = () => {
 
     useEffect(() => {
         getPassbookData();
-    }, []);
+    }, [itemsPerPage]);
+
+    useEffect(() => {
+      setCurrentItems(data.slice(itemsPerPage-10, itemsPerPage))
+    }, [data,itemsPerPage])
+    
 
     const getDate = (date) => {
         console.log("Dateeeeeee",date)
@@ -205,7 +227,7 @@ const Passbook = () => {
                                 <div className='text-[14px] mt-2 font-normal opacity-80'>Please change filters and retry.</div>
                             </div>
                         ) : (
-                            data.map((item, index) => (
+                            currentItems.map((item, index) => (
                                 <div className='flex flex-row w-full border border-collapse bg-[#FAFAFA]' key={index}>
                                     <div className='pl-2 border-r-2 pr-2 w-full py-2'>{getDate(item.date)}</div>
                                     <div className='pl-2 border-r-2 pr-2 w-full py-2'>{item.voucher_id ? item.voucher_id : '-'}</div>
@@ -217,6 +239,15 @@ const Passbook = () => {
                                 </div>
                             ))
                         )}
+                    </div>
+                    <div>
+                        <button className={`text-xl font-semibold mt-4 ml-4 p-2 border rounded text-white bg-[#159700] ${itemsPerPage === 10 ? 'cursor-not-allowed' : ''}`} onClick={() => {paginate(itemsPerPage - 10)}} disabled={itemsPerPage === 10}>
+                        Previous
+                        </button>
+
+                    <button className={`text-xl font-semibold mt-4 ml-4 p-2 border rounded text-white bg-[#159700] ${currentItems.length < 10 ? 'cursor-not-allowed' : ''}`} onClick={() => {paginate(itemsPerPage + 10)}} disabled={currentItems.length < 10}>
+                        Next
+                        </button>
                     </div>
                 </div>
             </BillingTabs>
