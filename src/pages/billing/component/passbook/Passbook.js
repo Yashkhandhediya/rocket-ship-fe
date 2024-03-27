@@ -71,7 +71,7 @@ const Passbook = () => {
         console.log("PAGEEEEEEE NUM",currentPage)
         setIsLoading(true);
         try {
-            const response = await axios.post(`${BACKEND_URL}/account_transaction/account_report?page_number=1&page_size=${itemsPerPage}`, { date_from: fromDate, date_to: toDate, user_id: ${id_user} });
+            const response = await axios.post(`${BACKEND_URL}/account_transaction/account_report?page_number=1&page_size=${itemsPerPage}`, { date_from: fromDate, date_to: toDate, user_id: id_user });
             setData(response.data.report);
             setCurrentItems(response.data.report.slice(itemsPerPage-10, itemsPerPage));
             getUsableAmount();
