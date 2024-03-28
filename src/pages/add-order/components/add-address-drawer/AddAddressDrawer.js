@@ -66,6 +66,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
   };
 
   const handleSaveAddressInRedux = () => {
+    console.log("PAYLOADDDDDDDD",addressInfo)
     if (
       !addressInfo?.contact_no ||
       !addressInfo?.first_name ||
@@ -82,7 +83,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
       setTriggerValidations(true);
       return;
     }
-    console.log("PAYLOADDDDDDDD",addressInfo)
+    
     axios
       .post(BACKEND_URL+`/address?created_by=${id_user}`, addressInfo)
       .then((resp) => {
@@ -228,7 +229,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
               placeHolder={'Name of the person to be contacted'}
               tooltip={'Please include the phone number of the person who will be present at this location.'}
               required={true}
-              isDisabled={isEdit}
+              // isDisabled={isEdit}
               value={addressInfo?.first_name || ''}
               onChange={handleSetAddressInfo}
               onBlur={() => setIsValidFirstName(addressInfo?.first_name)}
@@ -256,7 +257,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
               }
               placeHolder={'Enter 10 digit mobile number'}
               required={true}
-              isDisabled={contactDisabled}
+              // isDisabled={contactDisabled}
               value={addressInfo?.contact_no || ''}
               onChange={handleSetAddressInfo}
               onBlur={() => setIsValidNumber(/^\d{10}$/.test(addressInfo?.contact_no))}
@@ -275,7 +276,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
               labelClassNames={'text-xs'}
               placeHolder={'i.e acd@gmail.com'}
               required={true}
-              isDisabled={isEdit}
+              // isDisabled={isEdit}
               value={addressInfo?.email_address || ''}
               onChange={handleSetAddressInfo}
               onBlur={() =>
@@ -318,22 +319,22 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
           values={addressInfo}
           triggerValidation={triggerValidations}
           onPincodeVeify={!isEdit ? onaddressPincodeVerify : null}
-          disabledFields={
-            isEdit
-              ? {
-                  complete_address: true,
-                  landmark: true,
-                  pincode: true,
-                  city: true,
-                  state: true,
-                  country: true,
-                }
-              : {
-                  city: disabledLocationFields,
-                  state: disabledLocationFields,
-                  country: disabledLocationFields,
-                }
-          }
+          // disabledFields={
+          //   isEdit
+          //     ? {
+          //         complete_address: true,
+          //         landmark: true,
+          //         pincode: true,
+          //         city: true,
+          //         state: true,
+          //         country: true,
+          //       }
+          //     : {
+          //         city: disabledLocationFields,
+          //         state: disabledLocationFields,
+          //         country: disabledLocationFields,
+          //       }
+          // }
         />
       </div>
       <div className="mb-4 mt-5 w-full border border-gray-100" />
