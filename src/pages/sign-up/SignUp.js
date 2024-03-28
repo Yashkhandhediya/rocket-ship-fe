@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Field } from '../../common/components';
 import axios from 'axios';
+import { BACKEND_URL } from '../../common/utils/env.config';
+import { toast } from 'react-toastify';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -22,7 +24,19 @@ const SignUp = () => {
   };
 
   const handleSubmit = () => {
-    // api of signup
+    const headers = {'Content-Type': 'application/json'};
+    axios.post(BACKEND_URL + '/users/signup',signupInput,{headers}).then((res) => {
+      console.log("Reponse of Sign up",res)
+      if(res.data.msg == "User already exits"){
+        toast("User Already Exists",{type:'error'})
+      }else{
+        toast("Sign Up SuccessFully",{type:'success'})
+        navigate('/login')
+      }
+    }).catch((err) => {
+      console.log("Error in signup",err);
+      toast("Some Error in Sign Up",{type:'error'})
+    })
   };
 
   return (
@@ -39,20 +53,20 @@ const SignUp = () => {
           <div className="flex w-full gap-2">
             <Field
               type={'text'}
-              id={'firstName'}
+              id={'first_name'}
               label={'First Name'}
               placeHolder={'First name'}
               required={true}
-              value={signupInput['firstName']}
+              value={signupInput['first_name']}
               onChange={handleChangeInput}
             />
             <Field
               type={'text'}
-              id={'lastName'}
+              id={'last_name'}
               label={'Last Name'}
               placeHolder={'Last name'}
               required={true}
-              value={signupInput['lastName']}
+              value={signupInput['last_name']}
               onChange={handleChangeInput}
             />
           </div>
