@@ -70,6 +70,7 @@ const CustomMultiSelect = ({
   };
 
   const handleSelectChange = (selectedOption, event) => {
+    console.log("OPTIONSSSSSSS",selectedOption)
     if (isMulti && withCheckbox) {
       if (selectedOption !== null && selectedOption.length > 0) {
         if (selectedOption[selectedOption.length - 1].value === selectAllOption.value) {
@@ -87,6 +88,10 @@ const CustomMultiSelect = ({
           } else if (event.action === 'select-option') {
             result = [selectAllOption, ...options];
           }
+          return onChange(isMulti ? onChange(result.map((obj) => obj.value)) : onChange(result?.[0].value));
+        }
+        else{
+          result = [selectAllOption, ...options];
           return onChange(isMulti ? onChange(result.map((obj) => obj.value)) : onChange(result?.[0].value));
         }
       }

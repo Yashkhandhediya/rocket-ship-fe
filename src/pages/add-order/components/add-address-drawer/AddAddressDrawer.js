@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
 
 const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress }) => {
+  const id_user = localStorage.getItem('user_id')
   const [isAddSupplier, setIsAddSupplier] = useState(false);
   const [isAddRTOAddress, setIsAddRTOAddress] = useState(false);
   const [addressInfo, setAddressInfo] = useState({
@@ -81,8 +82,9 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
       setTriggerValidations(true);
       return;
     }
+    console.log("PAYLOADDDDDDDD",addressInfo)
     axios
-      .post(BACKEND_URL+'/address', addressInfo)
+      .post(BACKEND_URL+`/address?created_by=${id_user}`, addressInfo)
       .then((resp) => {
         if (resp.status == 200) {
           toast('Pickup details saved successfully', { type: 'success' });

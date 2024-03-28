@@ -21,17 +21,18 @@ const MoreFiltersDrawer = ({ isOpen, onClose, fieldNames = [] }) => {
   });
 
   const handleChangeValues = (e) => {
+    console.log("SELECTEDDDDDDD",e.target)
     const { id, value } = e.target;
     if (id !== 'securedShipments') {
-      setFilterSelection({
-        ...filterSelection,
+      setFilterSelection(prevState => ({
+        ...prevState,
         [id]: value,
-      });
+      }));
     } else if (id === 'securedShipments') {
-      setFilterSelection({
-        ...filterSelection,
+      setFilterSelection(prevState => ({
+        ...prevState,
         securedShipments: e.target.checked,
-      });
+      }));
     }
   };
 

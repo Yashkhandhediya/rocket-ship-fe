@@ -18,6 +18,7 @@ const Field = ({
   maxLength,
   minLength,
   maxDate,
+  minDate,
   showOptional = false,
   labelClassNames = '',
   inputClassNames = '',
@@ -90,6 +91,7 @@ const Field = ({
           required={required}
           onBlur={onBlur}
           max={maxDate || ''}
+          min={minDate || ''}
           maxLength={maxLength}
           minLength={minLength}
           autoComplete={autoComplete}
