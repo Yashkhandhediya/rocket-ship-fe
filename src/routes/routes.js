@@ -1,11 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails, Return, Weight_Freeze, WeightDiscrepancy, Settings, Bank_details, Manage_pickup_add, Change_password, Company_Profile, Home, Book, Indent,Allindent,User } from '../pages';
+import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails, Return, Weight_Freeze, WeightDiscrepancy, Settings, Bank_details, Manage_pickup_add, Change_password, Company_Profile, Home, Book, Indent,Allindent,User, ForgotPassword, ResetPassword } from '../pages';
 import Tracking from '../pages/tracking/Tracking';
 import ReturnTracking from '../pages/return-tracking/ReturnTracking';
 import PrivateRoute from './private-route/PrivateRoute';
 import { SellerKYC } from '../pages/kyc';
 import { Returns } from '../pages/returns';
 import { COD_Remittance, Passbook, ShippingCharges, Wallet_history } from '../pages/billing/component';
+import { Adhaar_Document } from '../pages/kyc/component/adhaar_document';
 
 const routes = createBrowserRouter([
   {
@@ -23,6 +24,14 @@ const routes = createBrowserRouter([
   {
     path: '/signup',
     element: <SignUp />,
+  },
+  {
+    path: '/forgotpassword',
+    element: <ForgotPassword />,
+  },
+  {
+    path: '/resetpassword',
+    element: <ResetPassword />,
   },
   {
     path: '/book',
@@ -75,6 +84,10 @@ const routes = createBrowserRouter([
   {
     path: '/seller/kyc',
     element: <PrivateRoute component={<SellerKYC />} />,
+  },
+  {
+    path: '/aadhar',
+    element: <PrivateRoute component={<Adhaar_Document />} />,
   },
   {
     path: '/request-weight-freeze',

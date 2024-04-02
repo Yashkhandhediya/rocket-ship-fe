@@ -3,8 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
+import ResetPassword from './ResetPassword';
 
-const OtpPopup = ({username,userId}) => {
+const OtpPopup = ({username,userId=null,upDatePassWord=false}) => {
+  const [seconds, setSeconds] = useState(45);
+  const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
   const navigate = useNavigate()
   const [message,setMessage] = useState(false)
   const [OTP, setOTP] = useState(Array(6).fill(''));
@@ -29,10 +32,50 @@ const handleInputChange = (e, index) => {
   }
 };
 
+const handleKeyDown = (index, e) => {
+  // Handle backspace to clear the current box and move back
+  if (e.key === 'Backspace' && index > 0 && OTP[index] === '') {
+      const newOtp = [...OTP];
+      newOtp[index - 1] = '';
+      setOTP(newOtp);
+      inputRefs[index - 1].current.focus();
+  }
+};
+
+const handleSendOTP = () => {
+  const headers={'Content-Type': 'application/x-www-form-urlencoded'};  
+  if(upDatePassWord){
+    axios.post(BACKEND_URL + `/users/generate_otp?email_id=${username}`,{ headers })
+    .then((otpResponse) => {
+      console.log(otpResponse);
+    })
+    .catch((otpError) => {
+      console.error('Error fetching OTP:', otpError);
+    });
+  }else{
+    axios.post(BACKEND_URL + `/login/generate_otp?email_id=${username}&user_id=${userId}`, { email_id:String(username),user_id: String(userId) }, { headers })
+        .then((otpResponse) => {
+          console.log(otpResponse);
+        })
+        .catch((otpError) => {
+          console.error('Error fetching OTP:', otpError);
+        });
+  }
+}
+
 //Cursor in Default in first input box when Component Render
 useEffect(() => {
   inputRefs[0].current.focus();
 }, [])
+
+ useEffect(() => {
+        const intervalId = setInterval(() => {
+            setSeconds((prevSeconds) => (prevSeconds > 0 ? prevSeconds - 1 : 0));
+        }, 1000);
+
+        // Clean up the interval when the component unmounts
+        return () => clearInterval(intervalId);
+    }, []);
 
   const handleSubmitOtp = (e) => {
     e.preventDefault()
@@ -59,6 +102,36 @@ useEffect(() => {
       error => {
         console.log(error)
         
+      }
+    )
+      // navigate('/login')
+  }
+
+  const handleResetPassword = (e) => {
+    e.preventDefault()
+    const joinOTP = OTP.join('');
+    console.log("OTP checkingg",OTP,userId)
+    const headers={'Content-Type': 'application/x-www-form-urlencoded'};
+    axios.get(BACKEND_URL+`/users/verify_forgot_pass_otp/?otp=${joinOTP}&user_id=${userId}`,
+    {headers})
+    .then(
+      response => {
+        console.log(response)
+        if(response.data.flag == 1){
+          navigate('/resetpassword', { state: { username } })
+        }else{
+          setMessage(true)
+          toast('OTP Mismatched',{type:'error'})
+          console.log("OTP Mismatched")
+        }
+        // if(1){
+        //   toast('Login Success',{type:'success'})
+        //   navigate('/')
+        // }
+      }
+    ).catch(
+      error => {
+        console.log(error)
       }
     )
       // navigate('/login')
@@ -91,6 +164,7 @@ useEffect(() => {
                 name=""
                 id=""
                 onChange={(e) => handleInputChange(e, index)}
+                onKeyDown={(e) => handleKeyDown(index, e)}
               />
             </div>
           ))}
@@ -99,10 +173,21 @@ useEffect(() => {
             <div>
               {message && <h3 className='text-center text-red-700'>OTP Mismatched!!!</h3>}
             </div>
+            {seconds > 0 ?
+                    <div>Resend OTP in 00:{formattedSeconds} sec</div>
+                    :
+                    <button className="text-[#7973ef] mb-2 cursor-pointer"
+                        onClick={() => {
+                            setSeconds(45)
+                            handleSendOTP()
+                        }}>
+                        Resend OTP
+                    </button>
+            }
             <div className="flex flex-col space-y-5">
               <div>
                 <button className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm"
-                onClick={handleSubmitOtp}>
+                onClick={!upDatePassWord ? handleSubmitOtp : handleResetPassword}>
                   Verify Account
                 </button>
               </div>

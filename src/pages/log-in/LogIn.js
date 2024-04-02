@@ -95,7 +95,7 @@ const LogIn = () => {
             onChange={handleChangeInput}
           />
           <div className="mb-3 text-sm">
-            <Link to={'/'} className="text-decoration-none text-red-700">
+            <Link to={'/forgotpassword'} className="text-decoration-none text-red-700">
               Forgot Password?
             </Link>
           </div>
