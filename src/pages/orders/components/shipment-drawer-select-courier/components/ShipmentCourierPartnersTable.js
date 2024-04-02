@@ -42,6 +42,12 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         "amount":data?.total_charge,
       }
     }
+    else if(data?.partner_name === 'MARUTI'){
+      requestData = {
+        "partner_id":5,
+        "amount":data?.total_charge,
+      }
+    }
     setIsLoading(true);
     if (orderId) {
       axios
