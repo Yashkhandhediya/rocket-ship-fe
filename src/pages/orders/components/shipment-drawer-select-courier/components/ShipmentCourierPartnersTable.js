@@ -42,7 +42,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         "amount":data?.total_charge,
       }
     }
-    else if(data?.partner_name === 'MARUTI'){
+    else if(data?.partner_name === 'Maruti'){
       requestData = {
         "partner_id":5,
         "amount":data?.total_charge,
@@ -50,6 +50,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
     }
     setIsLoading(true);
     if (orderId) {
+      console.log("JTTTTTTTTTT",requestData)
       axios
         .post(`${BACKEND_URL}/order/${orderId}/shipment`, requestData)
         .then((resp) => {
