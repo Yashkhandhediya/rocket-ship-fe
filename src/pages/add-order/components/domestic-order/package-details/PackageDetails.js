@@ -11,7 +11,7 @@ import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import Loader from '../../../../../common/loader/Loader';
-import { isEdit, order_id } from '../../../../orders/components/new/New'
+// import { isEdit, order_id } from '../../../../orders/components/new/New'
 
 export default function PackageDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
@@ -335,7 +335,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
           type="button"
           className="dark:focus:ring-red-900 rounded-lg bg-red-600 px-8 py-2 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300"
           onClick={() => changeNextStep('NEXT')}>
-          {!isEdit ? 'Place Order' : 'Edit Order'}
+          {'Place Order'}
         </button>
       </div>
     </div>
