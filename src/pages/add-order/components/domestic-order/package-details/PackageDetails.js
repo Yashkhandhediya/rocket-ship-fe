@@ -11,11 +11,14 @@ import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import Loader from '../../../../../common/loader/Loader';
+import { isEdit, order_id } from '../../../../orders/components/new/New'
 
 export default function PackageDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const id_user = localStorage.getItem('user_id')
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order);
+  const editDetails = useSelector((state)=> state?.editOrder?.domestic_order)
   const [validationTriggered, setValidationTriggered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formDirectField, setFormDirectField] = useState({
@@ -69,7 +72,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
   const placeOrder = async () => {
     setIsLoading(true)
     const date = getFullDateForPayload(domesticOrderFormValues?.date);
-    let resp = await axios.post(BACKEND_URL+'/order', {
+    let resp = await axios.post(BACKEND_URL + `/order?user_id=${id_user}`, {
       ...domesticOrderFormValues,
       ...formDirectField,
       order_type: 'domestic',
@@ -86,6 +89,29 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     }
     setIsLoading(false)
   };
+
+  // const editOrder = async () => {
+  //   setIsLoading(true)
+  //   const date = getFullDateForPayload(editDetails?.date);
+  //   console.log("lkkkkkkkkkk",editDetails)
+  //   console.log("lkkkkkkkkkk",domesticOrderFormValues)
+  //   let resp = await axios.put(`${BACKEND_URL}/order?id=${order_id}`, {
+  //     ...editDetails,
+  //     ...formDirectField,
+  //     order_type: 'domestic',
+  //     date: date,
+  //   });
+  //   if (resp.status == 200) {
+  //     toast('Order Updated Successfully', { type: 'success' });
+  //     dispatch(resetDomesticOrder());
+  //     dispatch(setAllOrders(null))
+  //     setIsLoading(false)
+  //     navigate('/orders');
+  //   } else {
+  //     toast('There is some error please check your network or contact support', { type: 'error' });
+  //   }
+  //   setIsLoading(false)
+  // };
 
   const changeNextStep = (type) => {
     if (type === 'NEXT') {
@@ -107,7 +133,8 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
             ...formDirectField,
           }),
         );
-        placeOrder();
+        // !isEdit ? placeOrder() : editOrder()
+        placeOrder()
       }
     } else if (currentStep > 0) {
       handleChangeStep(currentStep - 1);
@@ -134,6 +161,19 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
       });
     }
   }, [domesticOrderFormValues]);
+
+  // useEffect(() => {
+  //   if (!isEmpty(editDetails)) {
+  //     setFormDirectField({
+  //       length: editDetails?.length,
+  //       width: editDetails?.width,
+  //       height: editDetails?.height,
+  //       dead_weight: editDetails?.dead_weight,
+  //       applicable_weight: editDetails?.applicable_weight,
+  //       volumatric_weight: editDetails?.volumatric_weight,
+  //     });
+  //   }
+  // }, [editDetails]);
 
   return (
     <div>
@@ -295,7 +335,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
           type="button"
           className="dark:focus:ring-red-900 rounded-lg bg-red-600 px-8 py-2 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300"
           onClick={() => changeNextStep('NEXT')}>
-          {'Place Order'}
+          {!isEdit ? 'Place Order' : 'Edit Order'}
         </button>
       </div>
     </div>
