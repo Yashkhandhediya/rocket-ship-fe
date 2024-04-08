@@ -7,6 +7,7 @@ import { SellerKYC } from '../pages/kyc';
 import { Returns } from '../pages/returns';
 import { COD_Remittance, Passbook, ShippingCharges, Wallet_history } from '../pages/billing/component';
 import { Adhaar_Document } from '../pages/kyc/component/adhaar_document';
+import { RateCalculator } from '../pages/rate-calculator';
 
 const routes = createBrowserRouter([
   {
@@ -138,6 +139,10 @@ const routes = createBrowserRouter([
   {
     path: '/company-general-details',
     element: <PrivateRoute component={<Company_Profile />} />,
+  },
+  {
+    path: '/rate-calculator',
+    element: <PrivateRoute component={<RateCalculator />} />,
   },
 
 ]);

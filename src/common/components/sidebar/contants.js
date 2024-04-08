@@ -133,7 +133,7 @@ export const sidebarLinks = [
     subMenuOptions: [
       {
         title: 'Rate Calculator',
-        path: '/',
+        path: '/rate-calculator',
       },
       {
         title: 'Rate Card',
