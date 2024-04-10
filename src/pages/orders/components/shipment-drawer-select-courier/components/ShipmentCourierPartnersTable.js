@@ -30,7 +30,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         "amount": data?.total_charge,
       }
     }
-    else if(data?.partner_name === 'XPRESSBEES'){
+    else if(data?.partner_name === 'Xpressbees'){
       requestData = {
         "partner_id":3,
         "amount":data?.total_charge,
