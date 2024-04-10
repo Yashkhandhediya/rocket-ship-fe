@@ -18,7 +18,7 @@ import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
 import { resData } from '../../Orders';
-import { MENIFEST_URL } from '../../../../common/utils/env.config';
+import { BACKEND_URL,MENIFEST_URL } from '../../../../common/utils/env.config';
 
 
 export const ReadyToShip = () => {
@@ -283,6 +283,7 @@ export const ReadyToShip = () => {
                 options={moreActionOptions({
                   downloadInvoice : () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row.original),
+                  cancelOrder: () => cancelOrder(row?.original),
                 })}
               />
             </div>
@@ -291,6 +292,25 @@ export const ReadyToShip = () => {
       }),
     ];
   };
+
+  function cancelOrder(orderDetails) {
+    const headers={'Content-Type': 'application/json'};
+    console.log("ORDER DETAILSSSSSSSS",orderDetails)
+    axios
+      .post(`${BACKEND_URL}/order/${orderDetails?.id}/cancel_shipment`, {
+        partner_id:orderDetails?.partner_id
+      },{headers})
+      .then((resp) => {
+        if (resp?.status === 200) {
+          // dispatch(setAllOrders(null));
+          toast('Order cancelled successfully', { type: 'success' });
+          window.location.reload()
+        }
+      })
+      .catch(() => {
+        toast('Unable to cancel Order', { type: 'error' });
+      });
+  }
 
   function cloneOrder(orderDetails) {
     const clonedOrder = getClonedOrderFields(orderDetails);
