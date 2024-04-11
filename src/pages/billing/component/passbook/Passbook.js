@@ -235,7 +235,7 @@ const Passbook = () => {
                                     <div className='pl-2 border-r-2 pr-2 w-full py-2'>N.A.</div>
                                     <div className='pl-2 border-r-2 pr-2 w-full py-2'>{item.credit ? '₹' + item.credit : '-'}</div>
                                     <div className='pl-2 border-r-2 pr-2 w-full py-2'>{item.debit ? '₹' + item.debit : '-'}</div>
-                                    <div className='pl-2 border-r-2 pr-2 w-full py-2'>{item.remarks ? '₹' + item.remarks : '-'}</div>
+                                    <div className='pl-2 border-r-2 pr-2 w-full py-2'>{item.remarks ?  item.remarks : '-'}</div>
                                 </div>
                             ))
                         )}

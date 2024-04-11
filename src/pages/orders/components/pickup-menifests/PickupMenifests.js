@@ -305,7 +305,10 @@ const PickupMenifests = () => {
   function cancelOrder(orderDetails) {
     const headers={'Content-Type': 'application/json'};
     console.log("ORDER DETAILSSSSSSSS",orderDetails)
-    axios
+    if(orderDetails.partner_id == 1 || orderDetails.partner_id == 2){
+      toast("Cancel Functionality Is Not Providing By This Partner",{type:"error"})
+    }else{
+      axios
       .post(`${BACKEND_URL}/order/${orderDetails?.id}/cancel_shipment`, {
         partner_id:orderDetails?.partner_id
       },{headers})
@@ -313,11 +316,13 @@ const PickupMenifests = () => {
         if (resp?.status === 200) {
           // dispatch(setAllOrders(null));
           toast('Order cancelled successfully', { type: 'success' });
+          window.location.reload()
         }
       })
       .catch(() => {
         toast('Unable to cancel Order', { type: 'error' });
       });
+    }
   }
 
   // function cancelOrder(orderDetails) {
