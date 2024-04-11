@@ -11,6 +11,7 @@ import RechargeModal from '../../../pages/home/components/rechareModal/RechargeM
 const Navbar = () => {
 
     const user = localStorage.getItem('user_name') ? localStorage.getItem('user_name') : null;
+    const balance = localStorage.getItem('balance') == 0 ? "0.00" : localStorage.getItem('balance');
     const navigate = useNavigate();
     const [userData, setUserData] = useState({});
     const [showRechargeModal, setShowRechargeModal] = useState(false);
@@ -92,6 +93,13 @@ const Navbar = () => {
         try {
             const response = await axios.get(`${BACKEND_URL}/users/${id_user}`);
             setUserData(response.data);
+            console.log("Hallllllllllllll",userData,response.data)
+            if(response.data.wallet_balance == null){
+                localStorage.setItem('balance',0.00)
+                console.log("BALLLLLLLL",balance)
+            }else{
+                localStorage.setItem('balance',response.data.wallet_balance)
+            }
         } catch (error) {
             console.log(error); //eslint-disable-line
         }
@@ -126,7 +134,7 @@ const Navbar = () => {
                             <path d="M2.273 5.625A4.483 4.483 0 0 1 5.25 4.5h13.5c1.141 0 2.183.425 2.977 1.125A3 3 0 0 0 18.75 3H5.25a3 3 0 0 0-2.977 2.625ZM2.273 8.625A4.483 4.483 0 0 1 5.25 7.5h13.5c1.141 0 2.183.425 2.977 1.125A3 3 0 0 0 18.75 6H5.25a3 3 0 0 0-2.977 2.625ZM5.25 9a3 3 0 0 0-3 3v6a3 3 0 0 0 3 3h13.5a3 3 0 0 0 3-3v-6a3 3 0 0 0-3-3H15a.75.75 0 0 0-.75.75 2.25 2.25 0 0 1-4.5 0A.75.75 0 0 0 9 9H5.25Z" />
                         </svg>
                         <p className='text-[14px] cursor-pointer'>
-                            ₹{userData.wallet_balance ? userData.wallet_balance : '0.00'}
+                            ₹{balance}
                         </p>
                         <button onClick={handleRefresh}>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="w-4 h-5">
@@ -137,7 +145,7 @@ const Navbar = () => {
                 </Tooltip>
                 <button className='ml-2 text-[#E02424] text-[14px]' onClick={()=>setShowRechargeModal(true)}>
                     Recharge Wallet
-                    {showRechargeModal && <RechargeModal setShowRechargeModal={setShowRechargeModal} />}
+                    {showRechargeModal && <RechargeModal showRechargeModal={showRechargeModal} setShowRechargeModal={setShowRechargeModal} />}
                 </button>
             </div>
             <div className="flex flex-row items-center gap-2">

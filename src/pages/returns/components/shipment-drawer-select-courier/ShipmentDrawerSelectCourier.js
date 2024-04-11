@@ -17,7 +17,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
       panel: (
         <ShipmentCourierPartnersTable
           orderId={orderDetails?.id}
-          shipmentDetails={shipmentsDetails}
+          shipmentDetails={shipmentsDetails || []}
           closeShipmentDrawer={onClose}
         />
       ),
@@ -28,7 +28,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
       panel: (
         <ShipmentCourierPartnersTable
           orderId={orderDetails?.id}
-          shipmentDetails={shipmentsDetails}
+          shipmentDetails={shipmentsDetails ? shipmentsDetails.filter((detail) => detail.charge_type === "Air") : []}
           closeShipmentDrawer={onClose}
         />
       ),
@@ -39,7 +39,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
       panel: (
         <ShipmentCourierPartnersTable
           orderId={orderDetails?.id}
-          shipmentDetails={shipmentsDetails}
+          shipmentDetails={shipmentsDetails ? shipmentsDetails.filter((detail) => detail.charge_type === "Surface") : []}
           closeShipmentDrawer={onClose}
         />
       ),

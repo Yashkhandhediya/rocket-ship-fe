@@ -80,7 +80,7 @@ const RechargeModal = ({ setShowRechargeModal }) => {
               </div>
               <button
                 className="border-0 bg-transparent p-1 pt-0 text-2xl font-semibold leading-none text-black opacity-100 outline-none focus:outline-none"
-                onClick={() => setShowRechargeModal(false)}>
+                onClick={() => {setShowRechargeModal(false);window.location.reload()}}>
                 <span className="block h-6 w-6 bg-transparent text-black opacity-50 outline-none focus:outline-none">
                   ×
                 </span>
