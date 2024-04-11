@@ -8,6 +8,7 @@ const RechargeModal = ({ setShowRechargeModal }) => {
   const [amount, setAmount] = useState(500);
   const [couponCode, setCouponCode] = useState(''); // eslint-disable-line
   const [couponCodeAmount, setCouponCodeAmount] = useState(0); // eslint-disable-line
+  const balance = localStorage.getItem('balance') == 0 ? "0.00" : localStorage.getItem('balance')
 
   const formData = new FormData();
   formData.append('amount', amount * 100);
@@ -76,7 +77,7 @@ const RechargeModal = ({ setShowRechargeModal }) => {
             <div className="border-blueGray-200 flex w-full items-start text-black justify-between rounded-t p-5 py-3">
               <div className="text-xl font-bold">
                 <div>Recharge Your Wallet</div>
-                <div className="text-[12px] font-normal ">Current Wallet Amount <span className="text-green-600 font-semibold">₹0.00</span></div>
+                <div className="text-[12px] font-normal ">Current Wallet Amount <span className="text-green-600 font-semibold">₹{balance}</span></div>
               </div>
               <button
                 className="border-0 bg-transparent p-1 pt-0 text-2xl font-semibold leading-none text-black opacity-100 outline-none focus:outline-none"
