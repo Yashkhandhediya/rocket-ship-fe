@@ -22,7 +22,7 @@ const Home = () => {
                   </svg>
                 </div>
                 <div className="text-[20px] mt-8 font-medium">
-                  Fisrt Order Added
+                  First Order Added
                 </div>
               </div>
               <div className="flex justify-center text-[#E02424] text-[14px] font-normal items-center h-1/3">
