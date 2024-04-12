@@ -7,12 +7,21 @@ import { toast } from 'react-toastify';
 
 const SignUp = () => {
   const navigate = useNavigate();
+  // const [signupInput, setSignupInput] = useState({
+  //   first_name: "",
+  //   last_name: "",
+  //   email_address: "",
+  //   contact_no: "",
+  //   password: ""
+  // });
+
   const [signupInput, setSignupInput] = useState({
-    first_name: "",
-    last_name: "",
+    company_name: "",
+    company_address: "",
     email_address: "",
     contact_no: "",
-    password: ""
+    password: "",
+    company_gst_no:""
   });
 
   const handleChangeInput = (e) => {
@@ -25,7 +34,14 @@ const SignUp = () => {
 
   const handleSubmit = () => {
     const headers = {'Content-Type': 'application/json'};
-    axios.post(BACKEND_URL + '/users/signup',signupInput,{headers}).then((res) => {
+    axios.post(BACKEND_URL + '/company/signup',{
+      name:signupInput.company_name,
+      gst:signupInput.company_gst_no,
+      password:signupInput.password,
+      contact:parseInt(signupInput.contact_no),
+      email:signupInput.email_address,
+      address:signupInput.company_address
+    },{headers}).then((res) => {
       console.log("Reponse of Sign up",res)
       if(res.data.msg == "User already exits"){
         toast("User Already Exists",{type:'error'})
@@ -51,7 +67,7 @@ const SignUp = () => {
         <span className="my-2 inline-flex w-full border border-dashed border-gray-400"></span>
         <form>
           <div className="flex w-full gap-2">
-            <Field
+            {/* <Field
               type={'text'}
               id={'first_name'}
               label={'First Name'}
@@ -59,8 +75,17 @@ const SignUp = () => {
               required={true}
               value={signupInput['first_name']}
               onChange={handleChangeInput}
-            />
+            /> */}
             <Field
+              type={'text'}
+              id={'company_name'}
+              label={'Company Name'}
+              placeHolder={'Company name'}
+              required={true}
+              value={signupInput['company_name']}
+              onChange={handleChangeInput}
+            />
+            {/* <Field
               type={'text'}
               id={'last_name'}
               label={'Last Name'}
@@ -68,13 +93,31 @@ const SignUp = () => {
               required={true}
               value={signupInput['last_name']}
               onChange={handleChangeInput}
+            /> */}
+            <Field
+              type={'text'}
+              id={'company_gst_no'}
+              label={'Company GST No.'}
+              placeHolder={'GST No.'}
+              required={true}
+              value={signupInput['company_gst_no']}
+              onChange={handleChangeInput}
             />
           </div>
+          <Field
+            type={'text'}
+            id={'company_address'}
+            label={'Company Address'}
+            placeHolder={'Enter Company Address'}
+            required={true}
+            value={signupInput['company_address']}
+            onChange={handleChangeInput}
+          />
           <Field
             type={'email'}
             id={'email_address'}
             label={'Email ID'}
-            placeHolder={'Enter your email ID'}
+            placeHolder={'Enter Company email ID'}
             required={true}
             value={signupInput['email_address']}
             onChange={handleChangeInput}

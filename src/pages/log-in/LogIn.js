@@ -8,17 +8,21 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import OtpPopup from './OtpPopup';
 import { transport } from '../../common/images';
 import { homelogo } from '../../common/images';
+// import { GoogleLogin } from 'react-google-login';
+// import {gapi} from 'gapi-script'
 
 // export let id_user;
 
 const LogIn = () => {
   const navigate = useNavigate();
   const [userId,setUserId] = useState(null)
+  const [companyId,setCompanyId] = useState(null)
   const [handlePopup, setHandlePopup] = useState(false)
   const [loginInput, setLoginInput] = useState({
     username: '',
     password: '',
   });
+  const [userType, setUserType] = useState('user');
 
   const handleChangeInput = (e) => {
     const { id, value } = e.target;
@@ -28,20 +32,44 @@ const LogIn = () => {
     });
   };
 
+  const handleForgotPassword = () => {
+    const additionalData = {
+      userType: userType,
+    };
+
+    navigate('/forgotpassword', { state: additionalData });
+  };
+
+//   var SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
+
+//   function start() {
+//     gapi.client.init({
+//         clientId: "285163063974-00ubuj8sg12diejh6j2hn3mq845d5ngn.apps.googleusercontent.com",
+//         scope: SCOPES,
+//     });
+// }
+//   gapi.load("client:auth2", start);
+
   const handleSubmit = () => {
     const headers={'Content-Type': 'application/x-www-form-urlencoded'};
     console.log('username pass', loginInput.username, loginInput.password);
-    console.log('backend url', BACKEND_URL);    
-    axios.post(BACKEND_URL+'/login/access-token',{username:loginInput.username, password:loginInput.password}, {headers}).then(
+    console.log('backend url', BACKEND_URL);  
+    const apiURL = userType === 'user' ? '/login/access-token' : '/company/access-token';
+    const otpURL = userType === 'user' ? '/login' : '/company';
+    axios.post(BACKEND_URL+ apiURL,{username:loginInput.username, password:loginInput.password}, {headers}).then(
       (response)=>{
         // id_user = response.data.user_id
         localStorage.setItem('user_id',response.data.user_id)
+        localStorage.setItem('company_id',response.data.company_id)
+        localStorage.setItem('is_company',response.data.is_company)
         localStorage.setItem('is_admin',response.data.is_admin)
-        if (response.data.access_token){
+        const user_id = userType === 'user' ? localStorage.getItem('user_id') :  localStorage.getItem('company_id')
+         if (response.data.access_token){
           setUserId(response.data.user_id)
+          setCompanyId(response.data.company_id)
           localStorage.setItem('access_token',response.data.access_token)
           localStorage.setItem('user_name',response.data?.user_name?.split(' ')[0])
-          axios.post(BACKEND_URL + `/login/generate_otp?email_id=${loginInput.username}&user_id=${response.data.user_id}`, { email_id:String(loginInput.username),user_id: String(response.data.user_id) }, { headers })
+          axios.post(BACKEND_URL + `${otpURL}/generate_otp?email_id=${loginInput.username}&user_id=${user_id}`, { email_id:String(loginInput.username),user_id: String(response.data.user_id) }, { headers })
         .then((otpResponse) => {
           console.log(otpResponse);
         })
@@ -60,6 +88,19 @@ const LogIn = () => {
 
   };
 
+
+
+  // const onSuccess = (response) => {
+  //   console.log('Login Success:', response);
+  //   // Handle the response here, e.g., send it to your backend for authentication
+  // };
+
+  // const onError = (response) => {
+  //   console.log('Login Failed:', response);
+  //   // Handle the failed login here
+  // };
+
+
   return (
     <>
     <div className="flex flex-column h-full">
@@ -73,6 +114,38 @@ const LogIn = () => {
       {!handlePopup && <div className="bg-body mb-3 w-[95%] rounded-2xl bg-white px-12 py-6 shadow md:w-9/12">
         <div className="mb-2 text-center">
           <h3 className="m-0 text-xl font-medium">Login to Cloud Cargo</h3>
+        </div>
+        {/* <GoogleLogin
+                clientId="285163063974-00ubuj8sg12diejh6j2hn3mq845d5ngn.apps.googleusercontent.com"
+                buttonText="Login"
+                onSuccess={onSuccess}
+                onFailure={onError}
+                cookiePolicy={"single_host_origin"}
+            /> */}
+
+          <div className="mb-3 flex flex-row">
+          <div className="p-2">
+            <input
+              type="radio"
+              id="user"
+              name="userType"
+              value="user"
+              checked={userType === 'user'}
+              onChange={() => setUserType('user')}
+            />
+            <label className='font-semibold ml-2' htmlFor="user">User</label>
+          </div>
+          <div className="p-2">
+            <input
+              type="radio"
+              id="company"
+              name="userType"
+              value="company"
+              checked={userType === 'company'}
+              onChange={() => setUserType('company')}
+            />
+            <label className='font-semibold ml-2' htmlFor="company">Company</label>
+          </div>
         </div>
         <span className="my-2 inline-flex w-full border border-dashed border-gray-400"></span>
         <form>
@@ -95,7 +168,7 @@ const LogIn = () => {
             onChange={handleChangeInput}
           />
           <div className="mb-3 text-sm">
-            <Link to={'/forgotpassword'} className="text-decoration-none text-red-700">
+            <Link onClick={handleForgotPassword} className="text-decoration-none text-red-700">
               Forgot Password?
             </Link>
           </div>
@@ -117,7 +190,7 @@ const LogIn = () => {
         </form>
       </div>
       }
-      {handlePopup && <OtpPopup username={loginInput.username} userId={userId} />}
+      {handlePopup && <OtpPopup userType={userType} username={loginInput.username} userId={userId} companyId={companyId} />}
       <div className="flex flex-row justify-between mt-4 items-end ml-auto">
         <h1 className='font-bold text-red-700 text-xl ml-auto mr-4'>Powered By</h1>
         <img src={transport} className='ml-auto mt-10 mx-20 w-76 h-24'></img> 

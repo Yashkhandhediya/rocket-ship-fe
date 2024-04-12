@@ -5,7 +5,7 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import ResetPassword from './ResetPassword';
 
-const OtpPopup = ({username,userId=null,upDatePassWord=false}) => {
+const OtpPopup = ({userType,username,userId=null,upDatePassWord=false,companyId=null}) => {
   const [seconds, setSeconds] = useState(45);
   const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
   const navigate = useNavigate()
@@ -82,7 +82,9 @@ useEffect(() => {
     const joinOTP = OTP.join('');
     console.log("OTP checkingg",OTP,userId)
     const headers={'Content-Type': 'application/x-www-form-urlencoded'};
-    axios.get(BACKEND_URL+`/login/verify_otp?otp=${joinOTP}&user_id=${userId}`,{otp:OTP, user_id:userId}, {headers}).then(
+    const tempId = userType === 'user' ? userId : companyId;
+    const otpURL = userType === 'user' ? `/login/verify_otp?otp=${joinOTP}&user_id=${tempId}` : `/company/verify_otp?otp=${joinOTP}&id=${tempId}`;
+    axios.get(BACKEND_URL + otpURL,{otp:OTP, user_id:tempId}, {headers}).then(
       response => {
         console.log(response)
         if(response.data.flag == 1){
@@ -111,14 +113,16 @@ useEffect(() => {
     e.preventDefault()
     const joinOTP = OTP.join('');
     console.log("OTP checkingg",OTP,userId)
+    const tempId = userType === 'user' ? userId : companyId;
     const headers={'Content-Type': 'application/x-www-form-urlencoded'};
-    axios.get(BACKEND_URL+`/users/verify_forgot_pass_otp/?otp=${joinOTP}&user_id=${userId}`,
+    const verifyURL = userType === 'user' ? `/users/verify_forgot_pass_otp/?otp=${joinOTP}&user_id=${tempId}` : `/company/verify_otp?otp=${joinOTP}&id=${tempId}`;
+    axios.get(BACKEND_URL+ verifyURL,
     {headers})
     .then(
       response => {
         console.log(response)
         if(response.data.flag == 1){
-          navigate('/resetpassword', { state: { username } })
+          navigate('/resetpassword', { state: { username,userType } })
         }else{
           setMessage(true)
           toast('OTP Mismatched',{type:'error'})

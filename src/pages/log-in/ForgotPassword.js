@@ -1,5 +1,5 @@
 import { Field } from '../../common/components';
-import { Link } from 'react-router-dom';
+import { Link,useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import OtpPopup from './OtpPopup';
 import axios from 'axios';
@@ -7,12 +7,16 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 
 
 const ForgotPassword = () => {
+    const location = useLocation()
     const [upDatePassWord, setUpDatePassWord] = useState(true)
     const [userId,setUserId] = useState(null)
+    const [compId,setCompId] = useState(null)
     const [userInput, setUserInput] = useState({
         username:''
     })
     const [showOtp,setShowOtp] = useState(false)
+
+    const userType = location.state?.userType
 
     const handleChangeInput = (e) => {
         const { id, value } = e.target;
@@ -30,10 +34,12 @@ const ForgotPassword = () => {
       const handleOtp = () => {
         setShowOtp(true)
         const headers={'Content-Type': 'application/x-www-form-urlencoded'};  
-            axios.post(BACKEND_URL + `/users/generate_otp?email_id=${userInput.username}`,{ headers })
+        const otpURL = userType === 'user' ? `/users/generate_otp?email_id=${userInput.username}` : `/company/forget_password_otp?email=${userInput.username}`;
+            axios.post(BACKEND_URL + otpURL,{ headers })
             .then((otpResponse) => {
               console.log(otpResponse);
               setUserId(otpResponse.data.user_id)
+              setCompId(otpResponse.data.comp_id)
             })
             .catch((otpError) => {
               console.error('Error fetching OTP:', otpError);
@@ -73,7 +79,7 @@ const ForgotPassword = () => {
                     </p>
             </div>
             </div>}
-        {showOtp && <OtpPopup username={userInput.username} userId={userId} upDatePassWord={upDatePassWord} />}
+        {showOtp && <OtpPopup username={userInput.username} userId={userId} companyId={compId} upDatePassWord={upDatePassWord} />}
 
         </div>
 );

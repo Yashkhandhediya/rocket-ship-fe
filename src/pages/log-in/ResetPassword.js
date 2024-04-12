@@ -14,6 +14,8 @@ const ResetPassword = () => {
         confirmPassword:''
     })
 
+    const userType = location.state.userType
+
     const handleChangeInput = (e) => {
         const { id, value } = e.target;
         setPassword({
@@ -25,13 +27,14 @@ const ResetPassword = () => {
       const handleSubmit = async (e) => {
         const headers={'Content-Type': 'application/json'};
         e.preventDefault();
+        const passwordURL = userType === "user" ? '/users' : '/company'
         
         if (password.newPassword !== password.confirmPassword) {
             toast("New password and confirm password do not match",{type:'error'});
             return;
         }
         try {
-            axios.post(BACKEND_URL + '/users/update_password',{
+            axios.post(BACKEND_URL + `${passwordURL}/update_password`,{
                 email:username,
                 password:password.newPassword
             },{headers}).then((res) => {
