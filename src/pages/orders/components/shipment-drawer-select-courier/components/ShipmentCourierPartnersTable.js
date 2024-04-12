@@ -56,6 +56,10 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         .then((resp) => {
           if (resp?.status === 200) {
             setIsLoading(false);
+            if(resp?.data?.status_code == 401){
+              toast("insufficient balance",{type:"error"})
+              return
+            }
             toast(
               resp?.data?.success ? (
                 <div>

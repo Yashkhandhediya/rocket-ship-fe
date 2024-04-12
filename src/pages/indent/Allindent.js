@@ -107,9 +107,14 @@ const Allindent = () => {
     },
     {headers}).then((res)=>{
       console.log("111111111",res);
+      if(res?.data?.status_code == 401){
+        toast("insufficient balance",{type:"error"})
+        setLoading(false)
+        return
+      }
       status == 2 ? toast('Price Successfully Accepted',{type:'success'}) : toast('Price Successfully Rejected',{type:'error'})
       setLoading(false)
-      window.location.reload();
+      // window.location.reload();
     }).catch((err) => {
       console.log("222222222",err);
       setLoading(false)
