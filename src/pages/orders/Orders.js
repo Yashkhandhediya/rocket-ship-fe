@@ -14,13 +14,26 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 export let resData = []
 const Orders = () => {
   const id_user = localStorage.getItem('user_id')
+  const company_id = localStorage.getItem('company_id')
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // let filterTabs;
+
+
+  // if(localStorage.getItem('is_company') == 0){
+  //   filterTabs = ordersTabs.filter(tab => tab.id === 'new')
+  // }else{
+  //   filterTabs = ordersTabs
+  // }
   
   const allOrdersList = useSelector((state) => state?.ordersList);
 
   const fetchNewOrders = () => {
+    if(localStorage.getItem('is_company') == 1){
+      navigate('/all-user')
+    }
     axios
       .get(BACKEND_URL+`/order/get_filtered_orders?page=1&per_page=100&created_by=${id_user}`)
       .then(async (resp) => {
@@ -47,6 +60,7 @@ const Orders = () => {
       setIsLoading(false);
     }
   }, [allOrdersList]);
+
 
   return (
     <PageWithSidebar>

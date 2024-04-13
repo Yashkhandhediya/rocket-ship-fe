@@ -9,9 +9,10 @@ import RechargeModal from '../../../pages/home/components/rechareModal/RechargeM
 
 
 const Navbar = () => {
-
+    const is_company = localStorage.getItem('is_company') 
+    console.log("ISSSSSSSSSSS",is_company)
     const user = localStorage.getItem('user_name') ? localStorage.getItem('user_name') : null;
-    const balance = localStorage.getItem('balance') == 0 ? "0.00" : localStorage.getItem('balance');
+    const balance = localStorage.getItem('balance') <= 0 ? "0.00" : localStorage.getItem('balance');
     const navigate = useNavigate();
     const [userData, setUserData] = useState({});
     const [showRechargeModal, setShowRechargeModal] = useState(false);
@@ -94,7 +95,7 @@ const Navbar = () => {
             const response = await axios.get(`${BACKEND_URL}/users/${id_user}`);
             setUserData(response.data);
             console.log("Hallllllllllllll",userData,response.data)
-            if(response.data.wallet_balance == null){
+            if(response.data.wallet_balance == null || response.data.wallet_balance <= 0){
                 localStorage.setItem('balance',0.00)
                 console.log("BALLLLLLLL",balance)
             }else{
@@ -143,10 +144,10 @@ const Navbar = () => {
                         </button>
                     </div>
                 </Tooltip>
-                <button className='ml-2 text-[#E02424] text-[14px]' onClick={()=>setShowRechargeModal(true)}>
+                {(is_company == 1) && <button className='ml-2 text-[#E02424] text-[14px]' onClick={()=>setShowRechargeModal(true)}>
                     Recharge Wallet
                     {showRechargeModal && <RechargeModal showRechargeModal={showRechargeModal} setShowRechargeModal={setShowRechargeModal} />}
-                </button>
+                </button>}
             </div>
             <div className="flex flex-row items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="w-5 h-5">

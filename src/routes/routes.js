@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails, Return, Weight_Freeze, WeightDiscrepancy, Settings, Bank_details, Manage_pickup_add, Change_password, Company_Profile, Home, Book, Indent,Allindent,User, ForgotPassword, ResetPassword } from '../pages';
+import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails, Return, Weight_Freeze, WeightDiscrepancy, Settings, Bank_details, Manage_pickup_add, Change_password, Company_Profile, Home, Book, Indent,Allindent,User, ForgotPassword, ResetPassword, AllUser } from '../pages';
 import Tracking from '../pages/tracking/Tracking';
 import ReturnTracking from '../pages/return-tracking/ReturnTracking';
 import PrivateRoute from './private-route/PrivateRoute';
@@ -49,6 +49,10 @@ const routes = createBrowserRouter([
   {
     path: '/user',
     element: <PrivateRoute component={<User />} />,
+  },
+  {
+    path: '/all-user',
+    element: <PrivateRoute component={<AllUser />} />,
   },
   {
     path: '/orders',

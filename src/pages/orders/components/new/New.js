@@ -13,12 +13,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAllOrders, setClonedOrder } from '../../../../redux';
 import { toast } from 'react-toastify';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
-import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
+import { getClonedOrderFields, getEditOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
 import { CommonBadge } from '../../../../common/components/common-badge';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Orders';
+import { setEditOrder } from '../../../../redux/actions/editOrderActions';
+
+export let isEdit = false;
+export let order_id;
 
 export const New = () => {
   const dispatch = useDispatch();
@@ -26,7 +30,7 @@ export const New = () => {
   const flattened = {};
   const allOrdersList = useSelector((state) => state?.ordersList);
   const newOrdersList =
-    allOrdersList?.filter((order) => (order?.status_id) === 1) || [];
+    allOrdersList?.filter((order) => (order?.status_id) === 1 || order?.status_id === 8) || [];
     console.log("FDAAAAAAAAA",newOrdersList)
   const [selectShipmentDrawer, setSelectShipmentDrawer] = useState({
     isOpen: false,
@@ -71,6 +75,17 @@ export const New = () => {
     flatten(obj);
     return flattened;
 }
+
+  const handleRequestShipment = (id) => {
+    debugger
+    const headers={'Content-Type': 'application/json'};
+    axios.post(BACKEND_URL + `/order/${id}/request_shipment`,{headers})
+    .then((res) => {
+      console.log("Shipmentttttttt",res)
+    }).catch((err) => {
+      console.log("Errrrr Shipment",err)
+    })
+  }
 
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData,id)
@@ -247,8 +262,9 @@ export const New = () => {
         cell: ({ row }) => {
           return (
             <div className="flex gap-2 text-left text-xs">
-              {row?.original?.status_name == 'new' ? (
-                <button
+              {(row?.original?.status_name == 'new' || row?.original?.status_name == 'shipment_requested') ? (
+                 localStorage.getItem('is_company') == 1 ? (
+                  <button
                   id={row?.original?.id}
                   className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
                   onClick={() => {
@@ -257,8 +273,25 @@ export const New = () => {
                       orderDetails: row.original,
                     });
                   }}>
-                  {'Ship Now'}
+                  { 'Ship Now' }
                 </button>
+                 ): (
+                  row?.original?.status_id == 1 ? (
+                    <button
+                      id={row?.original?.id}
+                      className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
+                      onClick={() => handleRequestShipment(row?.original?.id)}>
+                      {  'Request Shipment' }
+                    </button>
+                  ) : (
+                      <button
+                        id={row?.original?.id}
+                        className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
+                        >
+                        {  'Shipment Requested' }
+                      </button>
+                  )
+                 )
               ) : (
                 <button
                   id={row?.original?.id}
@@ -281,6 +314,7 @@ export const New = () => {
                     downloadInvoice : () => {console.log("jauuuu",row?.original?.id);handleInvoice(row?.original?.id)},
                     cloneOrder: () => cloneOrder(row?.original),
                     cancelOrder: () => cancelOrder(row?.original?.id),
+                    editOrder: () => editOrder(row?.original)
                   })}
                 />
               </div>
@@ -302,6 +336,7 @@ export const New = () => {
         if (resp?.status === 200) {
           dispatch(setAllOrders(null));
           toast('Order cancelled successfully', { type: 'success' });
+          window.location.reload()
         }
       })
       .catch(() => {
@@ -314,6 +349,21 @@ export const New = () => {
     const clonedOrder = getClonedOrderFields(orderDetails);
     dispatch(setClonedOrder(clonedOrder));
     dispatch(setDomesticOrder(clonedOrder));
+    navigate('/add-order');
+  }
+
+  function editOrder(orderDetails) {
+    isEdit = true
+    order_id = orderDetails?.id
+    axios.get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails?.id}`)
+    .then((res) => {
+      console.log("Response Of Get Order While Edit ",res)
+    }).catch((err) => {
+      console.log("Error While Edit Order ",err)
+    })
+    const editedOrder = getEditOrderFields(orderDetails);
+    dispatch(setEditOrder(editedOrder));
+    dispatch(setDomesticOrder(editedOrder))
     navigate('/add-order');
   }
 
