@@ -11,11 +11,12 @@ import {toast} from 'react-toastify'
 
 
 const User = () => {
+  let amount = 0;
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState([])
   const [fetchData, setFetchData] = useState(false)
   const [showPopup, setShowPopup] = useState(false);
-  const [rechargeAmount, setRechargeAmount] = useState('');
+  const [rechargeAmount, setRechargeAmount] = useState(amount);
   const [idUser,setIdUser] = useState(null)
   const company_id = localStorage.getItem('company_id')
   const navigate = useNavigate()
@@ -43,7 +44,7 @@ const User = () => {
 
     useEffect(() => {
 
-      axios.get(BACKEND_URL + `/company/get_company_users?companyId=${company_id}`).then((res)=> {
+      axios.get(BACKEND_URL + `/company/get_company_users/?companyId=${company_id}`).then((res)=> {
         console.log("RESSSSSSSSSSSSS",res)
         setUserData(res.data)
         setFetchData(true)
@@ -75,8 +76,8 @@ const User = () => {
     axios.post(BACKEND_URL + `/company/update_wallet_balance?companyId=${parseInt(company_id)}&user_id=${parseInt(idUser)}&amount=${parseInt(rechargeAmount)}`).
     then((res) => {
         console.log("Recharge Responsee",res)
-        let newVal = localStorage.getItem('balance') - rechargeAmount
-        localStorage.setItem('balance',newVal)
+        // let newVal = localStorage.getItem('balance') - rechargeAmount
+        // localStorage.setItem('balance',newVal)
         window.location.reload()
     }).catch((err) => {
         console.log("Error In Rechargeee")
@@ -137,6 +138,17 @@ const User = () => {
             <div className="flex flex-col gap-2 text-left text-xs">
               {/* {row?.original?.wallet_balance && <div>{row?.original?.wallet_balance}</div>} */}
               <div>{row?.original?.wallet_balance !== null ? row?.original?.wallet_balance : 0}</div>
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor('requested_balance', {
+        header: 'Request Balance',
+        cell: ({ row }) => {
+          return (
+            <div className="flex flex-col gap-2 text-left text-xs">
+              {/* {row?.original?.wallet_balance && <div>{row?.original?.wallet_balance}</div>} */}
+              <div>{row?.original?.requested_balance !== null ? row?.original?.requested_balance : 0}</div>
             </div>
           );
         },
