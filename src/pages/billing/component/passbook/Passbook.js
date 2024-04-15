@@ -231,7 +231,7 @@ const Passbook = () => {
                                 <div className='flex flex-row w-full border border-collapse bg-[#FAFAFA]' key={index}>
                                     <div className='pl-2 border-r-2 pr-2 w-full py-2'>{getDate(item.date)}</div>
                                     <div className='pl-2 border-r-2 pr-2 w-full py-2'>{item.voucher_id ? item.voucher_id : '-'}</div>
-                                    <div className='pl-2 border-r-2 pr-2 w-full py-2'>N.A.</div>
+                                    <div className='pl-2 border-r-2 pr-2 w-full py-2'>{Number.isInteger(Number(item.voucher_type)) ? item.voucher_type : 'N.A'}</div>
                                     <div className='pl-2 border-r-2 pr-2 w-full py-2'>N.A.</div>
                                     <div className='pl-2 border-r-2 pr-2 w-full py-2'>{item.credit ? '₹' + item.credit : '-'}</div>
                                     <div className='pl-2 border-r-2 pr-2 w-full py-2'>{item.debit ? '₹' + item.debit : '-'}</div>
