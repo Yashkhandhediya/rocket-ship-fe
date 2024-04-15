@@ -13,13 +13,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAllOrders, setClonedOrder } from '../../../../redux';
 import { toast } from 'react-toastify';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
-import { getClonedOrderFields, getEditOrderFields } from '../../../../common/utils/ordersUtils';
+import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
 import { CommonBadge } from '../../../../common/components/common-badge';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Orders';
-import { setEditOrder } from '../../../../redux/actions/editOrderActions';
+// import { setEditOrder } from '../../../../redux/actions/editOrderActions';
 
 export let isEdit = false;
 export let order_id;
@@ -362,7 +362,7 @@ export const New = () => {
       console.log("Error While Edit Order ",err)
     })
     const editedOrder = getEditOrderFields(orderDetails);
-    dispatch(setEditOrder(editedOrder));
+    // dispatch(setEditOrder(editedOrder));
     dispatch(setDomesticOrder(editedOrder))
     navigate('/add-order');
   }
