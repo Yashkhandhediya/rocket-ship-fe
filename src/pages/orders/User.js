@@ -202,6 +202,9 @@ const User = () => {
   return (
     <>
      <PageWithSidebar>
+     <div className="mt-2">
+
+   
      {fetchData && <CustomDataTable
         columns={getColumns()}
         rowData={userData}
@@ -240,6 +243,7 @@ const User = () => {
               </div>
             </div>
           )}
+        </div>
      </PageWithSidebar>
       
     {/* <button className='bg-purple-200 font-semibold' onClick={handleUser}>User</button> */}

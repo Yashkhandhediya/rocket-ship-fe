@@ -37,9 +37,12 @@ const RechargeModal = ({ setShowRechargeModal }) => {
   };
 
   const handleCreatePayment = async () => {
-    const id_user = localStorage.getItem('user_id')
-    console.log("USERRRRRRRRRRR",id_user)
-    formData.append("user_id",id_user)
+    // const id_user = localStorage.getItem('user_id')
+    const id_company = localStorage.getItem('company_id')
+    // console.log("USERRRRRRRRRRR",id_user)
+
+    // formData.append("user_id",id_user)
+    formData.append("company_id",id_company)
     try {
       const response = await axios.post(`${BACKEND_URL}/payment/razorpay`, formData);
       const options = {

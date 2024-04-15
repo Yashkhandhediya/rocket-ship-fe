@@ -12,12 +12,12 @@ export const sidebarLinks = [
     icon: newHome,
     hoverIcon: newHome,
   },
-  parseInt(is_company) && {
+  (parseInt(is_company) ? {
     title: 'Add User',
     path: '/signup-user',
     icon: user,
     hoverIcon: user,
-  },
+  } : null),
   {
     title: 'Dashboard',
     path: '/dashboard',
@@ -182,4 +182,4 @@ export const sidebarLinks = [
     hoverIcon: homeActive,
     onClick: logout
   },
-];
+].filter(option => option !== null);
