@@ -51,18 +51,26 @@ const LogIn = () => {
 //   gapi.load("client:auth2", start);
 
   const handleSubmit = () => {
+    if(loginInput.username == '' || loginInput.password == ''){
+      toast("Email and Password Both are required",{type:'error'})
+      return
+    }
     const headers={'Content-Type': 'application/x-www-form-urlencoded'};
     console.log('username pass', loginInput.username, loginInput.password);
     console.log('backend url', BACKEND_URL);  
     const apiURL = userType === 'user' ? '/login/access-token' : '/company/access-token';
     const otpURL = userType === 'user' ? '/login' : '/company';
-    axios.post(BACKEND_URL+ apiURL,{username:loginInput.username, password:loginInput.password}, {headers}).then(
+    axios.post(BACKEND_URL+ apiURL,{
+      username:loginInput.username,
+      password:loginInput.password
+    }, {headers}).then(
       (response)=>{
         // id_user = response.data.user_id
         localStorage.setItem('user_id',response.data.user_id)
         localStorage.setItem('company_id',response.data.company_id)
         localStorage.setItem('is_company',response.data.is_company)
         localStorage.setItem('is_admin',response.data.is_admin)
+        localStorage.setItem('balance',response.data.wallet_balance)
         const user_id = userType === 'user' ? localStorage.getItem('user_id') :  localStorage.getItem('company_id')
          if (response.data.access_token){
           setUserId(response.data.user_id)
@@ -81,6 +89,7 @@ const LogIn = () => {
           setHandlePopup(true)
         }
         else if(response.data.msg){
+          debugger
           toast(response.data.msg,{type:'error'})
         }
       }

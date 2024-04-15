@@ -67,6 +67,7 @@ const Orders = () => {
         console.log("RESSSSSSSS",res)
         dispatch(setAllOrders(res?.data || []));
         setIsLoading(false);
+        flag = false
       }).catch((err) => {
         console.log("ERRRRR",err)
         toast('There is some error while fetching orders.', { type: 'error' });
@@ -76,12 +77,12 @@ const Orders = () => {
   };
 
   useEffect(() => {
-    if (!allOrdersList || isEmpty[allOrdersList]) {
+    if (!allOrdersList || isEmpty[allOrdersList] || !flag) {
       fetchNewOrders();
     } else {
       setIsLoading(false);
     }
-  }, [allOrdersList]);
+  }, [allOrdersList,flag]);
 
 
   return (

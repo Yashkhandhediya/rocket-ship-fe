@@ -58,6 +58,8 @@ const User = () => {
   const handleIndent = (row) => {
     console.log("yash row", row.original)
     //   navigate('/all-indent/'+row.original.id)
+    amount = row?.original?.requested_balance
+    setRechargeAmount(amount)
     setIdUser(row?.original?.id)
     setShowPopup(true);
   }

@@ -12,11 +12,34 @@ const Navbar = () => {
     const is_company = localStorage.getItem('is_company') 
     console.log("ISSSSSSSSSSS",is_company)
     const user = localStorage.getItem('user_name') ? localStorage.getItem('user_name') : null;
+    console.log("USEEEEEEEEEEEE",user)
     const balance = localStorage.getItem('balance') <= 0 ? "0.00" : localStorage.getItem('balance');
     const navigate = useNavigate();
     const [userData, setUserData] = useState({});
     const [showRechargeModal, setShowRechargeModal] = useState(false);
     const id_user = localStorage.getItem('user_id')
+    const id_company = localStorage.getItem('company_id')
+    const [showPopup, setShowPopup] = useState(false);
+    const [rechargeAmount, setRechargeAmount] = useState('');
+    const handleRequest = () => {
+        setShowPopup(true)
+    }
+
+    const handleRecharge = () => {
+        const headers={'Content-Type': 'application/json'};
+        axios.post(BACKEND_URL + `/company/request_balance/?user_id=${parseInt(id_user)}&amount=${parseInt(rechargeAmount)}`).
+        then((res) => {
+            console.log("Recharge Responsee",res)
+            // let newVal = localStorage.getItem('balance') - rechargeAmount
+            // localStorage.setItem('balance',newVal)
+            // window.location.reload()
+        }).catch((err) => {
+            console.log("Error In Rechargeee")
+        })
+        setShowPopup(false);
+        toast.success('Recharge successful!');
+      };
+
     const navbarLinks = [
         {
             label: userData ? user : 'User',
@@ -91,8 +114,9 @@ const Navbar = () => {
     }
 
     const getUser = async () => {
+        const apiURL = is_company == 0 ? `${BACKEND_URL}/users/${id_user}` : `${BACKEND_URL}/company/${id_company}`
         try {
-            const response = await axios.get(`${BACKEND_URL}/users/${id_user}`);
+            const response = await axios.get(apiURL);
             setUserData(response.data);
             console.log("Hallllllllllllll",userData,response.data)
             if(response.data.wallet_balance == null || response.data.wallet_balance <= 0){
@@ -144,10 +168,12 @@ const Navbar = () => {
                         </button>
                     </div>
                 </Tooltip>
-                {(is_company == 1) && <button className='ml-2 text-[#E02424] text-[14px]' onClick={()=>setShowRechargeModal(true)}>
+                {(is_company == 1) ? (<button className='ml-2 text-[#E02424] text-[14px]' onClick={()=>setShowRechargeModal(true)}>
                     Recharge Wallet
                     {showRechargeModal && <RechargeModal showRechargeModal={showRechargeModal} setShowRechargeModal={setShowRechargeModal} />}
-                </button>}
+                </button>) : (
+                    <button className='ml-2 text-[#E02424] text-[14px]' onClick={() => handleRequest()} >Request Recharge</button>
+                )}
             </div>
             <div className="flex flex-row items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="w-5 h-5">
@@ -178,6 +204,34 @@ const Navbar = () => {
                     ))}
                 </Dropdown>
             </div>
+            {showPopup && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+              <div className="bg-white p-6 rounded-lg">
+                <h2 className="text-lg font-semibold mb-4">Request Amount</h2>
+                <input
+                  type="number"
+                  value={rechargeAmount}
+                  onChange={(e) => setRechargeAmount(e.target.value)}
+                  placeholder="Enter amount"
+                  className="border border-gray-400 rounded-lg px-3 py-2 mb-4"
+                />
+                <div className="flex justify-end">
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                    onClick={handleRecharge}
+                  >
+                    Recharge
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 ml-2 rounded-lg"
+                    onClick={() => setShowPopup(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
     )
 }

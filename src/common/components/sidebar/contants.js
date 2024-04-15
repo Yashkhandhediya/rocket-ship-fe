@@ -3,6 +3,7 @@ import { logout } from './utils';
 
 const is_admin = localStorage.getItem('is_admin')
 const user_id = localStorage.getItem('user_id')
+const is_company = localStorage.getItem('is_company')
 
 export const sidebarLinks = [
   {
@@ -10,6 +11,12 @@ export const sidebarLinks = [
     path: '/seller/home',
     icon: newHome,
     hoverIcon: newHome,
+  },
+  parseInt(is_company) && {
+    title: 'Add User',
+    path: '/signup-user',
+    icon: user,
+    hoverIcon: user,
   },
   {
     title: 'Dashboard',

@@ -8,6 +8,7 @@ import { Returns } from '../pages/returns';
 import { COD_Remittance, Passbook, ShippingCharges, Wallet_history } from '../pages/billing/component';
 import { Adhaar_Document } from '../pages/kyc/component/adhaar_document';
 import { RateCalculator } from '../pages/rate-calculator';
+import SignUpUser from '../pages/sign-up/SingUpUser';
 
 const routes = createBrowserRouter([
   {
@@ -21,6 +22,14 @@ const routes = createBrowserRouter([
   {
     path: '/login',
     element: <LogIn />,
+  },
+  {
+    path: '/signup',
+    element: <SignUp />,
+  },
+  {
+    path: '/signup-user',
+    element: <SignUpUser />,
   },
   {
     path: '/signup',
