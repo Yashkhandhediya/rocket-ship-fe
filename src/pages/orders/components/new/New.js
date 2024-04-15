@@ -31,6 +31,8 @@ export const New = () => {
   const allOrdersList = useSelector((state) => state?.ordersList);
   const newOrdersList =
     allOrdersList?.filter((order) => (order?.status_id) === 1 || order?.status_id === 8) || [];
+    const newOrdersList1 =
+    allOrdersList?.filter((order) => order?.status_id === 8) || [];
     console.log("FDAAAAAAAAA",newOrdersList)
   const [selectShipmentDrawer, setSelectShipmentDrawer] = useState({
     isOpen: false,
@@ -399,7 +401,7 @@ export const New = () => {
         </div>
       </div>
 
-      <CustomDataTable
+      {localStorage.getItem('is_company') == 0 ? (<CustomDataTable
         columns={getColumns()}
         rowData={newOrdersList}
         enableRowSelection={true}
@@ -408,7 +410,18 @@ export const New = () => {
         rowSubComponent={rowSubComponent}
         enablePagination={true}
         tableWrapperStyles={{ height: '78vh' }}
+      />) : (
+        <CustomDataTable
+        columns={getColumns()}
+        rowData={newOrdersList1}
+        enableRowSelection={true}
+        shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
+        onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}
+        rowSubComponent={rowSubComponent}
+        enablePagination={true}
+        tableWrapperStyles={{ height: '78vh' }}
       />
+      )}
 
       <DrawerWithSidebar
         isOpen={selectShipmentDrawer?.isOpen}

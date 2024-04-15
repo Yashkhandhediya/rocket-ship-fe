@@ -42,9 +42,8 @@ const Orders = () => {
       navigate('/all-user')
       return
     }
-    if(is_company == 0){
       axios
-      .get(BACKEND_URL+`/order/get_filtered_orders?page=1&per_page=100&created_by=${id_user}`)
+      .get(BACKEND_URL+`/order/get_filtered_orders?created_by=${cuser_id}`)
       .then(async (resp) => {
         if (resp.status === 200) {
           dispatch(setAllOrders(resp?.data || []));
@@ -60,20 +59,19 @@ const Orders = () => {
         toast('There is some error while fetching orders.', { type: 'error' });
         setIsLoading(false);
       });
-    } 
-    else{
-      axios.get(BACKEND_URL + `/order/get_filtered_orders_company?created_by=${cuser_id}`).then
-      ((res) => {
-        console.log("RESSSSSSSS",res)
-        dispatch(setAllOrders(res?.data || []));
-        setIsLoading(false);
-        flag = false
-      }).catch((err) => {
-        console.log("ERRRRR",err)
-        toast('There is some error while fetching orders.', { type: 'error' });
-        setIsLoading(false);
-      })
-    }
+    // else{
+    //   axios.get(BACKEND_URL + `/order/get_filtered_orders_company?created_by=${cuser_id}`).then
+    //   ((res) => {
+    //     console.log("RESSSSSSSS",res)
+    //     dispatch(setAllOrders(res?.data || []));
+    //     setIsLoading(false);
+    //     flag = false
+    //   }).catch((err) => {
+    //     console.log("ERRRRR",err)
+    //     toast('There is some error while fetching orders.', { type: 'error' });
+    //     setIsLoading(false);
+    //   })
+    // }
   };
 
   useEffect(() => {
