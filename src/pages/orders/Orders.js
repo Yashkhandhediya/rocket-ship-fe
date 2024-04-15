@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
 import { Tabs } from '../../common/components/tabs';
 import { ordersTabs } from './duck';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
@@ -13,11 +13,18 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 
 export let resData = []
 const Orders = () => {
+  const location = useLocation()
   const id_user = localStorage.getItem('user_id')
   const company_id = localStorage.getItem('company_id')
   const [isLoading, setIsLoading] = useState(true);
+  const is_company = localStorage.getItem('is_company')
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  let flag = false
+  flag = location?.state?.data?.flag
+  let cuser_id = location?.state?.data?.id
+
+  console.log("FLAGGG",flag)
 
   // let filterTabs;
 
@@ -31,10 +38,12 @@ const Orders = () => {
   const allOrdersList = useSelector((state) => state?.ordersList);
 
   const fetchNewOrders = () => {
-    if(localStorage.getItem('is_company') == 1){
+    if(localStorage.getItem('is_company') == 1 && !flag){
       navigate('/all-user')
+      return
     }
-    axios
+    if(is_company == 0){
+      axios
       .get(BACKEND_URL+`/order/get_filtered_orders?page=1&per_page=100&created_by=${id_user}`)
       .then(async (resp) => {
         if (resp.status === 200) {
@@ -51,6 +60,19 @@ const Orders = () => {
         toast('There is some error while fetching orders.', { type: 'error' });
         setIsLoading(false);
       });
+    } 
+    else{
+      axios.get(BACKEND_URL + `/order/get_filtered_orders_company?created_by=${cuser_id}`).then
+      ((res) => {
+        console.log("RESSSSSSSS",res)
+        dispatch(setAllOrders(res?.data || []));
+        setIsLoading(false);
+      }).catch((err) => {
+        console.log("ERRRRR",err)
+        toast('There is some error while fetching orders.', { type: 'error' });
+        setIsLoading(false);
+      })
+    }
   };
 
   useEffect(() => {

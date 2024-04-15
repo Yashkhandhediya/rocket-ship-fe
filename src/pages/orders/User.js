@@ -17,6 +17,7 @@ const User = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [rechargeAmount, setRechargeAmount] = useState('');
   const [idUser,setIdUser] = useState(null)
+  const company_id = localStorage.getItem('company_id')
   const navigate = useNavigate()
 
 //   const fetchUsers = () => {
@@ -42,7 +43,7 @@ const User = () => {
 
     useEffect(() => {
 
-      axios.get(BACKEND_URL + '/company/get_company_users?companyId=8').then((res)=> {
+      axios.get(BACKEND_URL + `/company/get_company_users?companyId=${company_id}`).then((res)=> {
         console.log("RESSSSSSSSSSSSS",res)
         setUserData(res.data)
         setFetchData(true)
@@ -62,18 +63,15 @@ const User = () => {
 
   const handleOrder = (row) => {
     const id = row?.original?.id
-    axios.get(BACKEND_URL + `/order/get_filtered_orders_company?created_by=${id}`).then
-    ((res) => {
-      console.log("RESSSSSSSS",res)
-      navigate('/orders')
-    }).catch((err) => {
-      console.log("ERRRRR",err)
-    })
+    const data = {
+      id:id,
+      flag:true
+    }
+    navigate('/orders',{state:{data:data}})
   }
 
   const handleRecharge = () => {
     const headers={'Content-Type': 'application/json'};
-    const company_id = localStorage.getItem('company_id')
     axios.post(BACKEND_URL + `/company/update_wallet_balance?companyId=${parseInt(company_id)}&user_id=${parseInt(idUser)}&amount=${parseInt(rechargeAmount)}`).
     then((res) => {
         console.log("Recharge Responsee",res)
