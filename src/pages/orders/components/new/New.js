@@ -361,9 +361,9 @@ export const New = () => {
     }).catch((err) => {
       console.log("Error While Edit Order ",err)
     })
-    const editedOrder = getEditOrderFields(orderDetails);
+    // const editedOrder = getEditOrderFields(orderDetails);
     // dispatch(setEditOrder(editedOrder));
-    dispatch(setDomesticOrder(editedOrder))
+    // dispatch(setDomesticOrder(editedOrder))
     navigate('/add-order');
   }
 
