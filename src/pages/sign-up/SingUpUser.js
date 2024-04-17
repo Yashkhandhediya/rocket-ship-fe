@@ -27,7 +27,7 @@ const SignUpUser = () => {
 
   const handleSubmit = () => {
     const headers = {'Content-Type': 'application/json'};
-    axios.post(BACKEND_URL + '/users/',{
+    axios.post(BACKEND_URL + '/users/signup',{
       first_name:signupInput.first_name,
       last_name:signupInput.last_name,
       password:signupInput.password,

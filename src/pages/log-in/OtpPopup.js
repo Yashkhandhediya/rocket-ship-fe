@@ -115,7 +115,7 @@ useEffect(() => {
     console.log("OTP checkingg",OTP,userId)
     const tempId = userType === 'user' ? userId : companyId;
     const headers={'Content-Type': 'application/x-www-form-urlencoded'};
-    const verifyURL = userType === 'user' ? `/users/verify_forgot_pass_otp/?otp=${joinOTP}&user_id=${tempId}` : `/company/verify_otp?otp=${joinOTP}&id=${tempId}`;
+    const verifyURL = userType === 'user' ? `/users/verify_forgot_pass_otp/?otp=${joinOTP}&user_id=${tempId}` : `/company/verify_otp/?otp=${joinOTP}&id=${tempId}`;
     axios.get(BACKEND_URL+ verifyURL,
     {headers})
     .then(
