@@ -4,6 +4,7 @@ import { useState } from 'react';
 import OtpPopup from './OtpPopup';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
+import { type_user } from './LogIn';
 
 
 const ForgotPassword = () => {
@@ -16,7 +17,8 @@ const ForgotPassword = () => {
     })
     const [showOtp,setShowOtp] = useState(false)
 
-    const userType = location.state?.userType
+    // const userType = location?.state
+    // console.log("USSSSSSSSSSSS",userType)
 
     const handleChangeInput = (e) => {
         const { id, value } = e.target;
@@ -34,7 +36,7 @@ const ForgotPassword = () => {
       const handleOtp = () => {
         setShowOtp(true)
         const headers={'Content-Type': 'application/x-www-form-urlencoded'};  
-        const otpURL = userType === 'user' ? `/users/generate_otp?email_id=${userInput.username}` : `/company/forget_password_otp?email=${userInput.username}`;
+        const otpURL = type_user === 'user' ? `/users/generate_otp?email_id=${userInput.username}` : `/company/forget_password_otp?email=${userInput.username}`;
             axios.post(BACKEND_URL + otpURL,{ headers })
             .then((otpResponse) => {
               console.log(otpResponse);

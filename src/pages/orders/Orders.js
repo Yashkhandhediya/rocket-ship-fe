@@ -21,10 +21,12 @@ const Orders = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   let flag = false
-  flag = location?.state?.data?.flag
-  let cuser_id = location?.state?.data?.id
+  flag = location?.state?.data?.flag !== undefined ? location.state.data.flag : false
+  // let cuser_id = location?.state?.data?.id
+  let cuser_id = location?.state?.data?.id !== undefined ? location.state.data.id : id_user;
 
-  console.log("FLAGGG",flag)
+
+  console.log("FLAGGG",flag,cuser_id)
 
   // let filterTabs;
 
@@ -75,7 +77,7 @@ const Orders = () => {
   };
 
   useEffect(() => {
-    if (!allOrdersList || isEmpty[allOrdersList] || !flag) {
+    if (!allOrdersList || isEmpty[allOrdersList]) {
       fetchNewOrders();
     } else {
       setIsLoading(false);
@@ -89,11 +91,11 @@ const Orders = () => {
       <div className="h-full w-full bg-[#f4f4f4] px-4 text-center">
         <div className="flex items-center justify-between px-1.5 pb-3 pt-4">
           <h1 className="text-xl font-bold">Orders</h1>
-          <button
+          {is_company == 0 && <button
             className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-sm font-medium text-orange-600'}
             onClick={() => navigate('/add-order')}>
             + Add Order
-          </button>
+          </button>}
         </div>
         <div>
           <Tabs tabs={ordersTabs} tabClassNames={'mr-6 px-3 py-3.5 text-[#7f7f7f] font-medium'} />

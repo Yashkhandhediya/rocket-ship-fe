@@ -13,6 +13,7 @@ import { homelogo } from '../../common/images';
 
 // export let id_user;
 
+export let type_user;
 const LogIn = () => {
   const navigate = useNavigate();
   const [userId,setUserId] = useState(null)
@@ -23,6 +24,7 @@ const LogIn = () => {
     password: '',
   });
   const [userType, setUserType] = useState('user');
+  type_user = userType
 
   const handleChangeInput = (e) => {
     const { id, value } = e.target;
@@ -33,11 +35,10 @@ const LogIn = () => {
   };
 
   const handleForgotPassword = () => {
-    const additionalData = {
-      userType: userType,
-    };
+    type_user = userType
+    // console.log("DATAAAAAAAAA",data)
 
-    navigate('/forgotpassword', { state: additionalData });
+    navigate('/forgotpassword');
   };
 
 //   var SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
