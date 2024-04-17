@@ -81,7 +81,7 @@ const ForgotPassword = () => {
                     </p>
             </div>
             </div>}
-        {showOtp && <OtpPopup username={userInput.username} userId={userId} companyId={compId} upDatePassWord={upDatePassWord} />}
+        {showOtp && <OtpPopup userType={type_user} username={userInput.username} userId={userId} companyId={compId} upDatePassWord={upDatePassWord} />}
 
         </div>
 );

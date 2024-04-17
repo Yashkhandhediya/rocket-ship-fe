@@ -5,7 +5,8 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import ResetPassword from './ResetPassword';
 
-const OtpPopup = ({userType,username,userId=null,upDatePassWord=false,companyId=null}) => {
+const OtpPopup = ({userType='user',username,userId=null,upDatePassWord=false,companyId=null}) => {
+  console.log("DATAAAAAAAAA",userType)
   const [seconds, setSeconds] = useState(45);
   const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
   const navigate = useNavigate()
