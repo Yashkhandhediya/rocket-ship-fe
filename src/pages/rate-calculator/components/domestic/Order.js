@@ -1,12 +1,15 @@
 import React, {useState,useEffect} from 'react'
-import { Field } from '../../../../common/components'
+import { CustomTooltip, Field } from '../../../../common/components'
 import axios from 'axios'
 import { BACKEND_URL } from '../../../../common/utils/env.config'
 import Loader from '../../../../common/loader/Loader'
 import { toast } from 'react-toastify'
+import { infoIcon } from '../../../../common/icons'
 
 
 const Order = ({onDetailChange,onCityChange,onDestinationChange}) => {
+  const [isValidPincode,setIsValidPincode] = useState(true)
+  const [isValidDestPinCode,setIsValidDestPincode] = useState(true)
   const [isPickPinCode, setIsPickPincode] = useState(null);
   const [loading,setLoading] = useState(false)
   const [isDeliveryPinCode, setIsDeliveryPincode] = useState(null);
@@ -135,13 +138,13 @@ const handleShip = (event) => {
   };
 
   useEffect(() => {
-    if (isPickPinCode?.length >= 6) {
+    if (isPickPinCode?.length >= 6 && isValidPincode) {
       fetchPincodeDetails();
     }
   }, [isPickPinCode]);
 
   useEffect(() => {
-    if (isDeliveryPinCode?.length >= 6) {
+    if (isDeliveryPinCode?.length >= 6 && isValidDestPinCode) {
       fetchDestinationPincodeDetails(isDeliveryPinCode);
     }
   }, [isDeliveryPinCode]);
@@ -175,6 +178,7 @@ const handleCalculate = () => {
       setLoading(false)
   }).catch((e) => {
       console.log("Error in rate calculate ",e)
+      toast("Error in Rate Calculation",{type:"error"})
   })
 }
 
@@ -233,7 +237,11 @@ const handleCalculate = () => {
               required={true}
               value={isPickPinCode || ''}
               onChange={(e) => setIsPickPincode(e.target.value)}
+              onBlur={() => {
+                setIsValidPincode(/^\d{6}$/.test(isPickPinCode));
+              }}
             />
+            {!isValidPincode && <p className="mt-1 text-xs text-red-500">Please enter a valid Pincode.</p>}
     </div>
     <div className='w-[80%] mb-2'>
       {/* <label htmlFor="delivery-pincode" className="text-sm font-semibold mb-1">Delivery Pincode</label> */}
@@ -247,7 +255,11 @@ const handleCalculate = () => {
               required={true}
               value={isDeliveryPinCode || ''}
               onChange={(e) => setIsDeliveryPincode(e.target.value)}
+              onBlur={() => {
+                setIsValidDestPincode(/^\d{6}$/.test(isDeliveryPinCode));
+              }}
             />
+            {!isValidDestPinCode && <p className="mt-1 text-xs text-red-500">Please enter a valid Pincode.</p>}
     </div>
   </div>
 
@@ -312,6 +324,10 @@ const handleCalculate = () => {
       </div>
       <p className="text-xs font-semibold text-gray-500 mt-1">Note: Dimensional value should be greater than 0.5cm</p>
     </div>
+    {actualWeight != null && <div className='flex flex-row'>
+      <div className='font-semibold text-base border rounded-lg mr-2 h-12 p-2 bg-slate-100'>Volumetric Weight : 0.00 KG</div>
+      <div className='font-semibold text-base border rounded-lg mr-2 h-12 p-2 bg-slate-50'>{`Applicable Weight : ${actualWeight} KG`}</div>
+    </div>}
   </div>
 
   <div className="grid grid-cols-2 gap-4 mt-8">
@@ -348,7 +364,7 @@ const handleCalculate = () => {
     </div>
     
   {shipmentDetails.type == "ptl" && <div className="mt-2">
-    <h3 className="text-lg font-semibold mb-2">QC Applicable?</h3>
+  <h3 className="text-lg font-semibold mb-2">QC Applicable?</h3>
     <div className="flex items-center">
       <div className="flex items-center mr-4 mb-2">
         <input type="radio" name="qc_type" id="yes1" value="yes1" className="form-radio h-4 w-4 text-purple-600" 
@@ -366,7 +382,12 @@ const handleCalculate = () => {
   </div>
 
  <div className="mt-8">
-    <h3 className="text-lg font-semibold mb-2">Shipping Dangerous Goods?</h3>
+ <div className="flex flex-row">
+ <h3 className="text-lg font-semibold mb-2">Shipping Dangerous Goods?</h3>
+    <CustomTooltip text={"Shipment containing flammable gas,flammable liquids,oil-based paints,batterries,and other hazardous materials ar not permitted in Air mode."}>
+      <img className=" mt-2 ms-2 w-4 h-4" src={infoIcon} />
+    </CustomTooltip>
+ </div>
     <div className="flex items-center">
       <div className="flex items-center mr-4 mb-2">
         <input type="radio" name="ship_type" id="yes" value="yes" className="form-radio h-4 w-4 text-purple-600" 
