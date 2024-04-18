@@ -28,7 +28,7 @@ const CustomDataTable = ({
         header: ({ table }) => (
           <FlowbiteCheckbox
             color={'red'}
-            className="px-0"
+            className="px-0 opacity-50"
             checked={table.getIsAllRowsSelected()}
             onChange={table.getToggleAllRowsSelectedHandler()}
           />
@@ -101,7 +101,7 @@ const CustomDataTable = ({
             return (
               <Table.HeadCell
                 key={`${header.id}-${headerInd}`}
-                className={`items-center bg-transparent bg-white p-3 font-medium normal-case leading-4 
+                className={`items-center bg-transparent p-3 font-medium normal-case leading-4 
                 ${headerCellStyle[headerInd]} ${getCellwidth(header?.id)}`}>
                 {flexRender(header.column.columnDef.header, header.getContext())}
               </Table.HeadCell>
