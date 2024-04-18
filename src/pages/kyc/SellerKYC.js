@@ -7,14 +7,26 @@ import Stepper from "./component/stepper/Stepper";
 import { Completed_KYC } from "./component/completed_KYC";
 
 const SellerKYC = () => {
-
+    const is_company = localStorage.getItem('is_company')
     const [state, setState] = useState(0);
     const [isKYCCompleted, setIsKYCCompleted] = useState(false);
-    const steps = {
-        0: <BussinessType currentStep={state} handleChangeStep={setState} />,
-        1: <PhotoIndentification currentStep={state} handleChangeStep={setState} />,
-        2: <DocumentVerification currentStep={state} handleChangeStep={setState} setIsKYCCompleted={setIsKYCCompleted} />,
+    let steps = {}
+    if(is_company == 0){
+        
+        steps = {
+            0: <BussinessType currentStep={state} handleChangeStep={setState} />,
+            1: <PhotoIndentification currentStep={state} handleChangeStep={setState} />,
+            2: <DocumentVerification currentStep={state} handleChangeStep={setState} setIsKYCCompleted={setIsKYCCompleted} />,
+        }
+    }else{
+        
+        steps = {
+            0: <BussinessType currentStep={state} handleChangeStep={setState} />,
+            // 1: <PhotoIndentification currentStep={state} handleChangeStep={setState} />,
+            1: <DocumentVerification currentStep={state} handleChangeStep={setState} setIsKYCCompleted={setIsKYCCompleted} />,
+        }
     }
+  
 
     return (
         <PageWithSidebar>
