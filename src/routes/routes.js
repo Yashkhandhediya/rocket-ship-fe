@@ -20,6 +20,10 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<Home />} />,
   },
   {
+    path: '/dashboard',
+    element: <PrivateRoute component={<Dashboard />} />,
+  },
+  {
     path: '/login',
     element: <LogIn />,
   },
