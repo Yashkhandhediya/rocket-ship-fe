@@ -11,7 +11,7 @@ import { BACKEND_URL } from '../../../../../common/utils/env.config';
 
 export default function OrderDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
-
+  const id_user = localStorage.getItem('user_id')
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order) || {};
 
   const defaultProductField = {
@@ -147,7 +147,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
 
   const fetchOrderId = () => {
     axios
-      .get(BACKEND_URL+'/order/get_order_id')
+      .get(BACKEND_URL+`/order/get_order_id/?id=${id_user}`)
       .then((resp) => {
         if (resp?.status == 200 && resp?.data?.order_id) {
           setFormDirectField({
