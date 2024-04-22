@@ -56,11 +56,11 @@ const Home = () => {
                 </div>
               </div>
               <div className="flex justify-center text-[#E02424] text-[14px] font-normal items-center h-1/3">
-                <button className={`py-1.5 w-48 border border-[#E02424] rounded-md bg-white ${localStorage.getItem('is_kyc') == 1 ? 'cursor-not-allowed' : ''}`}
+                <button className={`py-1.5 w-48 border border-[#E02424] rounded-md bg-white ${(localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2) ? 'cursor-not-allowed' : ''}`}
                   onClick={() => {
                     navigate('/orders')
                   }}
-                  disabled={localStorage.getItem('is_kyc') == 1}
+                  disabled={(localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2)}
                 >
                   View Order
                 </button>
@@ -82,8 +82,9 @@ const Home = () => {
                 </div>
               </div>
               <div className="flex justify-center text-white text-[14px] font-medium items-center h-1/3">
-                <button className="py-1.5 w-48 bg-[#E02424] rounded-md"
+                <button className={`py-1.5 w-48 bg-[#E02424] rounded-md ${(localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2) ? 'cursor-not-allowed' : ''}`}
                   onClick={() => setShowRechargeModal(true)}
+                  disabled={(localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2)}
                 >
                   Recharge
                 </button>
@@ -106,8 +107,9 @@ const Home = () => {
                 </div>
               </div>
               <div className="flex justify-center text-white text-[14px] font-medium items-center h-1/3">
-                <button className="py-1.5 w-48 bg-[#E02424] rounded-md"
+                <button className={`py-1.5 w-48 bg-[#E02424] rounded-md ${(localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2) ? 'cursor-not-allowed' : ''}`}
                   onClick={() => setShowPopup(true)}
+                  disabled={(localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2)}
                 >
                   Request
                 </button>
@@ -129,11 +131,11 @@ const Home = () => {
                 </div>
               </div>
               <div className="flex justify-center text-white text-[14px] font-medium items-center h-1/3">
-                <button className={`py-1.5 w-48 bg-[#E02424] rounded-md ${localStorage.getItem('is_kyc') == 1 ? 'cursor-not-allowed' : ''}`}
+                <button className={`py-1.5 w-48 bg-[#E02424] rounded-md ${(localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2) ? 'cursor-not-allowed' : ''}`}
                   onClick={() => {
                     navigate('/orders')
                   }}
-                  disabled={localStorage.getItem('is_kyc') == 1}
+                  disabled={(localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2)}
                 >
                   Ship Now
                 </button>
