@@ -5,8 +5,10 @@ import { useState,useEffect } from 'react';
 import { noShipment } from '../../common/images';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
+  const navigate = useNavigate()
   const company_id = localStorage.getItem('company_id')
   const oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().slice(0, 10);
   const todayDate = new Date().toISOString().slice(0, 10);
@@ -122,8 +124,8 @@ const Dashboard = () => {
         toast.error('From date should be less than To date');
     }
 };
-  
 
+  
   useEffect(() => {
     if(!flag){
       handleData()
@@ -136,7 +138,10 @@ const Dashboard = () => {
     <PageWithSidebar>
       <div style={{ textAlign: 'center' }}>
         {loading && <Loader />}
-        <h1>Dashboard</h1>
+        {/* <h1>Dashboard</h1> */}
+        <div className="w-[98%] p-2 mt-2 ml-4 mr-4 bg-red-600 border shadow-md rounded-lg hover:underline">
+          <Link to={'/seller/kyc'} className='text-white'>Click here to complete your KYC and get non-disrupted shipping and COD remittances</Link>
+        </div>
         <div className="flex items-center justify-between p-4">
             <div className="w-[33%] h-40  bg-gray-100 flex items-center border shadow-md rounded-md">
               <div className="text-white border bg-white rounded-full p-2 mr-4 ml-20">
@@ -242,7 +247,7 @@ const Dashboard = () => {
         {shipData.length === 0 ? (
                             <div className='pt-16 mb-12 w-full flex justify-center items-center flex-col'>
                                 <img src={noShipment} alt="" width={'100px'} />
-                                <div className='text-[1.3rem] mt-10 text-[#b54040] font-semibold'>Couriers&apos; data not found this filter.</div>
+                                <div className='text-[1.3rem] mt-10 text-[#b54040] font-semibold'>Courier&apos;s data not found this filter.</div>
                             </div>
                         ) : (
                             result.map((item, index) => (

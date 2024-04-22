@@ -123,11 +123,32 @@ const Indent = () => {
         );
     }
 
+    // useEffect (() => {
+      
+    // },[])
+
     useEffect(() => {
         console.log(truckType);
     }, [truckType]);
 
+    let count = 1;
     useEffect(() => {
+        if(localStorage.getItem('is_kyc') == 1){
+            if(count == 1){
+                toast("Complete Your KYC First",{type:'error'})
+                count++
+            }
+            navigate('/seller/home')
+            return
+        }else if(localStorage.getItem('is_kyc') == 2){
+            if(count == 1){
+              toast("KYC Verification Is Pending.",{type:'error'})
+              count++
+            }
+            navigate('/seller/home')
+            return
+          }
+
         function handleClickOutside(event) {
             if (inputRef.current && !inputRef.current?.contains(event.target) && !dropdownRef.current?.contains(event.target)) {
                 setIsDropdownOpen(false);

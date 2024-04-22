@@ -8,6 +8,7 @@ import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithS
 import { useNavigate } from 'react-router-dom';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import {toast} from 'react-toastify'
+import { user } from '../../common/icons/sidebar-icons';
 
 
 const User = () => {
@@ -17,8 +18,12 @@ const User = () => {
   const [fetchData, setFetchData] = useState(false)
   const [showPopup, setShowPopup] = useState(false);
   const [rechargeAmount, setRechargeAmount] = useState(amount);
+  const [showkyc,setShowKyc] = useState(false)
   const [idUser,setIdUser] = useState(null)
   const company_id = localStorage.getItem('company_id')
+  const [aadharImg,setAadharImg] = useState(null)
+  const [userImg,setUserImg] = useState(null)
+  const [kyc_status,setKyc_status] = useState(0)
   const navigate = useNavigate()
 
 //   const fetchUsers = () => {
@@ -72,6 +77,66 @@ const User = () => {
     }
     navigate('/orders',{state:{data:data}})
   }
+
+  
+  const handleKYC = (row) => {
+    setIdUser(row?.original?.id)
+    setShowKyc(true)
+    const headers={'Content-Type': 'application/json'};
+    axios.get(BACKEND_URL + `/kyc/?id=110&type=user_aadhar`,{ responseType: 'blob' }).
+    then((res) => {
+        console.log("Recharge Responsee",res)
+        const imgUrl = URL.createObjectURL(res.data)
+        setAadharImg(imgUrl)
+        console.log("PICCCCCCCCCCCCCc",aadharImg)
+        // let newVal = localStorage.getItem('balance') - rechargeAmount
+        // localStorage.setItem('balance',newVal)
+        // window.location.reload()
+    }).catch((err) => {
+        console.log("Error In Rechargeee",err)
+    })
+
+    axios.get(BACKEND_URL + `/kyc/?id=110&type=selfie`,{ responseType: 'blob' }).
+    then((res) => {
+        console.log("Recharge Responsee",res)
+        const imgUrl = URL.createObjectURL(res.data)
+        setUserImg(imgUrl)
+        console.log("PICCCCCCCCCCCCCc",userImg)
+        // let newVal = localStorage.getItem('balance') - rechargeAmount
+        // localStorage.setItem('balance',newVal)
+        // window.location.reload()
+    }).catch((err) => {
+        console.log("Error In Rechargeee",err)
+    })
+  }
+
+  const handleAcceptKYC = () => {
+      setKyc_status(1)
+      const headers={'Content-Type': 'application/json'};
+      axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=user&status=${kyc_status}&id=${idUser}`,{headers})
+      .then((res) => {
+        console.log("Response ",res)
+        toast("KYC Verification Successfully",{type:'success'})
+        setShowKyc(false);
+      }).catch((err) => {
+        console.log("ERRRRRR",err)
+        toast("Error in KYC verification",{type:'error'})
+      })
+   }
+
+  // const checkKYC = ) => {
+  //   const headers={'Content-Type': 'application/json'};
+  //   axios.post(BACKEND_URL + `/kyc/?id=${idUser}&type=user_aadhar`).
+  //   then((res) => {
+  //       console.log("Recharge Responsee",res)
+  //       // let newVal = localStorage.getItem('balance') - rechargeAmount
+  //       // localStorage.setItem('balance',newVal)
+  //       window.location.reload()
+  //   }).catch((err) => {
+  //       console.log("Error In Rechargeee")
+  //   })
+  //   setShowKyc(false);
+  // }
 
   const handleRecharge = () => {
     const headers={'Content-Type': 'application/json'};
@@ -155,16 +220,30 @@ const User = () => {
           );
         },
       }),
+      columnHelper.accessor('kyc_status_id', {
+        header: 'KYC Status',
+        cell: ({ row }) => {
+          return (
+            <div className="flex flex-col gap-2 text-left text-xs">
+              {/* {row?.original?.wallet_balance && <div>{row?.original?.wallet_balance}</div>} */}
+              <div>{row?.original?.kyc_status_id == 1 ? 'Upload Pending' : row?.original?.kyc_status_id == 2 ? 'Approve Pending' : 'Approved'}</div>
+            </div>
+          );
+        },
+      }),
       columnHelper.accessor('action', {
         header: 'Action',
         cell: ({ row }) => {
+          const disableButtons = row?.original?.kyc_status_id === 3;
+          const showKYCBtn = row?.original?.kyc_status_id !== 3;
           return (
             <div className="flex gap-2 text-left text-xs">
               {(
                 <button
                   id={row?.original?.id}
-                  className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
+                  className={`min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600 ${!disableButtons ? 'cursor-not-allowed' : ''}`}
                   onClick={()=>handleIndent(row)}
+                  disabled={!disableButtons}
                   >
                   {'Recharge'}
                 </button>
@@ -172,10 +251,20 @@ const User = () => {
               {(
                 <button
                   id={row?.original?.id}
-                  className="min-w-fit rounded bg-blue-500 px-4 py-1.5 text-white hover:bg-green-600"
+                  className={`min-w-fit rounded bg-blue-500 px-4 py-1.5 text-white hover:bg-green-600 ${!disableButtons ? 'cursor-not-allowed' : ''}`}
                   onClick={()=>handleOrder(row)}
+                  disabled={!disableButtons}
                   >
                   {'Show Order'}
+                </button>
+              )}
+              {(
+                 showKYCBtn && <button
+                  id={row?.original?.id}
+                  className="min-w-fit rounded bg-red-400 px-4 py-1.5 text-white hover:bg-green-600"
+                  onClick={()=>handleKYC(row)}
+                  >
+                  {'KYC'}
                 </button>
               )}
             </div>
@@ -238,6 +327,32 @@ const User = () => {
                     onClick={() => setShowPopup(false)}
                   >
                     Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {showkyc && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+              <div className="w-[30%] bg-white p-6 rounded-lg">
+                <h2 className="text-lg font-semibold mb-4">Validate KYC</h2>
+                <div className="flex flex-row justify-evenly">
+                    <img src={aadharImg}  alt='Aadhar Image' className='w-40 shadow-md mb-4' />
+                    <img src={userImg}  alt='User Image' className='w-40 shadow-md mb-4' />
+                </div>
+                <div className="flex justify-center">
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                    onClick={handleAcceptKYC}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 ml-2 rounded-lg"
+                    onClick={() => setShowKyc(false)}
+                  >
+                    Decline
                   </button>
                 </div>
               </div>

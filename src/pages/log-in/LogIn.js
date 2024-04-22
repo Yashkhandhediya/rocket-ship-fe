@@ -72,6 +72,7 @@ const LogIn = () => {
         localStorage.setItem('is_company',response.data.is_company)
         localStorage.setItem('is_admin',response.data.is_admin)
         localStorage.setItem('balance',response.data.wallet_balance)
+        localStorage.setItem('is_kyc',response.data.kyc_status_id)
         const user_id = userType === 'user' ? localStorage.getItem('user_id') :  localStorage.getItem('company_id')
          if (response.data.access_token){
           setUserId(response.data.user_id)

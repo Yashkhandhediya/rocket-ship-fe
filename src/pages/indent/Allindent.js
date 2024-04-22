@@ -53,7 +53,23 @@ const Allindent = () => {
     };
 
 
+  let count = 1
   useEffect(() => {
+    if(localStorage.getItem('is_kyc') == 1){
+      if(count == 1){
+        toast("Complete Your KYC First",{type:'error'})
+        count++;
+      }
+      navigate('/seller/home')
+      return
+    }else if(localStorage.getItem('is_kyc') == 2){
+      if(count == 1){
+        toast("KYC Verification Is Pending.",{type:'error'})
+        count++
+      }
+      navigate('/seller/home')
+      return
+    }
     if (info.length === 0 && !dataFetch) {
       fetchData();
     }
