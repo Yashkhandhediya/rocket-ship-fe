@@ -7,6 +7,7 @@ import ResetPassword from './ResetPassword';
 
 const OtpPopup = ({userType='user',username,userId=null,upDatePassWord=false,companyId=null}) => {
   console.log("DATAAAAAAAAA",userType)
+  const is_super = localStorage.getItem('is_super')
   const [seconds, setSeconds] = useState(45);
   const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
   const navigate = useNavigate()
@@ -88,7 +89,12 @@ useEffect(() => {
     axios.get(BACKEND_URL + otpURL,{otp:OTP, user_id:tempId}, {headers}).then(
       response => {
         console.log(response)
-        if(response.data.flag == 1){
+        if(is_super == 3){
+          toast('Login Success',{type:'success'})
+          navigate('/company-list')
+          return
+        }
+        if(response.data.flag == 1 && is_super != 3){
           toast('Login Success',{type:'success'})
           navigate('/seller/home')
         }else{

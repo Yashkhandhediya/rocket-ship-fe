@@ -16,4 +16,5 @@ export * from './bank_details'
 export * from './home'
 export * from './book-truck'
 export * from './indent'
+export * from './kyc-verfication'
 

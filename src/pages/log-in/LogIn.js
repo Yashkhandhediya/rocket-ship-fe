@@ -19,6 +19,7 @@ const LogIn = () => {
   const [userId,setUserId] = useState(null)
   const [companyId,setCompanyId] = useState(null)
   const [handlePopup, setHandlePopup] = useState(false)
+  const [singleTimeLoginClick,setSingleTimeLoginClick] = useState(0)
   const [loginInput, setLoginInput] = useState({
     username: '',
     password: '',
@@ -52,6 +53,7 @@ const LogIn = () => {
 //   gapi.load("client:auth2", start);
 
   const handleSubmit = () => {
+    setSingleTimeLoginClick(1)
     if(loginInput.username == '' || loginInput.password == ''){
       toast("Email and Password Both are required",{type:'error'})
       return
@@ -67,12 +69,15 @@ const LogIn = () => {
     }, {headers}).then(
       (response)=>{
         // id_user = response.data.user_id
+        debugger
         localStorage.setItem('user_id',response.data.user_id)
         localStorage.setItem('company_id',response.data.company_id)
         localStorage.setItem('is_company',response.data.is_company)
         localStorage.setItem('is_admin',response.data.is_admin)
         localStorage.setItem('balance',response.data.wallet_balance)
         localStorage.setItem('is_kyc',response.data.kyc_status_id)
+        localStorage.setItem('is_super',response.data.user_type_id)
+
         const user_id = userType === 'user' ? localStorage.getItem('user_id') :  localStorage.getItem('company_id')
          if (response.data.access_token){
           setUserId(response.data.user_id)
@@ -186,7 +191,11 @@ const LogIn = () => {
           <button
             type="button"
             className="dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 mb-2 w-full rounded-lg bg-red-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300"
-            onClick={handleSubmit}
+            onClick={() => {
+              if(singleTimeLoginClick == 0){
+                handleSubmit()
+              }
+            }}
           >
             Login
           </button>
