@@ -83,7 +83,7 @@ const User = () => {
     setIdUser(row?.original?.id)
     setShowKyc(true)
     const headers={'Content-Type': 'application/json'};
-    axios.get(BACKEND_URL + `/kyc/?id=110&type=user_aadhar`,{ responseType: 'blob' }).
+    axios.get(BACKEND_URL + `/kyc/?id=${idUser}&type=user_aadhar`,{ responseType: 'blob' }).
     then((res) => {
         console.log("Recharge Responsee",res)
         const imgUrl = URL.createObjectURL(res.data)
@@ -96,7 +96,7 @@ const User = () => {
         console.log("Error In Rechargeee",err)
     })
 
-    axios.get(BACKEND_URL + `/kyc/?id=110&type=selfie`,{ responseType: 'blob' }).
+    axios.get(BACKEND_URL + `/kyc/?id=${idUser}&type=selfie`,{ responseType: 'blob' }).
     then((res) => {
         console.log("Recharge Responsee",res)
         const imgUrl = URL.createObjectURL(res.data)
@@ -335,6 +335,13 @@ const User = () => {
 
           {showkyc && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+            <button
+                className="border-0 bg-transparent p-1 pt-0 text-2xl font-semibold leading-none text-black opacity-100 outline-none focus:outline-none"
+                onClick={() => {setShowKyc(false)}}>
+                <span className="block h-6 w-6 bg-transparent text-black opacity-50 outline-none focus:outline-none">
+                  ×
+                </span>
+              </button>
               <div className="w-[30%] bg-white p-6 rounded-lg">
                 <h2 className="text-lg font-semibold mb-4">Validate KYC</h2>
                 <div className="flex flex-row justify-evenly">

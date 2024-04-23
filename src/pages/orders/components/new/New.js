@@ -27,6 +27,7 @@ export let order_id;
 export const New = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  let bulkOrder = []
   const flattened = {};
   const allOrdersList = useSelector((state) => state?.ordersList);
   const newOrdersList =
@@ -124,6 +125,31 @@ export const New = () => {
         console.error("Error:", error);
         toast('Error in Invoice Download',{type:'error'})
     });
+  }
+
+  const handleBulkOrder = () => {
+    const headers={'Content-Type': 'application/json'};
+    let temp_list = []
+    for(let i=0;i<bulkOrder.length;i++){
+        console.log(typeof bulkOrder[i].id);
+        temp_list.push(parseInt(bulkOrder[i].id))
+    }
+    if(temp_list.length <= 1){
+      toast("Please Select More Than One Order For Bulk Shipment",{type:'error'})
+      return
+    }
+    axios.post(BACKEND_URL + '/order/bulk_shipment/',
+      temp_list
+    ,{headers}).then((res) => {
+      console.log("Response Bulk Order",res)
+      toast("Bulk Shipment Succesfully Completed",{type:'success'})
+    }).catch((err) => {
+      console.log("Error In bulk order ",err)
+      toast("Error In Bulk Shipment",{type:'error'})
+    })
+    console.log("PAYLOADDDDDDDDD",temp_list)
+    temp_list = []
+    console.log("PAYLOADDDDDDDDD",temp_list)
   }
 
   const getColumns = () => {
@@ -391,13 +417,19 @@ export const New = () => {
   return (
     <div className="mt-5">
       <div className="mb-4 flex w-full">
-        <div>
+        <div className='flex flex-row'>
           <button
             className="inline-flex items-center rounded-sm border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-orange-700"
             onClick={() => setOpenFilterDrawer(true)}>
             <img src={filterIcon} className="mr-2 w-4" />
             {'More Filters'}
           </button>
+
+          <button className="min-w-fit ml-6 rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600" 
+          onClick={handleBulkOrder}>
+            { 'Bulk Shipment' }
+          </button>
+
         </div>
       </div>
 
@@ -406,7 +438,7 @@ export const New = () => {
         rowData={newOrdersList}
         enableRowSelection={true}
         shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
-        onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}
+        onRowSelectStateChange={(selected) => {console.log('selected-=-', selected);bulkOrder.push(selected)}}
         rowSubComponent={rowSubComponent}
         enablePagination={true}
         tableWrapperStyles={{ height: '78vh' }}
@@ -416,7 +448,7 @@ export const New = () => {
         rowData={newOrdersList1}
         enableRowSelection={true}
         shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
-        onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}
+        onRowSelectStateChange={(selected) => {console.log('selected-=-', selected);bulkOrder=selected}}
         rowSubComponent={rowSubComponent}
         enablePagination={true}
         tableWrapperStyles={{ height: '78vh' }}

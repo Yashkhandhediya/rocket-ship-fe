@@ -34,7 +34,7 @@ const Home = () => {
     <PageWithSidebar>
       <div className="flex flex-col w-full h-screen bg-[#f8f8f8] pl-6 mt-4 py-2 px-2">
       {localStorage.getItem('is_kyc') == 1 && <div className="w-[99%] p-2 mt-2 ml-2 mr-4 mb-4 bg-red-600 border shadow-md rounded-lg hover:underline" style={{ textAlign: 'center' }}>
-          <Link to={'/seller/kyc'} className='text-white'>Click here to complete your KYC and get non-disrupted shipping and COD remittances</Link>
+          <marquee className='text-white font-semibold'><Link to={'/seller/kyc'} >Click here to complete your KYC and get non-disrupted shipping and COD remittances</Link></marquee>
       </div>}
       {localStorage.getItem('is_kyc') == 2 && <div className="w-[99%] font-semibold text-md p-2 mt-2 ml-2 mr-4 mb-4 bg-yellow-400 border shadow-md rounded-lg hover:underline" style={{ textAlign: 'center' }}>
           <marquee className='text-white'>KYC Verification Is Pending</marquee>

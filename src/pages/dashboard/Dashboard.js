@@ -142,8 +142,8 @@ const Dashboard = () => {
         <div className="w-[98%] p-2 mt-2 ml-4 mr-4 bg-red-600 border shadow-md rounded-lg hover:underline">
           <Link to={'/seller/kyc'} className='text-white'>Click here to complete your KYC and get non-disrupted shipping and COD remittances</Link>
         </div>
-        <div className="flex items-center justify-between p-4">
-            <div className="w-[33%] h-40  bg-gray-100 flex items-center border shadow-md rounded-md">
+        <div className="flex items-center justify-between p-4 md:w-full flex-col lg:flex-row">
+            <div className="h-40 bg-gray-100 flex items-center border shadow-md rounded-md sm:w-full md:w-full mt-4 lg:w-[33%]">
               <div className="text-white border bg-white rounded-full p-2 mr-4 ml-20">
               <svg className="w-12 h-12 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                 <path stroke="red" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-3 5h3m-6 0h.01M12 16h3m-6 0h.01M10 3v4h4V3h-4Z"/>
@@ -155,7 +155,7 @@ const Dashboard = () => {
                 <p className="text-xs text-left font-semibold text-gray-500">{`Yesterday ${yesterdayOrder}`}</p>
               </div>
             </div>
-          <div className="w-[65%] h-40 flex flex-col bg-gray-100 space-x-2 border shadow-md rounded-md ml-0">
+          <div className="h-40 flex flex-col bg-gray-100 space-x-2 border shadow-md rounded-md ml-0 sm:w-full md:w-full mt-4 lg:w-[65%]">
             <div className='text-left mt-2 ml-2 font-semibold'>
               Shipments Details
             </div>

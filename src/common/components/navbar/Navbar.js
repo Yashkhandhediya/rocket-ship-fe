@@ -215,7 +215,7 @@ const Navbar = () => {
                 </Dropdown>
             </div>
             {showPopup && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-25">
+            <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none bg-opacity-50 bg-gray-400">
               <div className="bg-white p-6 rounded-lg">
                 <h2 className="text-lg font-semibold mb-4">Request Amount</h2>
                 <input
