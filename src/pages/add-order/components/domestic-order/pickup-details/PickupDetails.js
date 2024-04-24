@@ -115,7 +115,7 @@ export default function PickupDetails({ currentStep, handleChangeStep }) {
             {/* card with Address */}
             {addressList?.map((address, index) => {
               const isSelectedAddress = address?.id == selectedAddress?.id;
-
+              const landmark = address?.landmark ? `${address.landmark}, ` : '';
               return (
                 <div
                   key={index}
@@ -139,7 +139,7 @@ export default function PickupDetails({ currentStep, handleChangeStep }) {
                     </div>
                     <div className="border-b  border-gray-200">
                       <div className="mb-2 line-clamp-2 min-h-[30px] min-w-[30px] overflow-hidden align-middle text-[11px] font-medium leading-4 text-gray-500">
-                        {`${address?.complete_address}, ${address?.landmark}, ${address?.city}, ${address?.state}-${address?.pincode}`}
+                        {`${address?.complete_address}, ${landmark} ${address?.city}, ${address?.state}-${address?.pincode}`}
                       </div>
                       <div className="mb-1 text-[11px] font-medium leading-6 text-gray-500">
                         {'Mobile : ' + address?.contact_no}

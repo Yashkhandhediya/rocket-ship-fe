@@ -12,6 +12,11 @@ import { BACKEND_URL } from '../../../../../common/utils/env.config';
 export default function OrderDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
   const id_user = localStorage.getItem('user_id')
+  const [suggestionData,setSuggestionData] = useState([])
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestionProductData,setSuggestionProductData] = useState([])
+  const [showProductSuggestions, setShowProductSuggestions] = useState(false);
+  const [cashCharge,setCashCharge] = useState(0)
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order) || {};
 
   const defaultProductField = {
@@ -60,7 +65,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
       Number(paymentDetails?.transaction_fee || 0) || 0;
 
   const totalOrderValue =
-    Number(subProductTotal || 0) + Number(otherCharges || 0) - Number(paymentDetails?.discount || 0);
+    Number(subProductTotal || 0) + Number(otherCharges || 0) + Number(cashCharge || 0) - Number(paymentDetails?.discount || 0) || 0;
 
   const checkIsProductValid = () => {
     const errors = {
@@ -110,9 +115,20 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   const handleSetProductFields = (event, index) => {
     const { id, value } = event.target;
 
+    if(id == 'name'){
+      axios.get(BACKEND_URL + '/product/get_product_details/')
+      .then((res) => {
+        console.log("Suggestion Products",res.data)
+        setSuggestionProductData(res.data)
+        setShowProductSuggestions(true)
+      }).catch((err) => {
+        console.log("Error in Products",err)
+      })
+    }
     const allFields = [...productFields];
     allFields[index][id] = value;
     setProductFields(allFields);
+    
   };
 
   const handleQuantityCounter = (value, index) => {
@@ -144,6 +160,59 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
       [id]: value,
     });
   };
+
+  const handleChannel = (event) => {
+    const { id, value } = event.target;
+    setFormDirectField({
+      ...formDirectField,
+      [id]: value,
+    });
+    if(formDirectField?.channel != ''){
+      axios.get(BACKEND_URL + '/channel/get_channel_suggestions')
+      .then((res) => {
+        console.log("Suggestions",res.data)
+        setSuggestionData(res.data)
+        setShowSuggestions(true)
+      }).catch((err) => {
+        console.log("Error in Suggestion",err)
+      })
+  }
+  };
+
+    // Handle suggestion selection
+    const handleSuggestionClick = (suggestion) => {
+      setFormDirectField({
+        ...formDirectField,
+        channel:suggestion.name
+      })
+      setShowSuggestions(false);
+    };
+  
+    // Handle hover over suggestion
+    const handleSuggestionHover = (suggestion) => {
+      setFormDirectField({
+        ...formDirectField,
+        channel:suggestion.name
+      })
+    };
+
+       // Handle product suggestion selection
+       const handleProductSuggestionClick = (suggestion,index) => {
+        const allFields = [...productFields];
+        allFields[index]['name'] = suggestion.name;
+        setProductFields(allFields);
+        setCashCharge(suggestion.cod_charge)
+        setShowProductSuggestions(false);
+      };
+    
+      // Handle product hover over suggestion
+      const handleProductSuggestionHover = (suggestion,index) => {
+        const allFields = [...productFields];
+        const temp_info = allFields[index]
+        console.log("ALLLLLLLLLL",allFields,index)
+        temp_info.name = suggestion.name;
+        setProductFields(allFields);
+      };
 
   const fetchOrderId = () => {
     axios
@@ -262,7 +331,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               <p className="mt-1 text-xs text-red-500">Order date is required.</p>
             )}
           </div>
-          <div className="px-2 pb-2 md:w-3/12 md:pb-0">
+          <div className="px-2 pb-2 relative md:w-3/12 md:pb-0">
             <Field
               type={'select'}
               id={'channel'}
@@ -275,8 +344,22 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               }
               required={true}
               value={formDirectField?.channel}
-              onChange={setDirectKeysInForm}
+              onChange={handleChannel}
             />
+              {showSuggestions && suggestionData.length > 0 && (
+                  <div className="absolute w-[30%] bg-white border border-gray-300 rounded shadow-md z-10">
+                    {suggestionData.map((suggestion, index) => (
+                      <div
+                        key={index}
+                        className="p-2 cursor-pointer hover:bg-gray-200"
+                        onMouseDown={() => handleSuggestionClick(suggestion)}
+                        onMouseEnter={() => handleSuggestionHover(suggestion)}
+                      >
+                        {suggestion.name}
+                      </div>
+                    ))}
+                  </div>
+              )}
             {productValidation && !formDirectField?.channel && (
               <p className="mt-1 text-xs text-red-500">Order Channel is required.</p>
             )}
@@ -320,7 +403,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
             return (
               <div className="mb-4 border-b border-gray-200" key={index}>
                 <div className="mb-3 w-full md:flex">
-                  <div className="w-full px-2 pb-2 xl:w-4/12">
+                  <div className="w-full px-2 pb-2 relative xl:w-4/12">
                     <Field
                       id={'name'}
                       label={`Product ${index + 1} Name`}
@@ -331,6 +414,20 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                       value={field?.name || ''}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
+                      {showProductSuggestions && suggestionProductData.length > 0 && (
+                        <div className="absolute w-[70%] bg-white border border-gray-300 rounded shadow-md z-10 max-h-40 overflow-y-auto">
+                          {suggestionProductData.map((suggestion, i) => (
+                            <div
+                              key={i}
+                              className="p-2 cursor-pointer hover:bg-gray-200"
+                              onMouseDown={() => handleProductSuggestionClick(suggestion,index)}
+                              onMouseEnter={() => handleProductSuggestionHover(suggestion,index)}
+                            >
+                              {suggestion.name}
+                            </div>
+                          ))}
+                        </div>
+                    )}
                     {productValidation && !field?.name?.length && (
                       <p className="mt-1 text-xs text-red-500">Product Name is required.</p>
                     )}
@@ -581,11 +678,27 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
             <div className="my-5 rounded-md bg-[#ecf2fe99] p-5 text-sm">
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Sub-total for Product'}</p>
-                <p className="w-6/12 text-end">{'₹ ' + formDirectField?.sub_total || 0}</p>
+                <p className="w-6/12 text-end">{'₹ ' + (formDirectField?.sub_total ? formDirectField?.sub_total : 0)}</p>
               </div>
-              <div className="mb-1 flex justify-between">
+              {/* <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Other Charges'}</p>
                 <p className="w-6/12 text-end">{'₹ ' + formDirectField?.other_charges || 0}</p>
+              </div> */}
+              <div className="mb-1 flex justify-between">
+                <p className="w-6/12 text-gray-600">{'Shipping Charges'}</p>
+                <p className="w-6/12 text-end">{'₹ ' + (paymentDetails?.shipping_charges ? paymentDetails?.shipping_charges : 0)}</p>
+              </div>
+              <div className="mb-1 flex justify-between">
+                <p className="w-6/12 text-gray-600">{'Gift Wrap'}</p>
+                <p className="w-6/12 text-end">{'₹ ' + (paymentDetails?.gift_wrap ? paymentDetails?.gift_wrap : 0)}</p>
+              </div>
+              <div className="mb-1 flex justify-between">
+                <p className="w-6/12 text-gray-600">{'Transaction Fee'}</p>
+                <p className="w-6/12 text-end">{'₹ ' + (paymentDetails?.transaction_fee ? paymentDetails?.transaction_fee : 0)}</p>
+              </div>
+              <div className="mb-1 flex justify-between">
+                <p className="w-6/12 text-gray-600">{'Cash On Delivery'}</p>
+                <p className="w-6/12 text-end">{'₹ ' + (cashCharge?cashCharge:0)}</p>
               </div>
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Discounts'}</p>
@@ -595,7 +708,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               </div>
               <div className="mt-4 flex justify-between">
                 <p className="w-6/12 font-medium">{'Total Order Value'}</p>
-                <p className="w-6/12 text-end font-medium">{'₹ ' + formDirectField?.total_amount || 0}</p>
+                <p className="w-6/12 text-end font-medium">{'₹ ' + (formDirectField?.total_amount ? formDirectField?.total_amount : 0)}</p>
               </div>
             </div>
           </div>
