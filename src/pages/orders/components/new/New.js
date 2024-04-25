@@ -141,6 +141,7 @@ export const New = () => {
     }
     if(temp_list.length <= 1){
       toast("Please Select More Than One Order For Bulk Shipment",{type:'error'})
+      setLoading(false)
       return
     }
     setLoading(true)
