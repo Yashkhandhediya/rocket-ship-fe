@@ -206,6 +206,7 @@ const CompanyList = () => {
     <CustomDataTable
         columns={getColumns()}
         rowData={companyData}
+        isHeaderSticky={false}
         enableRowSelection={false}
         shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
         onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}

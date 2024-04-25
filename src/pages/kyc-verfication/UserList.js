@@ -192,6 +192,7 @@ const UserList = () => {
     <div className='m-6'>
       <CustomDataTable
         columns={getColumns()}
+        isHeaderSticky={false}
         rowData={userData}
         enableRowSelection={true}
         shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}

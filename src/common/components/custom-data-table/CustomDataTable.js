@@ -96,7 +96,7 @@ const CustomDataTable = ({
       style={{ ...tableWrapperStyles, scrollbarGutter: 'stable' }}>
       <Table className="mb-3 w-full">
         <Table.Head
-          className={`h-[2.875rem] text-xs font-medium ${isHeaderSticky ? 'sticky top-0 z-[10]' : ''}`}>
+          className={`h-[2.875rem] text-xs font-medium ${isHeaderSticky ? 'sticky top-0 z-[1]' : 'sticky top-0 z-[10]'}`}>
           {table.getFlatHeaders().map((header, headerInd) => {
             return (
               <Table.HeadCell
