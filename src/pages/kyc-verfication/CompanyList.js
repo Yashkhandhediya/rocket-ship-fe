@@ -4,11 +4,17 @@ import { BACKEND_URL } from '../../common/utils/env.config'
 import { createColumnHelper } from '@tanstack/react-table'
 import { useNavigate } from 'react-router-dom'
 import { CustomDataTable } from '../../common/components'
+import { toast } from 'react-toastify'
 
 const CompanyList = () => {
     const navigate = useNavigate()
     const [companyData,setCompanyData] = useState([])
     const [showPopup,setShowPopup] = useState(false)
+    const [idUser,setIdUser] = useState(null)
+    const [companyPan,setCompanyPan] = useState(null)
+    const [companyLogo,setCompanyLogo] = useState(null)
+    const [companyGst,setCompanyGst] = useState(null)
+    const [companyStamp,setCompanyStamp] = useState(null)
     const handleCompany = () => {
         axios.get(BACKEND_URL + '/company/get_all_companies/')
         .then((res) => {
@@ -29,9 +35,57 @@ const CompanyList = () => {
     }
 
     const handleCompanyKYC = (row) => {
-      const id = row?.original?.id
       setShowPopup(true)
+      setIdUser(row?.original?.id)
+      axios.get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=company_pan`,{ responseType: 'blob' }).
+      then((res) => {
+          console.log("Recharge Responsee",res)
+          const imgUrl = URL.createObjectURL(res.data)
+          setCompanyPan(imgUrl)
+      }).catch((err) => {
+          console.log("Error In Rechargeee",err)
+      })
 
+      axios.get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=company_logo`,{ responseType: 'blob' }).
+      then((res) => {
+          console.log("Recharge Responsee",res)
+          const imgUrl = URL.createObjectURL(res.data)
+          setCompanyLogo(imgUrl)
+      }).catch((err) => {
+          console.log("Error In Rechargeee",err)
+      })
+
+      axios.get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=company_gst`,{ responseType: 'blob' }).
+      then((res) => {
+          console.log("Recharge Responsee",res)
+          const imgUrl = URL.createObjectURL(res.data)
+          setCompanyGst(imgUrl)
+      }).catch((err) => {
+          console.log("Error In Rechargeee",err)
+      })
+
+      axios.get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=company_stamp`,{ responseType: 'blob' }).
+      then((res) => {
+          console.log("Recharge Responsee",res)
+          const imgUrl = URL.createObjectURL(res.data)
+          setCompanyStamp(imgUrl)
+      }).catch((err) => {
+          console.log("Error In Rechargeee",err)
+      })
+
+    }
+
+    const handleAcceptKYC = () => {
+      const headers={'Content-Type': 'application/json'};
+      axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=user&status=${3}&id=${idUser}`,{headers})
+      .then((res) => {
+        console.log("Response ",res)
+        toast("KYC Verification Successfully",{type:'success'})
+        setShowPopup(false);
+      }).catch((err) => {
+        console.log("ERRRRRR",err)
+        toast("Error in KYC verification",{type:'error'})
+      })
     }
 
     const rowSubComponent = () => {
@@ -165,7 +219,7 @@ const CompanyList = () => {
               <div className="flex flex-row justify-between">
               <h2 className="text-lg font-semibold">Validate KYC</h2>
                 <button
-                    className="border-0 bg-transparent p-1 pt-0 text-2xl font-semibold leading-none text-black opacity-100 outline-none focus:outline-none"
+                    className="bg-transparent p-1 pt-0 text-2xl font-semibold leading-none text-black opacity-100 outline-none focus:outline-none"
                     onClick={() => {setShowPopup(false)}}>
                     <span className="block h-6 w-6 bg-transparent text-black opacity-50 outline-none focus:outline-none">
                       ×
@@ -173,20 +227,20 @@ const CompanyList = () => {
                 </button>
                </div>
                
-               <div className="flex flex-col">
-                <div className="flex flex-row justify-evenly">
-                    <img src=''  alt='Company PAN' className='w-40 mb-4' />
-                    <img src=''  alt='Company GST' className='w-40 mb-4' />
+               <div className="mt-6 flex flex-col md:w-[50%]">
+                <div className="flex flex-row justify-evenly md:w-[99%]">
+                    <img src={companyPan}  alt='Company PAN' className='w-40 ml-2 mb-4 md:w-full h-25' />
+                    <img src={companyGst}  alt='Company GST' className='w-40 ml-2 mb-4 md:w-full h-25' />
                 </div>
-                <div className="flex flex-row justify-evenly">
-                    <img src=''  alt='Company Stamp' className='w-40 mb-4' />
-                    <img src=''  alt='Company LOGO' className='w-40 mb-4' />
+                <div className="flex flex-row justify-evenly md:w-[99%]">
+                    <img src={companyStamp}  alt='Company Stamp' className='w-40 mb-4 md:w-full h-25' />
+                    <img src={companyLogo}  alt='Company LOGO' className='w-40 mb-4 md:w-full h-25' />
                 </div>
                 </div>
                 <div className="flex justify-center">
                   <button
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                    // onClick={handleAcceptKYC}
+                    onClick={handleAcceptKYC}
                   >
                     Accept
                   </button>

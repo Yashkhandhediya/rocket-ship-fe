@@ -113,7 +113,7 @@ const User = () => {
   const handleAcceptKYC = () => {
       setKyc_status(1)
       const headers={'Content-Type': 'application/json'};
-      axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=user&status=${kyc_status}&id=${idUser}`,{headers})
+      axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=user&status=${3}&id=${idUser}`,{headers})
       .then((res) => {
         console.log("Response ",res)
         toast("KYC Verification Successfully",{type:'success'})

@@ -41,7 +41,7 @@ const UserList = () => {
     setIdUser(row?.original?.id)
     setShowKyc(true)
     const headers={'Content-Type': 'application/json'};
-    axios.get(BACKEND_URL + `/kyc/?id=${idUser}&type=user_aadhar`,{ responseType: 'blob' }).
+    axios.get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=user_aadhar`,{ responseType: 'blob' }).
     then((res) => {
         console.log("Recharge Responsee",res)
         const imgUrl = URL.createObjectURL(res.data)
@@ -54,7 +54,7 @@ const UserList = () => {
         console.log("Error In Rechargeee",err)
     })
 
-    axios.get(BACKEND_URL + `/kyc/?id=${idUser}&type=selfie`,{ responseType: 'blob' }).
+    axios.get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=selfie`,{ responseType: 'blob' }).
     then((res) => {
         console.log("Recharge Responsee",res)
         const imgUrl = URL.createObjectURL(res.data)
@@ -71,7 +71,7 @@ const UserList = () => {
   const handleAcceptKYC = () => {
     setKyc_status(1)
     const headers={'Content-Type': 'application/json'};
-    axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=user&status=${kyc_status}&id=${idUser}`,{headers})
+    axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=user&status=${3}&id=${idUser}`,{headers})
     .then((res) => {
       console.log("Response ",res)
       toast("KYC Verification Successfully",{type:'success'})
@@ -200,7 +200,7 @@ const UserList = () => {
         tableWrapperStyles={{ height: '78vh' }}
       />
        {showkyc && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+            <div className="absolute inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
               <div className="w-[30%] bg-white p-6 rounded-lg">
               <div className="flex flex-row justify-between">
               <h2 className="text-lg font-semibold mb-4">Validate KYC</h2>
