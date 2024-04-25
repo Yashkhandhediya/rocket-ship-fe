@@ -317,7 +317,7 @@ const User = () => {
         tableWrapperStyles={{ height: '78vh' }}
       />}
       {showPopup && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+            <div className="absolute inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
               <div className="bg-white p-6 rounded-lg">
                 <h2 className="text-lg font-semibold mb-4">Recharge Wallet</h2>
                 <input
