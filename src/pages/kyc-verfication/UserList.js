@@ -76,7 +76,7 @@ const UserList = () => {
       console.log("Response ",res)
       toast("KYC Verification Successfully",{type:'success'})
       setShowKyc(false);
-      window.reload.location()
+      window.location.reload()
     }).catch((err) => {
       console.log("ERRRRRR",err)
       toast("Error in KYC verification",{type:'error'})
