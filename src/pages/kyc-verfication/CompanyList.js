@@ -77,7 +77,7 @@ const CompanyList = () => {
 
     const handleAcceptKYC = () => {
       const headers={'Content-Type': 'application/json'};
-      axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=user&status=${3}&id=${idUser}`,{headers})
+      axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=company&status=${3}&id=${idUser}`,{headers})
       .then((res) => {
         console.log("Response ",res)
         toast("KYC Verification Successfully",{type:'success'})
@@ -215,7 +215,7 @@ const CompanyList = () => {
       />
         {showPopup && (
             <div className="absolute inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
-              <div className="w-[30%] bg-white p-6 rounded-lg">
+              <div className="w-[60%] bg-white p-6 rounded-lg">
               <div className="flex flex-row justify-between">
               <h2 className="text-lg font-semibold">Validate KYC</h2>
                 <button
@@ -227,14 +227,14 @@ const CompanyList = () => {
                 </button>
                </div>
                
-               <div className="mt-6 flex flex-col md:w-[50%]">
-                <div className="flex flex-row justify-evenly md:w-[99%]">
-                    <img src={companyPan}  alt='Company PAN' className='w-40 ml-2 mb-4 md:w-full h-25' />
-                    <img src={companyGst}  alt='Company GST' className='w-40 ml-2 mb-4 md:w-full h-25' />
+               <div className="mt-6 flex flex-col items-center justify-center md:w-[50%]">
+                <div className="flex flex-row items-center justify-between  md:w-[99%]">
+                    <img src={companyPan}  alt='Company PAN' className='w-40 ml-20 mb-4 md:w-full h-25' />
+                    <img src={companyGst}  alt='Company GST' className='w-40 ml-20 mb-4 md:w-full h-25' />
                 </div>
-                <div className="flex flex-row justify-evenly md:w-[99%]">
-                    <img src={companyStamp}  alt='Company Stamp' className='w-40 mb-4 md:w-full h-25' />
-                    <img src={companyLogo}  alt='Company LOGO' className='w-40 mb-4 md:w-full h-25' />
+                <div className="flex flex-row items-center justify-between md:w-[99%]">
+                    <img src={companyStamp}  alt='Company Stamp' className='w-40 ml-20 mb-4 md:w-full h-25' />
+                    <img src={companyLogo}  alt='Company LOGO' className='w-40 ml-20 mb-4 md:w-full h-25' />
                 </div>
                 </div>
                 <div className="flex justify-center">
