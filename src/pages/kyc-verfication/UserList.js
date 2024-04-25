@@ -201,7 +201,7 @@ const UserList = () => {
       />
        {showkyc && (
             <div className="absolute inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
-            <div className="w-[60%] bg-white p-6 rounded-lg">
+            <div className="w-[30%] bg-white p-6 rounded-lg">
               <div className="w-full flex flex-row justify-between">
               <h2 className="text-lg font-semibold mb-4">Validate KYC</h2>
                 <button
