@@ -124,17 +124,19 @@ const CompanyList = () => {
 
   return (
     <>
-    <button className='bg-red-600 p-2 mt-4 ml-4 border rounded-md shadow-md text-white font-semibold'
-    onClick={() => {
-        localStorage.removeItem('user_name')
-        localStorage.removeItem('access_token')
-        window.location.href = '/login'
-    }}>Logout</button>
+    <div className="mt-2">
+      <button className='bg-red-600 p-2 mt-4 ml-4 border rounded-md shadow-md text-white font-semibold'
+        onClick={() => {
+            localStorage.removeItem('user_name')
+            localStorage.removeItem('access_token')
+            window.location.href = '/login'
+        }}>Logout</button>
+    </div>
     <div className="m-6">
     <CustomDataTable
         columns={getColumns()}
         rowData={companyData}
-        enableRowSelection={true}
+        enableRowSelection={false}
         shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
         onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}
         rowSubComponent={rowSubComponent}

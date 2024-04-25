@@ -93,15 +93,15 @@ const CustomDataTable = ({
   return (
     <div
       className={`h-full w-full overflow-y-auto`}
-      style={{ ...tableWrapperStyles, scrollbarGutter: 'stable' }}>
+      style={{ ...tableWrapperStyles, overflowY: 'auto', scrollbarGutter: 'stable' }}>
       <Table className="mb-3 w-full">
         <Table.Head
-          className={`h-[2.875rem] text-xs font-medium ${isHeaderSticky ? 'sticky top-0 z-[1]' : ''}`}>
+          className={`h-[2.875rem] text-xs font-medium ${isHeaderSticky ? 'sticky top-0 z-[10]' : ''}`}>
           {table.getFlatHeaders().map((header, headerInd) => {
             return (
               <Table.HeadCell
                 key={`${header.id}-${headerInd}`}
-                className={`items-center bg-transparent p-3 font-medium normal-case leading-4 
+                className={`top-0 items-center bg-white p-3 font-medium normal-case leading-4 
                 ${headerCellStyle[headerInd]} ${getCellwidth(header?.id)}`}>
                 {flexRender(header.column.columnDef.header, header.getContext())}
               </Table.HeadCell>

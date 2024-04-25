@@ -174,12 +174,20 @@ const UserList = () => {
   console.log("Company Id",id)
   return (
     <>
-    <button className='bg-red-600 p-2 mt-4 ml-4 border rounded-md shadow-md text-white font-semibold'
+    <div className="flex flex-row justify-between">
+    <button className='bg-blue-600 p-2 mt-4 ml-8 border rounded-md shadow-md text-white font-semibold'
+        onClick={() => {
+            window.location.href = '/company-list'
+        }}>Back</button>
+
+         <button className='bg-red-600 p-2 mt-4 mr-8 border rounded-md shadow-md text-white font-semibold'
           onClick={() => {
               localStorage.removeItem('user_name')
               localStorage.removeItem('access_token')
               window.location.href = '/login'
           }}>Logout</button>
+    </div>
+   
     <div className='m-6'>
       <CustomDataTable
         columns={getColumns()}

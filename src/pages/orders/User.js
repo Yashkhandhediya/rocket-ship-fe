@@ -83,7 +83,7 @@ const User = () => {
     setIdUser(row?.original?.id)
     setShowKyc(true)
     const headers={'Content-Type': 'application/json'};
-    axios.get(BACKEND_URL + `/kyc/?id=${idUser}&type=user_aadhar`,{ responseType: 'blob' }).
+    axios.get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=user_aadhar`,{ responseType: 'blob' }).
     then((res) => {
         console.log("Recharge Responsee",res)
         const imgUrl = URL.createObjectURL(res.data)
@@ -96,7 +96,7 @@ const User = () => {
         console.log("Error In Rechargeee",err)
     })
 
-    axios.get(BACKEND_URL + `/kyc/?id=${idUser}&type=selfie`,{ responseType: 'blob' }).
+    axios.get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=selfie`,{ responseType: 'blob' }).
     then((res) => {
         console.log("Recharge Responsee",res)
         const imgUrl = URL.createObjectURL(res.data)
@@ -147,10 +147,17 @@ const User = () => {
           toast("Insufficient Balance",{type:'error'})
         }else{
           toast("Recharge Successfully",{type:'success'})
+          axios.get(BACKEND_URL + `/company/get_company_users/?companyId=${company_id}`).then((res)=> {
+            console.log("RESSSSSSSSSSSSS",res)
+            setUserData(res.data)
+            setFetchData(true)
+        }).catch((err) => {
+            console.log("ERRRRRRRRRR",err)
+        })
         }
         // let newVal = localStorage.getItem('balance') - rechargeAmount
         // localStorage.setItem('balance',newVal)
-        window.location.reload()
+        // window.location.reload()
     }).catch((err) => {
         console.log("Error In Rechargeee")
     })

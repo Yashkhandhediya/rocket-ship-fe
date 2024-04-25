@@ -21,6 +21,8 @@ const Passbook = () => {
     const [itemsPerPage,setItemsPerPage] = useState(10);
     const [currentItems, setCurrentItems] = useState([]);
     const id_user = localStorage.getItem('user_id')
+    const id_company = localStorage.getItem('company_id')
+    const is_company = localStorage.getItem('is_company')
 
     console.log("Infooooooooooooooo",currentItems,itemsPerPage-10,itemsPerPage)
     const paginate = (page_item) => {
@@ -70,8 +72,9 @@ const Passbook = () => {
     const getPassbookData = async () => {
         console.log("PAGEEEEEEE NUM",currentPage)
         setIsLoading(true);
+        const temp_id = is_company == 1 ? id_company : id_user
         try {
-            const response = await axios.post(`${BACKEND_URL}/account_transaction/account_report?page_number=1&page_size=${itemsPerPage}`, { date_from: fromDate, date_to: toDate, user_id: id_user });
+            const response = await axios.post(`${BACKEND_URL}/account_transaction/account_report?page_number=1&page_size=${itemsPerPage}`, { date_from: fromDate, date_to: toDate, user_id: temp_id });
             setData(response.data.report);
             setCurrentItems(response.data.report.slice(itemsPerPage-10, itemsPerPage));
             getUsableAmount();

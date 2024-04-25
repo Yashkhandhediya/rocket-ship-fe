@@ -1,4 +1,30 @@
+import axios from "axios"
+import React,{useState,useEffect} from "react"
+import { BACKEND_URL } from "../../../../common/utils/env.config"
+
 const Completed_KYC = () => {
+    const [userImg,setUserImg] = useState(null)
+    const id_user = localStorage.getItem('user_id')
+    const handleImage = () => {
+        axios.get(BACKEND_URL + `/kyc/?id=${id_user}&type=selfie`,{ responseType: 'blob' }).
+        then((res) => {
+            console.log("Recharge Responsee",res)
+            const imgUrl = URL.createObjectURL(res.data)
+            setUserImg(imgUrl)
+            console.log("PICCCCCCCCCCCCCc",userImg)
+            // let newVal = localStorage.getItem('balance') - rechargeAmount
+            // localStorage.setItem('balance',newVal)
+            // window.location.reload()
+        }).catch((err) => {
+            console.log("Error In Rechargeee",err)
+        })
+    }
+
+    useEffect(() => {
+      handleImage()
+    }, [])
+    
+
     return (
         <div className="mt-4 px-52 flex flex-col gap-8 justify-center">
             <div className="flex flex-row items-center gap-4 bg-[#D7FAD4] py-1 px-5 rounded-xl">
@@ -9,12 +35,13 @@ const Completed_KYC = () => {
                 </div>
                 <div className="flex flex-col gap-0">
                     <div className="text-[14px] font-bold leading-[1.3rem] text-green-600">Congratulations!</div>
-                    <div className='text-[12px] text-green-600 leading-[1.3rem]'>Your KYC details have been successfully verified , now enjoy uninterrupted shipping with Rocket Ship</div>
+                    <div className='text-[12px] text-green-600 leading-[1.3rem]'>Your KYC details have been successfully verified , now enjoy uninterrupted shipping with Cloud Cargo</div>
                 </div>
             </div>
             <div className="bg-white shadow-md flex flex-rown items-center gap-4 rounded-md py-5 px-5">
                 <div className="w-[15%] flex justify-center align-middle">
-                    <img src="https://as1.ftcdn.net/v2/jpg/02/22/85/16/1000_F_222851624_jfoMGbJxwRi5AWGdPgXKSABMnzCQo9RN.jpg" alt="Seller picture" className="object-cover w-40 h-40 rounded-md" />
+                {/* https://as1.ftcdn.net/v2/jpg/02/22/85/16/1000_F_222851624_jfoMGbJxwRi5AWGdPgXKSABMnzCQo9RN.jpg */}
+                    <img src={userImg} alt="Seller picture" className="object-cover w-40 h-40 rounded-md" />
                 </div>
                 <div className="w-4/5">
                     {/* top details */}
@@ -23,23 +50,23 @@ const Completed_KYC = () => {
                             <span>KYC Status : </span>
                             <span className="text-green-600 font-bold">Verified</span>
                         </div>
-                        <div>
+                        {/* <div>
                             <span>Verified on : </span>
                             <span className="text-black font-bold">Oct 24, 2023</span>
                         </div>
                         <div>
                             <span>Current Business Type : </span>
                             <span className="text-black font-bold">Individual</span>
-                        </div>
+                        </div> */}
                     </div>
                     <hr className="bg-[#9A9A9A]" />
                     {/* bottom details */}
                     <div className="flex flex-col justify-start text-[12px] text-[#9A9A9A] mt-2">
                         <div>
                             <span>Verification method used : </span>
-                            <span className="text-black font-bold">Express KYC</span>
+                            <span className="text-black font-bold">KYC By Uploading Id And Address Proof</span>
                         </div>
-                        <div className="pl-5 mt-5 flex flex-row gap-20 mb-3">
+                        {/* <div className="pl-5 mt-5 flex flex-row gap-20 mb-3">
                             <div>
                                 <div>
                                     <span>Document 1 Type : </span>
@@ -60,7 +87,7 @@ const Completed_KYC = () => {
                                     <span className="text-black font-bold">999999999999</span>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

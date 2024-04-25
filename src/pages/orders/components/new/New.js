@@ -144,6 +144,7 @@ export const New = () => {
     ,{headers}).then((res) => {
       console.log("Response Bulk Order",res)
       toast("Bulk Shipment Succesfully Completed",{type:'success'})
+      window.reload.location()
     }).catch((err) => {
       console.log("Error In bulk order ",err)
       toast("Error In Bulk Shipment",{type:'error'})

@@ -97,6 +97,7 @@ const LogIn = () => {
         }
         else if(response.data.msg){
           debugger
+          setSingleTimeLoginClick(0)
           toast(response.data.msg,{type:'error'})
         }
       }

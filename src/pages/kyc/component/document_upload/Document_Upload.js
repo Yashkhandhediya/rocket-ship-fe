@@ -29,20 +29,20 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
     const [disableDocument4, setDisableDocument4] = useState(false);
 
     // document 1 number and name
-    const [document1number, setDocument1Number] = useState('ABCDE1234F');
-    const [document1name, setDocument1Name] = useState('Jai Shree Ram');
+    // const [document1number, setDocument1Number] = useState('ABCDE1234F');
+    // const [document1name, setDocument1Name] = useState('Jai Shree Ram');
 
-    // document 2 number and name
-    const [document2number, setDocument2Number] = useState('ABCDE1234F');
-    const [document2name, setDocument2Name] = useState('Jai Shree Ram');
+    // // document 2 number and name
+    // const [document2number, setDocument2Number] = useState('ABCDE1234F');
+    // const [document2name, setDocument2Name] = useState('Jai Shree Ram');
 
-    // document 3 number and name
-    const [document3number, setDocument3Number] = useState('ABCDE1234F');
-    const [document3name, setDocument3Name] = useState('Har Har Mahadev');
+    // // document 3 number and name
+    // const [document3number, setDocument3Number] = useState('ABCDE1234F');
+    // const [document3name, setDocument3Name] = useState('Har Har Mahadev');
 
-    // document 4 number and name
-    const [document4number, setDocument4Number] = useState('ABCDE1234F');
-    const [document4name, setDocument4Name] = useState('Har Har Mahadev');
+    // // document 4 number and name
+    // const [document4number, setDocument4Number] = useState('ABCDE1234F');
+    // const [document4name, setDocument4Name] = useState('Har Har Mahadev');
 
     const [document, setDocument] = useState({
         type1Front: '',
@@ -473,7 +473,7 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
                         </div>
                         :
                         <div className="flex flex-row gap-4 mt-6">
-                            <div className="w-[48%]">
+                            {/* <div className="w-[48%]">
                                 <Field
                                     type={'text'}
                                     id={"documentNumber"}
@@ -481,7 +481,7 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
                                     inputClassNames={'text-[12px] bg-[#E9ECEF] font-normal'}
                                     labelClassNames={'text-[12px] text-[#191919]'}
                                     required={true}
-                                    value={document1number}
+                                    // value={document1number}
                                     readOnly={true}
                                 />
                             </div>
@@ -496,7 +496,7 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
                                     value={document1name}
                                     readOnly={true}
                                 />
-                            </div>
+                            </div> */}
                         </div>
                     }
                 </div>
@@ -607,7 +607,7 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
                         </div>
                         :
                         <div className="flex flex-row gap-4 mt-6 w-full">
-                            <div className="w-[48%]">
+                            {/* <div className="w-[48%]">
                                 <Field
                                     type={'text'}
                                     id={"documentNumber"}
@@ -630,7 +630,7 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
                                     value={document2name}
                                     readOnly={true}
                                 />
-                            </div>
+                            </div> */}
                         </div>
                     }
                 </div>}
@@ -743,7 +743,7 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
                         </div>
                         :
                         <div className="flex flex-row gap-4 mt-6 w-full">
-                            <div className="w-[48%]">
+                            {/* <div className="w-[48%]">
                                 <Field
                                     type={'text'}
                                     id={"documentNumber"}
@@ -766,7 +766,7 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
                                     value={document3name}
                                     readOnly={true}
                                 />
-                            </div>
+                            </div> */}
                         </div>
                     }
                 </div>}
@@ -877,7 +877,7 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
                         </div>
                         :
                         <div className="flex flex-row gap-4 mt-6 w-full">
-                            <div className="w-[48%]">
+                            {/* <div className="w-[48%]">
                                 <Field
                                     type={'text'}
                                     id={"documentNumber"}
@@ -900,7 +900,7 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
                                     value={document4name}
                                     readOnly={true}
                                 />
-                            </div>
+                            </div> */}
                         </div>
                     }
                 </div>}
