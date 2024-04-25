@@ -143,6 +143,11 @@ const User = () => {
     axios.post(BACKEND_URL + `/company/update_wallet_balance?companyId=${parseInt(company_id)}&user_id=${parseInt(idUser)}&amount=${parseInt(rechargeAmount)}`).
     then((res) => {
         console.log("Recharge Responsee",res)
+        if(res?.data?.message){
+          toast("Insufficient Balance",{type:'error'})
+        }else{
+          toast("Recharge Successfully",{type:'success'})
+        }
         // let newVal = localStorage.getItem('balance') - rechargeAmount
         // localStorage.setItem('balance',newVal)
         window.location.reload()
