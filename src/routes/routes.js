@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails, Return, Weight_Freeze, WeightDiscrepancy, Settings, Bank_details, Manage_pickup_add, Change_password, Company_Profile, Home, Book, Indent,Allindent,User, ForgotPassword, ResetPassword, AllUser,CompanyList,UserList } from '../pages';
+import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails, Return, Weight_Freeze, WeightDiscrepancy, Settings, Bank_details, Manage_pickup_add, Change_password, Company_Profile, Home, Book, Indent,Allindent,User, ForgotPassword, ResetPassword, AllUser,CompanyList,UserList, Catalogue } from '../pages';
 import Tracking from '../pages/tracking/Tracking';
 import ReturnTracking from '../pages/return-tracking/ReturnTracking';
 import PrivateRoute from './private-route/PrivateRoute';
@@ -168,6 +168,10 @@ const routes = createBrowserRouter([
   {
     path: '/rate-calculator',
     element: <PrivateRoute component={<RateCalculator />} />,
+  },
+  {
+    path: '/catalogue',
+    element: <PrivateRoute component={<Catalogue />} />,
   },
 
 ]);

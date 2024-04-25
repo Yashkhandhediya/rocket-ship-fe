@@ -25,6 +25,7 @@ export let isEdit = false;
 export let order_id;
 
 export const New = () => {
+  const is_company = localStorage.getItem('is_company')
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let bulkOrder = []
@@ -425,10 +426,10 @@ export const New = () => {
             {'More Filters'}
           </button>
 
-          <button className="min-w-fit ml-6 rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600" 
+          {is_company != 0 && <button className="min-w-fit ml-6 rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600" 
           onClick={handleBulkOrder}>
             { 'Bulk Shipment' }
-          </button>
+          </button>}
 
         </div>
       </div>

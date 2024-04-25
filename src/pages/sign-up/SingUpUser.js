@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 
 const SignUpUser = () => {
   const navigate = useNavigate();
+  const [flag,setFlag] = useState(0)
   const [signupInput, setSignupInput] = useState({
     company_id: localStorage.getItem('company_id'),
     first_name: "",
@@ -26,6 +27,7 @@ const SignUpUser = () => {
   };
 
   const handleSubmit = () => {
+    setFlag(1)
     const headers = {'Content-Type': 'application/json'};
     axios.post(BACKEND_URL + '/users/signup',{
       first_name:signupInput.first_name,
@@ -115,7 +117,11 @@ const SignUpUser = () => {
           <button
             type="button"
             className=" mt-4 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 mb-2 w-full rounded-lg bg-red-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300"
-            onClick={handleSubmit}
+            onClick={() => {
+              if(flag == 0){
+                handleSubmit()
+              }
+            }}
           >
            Add User
           </button>

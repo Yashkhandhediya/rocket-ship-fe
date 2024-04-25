@@ -92,7 +92,7 @@ export const sidebarLinks = [
       },
       {
         title: 'Catalogue',
-        path: '/',
+        path: '/catalogue',
       },
       {
         title: 'Courier',

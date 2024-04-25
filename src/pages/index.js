@@ -17,4 +17,5 @@ export * from './home'
 export * from './book-truck'
 export * from './indent'
 export * from './kyc-verfication'
+export * from './catalogue'
 

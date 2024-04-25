@@ -22,16 +22,16 @@ import { BACKEND_URL,MENIFEST_URL } from '../../../../common/utils/env.config';
 
 
 export const ReadyToShip = () => {
+  const is_company = localStorage.getItem('is_company')
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const flattened = {};
   const allOrdersList = useSelector((state) => state?.ordersList);
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
-  const readyShipOrdersList = allOrdersList?.filter(
-    (order) => (order?.status_name || '')?.toLowerCase() !== 'new',
-  ) || [];
-  // const readyShipOrdersList = allOrdersList?.filter((order) => (order?.status_id) === 2) || [];
-
+  // const readyShipOrdersList = allOrdersList?.filter(
+  //   (order) => (order?.status_name || '')?.toLowerCase() !== 'new',
+  // ) || [];
+   const readyShipOrdersList = allOrdersList?.filter((order) => order?.status_id !== 1 && order?.status_id !== 8) || [];
   function splitString(string, length) {
     let result = [];
     for (let i = 0; i < string.length; i += length) {
@@ -257,7 +257,7 @@ export const ReadyToShip = () => {
         header: 'Action',
         cell: ({row}) => (
           <div className="flex gap-2 text-left text-xs">
-            <button
+            {is_company != 0 && <button
               id={row?.original?.id}
               className={`min-w-fit rounded px-4 py-1.5 text-white ${row.original.partner_id === 2 ? 'disabled cursor-not-allowed bg-red-400' : 'bg-red-700'}`}
               onClick={() => {
@@ -276,7 +276,7 @@ export const ReadyToShip = () => {
               disabled={row.original.partner_id === 2}
               >
               {'Schedule Pickup'}
-            </button>
+            </button>}
             <div className="min-h-[32px] min-w-[32px]">
               <MoreDropdown
                 renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
