@@ -201,8 +201,8 @@ const UserList = () => {
       />
        {showkyc && (
             <div className="absolute inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
-            <div className="w-[30%] bg-white p-6 rounded-lg">
-              <div className="w-full flex flex-row justify-between">
+              <div className="w-[30%] bg-white p-6 rounded-lg">
+              <div className="flex flex-row justify-between">
               <h2 className="text-lg font-semibold mb-4">Validate KYC</h2>
                 <button
                 className="border-0 mb-4 bg-transparent p-1 pt-0 text-2xl font-semibold leading-none text-black opacity-100 outline-none focus:outline-none"
@@ -212,9 +212,9 @@ const UserList = () => {
                 </span>
               </button>
               </div>
-                <div className="w-[40%] flex flex-row justify-evenly">
-                    <img src={aadharImg}  alt='Aadhar Image' className='w-[45%] shadow-md mb-4' />
-                    <img src={userImg}  alt='User Image' className='w-[45%] shadow-md mb-4' />
+                <div className="flex flex-row justify-evenly">
+                    <img src={aadharImg}  alt='Aadhar Image' className='w-40 shadow-md mb-4' />
+                    <img src={userImg}  alt='User Image' className='w-40 shadow-md mb-4' />
                 </div>
                 <div className="flex justify-center">
                   <button
