@@ -144,7 +144,6 @@ export const New = () => {
       return
     }
     setLoading(true)
-    debugger
     axios.post(BACKEND_URL + '/order/bulk_shipment/',
       temp_list
     ,{headers}).then((res) => {
@@ -436,7 +435,7 @@ export const New = () => {
             {'More Filters'}
           </button>
 
-          {is_company == 0 && <button className="min-w-fit ml-6 rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600" 
+          {is_company != 0 && <button className="min-w-fit ml-6 rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600" 
           onClick={() => {setLoading(true);handleBulkOrder();}}>
             { 'Bulk Shipment' }
           </button>}
