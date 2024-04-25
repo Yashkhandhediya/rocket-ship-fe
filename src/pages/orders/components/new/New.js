@@ -320,7 +320,7 @@ export const New = () => {
                       {  'Request Shipment' }
                     </button>
                   ) : (
-                      flag == 8 && <button
+                      <button
                         id={row?.original?.id}
                         className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
                         >
