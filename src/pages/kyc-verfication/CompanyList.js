@@ -8,6 +8,7 @@ import { CustomDataTable } from '../../common/components'
 const CompanyList = () => {
     const navigate = useNavigate()
     const [companyData,setCompanyData] = useState([])
+    const [showPopup,setShowPopup] = useState(false)
     const handleCompany = () => {
         axios.get(BACKEND_URL + '/company/get_all_companies/')
         .then((res) => {
@@ -25,6 +26,12 @@ const CompanyList = () => {
     const handleUser = (row) => {
         const id = row?.original?.id
         navigate('/user-list',{state:{data:id}})
+    }
+
+    const handleCompanyKYC = (row) => {
+      const id = row?.original?.id
+      setShowPopup(true)
+
     }
 
     const rowSubComponent = () => {
@@ -106,6 +113,15 @@ const CompanyList = () => {
             cell: ({ row }) => {
               return (
                 <div className="flex gap-2 text-left text-xs">
+                 {(
+                   <button
+                      id={row?.original?.id}
+                      className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
+                      onClick={()=>handleCompanyKYC(row)}
+                      >
+                      {'Company KYC'}
+                    </button>
+                  )}
                   {(
                    <button
                       id={row?.original?.id}
@@ -143,6 +159,47 @@ const CompanyList = () => {
         enablePagination={true}
         tableWrapperStyles={{ height: '85vh' }}
       />
+        {showPopup && (
+            <div className="absolute inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
+              <div className="w-[30%] bg-white p-6 rounded-lg">
+              <div className="flex flex-row justify-between">
+              <h2 className="text-lg font-semibold">Validate KYC</h2>
+                <button
+                    className="border-0 bg-transparent p-1 pt-0 text-2xl font-semibold leading-none text-black opacity-100 outline-none focus:outline-none"
+                    onClick={() => {setShowPopup(false)}}>
+                    <span className="block h-6 w-6 bg-transparent text-black opacity-50 outline-none focus:outline-none">
+                      ×
+                    </span>
+                </button>
+               </div>
+               
+               <div className="flex flex-col">
+                <div className="flex flex-row justify-evenly">
+                    <img src=''  alt='Company PAN' className='w-40 mb-4' />
+                    <img src=''  alt='Company GST' className='w-40 mb-4' />
+                </div>
+                <div className="flex flex-row justify-evenly">
+                    <img src=''  alt='Company Stamp' className='w-40 mb-4' />
+                    <img src=''  alt='Company LOGO' className='w-40 mb-4' />
+                </div>
+                </div>
+                <div className="flex justify-center">
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                    // onClick={handleAcceptKYC}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 ml-2 rounded-lg"
+                    onClick={() => setShowPopup(false)}
+                  >
+                    Decline
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
     </div>
     </>
   )

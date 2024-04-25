@@ -16,7 +16,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestionProductData,setSuggestionProductData] = useState([])
   const [showProductSuggestions, setShowProductSuggestions] = useState(false);
-  const [cashCharge,setCashCharge] = useState(0)
+  // const [cashCharge,setCashCharge] = useState(0)
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order) || {};
 
   const defaultProductField = {
@@ -49,6 +49,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     shipping_charges: 0,
     gift_wrap: 0,
     transaction_fee: 0,
+    cod_charge:0,
     discount: 0,
   });
 
@@ -61,11 +62,12 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
 
   const otherCharges =
     Number(paymentDetails?.gift_wrap || 0) +
+    Number(paymentDetails?.cod_charge || 0) +
       Number(paymentDetails?.shipping_charges || 0) +
       Number(paymentDetails?.transaction_fee || 0) || 0;
 
   const totalOrderValue =
-    Number(subProductTotal || 0) + Number(otherCharges || 0) + Number(cashCharge || 0) - Number(paymentDetails?.discount || 0) || 0;
+    Number(subProductTotal || 0) + Number(otherCharges || 0)  - Number(paymentDetails?.discount || 0) || 0;
 
   const checkIsProductValid = () => {
     const errors = {
@@ -201,7 +203,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
         const allFields = [...productFields];
         allFields[index]['name'] = suggestion.name;
         setProductFields(allFields);
-        setCashCharge(suggestion.cod_charge)
+        // setCashCharge(suggestion.cod_charge)
         setShowProductSuggestions(false);
       };
     
@@ -630,6 +632,19 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                   <div className="w-full px-2 pb-2 md:w-4/12 lg:w-3/12 xl:w-2/12">
                     <Field
                       type={'number'}
+                      id={'cod_charge'}
+                      label={'COD Charge'}
+                      inputClassNames={'text-xs'}
+                      labelClassNames={'text-xs'}
+                      placeHolder={'0.00'}
+                      leftAddOn="₹"
+                      value={paymentDetails?.cod_charge || 0}
+                      onChange={handleSetPaymentDetails}
+                    />
+                  </div>
+                  <div className="w-full px-2 pb-2 md:w-4/12 lg:w-3/12 xl:w-2/12">
+                    <Field
+                      type={'number'}
                       id={'gift_wrap'}
                       label={'Gift Wrap'}
                       inputClassNames={'text-xs'}
@@ -697,8 +712,8 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                 <p className="w-6/12 text-end">{'₹ ' + (paymentDetails?.transaction_fee ? paymentDetails?.transaction_fee : 0)}</p>
               </div>
               <div className="mb-1 flex justify-between">
-                <p className="w-6/12 text-gray-600">{'Cash On Delivery'}</p>
-                <p className="w-6/12 text-end">{'₹ ' + (cashCharge?cashCharge:0)}</p>
+                <p className="w-6/12 text-gray-600">{'Cash On Delivery Charge'}</p>
+                <p className="w-6/12 text-end">{'₹ ' + (paymentDetails?.cod_charge ? paymentDetails?.cod_charge : 0)}</p>
               </div>
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Discounts'}</p>
