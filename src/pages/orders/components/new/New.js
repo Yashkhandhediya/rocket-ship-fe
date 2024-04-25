@@ -19,6 +19,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { CommonBadge } from '../../../../common/components/common-badge';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Orders';
+import Loader from '../../../../common/loader/Loader';
 // import { setEditOrder } from '../../../../redux/actions/editOrderActions';
 
 export let isEdit = false;
@@ -41,6 +42,8 @@ export const New = () => {
     orderDetails: {},
   });
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
+  const [flag,setFlag] = useState(0)
+  const [loading,setLoading] = useState(false)
 
   function splitString(string, length) {
     let result = [];
@@ -86,6 +89,7 @@ export const New = () => {
     axios.post(BACKEND_URL + `/order/${id}/request_shipment`,{headers})
     .then((res) => {
       console.log("Shipmentttttttt",res)
+      setFlag(res?.data?.flag)
     }).catch((err) => {
       console.log("Errrrr Shipment",err)
     })
@@ -129,6 +133,7 @@ export const New = () => {
   }
 
   const handleBulkOrder = () => {
+    setLoading(true)
     const headers={'Content-Type': 'application/json'};
     let temp_list = []
     for(let i=0;i<bulkOrder.length;i++){
@@ -149,6 +154,7 @@ export const New = () => {
       console.log("Error In bulk order ",err)
       toast("Error In Bulk Shipment",{type:'error'})
     })
+    setLoading(false)
     console.log("PAYLOADDDDDDDDD",temp_list)
     temp_list = []
     console.log("PAYLOADDDDDDDDD",temp_list)
@@ -314,7 +320,7 @@ export const New = () => {
                       {  'Request Shipment' }
                     </button>
                   ) : (
-                      <button
+                      flag == 8 && <button
                         id={row?.original?.id}
                         className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
                         >
@@ -418,6 +424,7 @@ export const New = () => {
 
   return (
     <div className="mt-5">
+      {loading && <Loader />}
       <div className="mb-4 flex w-full">
         <div className='flex flex-row'>
           <button
