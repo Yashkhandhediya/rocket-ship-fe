@@ -133,7 +133,6 @@ export const New = () => {
   }
 
   const handleBulkOrder = () => {
-    setLoading(true)
     const headers={'Content-Type': 'application/json'};
     let temp_list = []
     for(let i=0;i<bulkOrder.length;i++){
@@ -144,17 +143,20 @@ export const New = () => {
       toast("Please Select More Than One Order For Bulk Shipment",{type:'error'})
       return
     }
+    setLoading(true)
+    debugger
     axios.post(BACKEND_URL + '/order/bulk_shipment/',
       temp_list
     ,{headers}).then((res) => {
       console.log("Response Bulk Order",res)
       toast("Bulk Shipment Succesfully Completed",{type:'success'})
       window.location.reload()
+      setLoading(false)
     }).catch((err) => {
       console.log("Error In bulk order ",err)
       toast("Error In Bulk Shipment",{type:'error'})
     })
-    setLoading(false)
+
     console.log("PAYLOADDDDDDDDD",temp_list)
     temp_list = []
     console.log("PAYLOADDDDDDDDD",temp_list)
@@ -434,8 +436,8 @@ export const New = () => {
             {'More Filters'}
           </button>
 
-          {is_company != 0 && <button className="min-w-fit ml-6 rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600" 
-          onClick={handleBulkOrder}>
+          {is_company == 0 && <button className="min-w-fit ml-6 rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600" 
+          onClick={() => {setLoading(true);handleBulkOrder();}}>
             { 'Bulk Shipment' }
           </button>}
 
@@ -447,7 +449,8 @@ export const New = () => {
         rowData={newOrdersList}
         enableRowSelection={true}
         shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
-        onRowSelectStateChange={(selected) => {console.log('selected-=-', selected);bulkOrder.push(selected)}}
+        onRowSelectStateChange={(selected) => {console.log('selected-=-', selected);
+        bulkOrder = selected}}
         rowSubComponent={rowSubComponent}
         enablePagination={true}
         tableWrapperStyles={{ height: '78vh' }}
@@ -457,7 +460,9 @@ export const New = () => {
         rowData={newOrdersList1}
         enableRowSelection={true}
         shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
-        onRowSelectStateChange={(selected) => {console.log('selected-=-', selected);bulkOrder=selected}}
+        onRowSelectStateChange={(selected) => {console.log('selected-=-', selected);
+        bulkOrder=selected
+        }}
         rowSubComponent={rowSubComponent}
         enablePagination={true}
         tableWrapperStyles={{ height: '78vh' }}
