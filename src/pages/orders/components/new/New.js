@@ -154,6 +154,7 @@ export const New = () => {
     }).catch((err) => {
       console.log("Error In bulk order ",err)
       toast("Error In Bulk Shipment",{type:'error'})
+      setLoading(false)
     })
 
     console.log("PAYLOADDDDDDDDD",temp_list)
