@@ -347,7 +347,6 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
             .then((res) => {
                 console.log("Response ",res)
                 toast("KYC Verification Successfully",{type:'success'})
-                setShowPopup(false);
             }).catch((err) => {
                 console.log("ERRRRRR",err)
                 toast("Error in KYC verification",{type:'error'})
