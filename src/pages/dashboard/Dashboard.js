@@ -139,9 +139,9 @@ const Dashboard = () => {
       <div style={{ textAlign: 'center' }}>
         {loading && <Loader />}
         {/* <h1>Dashboard</h1> */}
-        <div className="w-[98%] p-2 mt-2 ml-4 mr-4 bg-red-600 border shadow-md rounded-lg hover:underline">
+        {localStorage.getItem('is_kyc') == 1 && <div className="w-[98%] p-2 mt-2 ml-4 mr-4 bg-red-600 border shadow-md rounded-lg hover:underline">
           <Link to={'/seller/kyc'} className='text-white'>Click here to complete your KYC and get non-disrupted shipping and COD remittances</Link>
-        </div>
+        </div>}
         <div className="flex items-center justify-between p-4 md:w-full flex-col lg:flex-row">
             <div className="h-40 bg-gray-100 flex items-center border shadow-md rounded-md sm:w-full md:w-full mt-4 lg:w-[33%]">
               <div className="text-white border bg-white rounded-full p-2 mr-4 ml-20">
