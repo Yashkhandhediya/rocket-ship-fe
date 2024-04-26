@@ -8,6 +8,7 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import OtpPopup from './OtpPopup';
 import { transport } from '../../common/images';
 import { homelogo } from '../../common/images';
+import { LogoRCSL } from '../../common/images';
 // import { GoogleLogin } from 'react-google-login';
 // import {gapi} from 'gapi-script'
 
@@ -214,7 +215,7 @@ const LogIn = () => {
       {handlePopup && <OtpPopup userType={userType} username={loginInput.username} userId={userId} companyId={companyId} />}
       <div className="flex flex-row justify-between mt-4 items-end ml-auto">
         <h1 className='font-bold text-red-700 text-xl ml-auto mr-4'>Powered By</h1>
-        <img src={transport} className='ml-auto mt-10 mx-20 w-76 h-24'></img> 
+        <img src={LogoRCSL} className='ml-auto mt-10 mx-20 w-32 h-25'></img> 
       </div>
     </div>
     </div>
