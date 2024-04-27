@@ -83,17 +83,17 @@ export const New = () => {
     return flattened;
 }
 
-  const handleRequestShipment = (id) => {
-    debugger
-    const headers={'Content-Type': 'application/json'};
-    axios.post(BACKEND_URL + `/order/${id}/request_shipment`,{headers})
-    .then((res) => {
-      console.log("Shipmentttttttt",res)
-      setFlag(res?.data?.flag)
-    }).catch((err) => {
-      console.log("Errrrr Shipment",err)
-    })
-  }
+  // const handleRequestShipment = (id) => {
+  //   debugger
+  //   const headers={'Content-Type': 'application/json'};
+  //   axios.post(BACKEND_URL + `/order/${id}/request_shipment`,{headers})
+  //   .then((res) => {
+  //     console.log("Shipmentttttttt",res)
+  //     setFlag(res?.data?.flag)
+  //   }).catch((err) => {
+  //     console.log("Errrrr Shipment",err)
+  //   })
+  // }
 
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData,id)
@@ -301,8 +301,8 @@ export const New = () => {
         cell: ({ row }) => {
           return (
             <div className="flex gap-2 text-left text-xs">
-              {(row?.original?.status_name == 'new' || row?.original?.status_name == 'shipment_requested') ? (
-                 localStorage.getItem('is_company') == 1 ? (
+              {(row?.original?.status_name == 'new') ? 
+                (
                   <button
                   id={row?.original?.id}
                   className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
@@ -314,24 +314,7 @@ export const New = () => {
                   }}>
                   { 'Ship Now' }
                 </button>
-                 ): (
-                  row?.original?.status_id == 1 ? (
-                    <button
-                      id={row?.original?.id}
-                      className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
-                      onClick={() => handleRequestShipment(row?.original?.id)}>
-                      {  'Request Shipment' }
-                    </button>
-                  ) : (
-                      <button
-                        id={row?.original?.id}
-                        className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
-                        >
-                        {  'Shipment Requested' }
-                      </button>
-                  )
-                 )
-              ) : (
+                 ) : (
                 <button
                   id={row?.original?.id}
                   className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"

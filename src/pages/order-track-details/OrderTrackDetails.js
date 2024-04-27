@@ -82,11 +82,11 @@ const OrderTrackDetails = () => {
                 </Badge>
               </div>
               <div className="flex gap-1.5">
-                {localStorage.getItem('is_company') == 1 && <button
+                <button
                   className="min-w-fit rounded bg-orange-700 px-6 py-2 text-xs font-medium text-white"
                   onClick={() => setShipmentDrawerOpen(true)}>
                   {'Ship Now'}
-                </button>}
+                </button>
                 <MoreDropdown
                   renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                   options={moreActionOptions()}
