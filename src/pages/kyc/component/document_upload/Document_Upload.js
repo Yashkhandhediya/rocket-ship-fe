@@ -343,7 +343,8 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
             // toast.success('KYC completed successfully', { type: 'success' })
             const headers={'Content-Type': 'application/json'};
             const id = localStorage.getItem('is_company') == 1 ? id_company : id_user
-            axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=company&status=${2}&id=${id}`,{headers})
+            const type_client = localStorage.getItem('is_company') == 1 ? 'company' : 'user'
+            axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=${type_client}&status=${2}&id=${id}`,{headers})
             .then((res) => {
                 console.log("Response ",res)
                 toast("KYC Verification Successfully",{type:'success'})
