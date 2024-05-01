@@ -31,7 +31,8 @@ export const ReadyToShip = () => {
   // const readyShipOrdersList = allOrdersList?.filter(
   //   (order) => (order?.status_name || '')?.toLowerCase() !== 'new',
   // ) || [];
-   const readyShipOrdersList = allOrdersList?.filter((order) => order?.status_id !== 1 && order?.status_id !== 8) || [];
+  const readyShipOrdersList = allOrdersList?.filter((order) => order?.status_id == 2) || [];
+  //const readyShipOrdersList = allOrdersList?.filter((order) => order?.status_id !== 1 && order?.status_id !== 8) || [];
   function splitString(string, length) {
     let result = [];
     for (let i = 0; i < string.length; i += length) {
