@@ -18,8 +18,9 @@ const Returns = () => {
   const allReturnsList = useSelector((state) => state?.returnsList);
 
   const fetchNewReturns = () => {
+    const id = localStorage.getItem('is_company') == 1 ? localStorage.getItem('company_id') : localStorage.getItem('user_id')
     axios
-      .get(BACKEND_URL+'/return/get_filtered_returns?page=1&per_page=100')
+      .get(BACKEND_URL+`/return/get_filtered_returns?page=1&per_page=100&user_id=${id}`)
       .then(async (resp) => {
         if (resp.status === 200) {
           dispatch(setAllReturns(resp?.data || []));
