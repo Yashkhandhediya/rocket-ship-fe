@@ -59,6 +59,7 @@ const LogIn = () => {
       toast("Email and Password Both are required",{type:'error'})
       return
     }
+    localStorage.setItem("user_email",loginInput.username)
     const headers={'Content-Type': 'application/x-www-form-urlencoded'};
     console.log('username pass', loginInput.username, loginInput.password);
     console.log('backend url', BACKEND_URL);  

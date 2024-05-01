@@ -113,6 +113,7 @@ const Navbar = () => {
             onClick: () => {
                 localStorage.removeItem('user_name');
                 localStorage.removeItem('access_token');
+                localStorage.removeItem('is_super');
                 window.location.href = '/login';
             }
         },

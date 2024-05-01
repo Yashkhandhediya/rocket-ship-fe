@@ -1,6 +1,7 @@
 import { Navbar } from '../navbar';
 import Sidebar from '../sidebar/Sidebar';
 
+const is_super = localStorage.getItem('is_super')
 const PageWithSidebar = ({ children }) => {
   return (
     <div className="h-screen max-h-screen w-screen overflow-hidden bg-[#f8f8f8]">
@@ -8,7 +9,7 @@ const PageWithSidebar = ({ children }) => {
         <Sidebar />
       </aside>
       <main className="ml-[70px] h-full overflow-auto" style={{ scrollbarGutter: 'stable' }}>
-        <Navbar />
+        {is_super != 3 ? <Navbar /> : null}
         {children}
       </main>
     </div>

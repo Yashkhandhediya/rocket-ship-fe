@@ -5,6 +5,8 @@ import { createColumnHelper } from '@tanstack/react-table'
 import { useNavigate } from 'react-router-dom'
 import { CustomDataTable } from '../../common/components'
 import { toast } from 'react-toastify'
+import { noData } from '../../common/images'
+import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar'
 
 const CompanyList = () => {
     const navigate = useNavigate()
@@ -15,11 +17,26 @@ const CompanyList = () => {
     const [companyLogo,setCompanyLogo] = useState(null)
     const [companyGst,setCompanyGst] = useState(null)
     const [companyStamp,setCompanyStamp] = useState(null)
+    const [currentPage, setCurrentPage] = useState(2);
+    const [itemsPerPage,setItemsPerPage] = useState(10);
+    const [currentItems, setCurrentItems] = useState([]);
+    const [reload,setReload] = useState(false)
+
+    const paginate = (page_item) => {
+      if(page_item > 0){
+          console.log("kdkl",page_item)
+          setItemsPerPage(page_item)
+      }else{
+          setItemsPerPage(10)
+      }
+    };
+
     const handleCompany = () => {
         axios.get(BACKEND_URL + '/company/get_all_companies/')
         .then((res) => {
             console.log("All Company List",res)
             setCompanyData(res.data)
+            setCurrentItems(res.data.slice(itemsPerPage-10, itemsPerPage));
         }).catch((err) => {
             console.log("Error In Company API",err)
         })
@@ -29,15 +46,19 @@ const CompanyList = () => {
         handleCompany()
     },[])
 
+    useEffect(() => {
+      setCurrentItems(companyData.slice(itemsPerPage-10, itemsPerPage))
+    }, [companyData,itemsPerPage])
+
     const handleUser = (row) => {
-        const id = row?.original?.id
+        const id = row?.id
         navigate('/user-list',{state:{data:id}})
     }
 
     const handleCompanyKYC = (row) => {
       setShowPopup(true)
-      setIdUser(row?.original?.id)
-      axios.get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=company_pan`,{ responseType: 'blob' }).
+      setIdUser(row?.id)
+      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_pan`,{ responseType: 'blob' }).
       then((res) => {
           console.log("Recharge Responsee",res)
           const imgUrl = URL.createObjectURL(res.data)
@@ -46,7 +67,7 @@ const CompanyList = () => {
           console.log("Error In Rechargeee",err)
       })
 
-      axios.get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=company_logo`,{ responseType: 'blob' }).
+      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_logo`,{ responseType: 'blob' }).
       then((res) => {
           console.log("Recharge Responsee",res)
           const imgUrl = URL.createObjectURL(res.data)
@@ -55,7 +76,7 @@ const CompanyList = () => {
           console.log("Error In Rechargeee",err)
       })
 
-      axios.get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=company_gst`,{ responseType: 'blob' }).
+      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_gst`,{ responseType: 'blob' }).
       then((res) => {
           console.log("Recharge Responsee",res)
           const imgUrl = URL.createObjectURL(res.data)
@@ -64,7 +85,7 @@ const CompanyList = () => {
           console.log("Error In Rechargeee",err)
       })
 
-      axios.get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=company_stamp`,{ responseType: 'blob' }).
+      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_stamp`,{ responseType: 'blob' }).
       then((res) => {
           console.log("Recharge Responsee",res)
           const imgUrl = URL.createObjectURL(res.data)
@@ -88,122 +109,121 @@ const CompanyList = () => {
       })
     }
 
-    const rowSubComponent = () => {
-        return (
-          <>
-          </>
-        );
-      };
+    // const rowSubComponent = () => {
+    //     return (
+    //       <>
+    //       </>
+    //     );
+    //   };
   
-    const getColumns = () => {
-        const columnHelper = createColumnHelper();
-        return [
-          columnHelper.accessor('name', {
-            header: 'Company Name',
-            cell: ({ row }) => {
-              return (
-                <div className="flex flex-col gap-2 text-left text-xs">
-                  {row?.original?.name && <div>{row?.original?.name}</div>}
-                </div>
-              );
-            },
-          }),
-          columnHelper.accessor('email', {
-            header: 'Email Address',
-            cell: ({ row }) => {
-              return (
-                <div className="flex flex-col gap-2 text-left text-xs">
-                  {row?.original?.email && (
-                    <div>{row?.original?.email}</div>
-                  )}
-                </div>
-              );
-            },
-          }),
-          columnHelper.accessor('contact', {
-            header: 'Contact No.',
-            cell: ({ row }) => {
-              return (
-                <div className="flex flex-col gap-2 text-left text-xs">
-                  {row?.original?.contact && <div>{row?.original?.contact}</div>}
-                </div>
-              );
-            },
-          }),
-          columnHelper.accessor('gst', {
-            header: 'GST No.',
-            cell: ({ row }) => {
-              return (
-                <div className="flex flex-col gap-2 text-left text-xs">
-                  {row?.original?.gst && <div>{row?.original?.gst}</div>}
-                </div>
-              );
-            },
-          }),
-          columnHelper.accessor('wallet_balance', {
-            header: 'Wallet Balance',
-            cell: ({ row }) => {
-              return (
-                <div className="flex flex-col gap-2 text-left text-xs">
-                  {/* {row?.original?.wallet_balance && <div>{row?.original?.wallet_balance}</div>} */}
-                  <div>{row?.original?.wallet_balance !== null ? row?.original?.wallet_balance : 0}</div>
-                </div>
-              );
-            },
-          }),
-          columnHelper.accessor('kyc_status_id', {
-            header: 'KYC Status',
-            cell: ({ row }) => {
-              return (
-                <div className="flex flex-col gap-2 text-left text-xs">
-                  {/* {row?.original?.wallet_balance && <div>{row?.original?.wallet_balance}</div>} */}
-                  <div>{row?.original?.kyc_status_id == 1 ? 'Upload Pending' : row?.original?.kyc_status_id == 2 ? 'Approve Pending' : 'Approved'}</div>
-                </div>
-              );
-            },
-          }),
-          columnHelper.accessor('action', {
-            header: 'Action',
-            cell: ({ row }) => {
-              return (
-                <div className="flex gap-2 text-left text-xs">
-                 {(
-                   <button
-                      id={row?.original?.id}
-                      className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
-                      onClick={()=>handleCompanyKYC(row)}
-                      >
-                      {'Company KYC'}
-                    </button>
-                  )}
-                  {(
-                   <button
-                      id={row?.original?.id}
-                      className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
-                      onClick={()=>handleUser(row)}
-                      >
-                      {'Show User'}
-                    </button>
-                  )}
-                </div>
-              );
-            },
-          }),
-        ];
-      };
+    // const getColumns = () => {
+    //     const columnHelper = createColumnHelper();
+    //     return [
+    //       columnHelper.accessor('name', {
+    //         header: 'Company Name',
+    //         cell: ({ row }) => {
+    //           return (
+    //             <div className="flex flex-col gap-2 text-left text-xs">
+    //               {row?.original?.name && <div>{row?.original?.name}</div>}
+    //             </div>
+    //           );
+    //         },
+    //       }),
+    //       columnHelper.accessor('email', {
+    //         header: 'Email Address',
+    //         cell: ({ row }) => {
+    //           return (
+    //             <div className="flex flex-col gap-2 text-left text-xs">
+    //               {row?.original?.email && (
+    //                 <div>{row?.original?.email}</div>
+    //               )}
+    //             </div>
+    //           );
+    //         },
+    //       }),
+    //       columnHelper.accessor('contact', {
+    //         header: 'Contact No.',
+    //         cell: ({ row }) => {
+    //           return (
+    //             <div className="flex flex-col gap-2 text-left text-xs">
+    //               {row?.original?.contact && <div>{row?.original?.contact}</div>}
+    //             </div>
+    //           );
+    //         },
+    //       }),
+    //       columnHelper.accessor('gst', {
+    //         header: 'GST No.',
+    //         cell: ({ row }) => {
+    //           return (
+    //             <div className="flex flex-col gap-2 text-left text-xs">
+    //               {row?.original?.gst && <div>{row?.original?.gst}</div>}
+    //             </div>
+    //           );
+    //         },
+    //       }),
+    //       columnHelper.accessor('wallet_balance', {
+    //         header: 'Wallet Balance',
+    //         cell: ({ row }) => {
+    //           return (
+    //             <div className="flex flex-col gap-2 text-left text-xs">
+    //               {/* {row?.original?.wallet_balance && <div>{row?.original?.wallet_balance}</div>} */}
+    //               <div>{row?.original?.wallet_balance !== null ? row?.original?.wallet_balance : 0}</div>
+    //             </div>
+    //           );
+    //         },
+    //       }),
+    //       columnHelper.accessor('kyc_status_id', {
+    //         header: 'KYC Status',
+    //         cell: ({ row }) => {
+    //           return (
+    //             <div className="flex flex-col gap-2 text-left text-xs">
+    //               {/* {row?.original?.wallet_balance && <div>{row?.original?.wallet_balance}</div>} */}
+    //               <div>{row?.original?.kyc_status_id == 1 ? 'Upload Pending' : row?.original?.kyc_status_id == 2 ? 'Approve Pending' : 'Approved'}</div>
+    //             </div>
+    //           );
+    //         },
+    //       }),
+    //       columnHelper.accessor('action', {
+    //         header: 'Action',
+    //         cell: ({ row }) => {
+    //           return (
+    //             <div className="flex gap-2 text-left text-xs">
+    //              {(
+    //                <button
+    //                   id={row?.original?.id}
+    //                   className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
+    //                   onClick={()=>handleCompanyKYC(row)}
+    //                   >
+    //                   {'Company KYC'}
+    //                 </button>
+    //               )}
+    //               {(
+    //                <button
+    //                   id={row?.original?.id}
+    //                   className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
+    //                   onClick={()=>handleUser(row)}
+    //                   >
+    //                   {'Show User'}
+    //                 </button>
+    //               )}
+    //             </div>
+    //           );
+    //         },
+    //       }),
+    //     ];
+    //   };
 
   return (
-    <>
-    <div className="mt-2">
+    <PageWithSidebar>
+    <div className="mt-2 flex justify-end mr-4">
       <button className='bg-red-600 p-2 mt-4 ml-4 border rounded-md shadow-md text-white font-semibold'
         onClick={() => {
-            localStorage.removeItem('user_name')
-            localStorage.removeItem('access_token')
+            localStorage.clear()
             window.location.href = '/login'
         }}>Logout</button>
     </div>
-    <div className="m-6">
-    <CustomDataTable
+    <div className="mt-2 m-6">
+    {/* <CustomDataTable
         columns={getColumns()}
         rowData={companyData}
         isHeaderSticky={false}
@@ -213,7 +233,68 @@ const CompanyList = () => {
         rowSubComponent={rowSubComponent}
         enablePagination={true}
         tableWrapperStyles={{ height: '85vh' }}
-      />
+      /> */}
+      <div className='w-full ml-2 mr-2 text-[14px] border border-collapse font-bold text-[#333333] '>
+                    <div className='flex flex-row w-full border border-collapse bg-[#FAFAFA]'>
+                        <div className='pl-2 pr-2 w-[15%] py-2'>Company Name</div>
+                        <div className='pl-2 pr-2 w-[20%] py-2'>Email Address</div>
+                        <div className='pl-2 pr-2 w-[13%] py-2'>Contact No.</div>
+                        <div className='pl-2 pr-2 w-[15%] py-2'>GST No.</div>
+                        <div className='pl-2 pr-2 w-[10%] py-2'>Wallet Balance</div>
+                        <div className='pl-2 pr-2 w-[12%] py-2'>KYC Status</div>
+                        <div className='pl-2 text-center pr-2 w-[15%] py-2'>Actions</div>
+                    </div>
+                    <div className='w-full flex flex-col bg-[#FFFFFF] overflow-y-auto' style={{height:"500px"}}>
+                        {/* Table Data */}
+                        {companyData.length === 0 ? (
+                            <div className='pt-16 mb-12 w-full flex justify-center items-center flex-col'>
+                                <img src={noData} alt="" width={'200px'} />
+                                <div className='text-[1.7rem] mt-10 text-[#b54040] font-bold'>We could not find any data.</div>
+                                {/* <div className='text-[14px] mt-2 font-normal opacity-80'>Please change filters and retry.</div> */}
+                            </div>
+                        ) : (
+                            currentItems.map((item, index) => (
+                                <div className='w-full flex flex-row border border-collapse bg-[#FAFAFA]' key={index}>
+                                    <div className='pl-2 font-semibold border-r-2 pr-2 w-[15%] py-2'>{item.name}</div>
+                                    <div className='pl-2 font-semibold border-r-2 pr-2 w-[20%] py-2'>{item.email ? item.email : ''}</div>
+                                    <div className='pl-2 font-semibold border-r-2 pr-2 w-[13%] py-2'>{item.contact ? item.contact : 'N.A'}</div>
+                                    <div className='pl-2 font-semibold border-r-2 pr-2 w-[15%] py-2'>{item.gst ? item.gst : 'N.A'}</div>
+                                    <div className='pl-2 font-semibold border-r-2 pr-2 w-[10%] py-2'>{item.wallet_balance ? '₹' + item.wallet_balance : '-'}</div>
+                                    <div className='pl-2 font-semibold border-r-2 pr-2 w-[12%] py-2'>
+                                    {item?.kyc_status_id == 1 ? 'Upload Pending' : item?.kyc_status_id == 2 ? 'Approve Pending' : 'Approved'}
+                                    </div>
+                                    <div className='pl-2 font-semibold border-r-2 pr-2 w-[15%] py-2'>
+                                    <div className="flex flex-row justify-between">
+                                    <button
+                                        id={index}
+                                        className="min-w-fit rounded bg-red-600 p-1.5 font-semibold text-white hover:bg-green-600"
+                                        onClick={()=>handleCompanyKYC(item)}
+                                        >
+                                        {'Company KYC'}
+                                      </button>
+                                      <button
+                                          id={index}
+                                          className="min-w-fit text-sm rounded bg-red-600 p-1.5 font-semibold text-white hover:bg-green-600"
+                                          onClick={()=>handleUser(item)}
+                                          >
+                                          {'Show User'}
+                                       </button>
+                                    </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                    <div className='mb-6'>
+                    <button className={`text-base font-semibold mt-4 ml-4 p-2 border rounded text-white bg-[#159700] ${itemsPerPage === 10 ? 'cursor-not-allowed' : ''}`} onClick={() => {paginate(itemsPerPage - 10)}} disabled={itemsPerPage === 10}>
+                        Previous
+                        </button>
+
+                        <button className={`text-base font-semibold mt-4 ml-4 p-2 border rounded text-white bg-[#159700] ${currentItems.length < 10 ? 'cursor-not-allowed' : ''}`} onClick={() => {paginate(itemsPerPage + 10)}} disabled={currentItems.length < 10}>
+                        Next
+                        </button>
+                    </div>
+      </div>
         {showPopup && (
             <div className="absolute inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
               <div className="w-[60%] bg-white p-6 rounded-lg">
@@ -256,7 +337,7 @@ const CompanyList = () => {
             </div>
           )}
     </div>
-    </>
+  </PageWithSidebar>
   )
 }
 
