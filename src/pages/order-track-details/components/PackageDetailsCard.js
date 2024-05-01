@@ -18,7 +18,7 @@ const PackageDetailsCard = ({ packageDetails }) => {
         />
         <DetailsLabelValue
           label="Volumetric Weight (in Kg)"
-          value={packageDetails?.volumatric_weight?.toFixed(2) || 'N/A'}
+          value={packageDetails?.volumatric_weight?.toFixed(4) || 'N/A'}
         />
         <DetailsLabelValue
           label="Applied Weight (in Kg)"
