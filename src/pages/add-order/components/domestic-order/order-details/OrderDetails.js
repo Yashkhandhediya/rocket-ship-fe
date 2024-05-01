@@ -9,6 +9,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { cloneDeep, isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 
+export let package_info = {
+  length: 0,
+  width: 0,
+  height: 0,
+  volumatric_weight: '',
+}
+
 export default function OrderDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
   const id_user = localStorage.getItem('user_id')
@@ -202,7 +209,16 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
        const handleProductSuggestionClick = (suggestion,index) => {
         const allFields = [...productFields];
         allFields[index]['name'] = suggestion.name;
+        allFields[index]['unit_price'] = suggestion.unit_price;
+        allFields[index]['sku'] = suggestion.sku;
+        allFields[index]['hsn_code'] = suggestion.hsn_code;
+        allFields[index]['discount'] = suggestion.discount;
+        allFields[index]['cod_charge'] = suggestion.cod_charge;
         setProductFields(allFields);
+        package_info.length = suggestion.length;
+        package_info.width = suggestion.width;
+        package_info.height = suggestion.height;
+        package_info.volumatric_weight = suggestion.volumatric_weight;
         // setCashCharge(suggestion.cod_charge)
         setShowProductSuggestions(false);
       };
@@ -415,6 +431,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                       required={true}
                       value={field?.name || ''}
                       onChange={(e) => handleSetProductFields(e, index)}
+                      onBlur={() => setShowProductSuggestions(false)}
                     />
                       {showProductSuggestions && suggestionProductData.length > 0 && (
                         <div className="absolute w-[70%] bg-white border border-gray-300 rounded shadow-md z-10 max-h-40 overflow-y-auto">

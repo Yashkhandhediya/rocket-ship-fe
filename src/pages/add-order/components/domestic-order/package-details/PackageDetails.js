@@ -12,6 +12,7 @@ import moment from 'moment';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import Loader from '../../../../../common/loader/Loader';
 // import { isEdit, order_id } from '../../../../orders/components/new/New'
+import { package_info } from '../order-details/OrderDetails';
 
 export default function PackageDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
@@ -29,6 +30,17 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     applicable_weight: '',
     volumatric_weight: '',
   });
+
+  if(package_info?.volumatric_weight){
+    setFormDirectField({
+      ...formDirectField,
+      length:package_info.length,
+      width:package_info.width,
+      height:package_info.height,
+      volumatric_weight:package_info.volumatric_weight
+    })
+  }
+
   const volumatricWeight =
     useMemo(
       () =>
