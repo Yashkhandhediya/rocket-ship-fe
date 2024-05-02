@@ -15,21 +15,35 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [scheduleModal, setScheduleModal] = useState({ isOpen: false, pickupDetails: {} });
+  const [showPopup,setShowPopup] = useState(false)
+  const [apiCall,setApiCall] = useState(true)
+  const [wayBill,setWayBill] = useState(null)
+  const [info,setInfo] = useState(null)
 
   const handleShipOrder = (data) => {
     let requestData;
+    console.log("CVVVVVV",data)
+    if(data?.partner_name === 'DTDC'){
+      debugger
+      setShowPopup(true)
+      setInfo({
+        "partner_id": 2,
+        "amount": data?.total_charge,
+      })
+      return
+    }
     if (data?.partner_name === 'Delhivery') {
       requestData = {
         "partner_id": 1,
         "amount": data?.total_charge,
       }
     }
-    else if (data?.partner_name === 'DTDC') {
-      requestData = {
-        "partner_id": 2,
-        "amount": data?.total_charge,
-      }
-    }
+    // else if (data?.partner_name === 'DTDC') {
+    //   requestData = {
+    //     "partner_id": 2,
+    //     "amount": data?.total_charge,
+    //   }
+    // }
     else if(data?.partner_name === 'Xpressbees'){
       requestData = {
         "partner_id":3,
@@ -49,7 +63,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
       }
     }
     setIsLoading(true);
-    if (orderId) {
+    if (orderId && data?.partner_name != "dtdc") {
       console.log("JTTTTTTTTTT",requestData)
       axios
         .post(`${BACKEND_URL}/order/${orderId}/shipment`, requestData)
@@ -91,6 +105,53 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         });
     }
   };
+
+
+  const handleDtdc = () => {
+    debugger
+    setShowPopup(false)
+    let requestData = info
+    requestData.waybill_no = wayBill
+      axios
+        .post(`${BACKEND_URL}/order/${orderId}/shipment`, requestData)
+        .then((resp) => {
+          if (resp?.status === 200) {
+            setIsLoading(false);
+            if(resp?.data?.status_code == 401){
+              toast("insufficient balance",{type:"error"})
+              return
+            }
+            toast(
+              resp?.data?.success ? (
+                <div>
+                  <div className="font-medium">{'Success'}</div>
+                  <div>{'AWB assigned successfully'}</div>
+                </div>
+              ) : (
+                resp?.data?.error
+              ),
+              {
+                type: resp?.data?.success ? 'success' : 'error',
+              },
+            );
+            requestData.partner_id === 1 && setScheduleModal({
+              isOpen: true,
+              pickupDetails: { id: orderId },
+            });
+            dispatch(setAllOrders(null));
+            if (resp?.data?.success) {
+              closeShipmentDrawer();
+            }
+          }
+        })
+        .catch((e) => {
+          // eslint-disable-next-line no-console
+          console.error(e);
+          setIsLoading(false);
+          toast('Unable to ship order', { type: 'error' });
+        });
+      setWayBill(null)
+  }
 
   const getColumns = () => {
     const columnHelper = createColumnHelper()
@@ -236,6 +297,29 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         }
         pickupDetails={scheduleModal.pickupDetails}
       />
+
+    {showPopup && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none bg-opacity-50 bg-gray-400">
+              <div className="bg-white p-6 rounded-lg">
+                <h2 className="text-lg font-semibold mb-4">Enter Way Bill No.</h2>
+                <input
+                  type="number"
+                  value={wayBill}
+                  onChange={(e) => setWayBill(e.target.value)}
+                  placeholder="Enter Way Bill No."
+                  className="border border-gray-400 rounded-lg px-3 py-2 mb-4"
+                />
+                <div className="flex justify-end">
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                    onClick={handleDtdc}
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
     </div>
   );
 };
