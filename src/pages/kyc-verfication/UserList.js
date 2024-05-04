@@ -6,6 +6,7 @@ import { createColumnHelper } from '@tanstack/react-table'
 import { toast } from 'react-toastify'
 import { CustomDataTable } from '../../common/components'
 import { noData } from '../../common/images'
+import { ACCESS_TOKEN } from '../../common/utils/config'
 
 const UserList = () => {
   const [userData,setUserData] = useState([])
@@ -19,6 +20,8 @@ const UserList = () => {
   const id = location?.state?.data
   const [itemsPerPage,setItemsPerPage] = useState(10);
   const [currentItems, setCurrentItems] = useState([]);
+  const [pageNo,setPageNo] = useState(1)
+  const [totalPage,setTotalPage] = useState(1)
 
   const paginate = (page_item) => {
     if(page_item > 0){
@@ -34,6 +37,8 @@ const UserList = () => {
         axios.get(BACKEND_URL + `/company/get_company_users/?companyId=${id}`).then((res)=> {
           console.log("RESSSSSSSSSSSSS",res)
           setUserData(res.data)
+          let total = Math.ceil(res.data.length / 10)
+          setTotalPage(total)
           setFetchData(true)
       }).catch((err) => {
           console.log("ERRRRRRRRRR",err)
@@ -199,6 +204,7 @@ const UserList = () => {
               localStorage.removeItem('user_name')
               localStorage.removeItem('is_super')
               localStorage.removeItem('access_token')
+              sessionStorage.clear()
               window.location.href = '/login'
           }}>Logout</button>
     </div>
@@ -248,7 +254,7 @@ const UserList = () => {
                                     <div className="flex flex-row justify-between">
                                     <button
                                         id={index}
-                                        className="rounded bg-red-600 p-2 ml-4 font-semibold text-white hover:bg-green-600"
+                                        className="rounded bg-red-600 p-2 ml-16 font-semibold text-white hover:bg-green-600"
                                         onClick={()=>handleKYC(item)}
                                         >
                                         {'KYC'}
@@ -260,11 +266,13 @@ const UserList = () => {
                         )}
                     </div>
                     <div className='mb-6'>
-                    <button className={`text-base font-semibold mt-4 ml-4 p-2 border rounded text-white bg-[#159700] ${itemsPerPage === 10 ? 'cursor-not-allowed' : ''}`} onClick={() => {paginate(itemsPerPage - 10)}} disabled={itemsPerPage === 10}>
+                    <button className={`text-base font-semibold mt-4 ml-4 p-2 border rounded text-white bg-[#159700] ${itemsPerPage === 10 ? 'cursor-not-allowed' : ''}`} onClick={() => {paginate(itemsPerPage - 10);if(pageNo > 1){setPageNo(pageNo - 1)}}} disabled={itemsPerPage === 10}>
                         Previous
                         </button>
-
-                        <button className={`text-base font-semibold mt-4 ml-4 p-2 border rounded text-white bg-[#159700] ${currentItems.length < 10 ? 'cursor-not-allowed' : ''}`} onClick={() => {paginate(itemsPerPage + 10)}} disabled={currentItems.length < 10}>
+                    <span className='font-semibold ml-2 p-2 border-2 border-gray-300 rounded-md text-base'>{pageNo}</span>
+                    <span className='font-semibold ml-2 text-base'>Of</span>
+                    <span className='font-semibold ml-2 p-2 border-2 border-gray-300 rounded-md text-base'>{totalPage}</span>
+                        <button className={`text-base font-semibold mt-4 ml-4 p-2 border rounded text-white bg-[#159700] ${currentItems.length < 10 ? 'cursor-not-allowed' : ''}`} onClick={() => {paginate(itemsPerPage + 10);setPageNo(pageNo + 1)}} disabled={currentItems.length < 10}>
                         Next
                         </button>
                     </div>

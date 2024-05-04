@@ -7,6 +7,7 @@ import { CustomDataTable } from '../../common/components'
 import { toast } from 'react-toastify'
 import { noData } from '../../common/images'
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar'
+import { ACCESS_TOKEN } from '../../common/utils/config'
 
 const CompanyList = () => {
     const navigate = useNavigate()
@@ -21,6 +22,8 @@ const CompanyList = () => {
     const [itemsPerPage,setItemsPerPage] = useState(10);
     const [currentItems, setCurrentItems] = useState([]);
     const [reload,setReload] = useState(false)
+    const [pageNo,setPageNo] = useState(1)
+    const [totalPage,setTotalPage] = useState(1)
 
     const paginate = (page_item) => {
       if(page_item > 0){
@@ -36,6 +39,8 @@ const CompanyList = () => {
         .then((res) => {
             console.log("All Company List",res)
             setCompanyData(res.data)
+            let total = Math.ceil(res.data.length / 10)
+            setTotalPage(total)
             setCurrentItems(res.data.slice(itemsPerPage-10, itemsPerPage));
         }).catch((err) => {
             console.log("Error In Company API",err)
@@ -219,6 +224,7 @@ const CompanyList = () => {
       <button className='bg-red-600 p-2 mt-4 ml-4 border rounded-md shadow-md text-white font-semibold'
         onClick={() => {
             localStorage.clear()
+            sessionStorage.clear()
             window.location.href = '/login'
         }}>Logout</button>
     </div>
@@ -267,8 +273,9 @@ const CompanyList = () => {
                                     <div className="flex flex-row justify-between">
                                     <button
                                         id={index}
-                                        className="min-w-fit rounded bg-red-600 p-1.5 font-semibold text-white hover:bg-green-600"
+                                        className={`min-w-fit rounded bg-red-600 p-1.5 font-semibold text-white hover:bg-green-600 ${item?.kyc_status_id == 1 ? 'cursor-not-allowed' : ''}`}
                                         onClick={()=>handleCompanyKYC(item)}
+                                        disabled={item?.kyc_status_id == 1}
                                         >
                                         {'Company KYC'}
                                       </button>
@@ -286,11 +293,13 @@ const CompanyList = () => {
                         )}
                     </div>
                     <div className='mb-6'>
-                    <button className={`text-base font-semibold mt-4 ml-4 p-2 border rounded text-white bg-[#159700] ${itemsPerPage === 10 ? 'cursor-not-allowed' : ''}`} onClick={() => {paginate(itemsPerPage - 10)}} disabled={itemsPerPage === 10}>
+                    <button className={`text-base font-semibold mt-4 ml-4 p-2 border rounded text-white bg-[#159700] ${itemsPerPage === 10 ? 'cursor-not-allowed' : ''}`} onClick={() => {paginate(itemsPerPage - 10);if(pageNo > 1){setPageNo(pageNo - 1)}}} disabled={itemsPerPage === 10}>
                         Previous
                         </button>
-
-                        <button className={`text-base font-semibold mt-4 ml-4 p-2 border rounded text-white bg-[#159700] ${currentItems.length < 10 ? 'cursor-not-allowed' : ''}`} onClick={() => {paginate(itemsPerPage + 10)}} disabled={currentItems.length < 10}>
+                    <span className='font-semibold ml-2 p-2 border-2 border-gray-300 rounded-md text-base'>{pageNo}</span>
+                    <span className='font-semibold ml-2 text-base'>Of</span>
+                    <span className='font-semibold ml-2 p-2 border-2 border-gray-300 rounded-md text-base'>{totalPage}</span>
+                        <button className={`text-base font-semibold mt-4 ml-2 p-2 border rounded text-white bg-[#159700] ${currentItems.length < 10 ? 'cursor-not-allowed' : ''}`} onClick={() => {paginate(itemsPerPage + 10);setPageNo(pageNo + 1)}} disabled={currentItems.length < 10}>
                         Next
                         </button>
                     </div>
@@ -311,12 +320,12 @@ const CompanyList = () => {
                
                <div className="mt-6 flex flex-col items-center justify-center md:w-[50%]">
                 <div className="flex flex-row items-center justify-between  md:w-[99%]">
-                    <img src={companyPan}  alt='Company PAN' className='w-40 ml-20 mb-4 md:w-full h-25' />
-                    <img src={companyGst}  alt='Company GST' className='w-40 ml-20 mb-4 md:w-full h-25' />
+                    <img src={companyPan}  alt='Company PAN' className=' ml-20 mb-4 md:w-full ' style={{width:'300px',height:'300px'}} />
+                    <img src={companyGst}  alt='Company GST' className=' ml-20 mb-4 md:w-full ' style={{width:'300px',height:'300px'}} />
                 </div>
                 <div className="flex flex-row items-center justify-between md:w-[99%]">
-                    <img src={companyStamp}  alt='Company Stamp' className='w-40 ml-20 mb-4 md:w-full h-25' />
-                    <img src={companyLogo}  alt='Company LOGO' className='w-40 ml-20 mb-4 md:w-full h-25' />
+                    <img src={companyStamp}  alt='Company Stamp' className='w-40 ml-20 mb-4 md:w-full h-25' style={{width:'300px',height:'300px'}} />
+                    <img src={companyLogo}  alt='Company LOGO' className='w-40 ml-20 mb-4 md:w-full h-25' style={{width:'300px',height:'300px'}} />
                 </div>
                 </div>
                 <div className="flex justify-center">

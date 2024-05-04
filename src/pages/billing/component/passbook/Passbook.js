@@ -23,6 +23,8 @@ const Passbook = () => {
     const id_user = localStorage.getItem('user_id')
     const id_company = localStorage.getItem('company_id')
     const is_company = localStorage.getItem('is_company')
+    const [pageNo,setPageNo] = useState(1)
+    const [totalPage,setTotalPage] = useState(1)
 
     console.log("Infooooooooooooooo",currentItems,itemsPerPage-10,itemsPerPage)
     const paginate = (page_item) => {
@@ -76,6 +78,8 @@ const Passbook = () => {
         try {
             const response = await axios.post(`${BACKEND_URL}/account_transaction/account_report?page_number=1&page_size=${itemsPerPage}`, { date_from: fromDate, date_to: toDate, user_id: temp_id });
             setData(response.data.report);
+            let total = Math.ceil(response.data.report.length / 10)
+            setTotalPage(total)
             setCurrentItems(response.data.report.slice(itemsPerPage-10, itemsPerPage));
             getUsableAmount();
             setIsLoading(false);
@@ -88,7 +92,7 @@ const Passbook = () => {
 
     useEffect(() => {
         getPassbookData();
-    }, [itemsPerPage]);
+    }, []);
 
     useEffect(() => {
       setCurrentItems(data.slice(itemsPerPage-10, itemsPerPage))
@@ -211,7 +215,7 @@ const Passbook = () => {
                         </div>
                     ))}
                 </div>
-                <div className='ml-4 text-[14px] font-bold text-[#333333] border'>
+                <div className='ml-4 text-[14px] font-bold text-[#333333] border' style={{height:'600px'}}>
                     <div className='flex flex-row w-full border border-collapse bg-[#FAFAFA]'>
                         <div className='pl-2 border-r-2 pr-2 w-full py-2'>Date</div>
                         <div className='pl-2 border-r-2 pr-2 w-full py-2'>Order ID</div>
@@ -244,11 +248,13 @@ const Passbook = () => {
                         )}
                     </div>
                     <div>
-                        <button className={`text-xl font-semibold mt-4 ml-4 p-2 border rounded text-white bg-[#159700] ${itemsPerPage === 10 ? 'cursor-not-allowed' : ''}`} onClick={() => {paginate(itemsPerPage - 10)}} disabled={itemsPerPage === 10}>
+                        <button className={`text-xl font-semibold mt-4 ml-4 p-2 border rounded text-white bg-[#159700] ${itemsPerPage === 10 ? 'cursor-not-allowed' : ''}`} onClick={() => {paginate(itemsPerPage - 10);if(pageNo > 1){setPageNo(pageNo - 1)}}} disabled={itemsPerPage === 10}>
                         Previous
                         </button>
-
-                    <button className={`text-xl font-semibold mt-4 ml-4 p-2 border rounded text-white bg-[#159700] ${currentItems.length < 10 ? 'cursor-not-allowed' : ''}`} onClick={() => {paginate(itemsPerPage + 10)}} disabled={currentItems.length < 10}>
+                    <span className='font-semibold ml-2 p-2 border-2 border-gray-300 rounded-md text-base'>{pageNo}</span>
+                    <span className='font-semibold ml-2 text-base'>Of</span>
+                    <span className='font-semibold ml-2 p-2 border-2 border-gray-300 rounded-md text-base'>{totalPage}</span>
+                    <button className={`text-xl font-semibold mt-4 ml-4 p-2 border rounded text-white bg-[#159700] ${currentItems.length < 10 ? 'cursor-not-allowed' : ''}`} onClick={() => {paginate(itemsPerPage + 10);setPageNo(pageNo + 1)}} disabled={currentItems.length < 10}>
                         Next
                         </button>
                     </div>
