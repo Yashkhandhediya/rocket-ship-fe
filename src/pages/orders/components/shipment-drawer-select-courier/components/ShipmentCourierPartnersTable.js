@@ -24,7 +24,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
     let requestData;
     console.log("CVVVVVV",data)
     if(data?.partner_name === 'DTDC'){
-      debugger
+      
       setShowPopup(true)
       setInfo({
         "partner_id": 2,
@@ -108,7 +108,6 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
 
 
   const handleDtdc = () => {
-    debugger
     setShowPopup(false)
     let requestData = info
     requestData.waybill_no = wayBill
@@ -303,7 +302,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
               <div className="bg-white p-6 rounded-lg">
                 <h2 className="text-lg font-semibold mb-4">Enter Way Bill No.</h2>
                 <input
-                  type="number"
+                  type="text"
                   value={wayBill}
                   onChange={(e) => setWayBill(e.target.value)}
                   placeholder="Enter Way Bill No."
