@@ -6,7 +6,7 @@ import { createColumnHelper } from '@tanstack/react-table'
 import { toast } from 'react-toastify'
 import { CustomDataTable } from '../../common/components'
 import { noData } from '../../common/images'
-import { ACCESS_TOKEN } from '../../common/utils/config'
+// import { ACCESS_TOKEN } from '../../common/utils/config'
 
 const UserList = () => {
   const [userData,setUserData] = useState([])

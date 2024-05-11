@@ -7,7 +7,7 @@ import { CustomDataTable } from '../../common/components'
 import { toast } from 'react-toastify'
 import { noData } from '../../common/images'
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar'
-import { ACCESS_TOKEN } from '../../common/utils/config'
+// import { ACCESS_TOKEN } from '../../common/utils/config'
 
 const CompanyList = () => {
     const navigate = useNavigate()
