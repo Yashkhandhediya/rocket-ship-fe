@@ -10,20 +10,21 @@ import DrawerWithSidebar from '../../../../common/components/drawer-with-sidebar
 import { ShipmentDrawerOrderDetails } from '../shipment-drawer-order-details';
 import ShipmentDrawerSelectCourier from '../shipment-drawer-select-courier/ShipmentDrawerSelectCourier';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllOrders, setClonedOrder } from '../../../../redux';
+import { setAllOrders, setClonedOrder, setEditOrder } from '../../../../redux';
 import { toast } from 'react-toastify';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
-import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
+import { getClonedOrderFields, getEditOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
 import { CommonBadge } from '../../../../common/components/common-badge';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Orders';
 import Loader from '../../../../common/loader/Loader';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 // import { setEditOrder } from '../../../../redux/actions/editOrderActions';
 
-export let isEdit = false;
-export let order_id;
+// export let isEdit = false;
+// export let order_id;
 
 export const New = () => {
   const is_company = localStorage.getItem('is_company')
@@ -98,7 +99,7 @@ export const New = () => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)
-    const headers={'Content-Type': 'application/json'};
+    const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
 
     let temp_str = splitString(temp_payload['complete_address1'],35)
     let temp1 = splitString(temp_payload['complete_address'],35)
@@ -133,7 +134,7 @@ export const New = () => {
   }
 
   const handleBulkOrder = () => {
-    const headers={'Content-Type': 'application/json'};
+    const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
     let temp_list = []
     for(let i=0;i<bulkOrder.length;i++){
         console.log(typeof bulkOrder[i].id);
@@ -375,18 +376,23 @@ export const New = () => {
   }
 
   function editOrder(orderDetails) {
-    isEdit = true
-    order_id = orderDetails?.id
+    // let isEdit = true
+    // order_id = orderDetails?.id
+    let data = {
+      isEdit:true,
+      order_id:orderDetails?.id
+    }
     axios.get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails?.id}`)
     .then((res) => {
       console.log("Response Of Get Order While Edit ",res)
+      const editedOrder = getEditOrderFields(res.data);
+      console.log("GHHHH",editedOrder)
+      dispatch(setEditOrder(editedOrder));
+      dispatch(setDomesticOrder(editedOrder))
     }).catch((err) => {
       console.log("Error While Edit Order ",err)
     })
-    // const editedOrder = getEditOrderFields(orderDetails);
-    // dispatch(setEditOrder(editedOrder));
-    // dispatch(setDomesticOrder(editedOrder))
-    navigate('/add-order');
+    navigate('/add-order',{state:data});
   }
 
   const closeShipmentDrawer = () => {

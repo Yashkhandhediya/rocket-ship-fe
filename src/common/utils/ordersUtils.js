@@ -78,8 +78,46 @@ const getDomesticOrderFields = (clonnedOrderDetails) => {
   };
 };
 
+const getEditDomesticOrderFields = (clonnedOrderDetails) => {
+  const buyer_info = pick(clonnedOrderDetails?.buyer_info, domestic_buyer_info_fields);
+  const company_info = pick(clonnedOrderDetails?.buyer_info, domestic_company_info_fields);
+  const address_info = pick(clonnedOrderDetails?.buyer_info, domestic_address_info_fields);
+  const billing_info = pick(clonnedOrderDetails?.buyer_info, domestic_buyer_info_fields);
+  const payment_details = {type:clonnedOrderDetails?.payment_type_name};
+  const direct_order_values = pick(clonnedOrderDetails, domestic_direct_order_fields);
+  const pickup_address = {id: clonnedOrderDetails?.pickup_address_id  };
+  const date = moment(new Date()).format('YYYY-MM-DD');
+  const id = clonnedOrderDetails?.id;
+  const order_id = clonnedOrderDetails?.order_id;
+  const product_info = clonnedOrderDetails?.product_info?.map((product) => {
+    return pick(product, domestic_product_info_fields);
+  });
+  
+  return {
+    order_id,
+    id,
+    buyer_info,
+    company_info,
+    address_info,
+    billing_info,
+    pickup_address,
+    payment_details,
+    date,
+    product_info,
+    ...direct_order_values,
+  };
+};
+
+
+
 export const getClonedOrderFields = (clonedOrder) => {
   if (clonedOrder.order_type_name === 'domestic') {
     return getDomesticOrderFields(clonedOrder);
+  }
+};
+
+export const getEditOrderFields = (clonedOrder) => {
+  if (clonedOrder.order_type_name === 'domestic') {
+    return getEditDomesticOrderFields(clonedOrder);
   }
 };
