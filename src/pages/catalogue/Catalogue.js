@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile } from '@fortawesome/free-solid-svg-icons';
@@ -6,6 +6,8 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
+// import { ACCESS_TOKEN } from '../../common/utils/config';
+import { noData } from '../../common/images';
 
 const Catalogue = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -14,9 +16,23 @@ const Catalogue = () => {
   const [downloadPopup,setDownloadPopup] = useState(false)
   const [loading,setLoading] = useState(false)
   const user_email = localStorage.getItem('user_email')
+  const [itemsPerPage,setItemsPerPage] = useState(10);
+  const [currentItems, setCurrentItems] = useState([]);
+  const [data,setData] = useState([])
+  const [pageNo,setPageNo] = useState(1)
+  const [totalPage,setTotalPage] = useState(1)
 
   const togglePopup = () => {
     setIsPopupVisible(!isPopupVisible);
+  };
+
+  const paginate = (page_item) => {
+    if(page_item > 0){
+        console.log("kdkl",page_item)
+        setItemsPerPage(page_item)
+    }else{
+        setItemsPerPage(10)
+    }
   };
 
 //   const handleFileChange = (event) => {
@@ -64,22 +80,41 @@ const handleFileChange = (event) => {
   setSelectedFile(file)  
 };
 
+ const handleCatalogueData = () => {
+    axios.get(BACKEND_URL + '/product/get_product_details/')
+    .then((res) => {
+      console.log("Catalogue Data",res.data)
+      setData(res.data)
+      let total = Math.ceil(res.data.length / 10)
+      setTotalPage(total)
+      setCurrentItems(res.data.slice(itemsPerPage-10, itemsPerPage));
+    }).catch((err) => {
+      console.log("Error in Data",err)
+    })
+ }
 
+    useEffect(() => {
+      handleCatalogueData()
+    },[])
 
-const dataURLtoBlob = (dataURL) => {
-  const parts = dataURL.split(';base64,');
-  const contentType = parts[0].split(':')[1];
-  const base64Data = parts[1];
-  const byteCharacters = atob(base64Data);
-  const byteNumbers = new Array(byteCharacters.length);
+    useEffect(() => {
+      setCurrentItems(data.slice(itemsPerPage-10, itemsPerPage))
+    }, [data,itemsPerPage])
 
-  for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-  }
+// const dataURLtoBlob = (dataURL) => {
+//   const parts = dataURL.split(';base64,');
+//   const contentType = parts[0].split(':')[1];
+//   const base64Data = parts[1];
+//   const byteCharacters = atob(base64Data);
+//   const byteNumbers = new Array(byteCharacters.length);
 
-  const byteArray = new Uint8Array(byteNumbers);
-  return new Blob([byteArray], { type: contentType });
-};
+//   for (let i = 0; i < byteCharacters.length; i++) {
+//       byteNumbers[i] = byteCharacters.charCodeAt(i);
+//   }
+
+//   const byteArray = new Uint8Array(byteNumbers);
+//   return new Blob([byteArray], { type: contentType });
+// };
 
 // const arrayBufferToBinaryString = (arrayBuffer) => {
 //   const bytes = new Uint8Array(arrayBuffer);
@@ -116,7 +151,8 @@ formData.append('excel_file',selectedFile ,'sample.xlsx');
       // Make the POST request to the server using axios
       const response = await axios.post(BACKEND_URL + '/product/add_product_catalogue', formData, {
           headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data',
+            // "Authorization":ACCESS_TOKEN
           }
       });
 
@@ -160,7 +196,9 @@ formData.append('excel_file',selectedFile ,'sample.xlsx');
 
   const handleDownload = () => {
     setLoading(true)
-    const headers = {'Content-Type': 'application/json'}
+    const headers = {'Content-Type': 'application/json',
+  // "Authorization":ACCESS_TOKEN
+}
     axios.get(BACKEND_URL + '/product/send_product_mail/',{headers})
     .then((res) => {
       setLoading(false)
@@ -195,6 +233,68 @@ formData.append('excel_file',selectedFile ,'sample.xlsx');
     </div>
     </div>
     <hr className="ml-2 border-t-2 border-gray-300 my-4"></hr>
+    <div className="bg-gray-100 min-h-screen flex">
+    <div className="w-1/4 h-1/4 ml-4 shadow rounded-lg p-4">
+        <ul className="space-y-2">
+            <li><a href="#" className="text-gray-700 text-sm hover:text-gray-900">Channel Product</a></li>
+            <li><a href="#" className="text-gray-700 text-sm hover:text-gray-900">Manage Inventory</a></li>
+            <li><a href="#" className="text-gray-700 text-sm hover:text-gray-900">All Products</a></li>
+            <li><a href="#" className="text-gray-700 text-sm hover:text-gray-900">Manage Catalogue</a></li>
+            <li><a href="#" className="text-gray-700 text-sm hover:text-gray-900">Categories</a></li>
+            <li><a href="#" className="text-gray-700 text-sm hover:text-gray-900">Tax Classes</a></li>
+        </ul>
+    </div>
+    <div className="w-3/4 overflow-x-auto">
+        <div className="bg-white shadow rounded-lg">
+            <div className="flex justify-between mb-4">
+                <div className="flex flex-row items-center w-full border border-l-2 bg-[#FAFAFA]">
+                    <div className="p-2 h-full font-semibold text-sm border-r-2 w-1/12 flex-grow">Channel</div>
+                    <div className="p-2 h-full font-semibold text-sm border-r-2 w-2/12 flex-grow">Product Name</div>
+                    <div className="p-2 h-full font-semibold text-sm border-r-2 w-1/12 flex-grow">Category Heading</div>
+                    <div className="p-2 h-full font-semibold text-sm border-r-2 w-[12%] flex-grow">SKU Summary</div>
+                    <div className="p-2 h-full font-semibold text-sm border-r-2 w-1/12 flex-grow">Selling Price</div>
+                    <div className="p-2 h-full font-semibold text-sm border-r-2 w-1/12 flex-grow">HSN Code</div>
+                    <div className="p-2 h-full font-semibold text-sm border-r-2 w-2/12 flex-grow">Dimension/Weight</div>
+                    <div className="p-2 h-full font-semibold text-sm border-r-2 w-1/12 flex-grow">Select Package</div>
+                </div>
+            </div>
+            <div className='flex flex-col justify-between items-center mb-4'>
+                {data.length === 0 ? (
+                    <div className='pt-16 mb-12 w-full flex justify-center items-center flex-col'>
+                        <img src={noData} alt="" width={'200px'} />
+                        <div className='text-[1.7rem] mt-10 text-[#b54040] font-bold'>No Data Available.</div>
+                        <div className='text-[14px] mt-2 font-normal opacity-80'>Please change filters and retry.</div>
+                    </div>
+                ) : (
+                    currentItems.map((item, index) => (
+                        <div className='flex flex-row items-center h-12 w-full border bg-[#FAFAFA]' key={index}>
+                            <div className='p-2 h-full font-semibold text-sm w-1/12 flex-grow'>{'Custom'}</div>
+                            <div className='p-2 h-full font-semibold text-sm border-l-2 border-r-2 w-2/12 flex-grow'>{item.name ? item.name : '-'}</div>
+                            <div className='p-2 h-full font-semibold text-sm border-r-2 w-1/12 flex-grow'>{item.category ? item.category : 'N.A'}</div>
+                            <div className='p-1 h-full font-semibold text-sm border-r-2 w-[12%] flex-grow'>{item.sku ? item.sku : '-'}</div>
+                            <div className='p-1 h-full font-semibold text-sm border-r-2 w-1/12 flex-grow'>{item.unit_price ? '₹' + item.unit_price : '-'}</div>
+                            <div className='p-2 h-full font-semibold text-sm border-r-2 w-1/12 flex-grow'>{item.hsn_code ? item.hsn_code : '-'}</div>
+                            <div className='p-2 h-full font-semibold text-sm border-r-2 w-2/12 flex-grow'>{item.volumetric_weight ? item.volumetric_weight : '-'}</div>
+                            <div className='p-2 h-full font-semibold text-sm border-r-2 w-1/12 flex-grow'>{item.remarks ? item.remarks : '-'}</div>
+                        </div>
+                    ))
+                )}
+            </div>
+        </div>
+            <div>
+                <button className={`text-xl font-semibold mt-4 ml-4 p-2 border rounded text-white bg-[#159700] ${itemsPerPage === 10 ? 'cursor-not-allowed' : ''}`} onClick={() => { paginate(itemsPerPage - 10); if (pageNo > 1) { setPageNo(pageNo - 1) } }} disabled={itemsPerPage === 10}>
+                    Previous
+                </button>
+                <span className='font-semibold ml-2 p-1 border-2 border-gray-300 rounded-md text-sm'>{pageNo}</span>
+                <span className='font-semibold ml-2 text-base'>Of</span>
+                <span className='font-semibold ml-2 p-1 border-2 border-gray-300 rounded-md text-sm'>{totalPage}</span>
+                <button className={`text-xl font-semibold mt-4 ml-4 p-2 border rounded text-white bg-[#159700] ${currentItems.length < 10 ? 'cursor-not-allowed' : ''}`} onClick={() => { paginate(itemsPerPage + 10); setPageNo(pageNo + 1) }} disabled={currentItems.length < 10}>
+                    Next
+                </button>
+            </div>
+    </div>
+</div>
+
     {isPopupVisible && (
       <div className="w-full fixed mt-2 inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75 z-50">
               <div className="w-[30%] h-[45%] bg-white rounded-lg p-6 md:w-[35%] sm:w-[40%]">
@@ -235,7 +335,7 @@ formData.append('excel_file',selectedFile ,'sample.xlsx');
               </div>
       </div>
       )}
-
+    
     {downloadPopup && (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg">
