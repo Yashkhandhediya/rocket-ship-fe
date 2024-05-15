@@ -23,7 +23,7 @@ const Form = () => {
        
 
         axios
-            .get(BACKEND_URL+`/shopify/redirect?url=${url}`,{params:{url:url}})
+            .get(BACKEND_URL+`/shopify/redirect?url=${url}&user_id=${localStorage.getItem('user_id')}`)
             .then(async (resp) => {
                 if (resp.status === 200) {
                     response = resp.data.auth_url;
