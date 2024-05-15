@@ -92,7 +92,7 @@ if(localStorage.getItem('is_super') != 3){
       subMenuOptions: [
         {
           title: 'Channels',
-          path: '/',
+          path: '/channels',
         },
         {
           title: 'Catalogue',

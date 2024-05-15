@@ -1,0 +1,1 @@
+export {default as Channelpage} from './Channelpage'

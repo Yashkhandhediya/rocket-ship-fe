@@ -9,6 +9,8 @@ import { COD_Remittance, Passbook, ShippingCharges, Wallet_history } from '../pa
 import { Adhaar_Document } from '../pages/kyc/component/adhaar_document';
 import { RateCalculator } from '../pages/rate-calculator';
 import SignUpUser from '../pages/sign-up/SingUpUser';
+import { Channels } from '../pages/channels';
+import Channelpage from '../pages/channels/components/channelpage/Channelpage';
 
 const routes = createBrowserRouter([
   {
@@ -172,6 +174,14 @@ const routes = createBrowserRouter([
   {
     path: '/catalogue',
     element: <PrivateRoute component={<Catalogue />} />,
+  },
+  {
+    path: '/channels',
+    element: <PrivateRoute component={<Channels />} />,
+  },
+  {
+    path: '/channels/add_channel',
+    element: <PrivateRoute component={<Channelpage />} />,
   },
 
 ]);
