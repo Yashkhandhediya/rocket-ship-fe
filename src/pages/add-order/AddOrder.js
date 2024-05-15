@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { BulkOrder, DomesticOrder } from './components';
+import { BulkOrder, DomesticOrder, InternationalOrder } from './components';
 import { Tabs } from '../../common/components';
 import { blackLeftArrow } from '../../common/icons';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
@@ -13,9 +13,9 @@ const AddOrder = () => {
       tooltip: 'Add & ship your order by adding buyer & package details',
     },
     {
-      title: 'Intrnational Order',
-      id: 'intrnational-order',
-      panel: <>{'Intrnational Order'}</>,
+      title: 'International Order',
+      id: 'international-order',
+      panel: <InternationalOrder />,
       tooltip: 'Add & ship your international orders by adding buyer & package details',
     },
     {

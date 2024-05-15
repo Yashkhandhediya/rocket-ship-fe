@@ -7,24 +7,24 @@ export const moreActionOptions = (actions) => [
   {
     label: 'Edit Order',
     key: 'editOrder',
-    onClick: () => {},
+    onClick: actions?.editOrder,
   },
   { type: 'divider' },
-  {
-    label: 'Verify Order',
-    key: 'verifyOrder',
-    onClick: () => {},
-  },
+  // {
+  //   label: 'Verify Order',
+  //   key: 'verifyOrder',
+  //   onClick: () => {},
+  // },
   {
     label: 'Call Buyer',
     key: 'callBuyer',
     onClick: () => {},
   },
-  {
-    label: 'Mark as verified',
-    key: 'markAsVerified',
-    onClick: () => {},
-  },
+  // {
+  //   label: 'Mark as verified',
+  //   key: 'markAsVerified',
+  //   onClick: () => {},
+  // },
   { type: 'divider' },
   {
     label: 'Add Order Tag',
@@ -40,6 +40,26 @@ export const moreActionOptions = (actions) => [
     label: 'Cancel Order',
     key: 'cancelOrder',
     onClick: actions?.cancelOrder,
+  },
+];
+
+export const moreActionRtoOptions = (actions) => [
+  {
+    label: 'Deferred Delivery',
+    key: 'downloadInvoice',
+    onClick: () => {},
+  },
+  { type: 'divider' },
+  {
+    label: 'Edit Details',
+    key: 'editOrder',
+    onClick: actions?.editOrder,
+  },
+  { type: 'divider' },
+  {
+    label: 'Re-attempt',
+    key: 'addOrderTag',
+    onClick: () => {},
   },
 ];
 

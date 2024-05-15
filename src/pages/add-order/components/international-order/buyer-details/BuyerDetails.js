@@ -1,21 +1,27 @@
-import { BuyersInfoFields } from '../../buyers-info-fields';
-import { BuyerAddressFields } from '../../buyer-address-fields';
+import { BuyerAddressFields } from '../../international-buyer-address-fields';
+import { BuyerInfoFields } from '../../international-buyer-info-fields';
 import { Checkbox, Field, FieldAccordion } from '../../../../../common/components';
 import { useEffect, useState } from 'react';
 import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
+import { shipmentTypes, currencyTypes } from '../data';
+import { useLocation } from 'react-router-dom';
+import {CustomMultiSelect} from '../../../../../common/components';
 
 export default function BuyerDetails({ handleFormData, formData, currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
-
+  const location = useLocation()
+  const data = location.state?.data || {}
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order) || {};
 
   const [isSameBilingAddress, setIsSameBilingAddress] = useState(true);
   const [triggerBuyerValidations, setTriggerBuyerValidations] = useState(false);
   const [disableAddressLocationField, setDisableAddressLocationField] = useState(false);
   const [disableBillingLocationField, setDisableBillingLocationField] = useState(false);
+  const [shipmentPurpose, setShipmentPurpose] = useState(data?.shipmentTypes || 'Select Shipment Purpose');
+  const [currencyType, setCurrencyType] = useState(data?.currencyTypes || 'Select Currency');
 
   const [buyerInfo, setBuyerInfo] = useState({
     contact_no: formData?.buyer_info?.contact_no || '',
@@ -158,8 +164,56 @@ export default function BuyerDetails({ handleFormData, formData, currentStep, ha
     <div>
       <div className="mb-6 text-xl font-bold"> {"Add Buyer's Details"} </div>
       <div className="mb-3.5 rounded-xl bg-white p-9">
+      <div className="mb-3">
+          <BuyerAddressFields
+            heading={'Where is the order being delivered to?'}
+            values={addressInfo}
+            triggerValidation={triggerBuyerValidations}
+            onChange={handleSetAddressinfo}
+            onPincodeVeify={onAddressPincodeVerify}
+            disabledFields={{
+              country: true,
+              state: disableAddressLocationField,
+              city: disableAddressLocationField,
+            }}
+          />
+        </div>
+        <div className="mt-5 mb-5">
+          <div>
+            <Checkbox
+              id={'sameBillingAdress'}
+              checked={isSameBilingAddress}
+              label={'Billing address is same as the shipping address'}
+              onChange={(e) => setIsSameBilingAddress(e.target.checked)}
+            />
+          </div>
+          {!isSameBilingAddress && (
+            <div className="mt-5">
+              <div className="mb-5 text-xl font-bold">{'Billing Address'}</div>
+              <BuyerInfoFields
+                id="billing"
+                heading={"Buyer's Details"}
+                values={billingInfo}
+                onChange={handleSetBillinginfo}
+              />
+              <div className="my-6 w-full border border-gray-200" />
+              <BuyerAddressFields
+                id="billing"
+                heading={"Buyer's Address"}
+                values={billingInfo}
+                onChange={handleSetBillinginfo}
+                onPincodeVeify={onBillingPincodeVerify}
+                disabledFields={{
+                  country: disableBillingLocationField,
+                  state: disableBillingLocationField,
+                  city: disableBillingLocationField,
+                }}
+              />
+            </div>
+          )}
+        </div>
         <div className="mb-3">
-          <BuyersInfoFields
+          <BuyerInfoFields
             heading={'To whom is the order being delivered?'}
             alternateText={"(Buyer's Info)"}
             triggerValidation={triggerBuyerValidations}
@@ -213,55 +267,39 @@ export default function BuyerDetails({ handleFormData, formData, currentStep, ha
             </div>
           </div>
         </FieldAccordion>
-        <div className="mb-3">
-          <BuyerAddressFields
-            heading={'Where is the order being delivered to?'}
-            values={addressInfo}
-            triggerValidation={triggerBuyerValidations}
-            onChange={handleSetAddressinfo}
-            onPincodeVeify={onAddressPincodeVerify}
-            disabledFields={{
-              country: true,
-              state: disableAddressLocationField,
-              city: disableAddressLocationField,
-            }}
-          />
-        </div>
-        <div className="mt-5">
-          <div>
-            <Checkbox
-              id={'sameBillingAdress'}
-              checked={isSameBilingAddress}
-              label={'Billing address is same as the shipping address'}
-              onChange={(e) => setIsSameBilingAddress(e.target.checked)}
-            />
+
+      <div className="my-6 w-full border border-gray-200" />
+
+      <div className="flex flex-row mt-8 mb-8">
+          <div className="w-[49%] mr-2">
+          <CustomMultiSelect
+              isMulti={false}
+              label={'Shipment Purpose'}
+              options={shipmentTypes}
+              selected={shipmentPurpose}
+              closeMenuOnSelect={true}
+              placeholder={shipmentPurpose}
+              hideSelectedOptions={false}
+              onChange={(value) => {
+                  setShipmentPurpose(value)
+              }} />
           </div>
-          {!isSameBilingAddress && (
-            <div className="mt-5">
-              <div className="mb-5 text-xl font-bold">{'Billing Address'}</div>
-              <BuyersInfoFields
-                id="billing"
-                heading={"Buyer's Details"}
-                values={billingInfo}
-                onChange={handleSetBillinginfo}
-              />
-              <div className="my-6 w-full border border-gray-200" />
-              <BuyerAddressFields
-                id="billing"
-                heading={"Buyer's Address"}
-                values={billingInfo}
-                onChange={handleSetBillinginfo}
-                onPincodeVeify={onBillingPincodeVerify}
-                disabledFields={{
-                  country: disableBillingLocationField,
-                  state: disableBillingLocationField,
-                  city: disableBillingLocationField,
-                }}
-              />
-            </div>
-          )}
-        </div>
+          <div className="w-[49%] ml-2">
+          <CustomMultiSelect
+              isMulti={false}
+              label={'Currency'}
+              options={currencyTypes}
+              selected={currencyType}
+              closeMenuOnSelect={true}
+              placeholder={currencyType}
+              hideSelectedOptions={false}
+              onChange={(value) => {
+                  setCurrencyType(value)
+              }} />
+          </div>
       </div>
+      </div>
+
       <div className="flex justify-end gap-4">
         <button
           type="button"

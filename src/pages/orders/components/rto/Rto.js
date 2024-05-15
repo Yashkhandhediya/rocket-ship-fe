@@ -1,20 +1,24 @@
-import { filterInRTO, moreActionOptions } from '../utils';
+import { filterInRTO, moreActionOptions,moreActionRtoOptions } from '../utils';
 import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { MoreDropdown, CustomTooltip, CommonBadge, CustomDataTable } from '../../../../common/components';
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
 import { filterIcon, moreAction } from '../../../../common/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllOrders, setClonedOrder } from '../../../../redux';
+import { setAllOrders, setClonedOrder,setEditOrder } from '../../../../redux';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Fragment, useState } from 'react';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
-import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
+import { getClonedOrderFields,getEditOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Orders';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
+
+// export let isEditRTO = false;
+// export let order_id;
 
 const Rto = () => {
   const dispatch = useDispatch();
@@ -36,7 +40,7 @@ const Rto = () => {
   const handleMenifest = (id) => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)
-    const headers={'Content-Type': 'application/json'};
+    const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
 
     temp_payload['client_name']="cloud_cargo"
     temp_payload['file_name']="manifest"
@@ -90,7 +94,7 @@ const Rto = () => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)
-    const headers={'Content-Type': 'application/json'};
+    const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
 
     
     let temp_str = splitString(temp_payload['complete_address1'],35)
@@ -121,6 +125,26 @@ const Rto = () => {
         console.error("Error:", error);
         toast('Error in Invoice Download',{type:'error'})
     });
+  }
+
+  function editOrder(orderDetails) {
+    // let isEdit = true
+    // let order_id = orderDetails?.id
+    let data = {
+      "isEdit": true,
+      "order_id":orderDetails?.id
+    }
+    axios.get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails?.id}`)
+    .then((res) => {
+      console.log("Response Of Get Order While Edit ",res)
+      const editedOrder = getEditOrderFields(res.data);
+      console.log("GHHHH",editedOrder)
+      dispatch(setEditOrder(editedOrder));
+      dispatch(setDomesticOrder(editedOrder))
+    }).catch((err) => {
+      console.log("Error While Edit Order ",err)
+    })
+    navigate('/add-order',{state:data});
   }
 
   const getColumns = () => {
@@ -269,10 +293,11 @@ const Rto = () => {
             <div className="min-h-[32px] min-w-[32px]">
               <MoreDropdown
                 renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
-                options={moreActionOptions({
-                  downloadInvoice : () => handleInvoice(row?.original?.id),
-                  cloneOrder: () => cloneOrder(row?.original),
-                  cancelOrder: () => cancelOrder(row?.original),
+                options={moreActionRtoOptions({
+                   editOrder: () => editOrder(row?.original)
+                  // downloadInvoice : () => handleInvoice(row?.original?.id),
+                  // cloneOrder: () => cloneOrder(row?.original),
+                  // cancelOrder: () => cancelOrder(row?.original),
                 })}
               />
             </div>

@@ -11,7 +11,7 @@ import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import Loader from '../../../../../common/loader/Loader';
-// import { isEdit, order_id } from '../../../../orders/components/new/New'
+// import { order_id } from '../../../../orders/components/rto/Rto'
 import { package_info } from '../order-details/OrderDetails';
 
 export default function PackageDetails({ currentStep, handleChangeStep }) {
@@ -19,7 +19,6 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
   const navigate = useNavigate();
   const location = useLocation()
   let {isEdit,order_id} = location?.state || {}
-  console.log("EDDDITTT",isEdit)
   const id_user = localStorage.getItem('user_id')
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order);
   const editDetails = useSelector((state)=> state?.editOrder?.domestic_order)
@@ -114,7 +113,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     const date = getFullDateForPayload(editDetails?.date);
     console.log("lkkkkkkkkkk",editDetails)
     console.log("lkkkkkkkkkk",domesticOrderFormValues)
-    let resp = await axios.put(`${BACKEND_URL}/order?user_id=${id_user}`, {
+    let resp = await axios.put(`${BACKEND_URL}/order?id=${order_id}`, {
       ...editDetails,
       ...formDirectField,
       order_type: 'domestic',

@@ -1,10 +1,11 @@
-import React, {useState,useEffect} from 'react'
+import React, {useState,useEffect,useMemo} from 'react'
 import { CustomTooltip, Field } from '../../../../common/components'
 import axios from 'axios'
 import { BACKEND_URL } from '../../../../common/utils/env.config'
 import Loader from '../../../../common/loader/Loader'
 import { toast } from 'react-toastify'
 import { infoIcon } from '../../../../common/icons'
+// import { ACCESS_TOKEN } from '../../../../common/utils/config'
 
 
 const Order = ({onDetailChange,onCityChange,onDestinationChange}) => {
@@ -31,8 +32,27 @@ const Order = ({onDetailChange,onCityChange,onDestinationChange}) => {
   const [dimention,setDimention] = useState({
     length:0,
     width:0,
-    height:0
+    height:0,
+    volumetric_weight:0
 })
+
+const volumetricWeight =
+useMemo(
+    () =>
+        (Number(dimention?.length || 0) *
+            Number(dimention?.width || 0) *
+            Number(dimention?.height || 0)) /
+        5000,
+    [dimention],
+) || 0;
+
+
+useEffect(() => {
+  setDimention({
+    ...dimention,
+    volumetric_weight:volumetricWeight
+  })
+},[volumetricWeight])
 
 const handleDimention = (event) => {
   const { id, value } = event.target;
@@ -325,8 +345,8 @@ const handleCalculate = () => {
       <p className="text-xs font-semibold text-gray-500 mt-1">Note: Dimensional value should be greater than 0.5cm</p>
     </div>
     {actualWeight != null && <div className='flex flex-row'>
-      <div className='font-semibold text-base border rounded-lg mr-2 h-12 p-2 bg-slate-100'>Volumetric Weight : 0.00 KG</div>
-      <div className='font-semibold text-base border rounded-lg mr-2 h-12 p-2 bg-slate-50'>{`Applicable Weight : ${actualWeight} KG`}</div>
+      <div className='font-semibold text-sm border rounded-lg mr-2 h-12 p-2 bg-slate-100'>{`Volumetric Weight : ${volumetricWeight} KG`}</div>
+      <div className='font-semibold text-sm border rounded-lg mr-2 h-12 p-2 bg-slate-50'>{`Applicable Weight : ${actualWeight} KG`}</div>
     </div>}
   </div>
 
