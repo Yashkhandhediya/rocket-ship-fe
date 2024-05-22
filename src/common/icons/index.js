@@ -20,3 +20,4 @@ export {default as upload} from './upload.svg';
 export {default as map } from './map.svg'
 export {default as shopify } from './shopify-logo.svg'
 export {default as Woocommerce} from './Woocommerce.svg'
+export {default as woocommerce} from './woocommerce.png'

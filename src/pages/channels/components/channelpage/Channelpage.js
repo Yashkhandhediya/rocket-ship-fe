@@ -3,10 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import PageWithSidebar from '../../../../common/components/page-with-sidebar/PageWithSidebar';
-import { Steps } from './steps';
-import { Form } from './form';
+import { Steps, WooSteps } from './steps';
+import { Form, WooForm } from './form';
 
 const handleNameChange = (event) => {
 
@@ -14,6 +14,9 @@ const handleNameChange = (event) => {
 
 const Channelpage = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const flag = location?.state || {}
+    console.log("Flag Val",flag)
     return (
         <PageWithSidebar>
             <div className="flex flex-col bg-[#f8f8f8] h-auto rounded w-full py-6 px-5 shadow">
@@ -28,8 +31,8 @@ const Channelpage = () => {
                     <p className="text-[17px] text-black font-[500]">back</p>
                 </button>
                 <div className="flex gap-8 flex-row">
-                    <Steps></Steps>
-                    <Form></Form>
+                    {flag == 7 ? <WooSteps></WooSteps>:<Steps></Steps>}
+                    {flag == 7 ? <WooForm></WooForm>:<Form></Form>}
                     
                 </div>
             </div>

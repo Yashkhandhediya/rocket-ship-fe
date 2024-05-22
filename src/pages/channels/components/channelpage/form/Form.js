@@ -114,9 +114,9 @@ const Form = () => {
                     <span className='ml-9 mr-3 text-[17px] font-semibold text-black'>Seller Panel</span>
                 </div>
                 <div className='flex items-center text-left mb-3'>
-                    <span className='ml-9 mr-3 text-[12px] text-black text-[#999]'>Please provide below given credentials for your store :</span>
+                    <span className='ml-9 mr-3 text-[12px] text-black'>Please provide below given credentials for your store :</span>
                 </div>
-                <div className='flex items-center mt-3 mb-5 flex items-center justify-between'>
+                <div className='mt-3 mb-5 flex items-center justify-between'>
                     <label htmlFor="nameInput" className='ml-9 mr-3 text-[14px] font-semibold text-black text-[#999]'>Store Url</label>
                     <input
                         type="text"
@@ -464,7 +464,7 @@ const Form = () => {
                 </div>
             </div> */}
             <div className="flex bg-white-100 justify-start flex-col rounded-lg relative mr-9 ml-9 mt-4">
-                <div className='flex items-center ml-3 mt-3 mb-5 flex items-center '>
+                <div className='flex items-center ml-3 mt-3 mb-5'>
                     <button onClick={redirectToShopifyAuth}
                         className="py-2 px-4 bg-red-500 text-white rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
                         Connect to Shopify
