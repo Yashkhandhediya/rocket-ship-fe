@@ -18,3 +18,5 @@ export {default as KYC_adhaar} from './KYC_adhaar.svg';
 export {default as KYC_Document} from './KYC_Document.svg';
 export {default as upload} from './upload.svg';
 export {default as map } from './map.svg'
+export {default as shopify } from './shopify-logo.svg'
+export {default as Woocommerce} from './Woocommerce.svg'

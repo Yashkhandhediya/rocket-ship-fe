@@ -4,7 +4,7 @@ import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { MoreDropdown, CustomTooltip, CustomDataTable } from '../../../../common/components';
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
-import { filterIcon, moreAction } from '../../../../common/icons';
+import { Woocommerce, filterIcon, moreAction, shopify } from '../../../../common/icons';
 import { moreActionOptions, allFilterFields } from '../utils';
 import DrawerWithSidebar from '../../../../common/components/drawer-with-sidebar/DrawerWithSidebar';
 import { ShipmentDrawerOrderDetails } from '../shipment-drawer-order-details';
@@ -20,7 +20,8 @@ import { CommonBadge } from '../../../../common/components/common-badge';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Orders';
 import Loader from '../../../../common/loader/Loader';
-import { ACCESS_TOKEN } from '../../../../common/utils/config';
+// import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { infoIcon } from '../../../../common/icons';
 // import { setEditOrder } from '../../../../redux/actions/editOrderActions';
 
 // export let isEdit = false;
@@ -99,7 +100,7 @@ export const New = () => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)
-    const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
+    const headers={'Content-Type': 'application/json'};
 
     let temp_str = splitString(temp_payload['complete_address1'],35)
     let temp1 = splitString(temp_payload['complete_address'],35)
@@ -134,7 +135,7 @@ export const New = () => {
   }
 
   const handleBulkOrder = () => {
-    const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
+    const headers={'Content-Type': 'application/json'};
     let temp_list = []
     for(let i=0;i<bulkOrder.length;i++){
         console.log(typeof bulkOrder[i].id);
@@ -183,6 +184,8 @@ export const New = () => {
                 </Link>
               </div>
               <div className="text-[11px]">{formattedDate}</div>
+              {row?.original?.partner_name == "shopify" && <img src={shopify} className="mr-2 w-4" />}
+              {row?.original?.partner_name == "woocommerce" && <img src={Woocommerce} className="mr-2 w-14" />}
               <div>{(row?.original?.channel || '')?.toUpperCase()}</div>
               <div>
                 <CustomTooltip
@@ -238,6 +241,12 @@ export const New = () => {
               <div className="text-wrap">
                 {'Volumetric wt.: '} {row?.original?.volumatric_weight} {' Kg'}
               </div>
+            {row?.original?.volumatric_weight == null && <CustomTooltip text={"Weight Is missing Please Go to Edit Order To Add Information"}>
+            <div className="flex flex-row">
+            <img src={infoIcon} className="ms-2" />
+            <span className='ml-2 text-red-400 text-xs'>Missing Info</span>
+            </div>
+            </CustomTooltip>}
             </div>
           );
         },

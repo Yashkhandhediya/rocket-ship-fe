@@ -3,7 +3,7 @@ import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { MoreDropdown, CustomTooltip, CommonBadge, CustomDataTable } from '../../../../common/components';
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
-import { filterIcon, moreAction } from '../../../../common/icons';
+import { Woocommerce, filterIcon, moreAction, shopify } from '../../../../common/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllOrders, setClonedOrder,setEditOrder } from '../../../../redux';
 import axios from 'axios';
@@ -15,7 +15,7 @@ import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Orders';
-import { ACCESS_TOKEN } from '../../../../common/utils/config';
+// import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 // export let isEditRTO = false;
 // export let order_id;
@@ -40,7 +40,7 @@ const Rto = () => {
   const handleMenifest = (id) => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)
-    const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
+    const headers={'Content-Type': 'application/json'};
 
     temp_payload['client_name']="cloud_cargo"
     temp_payload['file_name']="manifest"
@@ -94,7 +94,7 @@ const Rto = () => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)
-    const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
+    const headers={'Content-Type': 'application/json'};
 
     
     let temp_str = splitString(temp_payload['complete_address1'],35)
@@ -167,6 +167,8 @@ const Rto = () => {
                 </Link>
               </div>
               <div className="text-[11px]">{formattedDate}</div>
+              {row?.original?.partner_name == "shopify" && <img src={shopify} className="mr-2 w-4" />}
+              {row?.original?.partner_name == "woocommerce" && <img src={Woocommerce} className="mr-2 w-4" />}
               <div>{(row?.original?.channel || '')?.toUpperCase()}</div>
               <div>
                 <CustomTooltip

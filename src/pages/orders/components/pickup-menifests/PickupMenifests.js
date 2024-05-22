@@ -1,6 +1,6 @@
 import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { Fragment, useState } from "react";
-import { filterIcon, moreAction } from "../../../../common/icons";
+import { filterIcon, moreAction, shopify } from "../../../../common/icons";
 import { MoreFiltersDrawer } from "../more-filters-drawer"; 
 import axios from 'axios';
 import { Badge } from 'flowbite-react';
@@ -15,6 +15,7 @@ import { setAllOrders, setClonedOrder } from '../../../../redux';
 import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { resData } from '../../Orders';
+// import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 
 
@@ -157,6 +158,7 @@ const PickupMenifests = () => {
                 </Link>
               </div>
               <div className="text-[11px]">{formattedDate}</div>
+              {row?.original?.partner_name == "shopify" && <img src={shopify} className="mr-2 w-4" />}
               <div>{(row?.original?.channel || '')?.toUpperCase()}</div>
               <div>
                 <CustomTooltip

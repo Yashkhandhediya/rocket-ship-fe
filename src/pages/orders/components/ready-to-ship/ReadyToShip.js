@@ -5,7 +5,7 @@ import moment from 'moment';
 import { Badge } from 'flowbite-react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { filterIcon, moreAction } from '../../../../common/icons';
+import { Woocommerce, filterIcon, moreAction, shopify } from '../../../../common/icons';
 import { filterReadyToShip, moreActionOptions } from '../utils';
 import DrawerWithSidebar from '../../../../common/components/drawer-with-sidebar/DrawerWithSidebar';
 import { ShipmentDrawerOrderDetails } from '../shipment-drawer-order-details';
@@ -19,6 +19,7 @@ import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
 import { resData } from '../../Orders';
 import { BACKEND_URL,MENIFEST_URL } from '../../../../common/utils/env.config';
+// import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 
 export const ReadyToShip = () => {
@@ -133,6 +134,8 @@ export const ReadyToShip = () => {
                 </Link>
               </div>
               <div className="text-[11px]">{formattedDate}</div>
+              {row?.original?.partner_name == "shopify" && <img src={shopify} className="mr-2 w-4" />}
+              {row?.original?.partner_name == "woocommerce" && <img src={Woocommerce} className="mr-2 w-14" />}
               <div>{(row?.original?.channel || '')?.toUpperCase()}</div>
               <div>
                 <CustomTooltip

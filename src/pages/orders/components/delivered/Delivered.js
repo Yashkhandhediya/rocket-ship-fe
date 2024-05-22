@@ -3,7 +3,7 @@ import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { MoreDropdown, CustomTooltip, CommonBadge, CustomDataTable } from '../../../../common/components';
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
-import { filterIcon, moreAction } from '../../../../common/icons';
+import { Woocommerce, filterIcon, moreAction, shopify } from '../../../../common/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllOrders, setClonedOrder } from '../../../../redux';
 import axios from 'axios';
@@ -15,6 +15,7 @@ import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Orders';
+// import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 const Delivered = () => {
   const dispatch = useDispatch();
@@ -125,6 +126,8 @@ const Delivered = () => {
                 </Link>
               </div>
               <div className="text-[11px]">{formattedDate}</div>
+              {row?.original?.partner_name == "shopify" && <img src={shopify} className="mr-2 w-4" />}
+              {row?.original?.partner_name == "woocommerce" && <img src={Woocommerce} className="mr-2 w-14" />}
               <div>{(row?.original?.channel || '')?.toUpperCase()}</div>
               <div>
                 <CustomTooltip
