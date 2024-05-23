@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 
 export const PrivateRoute = ({ component }) => {
 const accessToken = localStorage.getItem("access_token");
-  if (!accessToken) {
+  if (accessToken) {
     return <Navigate to="/login" />;
   }
   return component;
