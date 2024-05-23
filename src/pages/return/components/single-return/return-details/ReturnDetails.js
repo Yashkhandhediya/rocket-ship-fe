@@ -170,7 +170,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
   const fetchReturnId = () => {
     const id = localStorage.getItem('is_company') == 1 ? localStorage.getItem('company_id') : localStorage.getItem('user_id')
     axios
-      .get(BACKEND_URL + `/return/get_return_id&user_id=${id}`)
+      .get(BACKEND_URL + `/return/get_return_id?user_id=${id}`)
       .then((resp) => {
         if (resp?.status == 200 && resp?.data?.return_id) {
           setFormDirectField({
