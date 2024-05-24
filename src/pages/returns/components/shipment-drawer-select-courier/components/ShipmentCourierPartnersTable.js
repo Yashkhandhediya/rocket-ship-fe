@@ -107,7 +107,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
       name: 'Chargeable Weight',
       selector: (row) => (
         <div className="flex h-full w-full flex-col gap-1 py-2 text-center">
-          <div className="text-xs text-[#555]">{`${row?.charged_weight || ''} Kg`}</div>
+          <div className="text-xs text-[#555]">{`${row?.chargable_weight || ''} Kg`}</div>
         </div>
       ),
     },
@@ -116,7 +116,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
       selector: (row) => (
         <div className="flex flex-col gap-1 py-2 text-left">
           <div className="flex items-center">
-            <div className="text-base font-bold text-[gray]">{`₹${row?.total_amount || ''}`}</div>
+            <div className="text-base font-bold text-[gray]">{`₹${row?.total_charge || ''}`}</div>
             <CustomTooltip
               text={
                 <>

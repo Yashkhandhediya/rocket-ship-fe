@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { blackLeftArrow, copyToClipboard, moreAction } from '../../common/icons';
 import { Badge } from 'flowbite-react';
@@ -23,11 +23,15 @@ import { setDomesticOrder } from '../../redux/actions/addOrderActions';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setAllOrders } from '../../redux';
+// import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const OrderTrackDetails = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { orderId } = useParams();
+  const [searchParam] = useSearchParams();
+  const flag = searchParam.get('flag')
+  console.log("FLAAAAA",flag)
   const [copyTooltip, setCopyTooltip] = useState('Click to Copy');
   const [orderDetails, setOrderDetails] = useState(null);
   const [shipmentDrawerOpen, setShipmentDrawerOpen] = useState(false);
@@ -44,8 +48,9 @@ const OrderTrackDetails = () => {
   };
 
   const fetchOrderDetails = async () => {
+    const apiURL = flag == 1 ? '/return/get_return_detail' : '/order/get_order_detail'
     await axios
-      .get(BACKEND_URL+'/order/get_order_detail', {
+      .get(BACKEND_URL + apiURL, {
         params: {
           id: orderId,
         },
@@ -171,7 +176,7 @@ function flattenObject(obj, id) {
           <div className="w-full">
             <div className="flex items-center justify-between px-2 md:w-8/12">
               <div className="flex items-center">
-                <Link to="/orders">
+                <Link to={flag==1 ? `/returns`: `/orders`}>
                   <img src={blackLeftArrow} className="mr-0.5 h-4 w-4 cursor-pointer" />
                 </Link>
                 <div className="flex items-center text-lg font-medium">
