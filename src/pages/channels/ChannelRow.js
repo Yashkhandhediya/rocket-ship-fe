@@ -7,7 +7,7 @@ const [enabled, setEnabled] = React.useState(channelStatus);
     <div className="flex shadow-sm items-center justify-evenly p-4 m-1 my-2 bg-white ms-2 border-b">
 
       <div className="flex-1">
-      <span className="text-sm">{storeName}</span><br/>
+      <span className="text-sm font-semibold">{storeName}</span><br/>
       <span className="text-sm  text-gray-500">{storeCode}</span>
       </div>
 

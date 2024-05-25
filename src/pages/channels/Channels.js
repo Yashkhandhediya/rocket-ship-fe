@@ -34,6 +34,54 @@ const dummyChannels = [
     channelStatus: true,
   },
   {
+    id: 13,
+    storeName: 'Shopify Store',
+    storeCode: 123456,
+    salesChannel: shopifyImage,
+    lastOrderSync: 'Last Order Sync',
+    lastOrderSyncStatus: 'Last Order Sync is Off.',
+    lastInventorySync: 'Last Inventory Sync',
+    lastInventorySynStatus: 'Last Inventory Sync is Off.',
+    connectionStatus: 'Connected',
+    channelStatus: true,
+  },
+  {
+    id: 12,
+    storeName: 'Shopify Store',
+    storeCode: 123456,
+    salesChannel: shopifyImage,
+    lastOrderSync: 'Last Order Sync',
+    lastOrderSyncStatus: 'Last Order Sync is Off.',
+    lastInventorySync: 'Last Inventory Sync',
+    lastInventorySynStatus: 'Last Inventory Sync is Off.',
+    connectionStatus: 'Connected',
+    channelStatus: true,
+  },
+  {
+    id: 11,
+    storeName: 'Shopify Store',
+    storeCode: 123456,
+    salesChannel: shopifyImage,
+    lastOrderSync: 'Last Order Sync',
+    lastOrderSyncStatus: 'Last Order Sync is Off.',
+    lastInventorySync: 'Last Inventory Sync',
+    lastInventorySynStatus: 'Last Inventory Sync is Off.',
+    connectionStatus: 'Connected',
+    channelStatus: true,
+  },
+  {
+    id: 10,
+    storeName: 'Shopify Store',
+    storeCode: 123456,
+    salesChannel: shopifyImage,
+    lastOrderSync: 'Last Order Sync',
+    lastOrderSyncStatus: 'Last Order Sync is Off.',
+    lastInventorySync: 'Last Inventory Sync',
+    lastInventorySynStatus: 'Last Inventory Sync is Off.',
+    connectionStatus: 'Connected',
+    channelStatus: true,
+  },
+  {
     id: 2,
     storeName: 'WooCommerce Store',
     storeCode: 123456,
@@ -101,11 +149,11 @@ const Channels = () => {
 
       <div className="flex flex-col">
         <div className="m-1 my-2 ms-2 flex items-center justify-between border-b bg-white p-4 shadow-sm">
-          <div className="flex-1">Store Name/Channel ID</div>
-          <div className="flex-1">Sales Channel</div>
-          <div className="flex-1">Sync Info.</div>
-          <div className="flex-1 text-center">Channel Status</div>
-          <div className="flex-1 text-center">Action</div>
+          <div className="flex-1 font-semibold">Store Name/Channel ID</div>
+          <div className="flex-1 font-semibold">Sales Channel</div>
+          <div className="flex-1 font-semibold">Sync Info.</div>
+          <div className="flex-1 text-center font-semibold">Channel Status</div>
+          <div className="flex-1 text-center font-semibold">Action</div>
         </div>
         {dummyChannels.map((channel) => (
           <ChannelRow
