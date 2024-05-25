@@ -94,10 +94,10 @@ if(localStorage.getItem('is_super') != 3){
           title: 'Channels',
           path: '/channels',
         },
-        {
-          title: 'Catalogue',
-          path: '/catalogue',
-        },
+        // {
+        //   title: 'Catalogue',
+        //   path: '/catalogue',
+        // },
         {
           title: 'Courier',
           path: '/',
@@ -112,25 +112,25 @@ if(localStorage.getItem('is_super') != 3){
         },
       ],
     },
-    {
-      title: 'Buyer Experiance',
-      icon: user,
-      hoverIcon: user,
-      subMenuOptions: [
-        {
-          title: 'Brand Boost',
-          path: '/',
-        },
-        {
-          title: 'Brand Communication',
-          path: '/',
-        },
-        {
-          title: 'Return & Refunds',
-          path: '/',
-        },
-      ],
-    },
+    // {
+    //   title: 'Buyer Experiance',
+    //   icon: user,
+    //   hoverIcon: user,
+    //   subMenuOptions: [
+    //     {
+    //       title: 'Brand Boost',
+    //       path: '/',
+    //     },
+    //     {
+    //       title: 'Brand Communication',
+    //       path: '/',
+    //     },
+    //     {
+    //       title: 'Return & Refunds',
+    //       path: '/',
+    //     },
+    //   ],
+    // },
     {
       title: 'Billing',
       path: '/statement',

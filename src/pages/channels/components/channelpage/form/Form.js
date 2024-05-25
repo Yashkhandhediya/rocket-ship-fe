@@ -19,23 +19,24 @@ const Form = () => {
     };
 
     const redirectToShopifyAuth = async () => {
-        console.log(BACKEND_URL+`/shopify/redirect?url=${url}`)
-       
+        toast('Redirecting to Shopify authentication...', { type: 'info' });
+        
+        // console.log(BACKEND_URL+`/shopify/redirect?url=${url}`)
 
-        axios
-            .get(BACKEND_URL+`/shopify/redirect?url=${url}&user_id=${localStorage.getItem('user_id')}`)
-            .then(async (resp) => {
-                if (resp.status === 200) {
-                    response = resp.data.auth_url;
-                    console.log("REsponseeeeeeee", response)
-                    window.location.href = response;
-                } else {
-                    toast('Enter valid url', { type: 'error' });
-                }
-            })
-            .catch(() => {
-                toast('There is some error', { type: 'error' });
-            });
+        // axios
+        //     .get(BACKEND_URL+`/shopify/redirect?url=${url}&user_id=${localStorage.getItem('user_id')}`)
+        //     .then(async (resp) => {
+        //         if (resp.status === 200) {
+        //             response = resp.data.auth_url;
+        //             console.log("REsponseeeeeeee", response)
+        //             window.location.href = response;
+        //         } else {
+        //             toast('Enter valid url', { type: 'error' });
+        //         }
+        //     })
+        //     .catch(() => {
+        //         toast('There is some error', { type: 'error' });
+        //     });
     };
 
 
