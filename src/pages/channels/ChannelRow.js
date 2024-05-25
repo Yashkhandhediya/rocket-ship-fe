@@ -1,42 +1,62 @@
 import React from 'react';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
-const ChannelRow = ({ storeName, storeCode, salesChannel,lastOrderSyncStatus, lastOrderSync, lastInventorySyncStatus, lastInventorySync, channelStatus }) => {
-const [enabled, setEnabled] = React.useState(channelStatus);
+
+const ChannelRow = ({
+  storeName,
+  storeCode,
+  salesChannel,
+  lastOrderSyncStatus,
+  lastOrderSync,
+  lastInventorySyncStatus,
+  lastInventorySync,
+  channelStatus,
+}) => {
+  const [enabled, setEnabled] = React.useState(channelStatus);
+  const navigate = useNavigate();
+
+  const handleToggle = () => {
+    setEnabled(!enabled);
+    toast(`This channel has been ${enabled ? 'deactivated You cannot now fetch orders from this channel.' : 'activated. You can now fetch orders from this channel.'}`, { type: 'info' });
+  };
 
   return (
-    <div className="flex shadow-sm items-center justify-evenly p-4 m-1 my-2 bg-white ms-2 border-b">
-
+    <div className="m-1 my-2 ms-2 flex items-center justify-evenly border-b bg-white p-4 shadow-sm">
       <div className="flex-1">
-      <span className="text-sm font-semibold">{storeName}</span><br/>
-      <span className="text-sm  text-gray-500">{storeCode}</span>
+        <span className="text-sm font-semibold">{storeName}</span>
+        <br />
+        <span className="text-sm  text-gray-500">{storeCode}</span>
       </div>
 
       <div className="flex-1 text-center ">
         <img src={salesChannel} alt={storeName} className="h-[40%] w-[40%]" />
       </div>
       <div className="flex-2">
-
-      <span className="text-sm text-gray-500">{lastOrderSync}: </span>
-      <span className="text-sm font-semibold">{lastOrderSyncStatus}</span><br/>
-      <span className="text-sm text-gray-500">{lastInventorySync}: </span>
-      <span className="text-sm font-semibold">{lastInventorySyncStatus}</span>
+        <span className="text-sm text-gray-500">{lastOrderSync}: </span>
+        <span className="text-sm font-semibold">{lastOrderSyncStatus}</span>
+        <br />
+        <span className="text-sm text-gray-500">{lastInventorySync}: </span>
+        <span className="text-sm font-semibold">{lastInventorySyncStatus}</span>
       </div>
       <div className="flex-1 text-center">
-        <label className="inline-flex items-center me-5 cursor-pointer">
+        <label className="me-5 inline-flex cursor-pointer items-center">
           <input
             type="checkbox"
             value=""
-            className="sr-only peer"
+            className="peer sr-only"
             checked={enabled}
-            onChange={() => setEnabled(!enabled)}
+            onChange={handleToggle}
           />
-          <div className="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
-        
+          <div
+            className="dark:bg-gray-700 dark:peer-focus:ring-green-800 dark:border-gray-600 peer relative h-6 w-12 rounded-full bg-gary-200 after:absolute after:start-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-green-700 after:transition-all after:content-[''] peer-checked:bg-gray-200 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-1 peer-focus:ring-green-600 rtl:peer-checked:after:-translate-x-full"></div>
         </label>
       </div>
+      
       <div className="flex-1 text-center">
-        <button className={`w-32 rounded-md border border-[#E02424] bg-white py-0.5`}> Reconnect
-        </button>
+        <button className="w-32 rounded-md border border-[#E02424] bg-white py-0.5" onClick={() => {
+                navigate('/channels/add_channel');
+              }}> Reconnect</button>
       </div>
     </div>
   );
