@@ -17,13 +17,13 @@ import { package_info } from '../order-details/OrderDetails';
 export default function PackageDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation()
-  let {isEdit,order_id} = location?.state || {}
-  console.log("EDDDITTT",isEdit)
-  const id_user = localStorage.getItem('user_id')
+  const location = useLocation();
+  let { isEdit, order_id } = location?.state || {};
+  console.log('EDDDITTT', isEdit);
+  const id_user = localStorage.getItem('user_id');
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order);
-  const editDetails = useSelector((state)=> state?.editOrder?.domestic_order)
-  console.log("EDDDDDDDDDDD",editDetails)
+  const editDetails = useSelector((state) => state?.editOrder?.domestic_order);
+  console.log('EDDDDDDDDDDD', editDetails);
   const [validationTriggered, setValidationTriggered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [courierType, setCourierType] = useState('air');
@@ -36,27 +36,28 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     volumatric_weight: '',
   });
 
-  if(package_info?.volumatric_weight){
+  if (package_info?.volumatric_weight) {
     setFormDirectField({
       ...formDirectField,
-      length:package_info.length,
-      width:package_info.width,
-      height:package_info.height,
-      volumatric_weight:package_info.volumatric_weight
-    })
+      length: package_info.length,
+      width: package_info.width,
+      height: package_info.height,
+      volumatric_weight: package_info.volumatric_weight,
+    });
   }
 
   const divisor = courierType === 'air' ? 5000 : 4750;
 
-  const volumatricWeight =
-    useMemo(
-      () =>
-        ((Number(formDirectField?.length || 0) *
+  const volumatricWeight = useMemo(
+    () =>
+      (
+        (Number(formDirectField?.length || 0) *
           Number(formDirectField?.width || 0) *
           Number(formDirectField?.height || 0)) /
-        divisor).toFixed(5),
-      [formDirectField],
-    ) || 0;
+        divisor
+      ).toFixed(5),
+    [formDirectField, courierType]
+  ) || 0;
 
   const applicableWeight = useMemo(
     () =>
@@ -65,6 +66,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
         : Number(formDirectField?.dead_weight || 0),
     [volumatricWeight, formDirectField?.dead_weight],
   );
+
 
   const setDirectKeysInForm = (event) => {
     const { id, value } = event.target;
@@ -77,7 +79,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
   const getFullDateForPayload = (date) => {
     let newDate = moment(date, 'YYYY-MM-DD');
     const currentTime = moment();
-    return  moment({
+    return moment({
       year: newDate.year(),
       month: newDate.month(),
       date: newDate.date(),
@@ -86,10 +88,10 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
       second: currentTime.seconds(),
       millisecond: currentTime.milliseconds(),
     }).toDate();
-  }
+  };
 
   const placeOrder = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     const date = getFullDateForPayload(domesticOrderFormValues?.date);
     let resp = await axios.post(BACKEND_URL + `/order?user_id=${id_user}`, {
       ...domesticOrderFormValues,
@@ -100,20 +102,20 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     if (resp.status == 200) {
       toast('Order Placed Successfully', { type: 'success' });
       dispatch(resetDomesticOrder());
-      dispatch(setAllOrders(null))
-      setIsLoading(false)
+      dispatch(setAllOrders(null));
+      setIsLoading(false);
       navigate('/orders');
     } else {
       toast('There is some error please check your network or contact support', { type: 'error' });
     }
-    setIsLoading(false)
+    setIsLoading(false);
   };
 
   const editOrder = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     const date = getFullDateForPayload(editDetails?.date);
-    console.log("lkkkkkkkkkk",editDetails)
-    console.log("lkkkkkkkkkk",domesticOrderFormValues)
+    console.log('lkkkkkkkkkk', editDetails);
+    console.log('lkkkkkkkkkk', domesticOrderFormValues);
     let resp = await axios.put(`${BACKEND_URL}/order?user_id=${id_user}`, {
       ...editDetails,
       ...formDirectField,
@@ -123,13 +125,13 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     if (resp.status == 200) {
       toast('Order Updated Successfully', { type: 'success' });
       dispatch(resetDomesticOrder());
-      dispatch(setAllOrders(null))
-      setIsLoading(false)
+      dispatch(setAllOrders(null));
+      setIsLoading(false);
       navigate('/orders');
     } else {
       toast('There is some error please check your network or contact support', { type: 'error' });
     }
-    setIsLoading(false)
+    setIsLoading(false);
   };
 
   const changeNextStep = (type) => {
@@ -152,7 +154,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
             ...formDirectField,
           }),
         );
-        !isEdit ? placeOrder() : editOrder()
+        !isEdit ? placeOrder() : editOrder();
         // placeOrder()
       }
     } else if (currentStep > 0) {
@@ -196,11 +198,11 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
 
   return (
     <div>
-      {isLoading && <Loader/>}
+      {isLoading && <Loader />}
       <div className="mb-6 text-xl font-bold"> {'Package Details'} </div>
       <div className="mb-2 rounded-xl bg-white p-9">
-      <div className="flex flex-row ml-2 mb-4">
-          <h3 className='mt-2 text-sm font-medium text-gray-600'>Mode Of Courier</h3>
+        <div className="mb-4 ml-2 flex flex-row">
+          <h3 className="mt-2 text-sm font-medium text-gray-600">Mode Of Courier</h3>
           <div className="ml-2 p-2">
             <input
               type="radio"
@@ -210,7 +212,9 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
               checked={courierType === 'air'}
               onChange={() => setCourierType('air')}
             />
-            <label className='font-semibold ml-2' htmlFor="air">Air</label>
+            <label className="ml-2 font-semibold" htmlFor="air">
+              Air
+            </label>
           </div>
           <div className="ml-2 p-2">
             <input
@@ -221,7 +225,9 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
               checked={courierType === 'surface'}
               onChange={() => setCourierType('surface')}
             />
-            <label className='font-semibold ml-2' htmlFor="surface">Surface</label>
+            <label className="ml-2 font-semibold" htmlFor="surface">
+              Surface
+            </label>
           </div>
         </div>
         <div className="w-full md:flex">

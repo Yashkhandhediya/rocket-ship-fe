@@ -277,7 +277,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     if (!formDirectField?.order_id) {
       fetchOrderId();
     }
-  }, []);
+  }, [formDirectField]);
 
   useEffect(() => {
     setFormDirectField({
@@ -295,7 +295,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
           domesticOrderFormValues?.product_info?.length
             ? domesticOrderFormValues?.product_info
             : [defaultProductField],
-        ),
+        ),[domesticOrderFormValues]
       );
       setPaymentDetails({ type: 'cod', ...(domesticOrderFormValues?.payment_details || {}) });
       setFormDirectField({
