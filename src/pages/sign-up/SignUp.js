@@ -7,22 +7,15 @@ import { toast } from 'react-toastify';
 
 const SignUp = () => {
   const navigate = useNavigate();
-  // const [signupInput, setSignupInput] = useState({
-  //   first_name: "",
-  //   last_name: "",
-  //   email_address: "",
-  //   contact_no: "",
-  //   password: ""
-  // });
-
   const [signupInput, setSignupInput] = useState({
     company_name: "",
     company_address: "",
     email_address: "",
     contact_no: "",
     password: "",
-    company_gst_no:""
+    company_gst_no: ""
   });
+  const [gstError, setGstError] = useState("");
 
   const handleChangeInput = (e) => {
     const { id, value } = e.target;
@@ -32,27 +25,40 @@ const SignUp = () => {
     });
   };
 
+  const validateGST = (gst) => {
+    const gstRegex = /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}\d{1}[Z]{1}[A-Z\d]{1}$/;
+    return gstRegex.test(gst);
+  };
+
   const handleSubmit = () => {
-    const headers = {'Content-Type': 'application/json'};
-    axios.post(BACKEND_URL + '/company/signup',{
-      name:signupInput.company_name,
-      gst:signupInput.company_gst_no,
-      password:signupInput.password,
-      contact:parseInt(signupInput.contact_no),
-      email:signupInput.email_address,
-      address:signupInput.company_address
-    },{headers}).then((res) => {
-      console.log("Reponse of Sign up",res)
-      if(res.data.msg == "User already exits"){
-        toast("User Already Exists",{type:'error'})
-      }else{
-        toast("Sign Up SuccessFully",{type:'success'})
-        navigate('/login')
+    if (!validateGST(signupInput.company_gst_no)) {
+      setGstError("Invalid GST Number");
+      toast("Invalid GST Number", { type: 'error' });
+      return;
+    } else {
+      setGstError("");
+    }
+
+    const headers = { 'Content-Type': 'application/json' };
+    axios.post(BACKEND_URL + '/company/signup', {
+      name: signupInput.company_name,
+      gst: signupInput.company_gst_no,
+      password: signupInput.password,
+      contact: parseInt(signupInput.contact_no),
+      email: signupInput.email_address,
+      address: signupInput.company_address
+    }, { headers }).then((res) => {
+      console.log("Response of Sign up", res)
+      if (res.data.msg === "User already exits") {
+        toast("User Already Exists", { type: 'error' });
+      } else {
+        toast("Sign Up Successfully", { type: 'success' });
+        navigate('/login');
       }
     }).catch((err) => {
-      console.log("Error in signup",err);
-      toast("Some Error in Sign Up",{type:'error'})
-    })
+      console.log("Error in signup", err);
+      toast("Some Error in Sign Up", { type: 'error' });
+    });
   };
 
   return (
@@ -62,20 +68,11 @@ const SignUp = () => {
       </div>
       <div className="bg-body mb-3 w-8/12 rounded-2xl bg-white px-12 py-6 shadow md:w-5/12">
         <div className="mb-2 text-center">
-          <h3 className="m-0 text-xl font-medium">Get Started with a free account</h3>
+          <h3 className="m-0 text-xl font-medium">Get Started with a free account</        h3>
         </div>
         <span className="my-2 inline-flex w-full border border-dashed border-gray-400"></span>
         <form>
           <div className="flex w-full gap-2">
-            {/* <Field
-              type={'text'}
-              id={'first_name'}
-              label={'First Name'}
-              placeHolder={'First name'}
-              required={true}
-              value={signupInput['first_name']}
-              onChange={handleChangeInput}
-            /> */}
             <Field
               type={'text'}
               id={'company_name'}
@@ -85,15 +82,6 @@ const SignUp = () => {
               value={signupInput['company_name']}
               onChange={handleChangeInput}
             />
-            {/* <Field
-              type={'text'}
-              id={'last_name'}
-              label={'Last Name'}
-              placeHolder={'Last name'}
-              required={true}
-              value={signupInput['last_name']}
-              onChange={handleChangeInput}
-            /> */}
             <Field
               type={'text'}
               id={'company_gst_no'}
@@ -104,6 +92,7 @@ const SignUp = () => {
               onChange={handleChangeInput}
             />
           </div>
+          {gstError && <p className="text-red-600">{gstError}</p>}
           <Field
             type={'text'}
             id={'company_address'}
