@@ -15,22 +15,22 @@ export const moreActionOptions = (actions) => [
   //   key: 'verifyOrder',
   //   onClick: () => {},
   // },
-  {
-    label: 'Call Buyer',
-    key: 'callBuyer',
-    onClick: () => {},
-  },
+  // {
+  //   label: 'Call Buyer',
+  //   key: 'callBuyer',
+  //   onClick: () => {},
+  // },
   // {
   //   label: 'Mark as verified',
   //   key: 'markAsVerified',
   //   onClick: () => {},
   // },
-  { type: 'divider' },
-  {
-    label: 'Add Order Tag',
-    key: 'addOrderTag',
-    onClick: () => {},
-  },
+  // { type: 'divider' },
+  // {
+  //   label: 'Add Order Tag',
+  //   key: 'addOrderTag',
+  //   onClick: () => {},
+  // },
   {
     label: 'Clone Order',
     key: 'cloneOrder',

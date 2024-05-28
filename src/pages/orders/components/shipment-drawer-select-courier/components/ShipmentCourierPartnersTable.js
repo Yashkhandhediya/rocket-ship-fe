@@ -15,28 +15,27 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [scheduleModal, setScheduleModal] = useState({ isOpen: false, pickupDetails: {} });
-  const [showPopup,setShowPopup] = useState(false)
-  const [apiCall,setApiCall] = useState(true)
-  const [wayBill,setWayBill] = useState(null)
-  const [info,setInfo] = useState(null)
+  const [showPopup, setShowPopup] = useState(false);
+  const [apiCall, setApiCall] = useState(true);
+  const [wayBill, setWayBill] = useState(null);
+  const [info, setInfo] = useState(null);
 
   const handleShipOrder = (data) => {
     let requestData;
-    console.log("CVVVVVV",data)
-    if(data?.partner_name === 'DTDC'){
-      
-      setShowPopup(true)
+    console.log('CVVVVVV', data);
+    if (data?.partner_name === 'DTDC') {
+      setShowPopup(true);
       setInfo({
-        "partner_id": 2,
-        "amount": data?.total_charge,
-      })
-      return
+        partner_id: 2,
+        amount: data?.total_charge,
+      });
+      return;
     }
     if (data?.partner_name === 'Delhivery') {
       requestData = {
-        "partner_id": 1,
-        "amount": data?.total_charge,
-      }
+        partner_id: 1,
+        amount: data?.total_charge,
+      };
     }
     // else if (data?.partner_name === 'DTDC') {
     //   requestData = {
@@ -44,35 +43,33 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
     //     "amount": data?.total_charge,
     //   }
     // }
-    else if(data?.partner_name === 'Xpressbees'){
+    else if (data?.partner_name === 'Xpressbees') {
       requestData = {
-        "partner_id":3,
-        "amount":data?.total_charge,
-      }
-    }
-    else if(data?.partner_name === 'ECOM EXPRESS'){
+        partner_id: 3,
+        amount: data?.total_charge,
+      };
+    } else if (data?.partner_name === 'ECOM EXPRESS') {
       requestData = {
-        "partner_id":4,
-        "amount":data?.total_charge,
-      }
-    }
-    else if(data?.partner_name === 'Maruti'){
+        partner_id: 4,
+        amount: data?.total_charge,
+      };
+    } else if (data?.partner_name === 'Maruti') {
       requestData = {
-        "partner_id":5,
-        "amount":data?.total_charge,
-      }
+        partner_id: 5,
+        amount: data?.total_charge,
+      };
     }
     setIsLoading(true);
-    if (orderId && data?.partner_name != "dtdc") {
-      console.log("JTTTTTTTTTT",requestData)
+    if (orderId && data?.partner_name != 'dtdc') {
+      console.log('JTTTTTTTTTT', requestData);
       axios
         .post(`${BACKEND_URL}/order/${orderId}/shipment`, requestData)
         .then((resp) => {
           if (resp?.status === 200) {
             setIsLoading(false);
-            if(resp?.data?.status_code == 401){
-              toast("insufficient balance",{type:"error"})
-              return
+            if (resp?.data?.status_code == 401) {
+              toast('insufficient balance', { type: 'error' });
+              return;
             }
             toast(
               resp?.data?.success ? (
@@ -87,10 +84,11 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
                 type: resp?.data?.success ? 'success' : 'error',
               },
             );
-            requestData.partner_id === 1 && setScheduleModal({
-              isOpen: true,
-              pickupDetails: { id: orderId },
-            });
+            requestData.partner_id === 1 &&
+              setScheduleModal({
+                isOpen: true,
+                pickupDetails: { id: orderId },
+              });
             dispatch(setAllOrders(null));
             if (resp?.data?.success) {
               closeShipmentDrawer();
@@ -106,66 +104,70 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
     }
   };
 
-
   const handleDtdc = () => {
-    setShowPopup(false)
-    let requestData = info
-    requestData.waybill_no = wayBill
-      axios
-        .post(`${BACKEND_URL}/order/${orderId}/shipment`, requestData)
-        .then((resp) => {
-          if (resp?.status === 200) {
-            setIsLoading(false);
-            if(resp?.data?.status_code == 401){
-              toast("insufficient balance",{type:"error"})
-              return
-            }
-            toast(
-              resp?.data?.success ? (
-                <div>
-                  <div className="font-medium">{'Success'}</div>
-                  <div>{'AWB assigned successfully'}</div>
-                </div>
-              ) : (
-                resp?.data?.error
-              ),
-              {
-                type: resp?.data?.success ? 'success' : 'error',
-              },
-            );
-            requestData.partner_id === 1 && setScheduleModal({
+    setShowPopup(false);
+    let requestData = info;
+    requestData.waybill_no = wayBill;
+    axios
+      .post(`${BACKEND_URL}/order/${orderId}/shipment`, requestData)
+      .then((resp) => {
+        if (resp?.status === 200) {
+          setIsLoading(false);
+          if (resp?.data?.status_code == 401) {
+            toast('insufficient balance', { type: 'error' });
+            return;
+          }
+          toast(
+            resp?.data?.success ? (
+              <div>
+                <div className="font-medium">{'Success'}</div>
+                <div>{'AWB assigned successfully'}</div>
+              </div>
+            ) : (
+              resp?.data?.error
+            ),
+            {
+              type: resp?.data?.success ? 'success' : 'error',
+            },
+          );
+          requestData.partner_id === 1 &&
+            setScheduleModal({
               isOpen: true,
               pickupDetails: { id: orderId },
             });
-            dispatch(setAllOrders(null));
-            if (resp?.data?.success) {
-              closeShipmentDrawer();
-            }
+          dispatch(setAllOrders(null));
+          if (resp?.data?.success) {
+            closeShipmentDrawer();
           }
-        })
-        .catch((e) => {
-          // eslint-disable-next-line no-console
-          console.error(e);
-          setIsLoading(false);
-          toast('Unable to ship order', { type: 'error' });
-        });
-      setWayBill(null)
-  }
+        }
+      })
+      .catch((e) => {
+        // eslint-disable-next-line no-console
+        console.error(e);
+        setIsLoading(false);
+        toast('Unable to ship order', { type: 'error' });
+      });
+    setWayBill(null);
+  };
 
   const getColumns = () => {
-    const columnHelper = createColumnHelper()
+    const columnHelper = createColumnHelper();
     return [
-      columnHelper.accessor('courierPartner',{
+      columnHelper.accessor('courierPartner', {
         header: 'Courier Partner',
-        cell: ({row}) => (
+        cell: ({ row }) => (
           <div className="flex gap-1 text-left">
             <div>{/* <img src={''} className="h-10 w-10 rounded-full bg-gray-400" /> */}</div>
             <div>
-              <h4 className="pb-1.5 text-xs font-medium text-[#555]">{row?.original?.partner_name || 'Delhivery'}</h4>
+              <h4 className="pb-1.5 text-xs font-medium text-[#555]">
+                {row?.original?.partner_name || 'Delhivery'}
+              </h4>
               <div className="pb-1.5 text-xs text-[#555]">
                 {`${row?.original?.charge_type} | Min-weight: `}
                 <span className="font-medium">
-                  {Number(row?.original?.surface_max_weight || 0) ? row?.original?.surface_max_weight : row?.original?.air_max_weight || 0}
+                  {Number(row?.original?.surface_max_weight || 0)
+                    ? row?.original?.surface_max_weight
+                    : row?.original?.air_max_weight || 0}
                 </span>
               </div>
               <div className="pb-1.5 text-xs text-[#555]">
@@ -176,9 +178,9 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           </div>
         ),
       }),
-      columnHelper.accessor('rating',{
+      columnHelper.accessor('rating', {
         header: 'Rating',
-        cell: ({row}) => (
+        cell: ({ row }) => (
           <div className="flex flex-col gap-1 text-left">
             <div className="relative h-12 w-12 text-sm font-medium">
               <RatingProgressBar rating={row?.original?.rating || 0} />
@@ -186,33 +188,33 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           </div>
         ),
       }),
-      columnHelper.accessor('expectedPickup',{
+      columnHelper.accessor('expectedPickup', {
         header: 'Expected Pickup',
-        cell: ({row}) => (
+        cell: ({ row }) => (
           <div className="flex flex-col gap-1 text-left">
             <div className="text-xs text-[#555]">{row?.original?.expected_pickup || '-'}</div>
           </div>
         ),
       }),
-      columnHelper.accessor('estimatedDelivery',{
+      columnHelper.accessor('estimatedDelivery', {
         header: 'Estimated Delivery',
-        cell: ({row}) => (
+        cell: ({ row }) => (
           <div className="flex flex-col gap-1 text-left">
             <div className="text-xs text-[#555]">{row?.original?.estimated_delivery || '-'}</div>
           </div>
         ),
       }),
-      columnHelper.accessor('chargebleWeight',{
+      columnHelper.accessor('chargebleWeight', {
         header: 'Chargeable Weight',
-        cell: ({row}) => (
-          <div className="flex flex-col gap-1 text-center justify-center">
+        cell: ({ row }) => (
+          <div className="flex flex-col justify-center gap-1 text-center">
             <div className="text-xs text-[#555]">{`${row?.original?.chargable_weight || ''} Kg`}</div>
           </div>
         ),
       }),
-      columnHelper.accessor('charges',{
+      columnHelper.accessor('charges', {
         header: 'Charges',
-        cell: ({row}) => (
+        cell: ({ row }) => (
           <div className="flex flex-col gap-1 py-2 text-left">
             <div className="flex items-center">
               <div className="text-base font-bold text-[gray]">{`₹${row?.original?.total_charge || ''}`}</div>
@@ -235,33 +237,45 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           </div>
         ),
       }),
-      columnHelper.accessor('action',{
+      columnHelper.accessor('action', {
         header: 'Action',
-        cell: ({row}) => (
+        cell: ({ row }) => (
           <div className="flex flex-col gap-1 py-2 text-left">
             <Button
               id={row?.original?.id}
-              className="rounded bg-red-600 w-[104px] h-[34px] text-white"
+              className="h-[34px] w-[104px] rounded bg-red-600 text-white"
               onClick={() => {
-                console.log("PARTNER NAME",row?.original)
-                handleShipOrder(row?.original)}}
-              style={{':hover':{backgroundColor:'#DB5711'}}}>
+                console.log('PARTNER NAME', row?.original);
+                handleShipOrder(row?.original);
+              }}
+              style={{ ':hover': { backgroundColor: '#DB5711' } }}>
               {'Ship Now'}
             </Button>
           </div>
         ),
       }),
     ];
-  }
+  };
+
 
   const rowSubComponent = () => {
-    const services = []
+    const services = [];
     return (
-      <div className='flex text-[10px] p-1'>
-        <div className='text-black'>{"Availale Services:"}</div>
-        {["Call before delivery", "Instant POD", "Delivery personn contact no.", "Real Time Tracking"].map((service, i) => {
-          return (<div key={i} className={`px-3 text-[#888] ${i+1 !== services?.length ? 'border-r-2 border-[#dbdbdb]': ''}`}>{service}</div>)
-        })}
+      <div className="flex p-1 text-[10px]">
+        <div className="text-black">{'Availale Services:'}</div>
+        {['Call before delivery', 'Instant POD', 'Delivery personn contact no.', 'Real Time Tracking'].map(
+          (service, i) => {
+            return (
+              <div
+                key={i}
+                className={`px-3 text-[#888] ${
+                  i + 1 !== services?.length ? 'border-r-2 border-[#dbdbdb]' : ''
+                }`}>
+                {service}
+              </div>
+            );
+          },
+        )}
       </div>
     );
   };
@@ -273,7 +287,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           <div className="loader"></div>
         </div>
       )}
-      <div className="text-xs mb-4 text-[rgb(136,136,136)]">{`${
+      <div className="mb-4 text-xs text-[rgb(136,136,136)]">{`${
         shipmentDetails?.length || 0
       } Couriers Found`}</div>
       <CustomDataTable
@@ -286,39 +300,38 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
 
       <SchedulePickupModal
         isOpen={scheduleModal.isOpen}
-        onClose={() =>{
+        onClose={() => {
           setScheduleModal({
             isOpen: false,
             pickupDetails: {},
-          })
-          closeShipmentDrawer()
-        }
-        }
+          });
+          closeShipmentDrawer();
+        }}
         pickupDetails={scheduleModal.pickupDetails}
       />
 
-    {showPopup && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none bg-opacity-50 bg-gray-400">
-              <div className="bg-white p-6 rounded-lg">
-                <h2 className="text-lg font-semibold mb-4">Enter Way Bill No.</h2>
-                <input
-                  type="text"
-                  value={wayBill}
-                  onChange={(e) => setWayBill(e.target.value)}
-                  placeholder="Enter Way Bill No."
-                  className="border border-gray-400 rounded-lg px-3 py-2 mb-4"
-                />
-                <div className="flex justify-end">
-                  <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                    onClick={handleDtdc}
-                  >
-                    Submit
-                  </button>
-                </div>
-              </div>
+      {showPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-gray-400 bg-opacity-50 outline-none focus:outline-none">
+          <div className="rounded-lg bg-white p-6 ">
+            <div className="flex justify-between">
+              <h2 className="mb-4 text-lg font-semibold">Enter Way Bill No.</h2>
+             <span onClick={() => {setShowPopup(false)}}><i class="fa-solid fa-xmark"></i></span> 
             </div>
-          )}
+            <input
+              type="text"
+              value={wayBill}
+              onChange={(e) => setWayBill(e.target.value)}
+              placeholder="Enter Way Bill No."
+              className="mb-4 rounded-lg border border-gray-400 px-3 py-2"
+            />
+            <div className="flex justify-end">
+              <button className="rounded-lg bg-blue-500 px-4 py-2 text-white" onClick={handleDtdc}>
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
