@@ -3,13 +3,16 @@ import { BuyerAddressFields } from '../../buyer-address-fields';
 import { Checkbox, Field, FieldAccordion } from '../../../../../common/components';
 import { useEffect, useState } from 'react';
 import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
+import { setEditOrder } from '../../../../../redux';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
+import { useLocation } from 'react-router-dom';
 
 export default function BuyerDetails({ handleFormData, formData, currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
-
+  const location = useLocation()
+  let {isEdit,order_id} = location?.state || {}
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order) || {};
 
   const [isSameBilingAddress, setIsSameBilingAddress] = useState(true);
@@ -108,14 +111,25 @@ export default function BuyerDetails({ handleFormData, formData, currentStep, ha
       ) {
         toast('Please enter all required fields', { type: 'error' });
       } else {
-        dispatch(
-          setDomesticOrder({
-            buyer_info: buyerInfo,
-            company_info: companyInfo,
-            address_info: addressInfo,
-            billing_info: billingInfo,
-          }),
-        );
+        if(!isEdit){
+          dispatch(
+            setDomesticOrder({
+              buyer_info: buyerInfo,
+              company_info: companyInfo,
+              address_info: addressInfo,
+              billing_info: billingInfo,
+            }),
+          );
+        }else{
+          dispatch(
+            setEditOrder({
+              buyer_info: buyerInfo,
+              company_info: companyInfo,
+              address_info: addressInfo,
+              billing_info: buyerInfo,
+            }),
+          );
+        }
         handleChangeStep(currentStep + 1);
       }
     } else if (currentStep > 0) {

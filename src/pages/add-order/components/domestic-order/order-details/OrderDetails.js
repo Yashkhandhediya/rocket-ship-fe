@@ -8,6 +8,8 @@ import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { cloneDeep, isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
+import { setEditOrder } from '../../../../../redux';
+import { useLocation } from 'react-router-dom';
 
 export let package_info = {
   length: 0,
@@ -18,11 +20,15 @@ export let package_info = {
 
 export default function OrderDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
+  const location = useLocation();
+  let {isEdit} = location?.state || {}
   const id_user = localStorage.getItem('user_id')
   const [suggestionData,setSuggestionData] = useState([])
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestionProductData,setSuggestionProductData] = useState([])
   const [showProductSuggestions, setShowProductSuggestions] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [focusedProductIndex, setFocusedProductIndex] = useState(-1);
   // const [cashCharge,setCashCharge] = useState(0)
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order) || {};
 
@@ -198,7 +204,8 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     };
   
     // Handle hover over suggestion
-    const handleSuggestionHover = (suggestion) => {
+    const handleSuggestionHover = (index,suggestion) => {
+      setFocusedIndex(index);
       setFormDirectField({
         ...formDirectField,
         channel:suggestion.name
@@ -224,7 +231,8 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
       };
     
       // Handle product hover over suggestion
-      const handleProductSuggestionHover = (suggestion,index) => {
+      const handleProductSuggestionHover = (suggestion,index,i) => {
+        setFocusedProductIndex(i);
         const allFields = [...productFields];
         const temp_info = allFields[index]
         console.log("ALLLLLLLLLL",allFields,index)
@@ -259,13 +267,23 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
       if (!productFields?.length || !isValidProducts || !formDirectField?.channel || !formDirectField?.date) {
         toast('Please enter all required fields', { type: 'error' });
       } else {
-        dispatch(
-          setDomesticOrder({
-            product_info: productFields,
-            payment_details: paymentDetails,
-            ...formDirectField,
-          }),
-        );
+        if(!isEdit){
+          dispatch(
+            setDomesticOrder({
+              product_info: productFields,
+              payment_details: paymentDetails,
+              ...formDirectField,
+            }),
+          );
+        }else{
+          dispatch(
+            setEditOrder({
+              product_info: productFields,
+              payment_details: paymentDetails,
+              ...formDirectField,
+            }),
+          );
+        }
         handleChangeStep(currentStep + 1);
       }
     } else if (currentStep > 0) {
@@ -274,7 +292,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   };
 
   useEffect(() => {
-    if (!formDirectField?.order_id) {
+    if (!formDirectField?.order_id && !isEdit) {
       fetchOrderId();
     }
   }, [formDirectField]);
@@ -300,6 +318,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
       setPaymentDetails({ type: 'cod', ...(domesticOrderFormValues?.payment_details || {}) });
       setFormDirectField({
         ...formDirectField,
+        order_id:domesticOrderFormValues?.order_id,
         channel: domesticOrderFormValues?.channel,
         date: moment(new Date()).format('YYYY-MM-DD'),
         tag: domesticOrderFormValues?.tag,
@@ -310,6 +329,31 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
       });
     }
   }, [domesticOrderFormValues]);
+
+  const handleKeyDown = (event) => {
+    if (showSuggestions) {
+      if (event.key === 'ArrowDown') {
+        setFocusedIndex((prevIndex) => (prevIndex + 1) % suggestionData.length);
+      } else if (event.key === 'ArrowUp') {
+        setFocusedIndex((prevIndex) => (prevIndex - 1 + suggestionData.length) % suggestionData.length);
+      } else if (event.key === 'Enter') {
+        if (focusedIndex >= 0 && focusedIndex < suggestionData.length) {
+          handleSuggestionClick(suggestionData[focusedIndex]);
+        }
+      }
+    }
+    if (showProductSuggestions) {
+      if (event.key === 'ArrowDown') {
+        setFocusedProductIndex((prevIndex) => (prevIndex + 1) % suggestionProductData.length);
+      } else if (event.key === 'ArrowUp') {
+        setFocusedProductIndex((prevIndex) => (prevIndex - 1 + suggestionProductData.length) % suggestionProductData.length);
+      } else if (event.key === 'Enter') {
+        if (focusedProductIndex >= 0 && focusedProductIndex < suggestionProductData.length) {
+          handleProductSuggestionClick(suggestionProductData[focusedProductIndex],focusedIndex);
+        }
+      }
+    }
+  };
 
   return (
     <div>
@@ -349,7 +393,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               <p className="mt-1 text-xs text-red-500">Order date is required.</p>
             )}
           </div>
-          <div className="px-2 pb-2 relative md:w-3/12 md:pb-0">
+          <div className="px-2 pb-2 relative md:w-3/12 md:pb-0" onKeyDown={handleKeyDown}>
             <Field
               type={'select'}
               id={'channel'}
@@ -369,9 +413,9 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                     {suggestionData.map((suggestion, index) => (
                       <div
                         key={index}
-                        className="p-2 cursor-pointer hover:bg-gray-200"
+                        className={`p-2 cursor-pointer ${focusedIndex === index ? 'bg-gray-200' : 'hover:bg-gray-100'}`}
                         onMouseDown={() => handleSuggestionClick(suggestion)}
-                        onMouseEnter={() => handleSuggestionHover(suggestion)}
+                        onMouseEnter={() => handleSuggestionHover(index,suggestion)}
                       >
                         {suggestion.name}
                       </div>
@@ -421,7 +465,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
             return (
               <div className="mb-4 border-b border-gray-200" key={index}>
                 <div className="mb-3 w-full md:flex">
-                  <div className="w-full px-2 pb-2 relative xl:w-4/12">
+                  <div className="w-full px-2 pb-2 relative xl:w-4/12" onKeyDown={handleKeyDown}>
                     <Field
                       id={'name'}
                       label={`Product ${index + 1} Name`}
@@ -438,9 +482,9 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                           {suggestionProductData.map((suggestion, i) => (
                             <div
                               key={i}
-                              className="p-2 cursor-pointer hover:bg-gray-200"
+                              className={`p-2 cursor-pointer ${focusedProductIndex === i ? 'bg-gray-200' : 'hover:bg-gray-100'}`}
                               onMouseDown={() => handleProductSuggestionClick(suggestion,index)}
-                              onMouseEnter={() => handleProductSuggestionHover(suggestion,index)}
+                              onMouseEnter={() => handleProductSuggestionHover(suggestion,index,i)}
                             >
                               {suggestion.name}
                             </div>
@@ -710,7 +754,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
             <div className="my-5 rounded-md bg-[#ecf2fe99] p-5 text-sm">
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Sub-total for Product'}</p>
-                <p className="w-6/12 text-end">{'₹ ' + (formDirectField?.sub_total ? formDirectField?.sub_total : 0)}</p>
+                <p className="w-6/12 text-end">{'₹ ' + (isEdit == 1 ? domesticOrderFormValues?.sub_total : (formDirectField.sub_total || 0))}</p>
               </div>
               {/* <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Other Charges'}</p>
@@ -740,7 +784,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               </div>
               <div className="mt-4 flex justify-between">
                 <p className="w-6/12 font-medium">{'Total Order Value'}</p>
-                <p className="w-6/12 text-end font-medium">{'₹ ' + (formDirectField?.total_amount ? formDirectField?.total_amount : 0)}</p>
+                <p className="w-6/12 text-end font-medium">{'₹ ' + (isEdit == 1 ? domesticOrderFormValues.total_amount : (formDirectField?.total_amount || 0) )}</p>
               </div>
             </div>
           </div>

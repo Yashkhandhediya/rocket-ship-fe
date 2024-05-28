@@ -9,9 +9,13 @@ import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
+import { useLocation } from 'react-router-dom';
+import { setEditOrder } from '../../../../../redux';
 
 export default function PickupDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
+  const location = useLocation();
+  let {isEdit} = location?.state || {}
   const id_user = localStorage.getItem('user_id')
   const domesticOrderPickupAddress =
     useSelector((state) => state?.addOrder?.domestic_order?.pickup_address) || {};
@@ -46,11 +50,19 @@ export default function PickupDetails({ currentStep, handleChangeStep }) {
       if (!selectedAddress) {
         toast('Please select an address to proceed Next', { type: 'error' });
       } else {
-        dispatch(
-          setDomesticOrder({
-            pickup_address: selectedAddress,
-          }),
-        );
+        if(!isEdit){
+          dispatch(
+            setDomesticOrder({
+              pickup_address: selectedAddress,
+            }),
+          );
+        }else{
+          dispatch(
+            setEditOrder({
+              pickup_address: selectedAddress,
+            }),
+          );
+        }
         handleChangeStep(currentStep + 1);
       }
     } else if (currentStep > 0) {

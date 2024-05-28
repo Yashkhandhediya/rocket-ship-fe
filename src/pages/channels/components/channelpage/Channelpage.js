@@ -5,8 +5,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from "react-router-dom"
 import PageWithSidebar from '../../../../common/components/page-with-sidebar/PageWithSidebar';
-import { Steps, WooSteps } from './steps';
-import { Form, WooForm } from './form';
+import { Steps, WooSteps, BigSteps } from './steps';
+import { Form, WooForm, BigForm } from './form';
 
 const handleNameChange = (event) => {
 
@@ -31,8 +31,8 @@ const Channelpage = () => {
                     <p className="text-[17px] text-black font-[500]">back</p>
                 </button>
                 <div className="flex gap-8 flex-row">
-                    {flag == 7 ? <WooSteps></WooSteps>:<Steps></Steps>}
-                    {flag == 7 ? <WooForm></WooForm>:<Form></Form>}
+                    {flag == 1 ? <Steps></Steps> : (flag == 2 ? <WooSteps></WooSteps> : <BigSteps></BigSteps>)}
+                    {flag == 1 ? <Form></Form> : (flag == 2 ? <WooForm></WooForm> : <BigForm></BigForm>) }
                     
                 </div>
             </div>
