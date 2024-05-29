@@ -214,6 +214,11 @@ export const New = () => {
       columnHelper.accessor('customerDetails', {
         header: 'Customer details',
         cell: ({ row }) => {
+          const missingInfo = []
+          if(!row?.original?.buyer_info?.first_name)missingInfo.push('First Name')
+          if(!row?.original?.buyer_info?.email_address)missingInfo.push('Email Address')
+          if(!row?.original?.buyer_info?.contact_no)missingInfo.push('Contact Number')
+
           return (
             <div className="flex flex-col gap-2 text-left text-xs">
               {row?.original?.buyer_info?.first_name && <div>{row?.original?.buyer_info?.first_name}</div>}
@@ -221,6 +226,19 @@ export const New = () => {
                 <div>{row?.original?.buyer_info?.email_address}</div>
               )}
               {row?.original?.buyer_info?.contact_no && <div>{row?.original?.buyer_info?.contact_no}</div>}
+              {missingInfo.length > 0 && <CustomTooltip text={<div>
+                <p>Please go to Edit Order to add missing information:</p>
+                <ul className="list-disc list-inside">
+                  {missingInfo.map((info, index) => (
+                    <li key={index}>{info}</li>
+                  ))}
+                </ul>
+        </div>}>
+            <div className="flex flex-row">
+            <img src={infoIcon} className="ms-2" />
+            <span className='ml-2 text-red-400 text-xs'>Missing Info</span>
+            </div>
+            </CustomTooltip>}
             </div>
           );
         },
@@ -228,6 +246,13 @@ export const New = () => {
       columnHelper.accessor('packageDetails', {
         header: 'Package Details',
         cell: ({ row }) => {
+          const missingInfo = []
+          if (!row?.original?.height) missingInfo.push('Height');
+          if (!row?.original?.width) missingInfo.push('Width');
+          if (!row?.original?.length) missingInfo.push('Length');
+          if (!row?.original?.volumatric_weight) missingInfo.push('Volumetric Weight');
+          if (!row?.original?.deadweight) missingInfo.push('Dead Weight');
+
           return (
             <div className="flex flex-col gap-2 text-left text-xs">
               <div className="text-wrap">
@@ -241,7 +266,14 @@ export const New = () => {
               <div className="text-wrap">
                 {'Volumetric wt.: '} {row?.original?.volumatric_weight} {' Kg'}
               </div>
-            {row?.original?.volumatric_weight == null && <CustomTooltip text={"Weight Is missing Please Go to Edit Order To Add Information"}>
+            {missingInfo.length > 0 && <CustomTooltip text={<div>
+          <p>Please go to Edit Order to add missing information:</p>
+          <ul className="list-disc list-inside">
+            {missingInfo.map((info, index) => (
+              <li key={index}>{info}</li>
+            ))}
+          </ul>
+        </div>}>
             <div className="flex flex-row">
             <img src={infoIcon} className="ms-2" />
             <span className='ml-2 text-red-400 text-xs'>Missing Info</span>
@@ -268,6 +300,10 @@ export const New = () => {
       columnHelper.accessor('pickupAddress', {
         header: 'Pickup Address',
         cell: ({ row }) => {
+          const missingInfo = [];
+          if(!row?.original?.user_info?.complete_address)missingInfo.push('Complete Address')
+          if(!row?.original?.user_info?.city)missingInfo.push('City')
+          if(!row?.original?.user_info?.pincode)missingInfo.push('Pincode')
           return (
             <div className="flex flex-col gap-1 text-left text-xs">
               <div>
@@ -292,6 +328,19 @@ export const New = () => {
                   </div>
                 </CustomTooltip>
               </div>
+              {missingInfo.length > 0 && <CustomTooltip text={<div>
+                    <p>Please go to Edit Order to add missing information:</p>
+                    <ul className="list-disc list-inside">
+                      {missingInfo.map((info, index) => (
+                        <li key={index}>{info}</li>
+                      ))}
+                    </ul>
+                  </div>}>
+                      <div className="flex flex-row">
+                      <img src={infoIcon} className="ms-2" />
+                      <span className='ml-2 text-red-400 text-xs'>Missing Info</span>
+                      </div>
+                </CustomTooltip>}
             </div>
           );
         },
