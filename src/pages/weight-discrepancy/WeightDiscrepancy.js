@@ -1,4 +1,5 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useRef } from 'react';
 import { Tabs } from '../../common/components/tabs';
 import { returnsTabs } from './duck';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
@@ -10,7 +11,9 @@ import { useEffect, useState } from 'react';
 import Loader from '../../common/loader/Loader';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { DiscrepancyTable } from './components'
-
+import { DiscrepancyModal } from './components';
+import { Field } from '../../common/components';
+import { upload } from '../../common/icons';
 
 const WeightDiscrepancy = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -19,13 +22,33 @@ const WeightDiscrepancy = () => {
   const todayDate = new Date().toISOString().slice(0, 10);
   const [fromDate, setFromDate] = useState(oneMonthAgo);
   const [toDate, setToDate] = useState(todayDate);
-
+  const [selectedFile,setSelectedFile] = useState(null)
+  const [show,setShow] = useState(false)
   const [searchParams, setSearchParams] = useSearchParams();
-
+  const fileInputRef = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const allWeightDiscrepanciesList = useSelector((state) => state?.weightDiscrepanciesList);
+
+  const [images, setImages] = useState({
+    img_1: null,
+});
+
+  const [img,setImg] = useState('')
+
+  const [statusInfo,setStatusInfo] = useState({
+    status_id:'',
+    status_name:''
+  })
+
+  const [weightInfo,setWeightInfo] = useState({
+    charge_weight:0,
+    excess_weight:0,
+    excess_rate:0,
+    order_id:0
+  })
+
 
   const fetchWeightDiscrepancies = () => {
     axios
@@ -71,6 +94,84 @@ const WeightDiscrepancy = () => {
       toast.error('From date should be less than To date');
     }
   };
+
+  const handleImport = () => {
+    console.log("Inside Handle Import ")
+    fileInputRef.current.click();
+  }
+
+  const handleFileChange = async (e) => {
+    const formData = new FormData();
+    formData.append('file', e.target.files[0]);
+    setSelectedFile(formData);
+    const headers = { 'Content-Type': 'multipart/form-data'};
+    try {
+      const response = await axios.post(`${BACKEND_URL}/weight_discrepancy/import`, formData,{headers})
+      if (!response?.data[0]?.success) {
+          setSelectedFile(null)
+          return toast(response?.data[0]?.error,{type:'error'})
+      }
+      toast('File uploaded successfully',{type:'success'})
+      setSelectedFile(null)
+  } catch (error) {
+      toast('Something went wrong while uploading the file. Please try again.',{type:'error'})
+      setSelectedFile(null)
+  }
+  };
+
+  const handleProductFileChange = async (e) => {
+        const { name } = e.target;
+        const file = e.target.files[0];
+        console.log("Fillll",file)
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setImages({ ...images, [name]: e.target.result });
+            };
+            reader.readAsDataURL(file);
+        }
+        // handleUpload(name, file);
+        setImg(file.name)
+  };
+
+  const handleShow = () => {
+    setShow(true);
+  }
+
+  const handleDiscrepancy = () => {
+    axios.post(BACKEND_URL + `/weight_discrepancy/?user_id=${localStorage.getItem('user_id')}`,{
+      "status_id": parseInt(statusInfo?.status_id),
+      "status_name": statusInfo?.status_name,
+      "charged_weight": parseFloat(weightInfo?.charge_weight),
+      "excess_weight": parseFloat(weightInfo?.excess_weight),
+      "excess_rate": parseFloat(weightInfo?.excess_rate),
+      "courier_image": img,
+      "order_id":parseInt(weightInfo?.order_id)
+    }).then((res) => {
+      console.log("Discrepancy Response ",res.data)
+      toast('Weight Discrepancy Created',{type:'success'})
+      setShow(false)
+    }).catch((err) => {
+      console.log("Error in API",err)
+      toast('Error in Creating Weight Discrepancy ',{type:'error'})
+    })
+  }
+
+  const handleStatusInfo = (event) => {
+    const { id, value } = event.target;
+    setStatusInfo({
+      ...statusInfo,
+      [id]: value,
+    })
+  }
+
+  const handleWeightInfo = (event) => {
+    const { id, value } = event.target;
+    setWeightInfo({
+      ...weightInfo,
+      [id]:value
+    })
+  }
 
   return (
     <PageWithSidebar>
@@ -261,11 +362,27 @@ const WeightDiscrepancy = () => {
             {/* </div> */}
           </div>
           <div className='flex gap-2 items-center'>
+          <button className='py-1 px-2 bg-red-700 border rounded-md' title='create' onClick={handleShow}>
+             <span className="text-white text-base">
+              Create
+             </span> 
+          </button>
             <button className='py-1 px-2 bg-gray-700' title='export'>
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" x="0" y="0" viewBox="0 0 50 50" id="download">
                 <path d="m24 32.5 8-8h-6v-18h-4v18h-6l8 8zm18-26H30v3.97h12v28.06H6V10.47h12V6.5H6c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h36c2.21 0 4-1.79 4-4v-28c0-2.21-1.79-4-4-4z" fill='white'></path>
               </svg>
             </button>
+            <button className='py-1 px-2 bg-gray-700' title='Upload' onClick={handleImport}>
+            <svg  width="20" height="20" x="0" y="0" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg">
+            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M7 10H6.2C5.0799 10 4.51984 10 4.09202 10.218C3.71569 10.4097 3.40973 10.7157 3.21799 11.092C3 11.5198 3 12.0799 3 13.2V16.8C3 17.9201 3 18.4802 3.21799 18.908C3.40973 19.2843 3.71569 19.5903 4.09202 19.782C4.51984 20 5.0799 20 6.2 20H17.8C18.9201 20 19.4802 20 19.908 19.782C20.2843 19.5903 20.5903 19.2843 20.782 18.908C21 18.4802 21 17.9201 21 16.8V13.2C21 12.0799 21 11.5198 20.782 11.092C20.5903 10.7157 20.2843 10.4097 19.908 10.218C19.4802 10 18.9201 10 17.8 10H17M12 4V16M12 4L9 7M12 4L15 7" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
+          </button>
+            <input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+            accept=".xls,.xlsx"
+          />
             <div className='cursor-not-allowed py-0.1 px-8 text-gray-400 border border-grey-400 rounded-md bg-gray-200 text-center'>Accept All</div>
           </div>
         </div>
@@ -275,6 +392,142 @@ const WeightDiscrepancy = () => {
       <div>
         <DiscrepancyTable data={allWeightDiscrepanciesList} setLoading={setIsLoading} />
       </div>
+
+      {show && 
+        <div className="mt-8 fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none bg-opacity-25">
+  <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-9/12 lg:w-4/5 xl:w-3/4 max-w-7xl">
+  <div className="flex flex-row justify-between border-blueGray-200  w-full items-center rounded-t border-b border-solid p-5">
+    <h2 className="text-xl font-bold mb-2">Add Discrepancy Details</h2>
+    <button
+        className="border-0 bg-transparent p-1 mb-2 text-2xl font-semibold leading-none text-black opacity-100 outline-none focus:outline-none"
+        onClick={() => setShow(false)}>
+        <span className="block h-6 w-6 bg-transparent text-black opacity-50 outline-none focus:outline-none">
+            ×
+        </span>
+    </button>
+  </div>
+    <form>
+      <div className="mt-4 mb-4 flex flex-row">
+      <Field
+         type={'text'}
+         id={'status_id'}
+         label={'Status Id'}
+         inputClassNames={'text-xs mr-2'}
+         placeHolder={'Enter Status Id'}
+         required={true}
+         value={statusInfo?.status_id || ''}
+         onChange={handleStatusInfo}
+       />
+       <Field
+         type={'text'}
+         id={'status_name'}
+         label={'Status Name'}
+         inputClassNames={'text-xs ml-2'}
+         labelClassNames={'ml-2'}
+         placeHolder={'Enter Status Name'}
+         required={true}
+         value={statusInfo?.status_name || ''}
+         onChange={handleStatusInfo}
+       />
+      </div>
+      <div className="mb-4 flex flex-row">
+      <div className="flex flex-col w-[65%]">
+      <Field
+        type={'number'}
+        id={'charge_weight'}
+        label={'Charge Weight'}
+        inputClassNames={'text-xs mb-2'}
+        placeHolder={'Enter Charge Weight'}
+        required={true}
+        value={weightInfo?.charge_weight || ''}
+        onChange={handleWeightInfo}
+      />
+
+      <Field
+             type={'number'}
+             id={'excess_weight'}
+             label={'Excess Weight'}
+             inputClassNames={'text-xs mb-2'}
+             placeHolder={'Enter Excess Weight'}
+             required={true}
+             value={weightInfo?.excess_weight || ''}
+             onChange={handleWeightInfo}
+           />
+
+      <Field
+          type={'number'}
+          id={'excess_rate'}
+          label={'Excess Rate'}
+          inputClassNames={'text-xs'}
+          placeHolder={'Enter Excess Rate'}
+          required={true}
+          value={weightInfo?.excess_rate || ''}
+          onChange={handleWeightInfo}
+        />
+
+         <Field
+          type={'number'}
+          id={'order_id'}
+          label={'Order ID'}
+          inputClassNames={'text-xs'}
+          placeHolder={'Enter Order Id'}
+          required={true}
+          value={weightInfo?.order_id || ''}
+          onChange={handleWeightInfo}
+        />
+      </div>
+      <div className="w-[25%] ml-8">
+          <div className="mt-2 mb-2 font-semibold">
+            Product Image
+          </div>
+          <div className="flex h-40 cursor-pointer flex-col items-center justify-evenly rounded-lg border-2 border-dashed border-[#B02828]">
+              <label htmlFor="img_1" className="w-full">
+                  <div className="flex cursor-pointer flex-col items-center justify-center">
+                      {images.img_1 ? (
+                          <div className='flex justify-center w-[90%] h-[90%]'>
+                              <img src={images.img_1} alt="" className='object-fill h-28' />
+                          </div>
+                      ) : (
+                          <>
+                              <img src={upload} alt="" />
+                              <p>Upload Image</p>
+                              <input type="file" className="hidden" name="img_1" accept=".jpg,.png,.gif,.jpeg" id="img_1" onChange={handleProductFileChange}
+                              />
+                          </>
+                      )}
+                  </div>
+              </label>
+          </div>
+          {images.img_1 && (
+              <button className='border border-red-400 text-red-400 mt-2 p-2 rounded-md hover:bg-red-600 hover:text-white'>
+                  <label htmlFor="img_1">
+                      Change image
+                      <input type="file" className="hidden" name="img_1" accept=".jpg,.png,.gif,.jpeg" id="img_1" onChange={handleProductFileChange}
+                      />
+                  </label>
+              </button>
+          )}
+      </div>
+      </div>
+      <div className="flex items-center justify-center px-6">
+            <button
+                className="mb-1 mr-1 px-12 rounded-lg py-2 text-sm border border-[#B07828] text-[#B07828] outline-none transition-all duration-150 ease-linear focus:outline-none hover:shadow-lg font-semibold"
+                type="button"
+                onClick={() => setShow(false)}>
+                Cancel
+            </button>
+            <button
+                className="mb-1 mr-1 rounded-lg bg-[#B07828] px-6 py-2 text-sm text-white shadow outline-none transition-all duration-150 border ease-linear hover:shadow-lg focus:outline-none font-semibold"
+                type="button"
+                onClick={() => handleDiscrepancy()}
+            >
+                {'Request Weight Discrepancy' }
+            </button>
+        </div>
+    </form>
+  </div>
+</div>
+      }
     </PageWithSidebar>
   );
 };
