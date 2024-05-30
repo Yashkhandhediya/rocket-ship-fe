@@ -52,7 +52,7 @@ const WeightDiscrepancy = () => {
 
   const fetchWeightDiscrepancies = () => {
     axios
-      .get(BACKEND_URL + '/weight_discrepancy/get_weight_discrepancy')
+      .get(BACKEND_URL + `/weight_discrepancy/get_weight_discrepancy?user_id=${localStorage.getItem('user_id')}`)
       .then(async (resp) => {
         if (resp.status === 200) {
           dispatch(setAllWeightDiscrepancies(resp?.data.data || []));
@@ -140,8 +140,8 @@ const WeightDiscrepancy = () => {
 
   const handleDiscrepancy = () => {
     axios.post(BACKEND_URL + `/weight_discrepancy/?user_id=${localStorage.getItem('user_id')}`,{
-      "status_id": parseInt(statusInfo?.status_id),
-      "status_name": statusInfo?.status_name,
+      // "status_id": parseInt(statusInfo?.status_id),
+      // "status_name": statusInfo?.status_name,
       "charged_weight": parseFloat(weightInfo?.charge_weight),
       "excess_weight": parseFloat(weightInfo?.excess_weight),
       "excess_rate": parseFloat(weightInfo?.excess_rate),
@@ -150,6 +150,7 @@ const WeightDiscrepancy = () => {
     }).then((res) => {
       console.log("Discrepancy Response ",res.data)
       toast('Weight Discrepancy Created',{type:'success'})
+      window.location.reload()
       setShow(false)
     }).catch((err) => {
       console.log("Error in API",err)
@@ -407,7 +408,7 @@ const WeightDiscrepancy = () => {
     </button>
   </div>
     <form>
-      <div className="mt-4 mb-4 flex flex-row">
+      {/* <div className="mt-4 mb-4 flex flex-row">
       <Field
          type={'text'}
          id={'status_id'}
@@ -429,9 +430,22 @@ const WeightDiscrepancy = () => {
          value={statusInfo?.status_name || ''}
          onChange={handleStatusInfo}
        />
-      </div>
-      <div className="mb-4 flex flex-row">
+      </div> */}
+      <div className="mb-4 mt-4 flex flex-row">
       <div className="flex flex-col w-[65%]">
+
+      <Field
+          type={'number'}
+          id={'order_id'}
+          label={'Order ID'}
+          inputClassNames={'text-xs mb-2'}
+          placeHolder={'Enter Order Id'}
+          required={true}
+          value={weightInfo?.order_id || ''}
+          onChange={handleWeightInfo}
+        />
+
+
       <Field
         type={'number'}
         id={'charge_weight'}
@@ -462,17 +476,6 @@ const WeightDiscrepancy = () => {
           placeHolder={'Enter Excess Rate'}
           required={true}
           value={weightInfo?.excess_rate || ''}
-          onChange={handleWeightInfo}
-        />
-
-         <Field
-          type={'number'}
-          id={'order_id'}
-          label={'Order ID'}
-          inputClassNames={'text-xs'}
-          placeHolder={'Enter Order Id'}
-          required={true}
-          value={weightInfo?.order_id || ''}
           onChange={handleWeightInfo}
         />
       </div>
