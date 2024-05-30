@@ -14,7 +14,8 @@ const SignUpUser = () => {
     last_name: "",
     email_address: "",
     contact_no: "",
-    password: ""
+    password: "",
+    users_type_id:0
   });
 
 
@@ -29,13 +30,14 @@ const SignUpUser = () => {
   const handleSubmit = () => {
     setFlag(1)
     const headers = {'Content-Type': 'application/json'};
-    axios.post(BACKEND_URL + '/users/signup',{
+    axios.post(BACKEND_URL + '/users/create_user_and_company',{
       first_name:signupInput.first_name,
       last_name:signupInput.last_name,
       password:signupInput.password,
       contact_no:signupInput.contact_no,
       email_address:signupInput.email_address,
-      company_id:signupInput.company_id
+      company_id:signupInput.company_id,
+      users_type_id:signupInput.users_type_id
     },{headers}).then((res) => {
       console.log("Reponse of Sign up",res)
       if(res.data.msg == "User already exits"){
@@ -106,6 +108,15 @@ const SignUpUser = () => {
             placeHolder={'Enter password'}
             required={true}
             value={signupInput['password']}
+            onChange={handleChangeInput}
+          />
+          <Field
+            type={'number'}
+            id={'users_type_id'}
+            label={'User Type Id'}
+            placeHolder={'Enter user type id'}
+            required={true}
+            value={signupInput['user_type_id']}
             onChange={handleChangeInput}
           />
           {/* <div className="mb-3 text-sm">
