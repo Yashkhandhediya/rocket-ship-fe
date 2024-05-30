@@ -5,6 +5,9 @@ import { useSearchParams,useNavigate } from 'react-router-dom';
 import { FutureCod } from '../future-cod';
 import PageWithSidebar from '../../../../common/components/page-with-sidebar/PageWithSidebar';
 import { BillingTabs } from '../billing-tabs';
+import { Field } from '../../../../common/components';
+import axios from 'axios';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
 
 const COD_Remittance = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -15,6 +18,22 @@ const COD_Remittance = () => {
     const todayDate = new Date().toISOString().slice(0, 10);
     const [fromDate, setFromDate] = useState(oneMonthAgo);
     const [toDate, setToDate] = useState(todayDate);
+    const [show,setShow] = useState(false)
+
+    const [remittanceInfo,setRemittanceInfo] = useState({
+        order_id:0,
+        cod_to_be_remitted: 0,
+        last_cod_remitted: 0,
+        total_cod_remitted: 0,
+        total_deduction_from_cod: 0,
+        remittance_initiated: 0,
+        status_id: 0
+    })
+
+    const handleRemittanceInfo = (e) => {
+        const {id, value} = e.target
+        setRemittanceInfo((prev) => ({...prev, [id]: value}))
+    }
 
     const checkDate = (fromDate, toDate) => {
         const from = new Date(fromDate);
@@ -34,6 +53,41 @@ const COD_Remittance = () => {
             toast.error('From date should be less than To date');
         }
     };
+
+    const handleCreate = () => {
+        setShow(true)
+    }
+
+    const handleCOD = () => {
+        axios.post(BACKEND_URL + '/order/create_cod_remittance', {
+            "order_id": parseInt(remittanceInfo?.order_id),
+            "cod_to_be_remitted": parseInt(remittanceInfo?.cod_to_be_remitted),
+            "last_cod_remitted": parseInt(remittanceInfo?.last_cod_remitted),
+            "total_cod_remitted": parseInt(remittanceInfo?.total_cod_remitted),
+            "total_deduction_from_cod": parseInt(remittanceInfo?.total_deduction_from_cod),
+            "remittance_initiated": parseInt(remittanceInfo?.remittance_initiated),
+            "status_id": parseInt(remittanceInfo?.status_id)
+        })
+        .then((res) => {
+            console.log("Response Cod",res.data);
+            toast.success('COD remittance created successfully');
+            setShow(false)
+        }).catch((err) => {
+            console.log("Error Cod",err);
+            toast("Error In Creation Of COD remittance",{type:'error'})
+        })
+        
+        setRemittanceInfo({
+            order_id:0,
+            cod_to_be_remitted: 0,
+            last_cod_remitted: 0,
+            total_cod_remitted: 0,
+            total_deduction_from_cod: 0,
+            remittance_initiated: 0,
+            status_id: 0
+        })
+    }
+
     const charges = [
         {
             label: 'COD To Be Remitted',
@@ -145,12 +199,137 @@ const COD_Remittance = () => {
                                     </svg>
                                 </button>
                             </div>
+                            <div className="ml-2">
+                                <button className="border-1 h-[33px] w-[100px] rounded-[4px] border-[#B07828] bg-[#B07828] text-[12px] leading-[30px] text-white hover:text-white" onClick={handleCreate}>Create</button>
+                            </div>
+                            <div className="ml-2">
+                                <button className="border-1 h-[33px] w-[100px] rounded-[4px] border-[#5a28b0] bg-[#5a28b0] text-[12px] leading-[30px] text-white hover:text-white">Upload</button>
+                            </div>
                         </div>
                     }
                 </div>
                 {activeTab === 0 && <COD_Reconciliation charges={charges} data={data} />}
                 {activeTab === 1 && <FutureCod />}
             </BillingTabs>
+
+
+    {show && 
+        <div className="mt-8 fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none bg-opacity-25">
+            <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-9/12 lg:w-4/5 xl:w-3/4 max-w-7xl">
+            <div className="flex flex-row justify-between border-blueGray-200  w-full items-center rounded-t border-b border-solid p-5">
+                <h2 className="text-xl font-bold mb-2">Add COD Remittance Details</h2>
+                <button
+                    className="border-0 bg-transparent p-1 mb-2 text-2xl font-semibold leading-none text-black opacity-100 outline-none focus:outline-none"
+                    onClick={() => setShow(false)}>
+                    <span className="block h-6 w-6 bg-transparent text-black opacity-50 outline-none focus:outline-none">
+                        ×
+                    </span>
+                </button>
+            </div>
+                <form>
+                <div className="mt-4 mb-4 flex flex-row">
+                <Field
+                    type={'number'}
+                    id={'order_id'}
+                    label={'Order ID'}
+                    inputClassNames={'text-xs mr-2'}
+                    placeHolder={'Enter Order Id'}
+                    required={true}
+                    value={remittanceInfo?.order_id || ''}
+                    onChange={handleRemittanceInfo}
+                    />
+
+                <Field
+                    type={'number'}
+                    id={'cod_to_be_remitted'}
+                    label={'COD To Be Remitted'}
+                    inputClassNames={'text-xs ml-2'}
+                    placeHolder={'Enter Cod to be remitted'}
+                    required={true}
+                    value={remittanceInfo?.cod_to_be_remitted || ''}
+                    onChange={handleRemittanceInfo}
+                    />
+
+                </div>
+                <div className="mt-4 mb-4 flex flex-row">
+                <Field
+                    type={'number'}
+                    id={'last_cod_remitted'}
+                    label={'Last COD'}
+                    inputClassNames={'text-xs mr-2'}
+                    placeHolder={'Enter Last Cod'}
+                    required={true}
+                    value={remittanceInfo?.last_cod_remitted || ''}
+                    onChange={handleRemittanceInfo}
+                    />
+
+                <Field
+                    type={'number'}
+                    id={'total_cod_remitted'}
+                    label={'Total COD'}
+                    inputClassNames={'text-xs ml-2'}
+                    placeHolder={'Enter Total Cod'}
+                    required={true}
+                    value={remittanceInfo?.total_cod_remitted || ''}
+                    onChange={handleRemittanceInfo}
+                    />
+
+                </div>
+                <div className="mb-4 flex flex-row">
+                <div className="flex flex-row justify-between w-full">
+                <Field
+                    type={'number'}
+                    id={'total_deduction_from_cod'}
+                    label={'Deduction From COD'}
+                    inputClassNames={'text-xs mb-2 mr-2'}
+                    placeHolder={'Enter Deduction From COD'}
+                    required={true}
+                    value={remittanceInfo?.total_deduction_from_cod || ''}
+                    onChange={handleRemittanceInfo}
+                />
+
+                <Field
+                        type={'number'}
+                        id={'remittance_initiated'}
+                        label={'Remittance Initiated'}
+                        inputClassNames={'text-xs mb-2 mr-2'}
+                        placeHolder={'Enter Remittence Initiated'}
+                        required={true}
+                        value={remittanceInfo?.remittance_initiated || ''}
+                        onChange={handleRemittanceInfo}
+                    />
+
+                    <Field
+                    type={'number'}
+                    id={'status_id'}
+                    label={'Status Id'}
+                    inputClassNames={'text-xs mr-2'}
+                    placeHolder={'Enter Status Id'}
+                    required={true}
+                    value={remittanceInfo?.status_id || ''}
+                    onChange={handleRemittanceInfo}
+                />
+                </div>
+                </div>
+                <div className="flex items-center justify-center px-6">
+                        <button
+                            className="mb-1 mr-1 px-12 rounded-lg py-2 text-sm border border-[#B07828] text-[#B07828] outline-none transition-all duration-150 ease-linear focus:outline-none hover:shadow-lg font-semibold"
+                            type="button"
+                            onClick={() => setShow(false)}>
+                            Cancel
+                        </button>
+                        <button
+                            className="mb-1 mr-1 rounded-lg bg-[#B07828] px-6 py-2 text-sm text-white shadow outline-none transition-all duration-150 border ease-linear hover:shadow-lg focus:outline-none font-semibold"
+                            type="button"
+                            onClick={() => handleCOD()}
+                        >
+                            {'Request COD Remittance' }
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        }
         </PageWithSidebar>
     )
 }
