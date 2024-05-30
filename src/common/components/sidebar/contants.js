@@ -195,6 +195,18 @@ sidebarLinks = [
       path: '/company-list',
       icon: newHome,
       hoverIcon: newHome,
+    },
+    {
+      title: 'COD Remittance',
+      path: '/remittance-logs',
+      icon: bill,
+      hoverIcon: bill,
+    },
+    {
+      title: 'Weight Discrepancy',
+      path: '/billing-charge-details?page=1&perPage=15&to=&from=&status=0&search=&courier_id=',
+      icon: weight,
+      hoverIcon: weight,
     }
   ]
 }
