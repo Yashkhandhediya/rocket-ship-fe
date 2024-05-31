@@ -1,28 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom';
-import {
-  LogIn,
-  Orders,
-  SignUp,
-  Dashboard,
-  AddOrder,
-  OrderTrackDetails,
-  Return,
-  Weight_Freeze,
-  WeightDiscrepancy,
-  Settings,
-  Bank_details,
-  Manage_pickup_add,
-  Change_password,
-  Company_Profile,
-  Home,
-} from '../pages';
+import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails, Return, Weight_Freeze, WeightDiscrepancy, Settings, Bank_details, Manage_pickup_add, Change_password, Company_Profile, Home } from '../pages';
 import Tracking from '../pages/tracking/Tracking';
 import ReturnTracking from '../pages/return-tracking/ReturnTracking';
 import PrivateRoute from './private-route/PrivateRoute';
 import { SellerKYC } from '../pages/kyc';
 import { Returns } from '../pages/returns';
 import { COD_Remittance, Passbook, ShippingCharges, Wallet_history } from '../pages/billing/component';
-import { RateCard } from '../pages/rate-card';
+
 const routes = createBrowserRouter([
   {
     path: '/',
@@ -97,10 +81,12 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<Wallet_history />} />,
   },
   {
+
     path: '/recharge-status',
     element: <PrivateRoute component={<Wallet_history />} />,
   },
   {
+
     path: '/passbook',
     element: <PrivateRoute component={<Passbook />} />,
   },
@@ -125,10 +111,6 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<Company_Profile />} />,
   },
 
-  {
-    path: '/rate-card',
-    element: <PrivateRoute component={<RateCard />} />,
-  },
 ]);
 
 export default routes;

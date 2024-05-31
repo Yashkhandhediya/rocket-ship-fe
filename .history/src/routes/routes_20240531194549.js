@@ -23,6 +23,7 @@ import { SellerKYC } from '../pages/kyc';
 import { Returns } from '../pages/returns';
 import { COD_Remittance, Passbook, ShippingCharges, Wallet_history } from '../pages/billing/component';
 import { RateCard } from '../pages/rate-card';
+
 const routes = createBrowserRouter([
   {
     path: '/',
