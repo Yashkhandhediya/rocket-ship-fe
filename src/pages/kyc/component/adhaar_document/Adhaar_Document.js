@@ -2,11 +2,14 @@ import { useState } from 'react'
 import { Field } from '../../../../common/components'
 import { OTP_Input } from '../otp_Input';
 import { toast } from 'react-toastify';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
+import axios from 'axios';
 
 const Adhaar_Document = ({ triggerValidation,setTriggerValidations,setIsKYCCompleted}) => {
     const [isValidAdhaar, setIsValidAdhaar] = useState(true);
     const [adhaarNumber, setAdhaarNumber] = useState('')
     const [showOTPBox, setShowOTPBox] = useState(false)
+    const [id,setId] = useState(null)
     const [disableInput, setDisableInput] = useState(false)
     const handleSetAdhaarNumber = (event) => {
         const inputAdhaarNumber = event.target.value;
@@ -30,6 +33,12 @@ const Adhaar_Document = ({ triggerValidation,setTriggerValidations,setIsKYCCompl
             setTriggerValidations(true)
             setDisableInput(true)
             // API call to send OTP
+            axios.post(BACKEND_URL + `/kyc/adhaar_generate_otp?id_number=${adhaarNumber}`)
+            .then((res) => {
+                console.log("Response OTP",res.data)
+                setId(res.data.id)
+                toast.success('otp send successfully')
+            })
         } catch (error) {
             // Show error message
             toast.error('Please enter a valid Adhaar number', { type: 'error' })
@@ -83,6 +92,7 @@ const Adhaar_Document = ({ triggerValidation,setTriggerValidations,setIsKYCCompl
             {showOTPBox && <OTP_Input handleSendOTP={handleSendOTP}
                 timer={30}
                 setIsKYCCompleted={setIsKYCCompleted}
+                id={id}
             />}
         </div>
     )

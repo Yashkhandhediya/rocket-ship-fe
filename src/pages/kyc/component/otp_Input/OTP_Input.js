@@ -1,7 +1,9 @@
+import axios from 'axios';
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
 
-const OTP_Input = ({ handleSendOTP, timer, setIsKYCCompleted }) => {
+const OTP_Input = ({ handleSendOTP, timer, setIsKYCCompleted,id=null }) => {
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
     const [seconds, setSeconds] = useState(timer);
     const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null), useRef(null), useRef(null)];
@@ -34,8 +36,13 @@ const OTP_Input = ({ handleSendOTP, timer, setIsKYCCompleted }) => {
     const completeKYC = () => {
         if (isOtpEntered) {
             // API call to verify OTP
-            toast.success('KYC completed successfully', { type: 'success' })
-            setIsKYCCompleted(true)
+            axios.post(BACKEND_URL + `/kyc/adhaar_submit_otp?reference_id=${id}&otp=${otp}`)
+            .then((res) => {
+                toast.success('KYC completed successfully', { type: 'success' })
+                setIsKYCCompleted(true)
+            }).catch((err) => {
+                toast("Mismatch OTP",{type:'error'})
+            })
         }
         else {
             // Show error message
