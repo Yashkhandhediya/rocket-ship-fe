@@ -59,19 +59,20 @@ const COD_Remittance = () => {
     }
 
     const handleCOD = () => {
-        axios.post(BACKEND_URL + '/order/create_cod_remittance', {
+        axios.post(BACKEND_URL + `/order/create_cod_remittance?user_id=${localStorage.getItem('user_id')}`, {
             "order_id": parseInt(remittanceInfo?.order_id),
             "cod_to_be_remitted": parseInt(remittanceInfo?.cod_to_be_remitted),
             "last_cod_remitted": parseInt(remittanceInfo?.last_cod_remitted),
             "total_cod_remitted": parseInt(remittanceInfo?.total_cod_remitted),
             "total_deduction_from_cod": parseInt(remittanceInfo?.total_deduction_from_cod),
             "remittance_initiated": parseInt(remittanceInfo?.remittance_initiated),
-            "status_id": parseInt(remittanceInfo?.status_id)
+            // "status_id": parseInt(remittanceInfo?.status_id)
         })
         .then((res) => {
             console.log("Response Cod",res.data);
             toast.success('COD remittance created successfully');
             setShow(false)
+            window.location.reload()
         }).catch((err) => {
             console.log("Error Cod",err);
             toast("Error In Creation Of COD remittance",{type:'error'})
@@ -306,14 +307,14 @@ const COD_Remittance = () => {
                         type={'number'}
                         id={'remittance_initiated'}
                         label={'Remittance Initiated'}
-                        inputClassNames={'text-xs mb-2 mr-2'}
+                        inputClassNames={'text-xs mb-2 ml-2'}
                         placeHolder={'Enter Remittence Initiated'}
                         required={true}
                         value={remittanceInfo?.remittance_initiated || ''}
                         onChange={handleRemittanceInfo}
                     />
 
-                    <Field
+                    {/* <Field
                     type={'number'}
                     id={'status_id'}
                     label={'Status Id'}
@@ -322,7 +323,7 @@ const COD_Remittance = () => {
                     required={true}
                     value={remittanceInfo?.status_id || ''}
                     onChange={handleRemittanceInfo}
-                />
+                /> */}
                 </div>
                 </div>
                 <div className="flex items-center justify-center px-6">
