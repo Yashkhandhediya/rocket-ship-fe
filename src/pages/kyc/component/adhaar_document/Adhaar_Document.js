@@ -33,10 +33,11 @@ const Adhaar_Document = ({ triggerValidation,setTriggerValidations,setIsKYCCompl
             setTriggerValidations(true)
             setDisableInput(true)
             // API call to send OTP
-            axios.post(BACKEND_URL + `/kyc/adhaar_generate_otp?id_number=${adhaarNumber}`)
+            let temp_number = adhaarNumber.replace(/-/g,'')
+            axios.post(BACKEND_URL + `/kyc/adhaar_generate_otp?id_number=${temp_number}`)
             .then((res) => {
                 console.log("Response OTP",res.data)
-                setId(res.data.id)
+                setId(res.data.reference_id)
                 toast.success('otp send successfully')
             })
         } catch (error) {
