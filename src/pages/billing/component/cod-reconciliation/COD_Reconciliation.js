@@ -1,7 +1,21 @@
+import axios from "axios";
 import { CustomTooltip } from "../../../../common/components";
 import { remitance } from "../../../../common/images";
+import { BACKEND_URL } from "../../../../common/utils/env.config";
+import { toast } from "react-toastify";
 
 const COD_Reconciliation = ({ charges, data }) => {
+    const updateStatus = (id,status_name) => {
+        axios.put(BACKEND_URL + `/order/cod_remittance_update_status/${id}?status_name=${status_name}`)
+        .then((res) => {
+            console.log("Response Of Update Status",res.data)
+            toast(`status updated to ${status_name}`,{type:'success'})
+            window.location.reload()
+        }).catch((err) => {
+            console.log("Error in updating status",err)
+            toast(`Error in updating status`,{type:'error'})
+        })
+    }
     return (
         <>
             <div className="flex flex-row w-full justify-evenly my-4 px-6">
@@ -24,15 +38,16 @@ const COD_Reconciliation = ({ charges, data }) => {
             </div>
             <div>
                 {data.length > 0 ? (
-                        <div className="m-4">
+                        <div className="m-2">
                             <div className="flex items-center border border-b-[#E5E7EB] text-left">
-                            <div className="w-[14.66%] border-r-2 py-2.5 pl-2">Order ID</div>
-                            <div className="w-[14.66%] border-r-2 py-2.5 pl-2">COD To Remitted</div>
-                            <div className="w-[14.66%] border-r-2 py-2.5 pl-2">Last COD Remitted</div>
-                            <div className="w-[14.66%] border-r-2 py-2.5 pl-2">Total COD Remitted</div>
+                            <div className="w-[13.66%] border-r-2 py-2.5 pl-2">Order ID</div>
+                            <div className="w-[13.66%] border-r-2 py-2.5 pl-2">COD To Remitted</div>
+                            <div className="w-[13.66%] border-r-2 py-2.5 pl-2">Last COD Remitted</div>
+                            <div className="w-[13.66%] border-r-2 py-2.5 pl-2">Total COD Remitted</div>
                             <div className="w-[16.66%] border-r-2 py-2.5 pl-2">Total Deduction From COD</div>
-                            <div className="w-[14.66%] border-r-2 py-2.5 pl-2">Remittence Initiated</div>
+                            <div className="w-[13.66%] border-r-2 py-2.5 pl-2">Remittence Initiated</div>
                             <div className="w-[12.66%] border-r-2 py-2.5 pl-2">Status</div>
+                            <div className="w-[12.66%] border-r-2 py-2.5 pl-2">Action</div>
                         </div>
                         {/* table data */}
                         <div className="flex flex-col items-center justify-center">
@@ -40,33 +55,44 @@ const COD_Reconciliation = ({ charges, data }) => {
                             {Array.isArray(data) && data.length > 0 ? data.map((item, key) => {
                             return (
                                 <div
-                                className="flex h-10 w-full flex-row items-center border border-b-[#E5E7EB] text-left"
+                                className="flex h-12 w-full flex-row items-center border border-b-[#E5E7EB] text-left"
                                 key={key}
                                 >
-                                <div className="flex h-full w-[14.66%] items-center border-r-2 pl-2 font-normal">{item.order_id}</div>
-                                <div className="flex flex-col h-full w-[14.66%] justify-center border-r-2 pl-2 font-normal">
-                                    <div>{item.cod_to_be_remitted}</div>
+                                <div className="flex h-full w-[13.66%] items-center border-r-2 pl-2 font-normal">{item.order.id}</div>
+                                <div className="flex flex-col h-full w-[13.66%] justify-center border-r-2 pl-2 font-normal">
+                                    <div>{item.COD_Remittance.cod_to_be_remitted}</div>
                                 </div>
-                                <div className="flex h-full w-[14.66%] flex-col justify-center gap-4 border-r-2 pl-2 text-left">
-                                    <div>{item.last_cod_remitted}</div>
+                                <div className="flex h-full w-[13.66%] flex-col justify-center gap-4 border-r-2 pl-2 text-left">
+                                    <div>{item.COD_Remittance.last_cod_remitted}</div>
                                 </div>
-                                <div className="h-full flex justify-center flex-col w-[14.66%] border-r-2 pl-2 font-normal">
-                                    <div>{`${item.total_cod_remitted}`}</div>
+                                <div className="h-full flex justify-center flex-col w-[13.66%] border-r-2 pl-2 font-normal">
+                                    <div>{`${item.COD_Remittance.total_cod_remitted}`}</div>
                                    
                                 </div>
                                 <div className="h-full flex justify-center flex-col w-[16.66%] border-r-2 pl-2 font-normal">
-                                    <div>{`${item.total_deduction_from_cod}`}</div>
+                                    <div>{`${item.COD_Remittance.total_deduction_from_cod}`}</div>
                                     
                                 </div>
-                                <div className="h-full flex justify-center flex-col w-[14.66%] border-r-2 pl-2 font-normal">
-                                    <div><span className='text-red-800'>{item.remittance_initiated}</span></div>
+                                <div className="h-full flex justify-center flex-col w-[13.66%] border-r-2 pl-2 font-normal">
+                                    <div><span className='text-red-800'>{item.COD_Remittance.remittance_initiated}</span></div>
                                 </div>
                                 <div className="px-2 flex item-center h-full w-[12.66%] items-center border-r-2 pl-2 font-normal">
                                     <div className='rounded basis-full font-semibold bg-red-100 text-red-700 text-center'>{
-                                        item.status_id == 0 ? 'Pending' : item.status_id == 1 ? 'Approved' : 'Rejected'
-
+                                        item.COD_Remittance.status
                                     }
                                     </div>
+                                </div> 
+                                <div className="px-2 flex item-center h-full w-[12.66%] items-center border-r-2 pl-2 font-normal">
+                                <button className='border-2 p-1 mr-2 border-red-400 rounded font-semibold text-red-600'
+                                    onClick={() => {
+                                        updateStatus(item.COD_Remittance.id,"done");
+                                    }}>Done</button>
+                                    <button
+                                    className='border-2 p-1 border-red-400 rounded font-semibold text-red-600'
+                                    onClick={() => {
+                                        updateStatus(item.COD_Remittance.id,"inprogress");
+                                    }}
+                                    >InProgrss</button>
                                 </div> 
                                 </div>
                             );

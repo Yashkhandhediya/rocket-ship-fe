@@ -89,7 +89,7 @@ const COD_Remittance = () => {
     }
 
     const handleCODData = () => {
-        axios.post(BACKEND_URL + `/order/get_cod_remittance?user_id=${localStorage.getItem('user_id')}`)
+        axios.get(BACKEND_URL + `/order/get_cod_remittance?user_id=${localStorage.getItem('user_id')}&from_date=${fromDate}&to_date=${toDate}`)
         .then((res) => {
             console.log("COD DATA",res.data)
             setData(res.data)
@@ -100,7 +100,7 @@ const COD_Remittance = () => {
 
     useEffect(() => {
         handleCODData()
-    },[])
+    },[fromDate,toDate])
 
     const charges = [
         {
