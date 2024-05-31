@@ -7,6 +7,7 @@ import { bigcommerce } from '../../../../../common/icons';
 const BigForm = () => {
     let response = ""
     const [checked, setChecked] = useState(false);
+    const [storeName,setStoreName] = useState('')
 
     const handleToggle = () => {
         setChecked(!checked);
@@ -21,7 +22,8 @@ const BigForm = () => {
 
     const redirectToBigAuth = async () => {
         axios
-            .post(BACKEND_URL+`/bigcommerce/create-webhook?HASH_CODE=${hashCode}&AUTH_TOKEN=${authToken}&user_id=${localStorage.getItem('user_id')}`)
+            .post(BACKEND_URL+`/bigcommerce/create-webhook?HASH_CODE=${hashCode}&AUTH_TOKEN=${authToken}&user_id=${localStorage.getItem('user_id')}&shop_name=${storeName}`)
+
             .then(async (resp) => {
                 if (resp.status === 200) {
                     console.log("REsponseeeeeeee", resp)
@@ -56,8 +58,20 @@ const BigForm = () => {
                     <span className='ml-9 mr-3 text-[12px] text-black'>Please provide below given credentials for your store :</span>
                 </div>
                 <div className='mt-3 mb-5 flex flex-col justify-between'>
+
+                <div className='flex flex-row mt-4'>
+                    <label htmlFor="storenameInput" className='mt-2 ml-8 mr-3 text-[14px] font-semibold text-black'>Store Name</label>
+                    <input
+                        type="text"
+                        id="storenameInput"
+                        placeholder="Enter Your Store Name"
+                        className='rounded-lg mr-2 h-9 w-[70%] md:w-[70%] lg:w-[70%] xl:w-[70%]'
+                        value={storeName}
+                        onChange={(e) => setStoreName(e.target.value)}
+                    />
+                </div>
                 <div className="flex flex-row mt-4">
-                    <label className='mt-2 ml-8 mr-3 text-[14px] font-semibold text-black'>Hash Code</label>
+                    <label className='mt-2 ml-8 mr-4 text-[14px] font-semibold text-black'>Hash Code</label>
                     <input
                         type="text"
                         placeholder="Enter Hash Code"
@@ -67,7 +81,7 @@ const BigForm = () => {
                     />
                 </div>
                 <div className="flex flex-row mt-4">
-                    <label className='mt-2 ml-8 mr-3 text-[14px] font-semibold text-black'>Auth Token</label>
+                    <label className='mt-2 ml-8 mr-4 text-[14px] font-semibold text-black'>Auth Token</label>
                     <input
                         type="text"
                         placeholder="Enter Auth Token"

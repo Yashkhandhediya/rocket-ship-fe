@@ -7,6 +7,7 @@ import { woocommerce } from '../../../../../common/icons';
 const WooForm = () => {
     let response = ""
     const [checked, setChecked] = useState(false);
+    const [storeName,setStoreName] = useState('')
 
     const handleToggle = () => {
         setChecked(!checked);
@@ -20,7 +21,7 @@ const WooForm = () => {
 
     const redirectToWooAuth = async () => {
         axios
-            .get(BACKEND_URL+`/woocommerce/generate_auth_url?store_url=${url}&user_id=${localStorage.getItem('user_id')}`)
+            .get(BACKEND_URL+`/woocommerce/generate_auth_url?store_url=${url}&user_id=${localStorage.getItem('user_id')}&shop_name=${storeName}`)
             .then(async (resp) => {
                 if (resp.status === 200) {
                     response = resp.data.auth_url;
@@ -54,6 +55,17 @@ const WooForm = () => {
                 </div>
                 <div className='flex items-center text-left mb-3'>
                     <span className='ml-9 mr-3 text-[12px] text-black'>Please provide below given credentials for your store :</span>
+                </div>
+                <div className='mt-3 mb-5 flex items-center justify-between'>
+                    <label htmlFor="storenameInput" className='ml-8 mr-3 text-[14px] font-semibold text-black'>Store Name</label>
+                    <input
+                        type="text"
+                        id="storenameInput"
+                        placeholder="Enter Your Store Name"
+                        className='rounded-lg mr-2 h-9 w-[70%] md:w-[70%] lg:w-[70%] xl:w-[70%]'
+                        value={storeName}
+                        onChange={(e) => setStoreName(e.target.value)}
+                    />
                 </div>
                 <div className='mt-3 mb-5 flex items-center justify-between'>
                     <label htmlFor="nameInput" className='ml-8 mr-3 text-[14px] font-semibold text-black'>WooCommerce Store Url</label>

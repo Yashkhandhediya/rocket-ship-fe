@@ -3,7 +3,7 @@ import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { MoreDropdown, CustomTooltip, CommonBadge, CustomDataTable } from '../../../../common/components';
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
-import { Woocommerce, filterIcon, moreAction, shopify } from '../../../../common/icons';
+import { Woocommerce, bigcommerce, filterIcon, moreAction, shopify } from '../../../../common/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllOrders, setClonedOrder,setEditOrder } from '../../../../redux';
 import axios from 'axios';
@@ -167,8 +167,24 @@ const Rto = () => {
                 </Link>
               </div>
               <div className="text-[11px]">{formattedDate}</div>
-              {row?.original?.partner_name == "shopify" && <img src={shopify} className="mr-2 w-4" />}
-              {row?.original?.partner_name == "woocommerce" && <img src={Woocommerce} className="mr-2 w-4" />}
+              {row?.original?.channel_name == "shopify" && (<div className="flex flex-col">
+                <div className="mt-2">{row?.original?.shop_name}</div>
+                <img src={shopify} className="mr-2 w-4" />
+              </div>)
+              }
+              {row?.original?.channel_name == "woocommerce" && (
+                <div className="flex flex-col">
+                <div className="mt-2">{row?.original?.shop_name}</div>
+                <img src={Woocommerce} className="mr-2 w-14" />
+                </div>)
+              }
+              {row?.original?.channel_name == "bigcommerce" && (
+                <div className="flex flex-col">
+                <div className="mt-2">{row?.original?.shop_name}</div>
+                <img src={bigcommerce} className="mr-2 w-14" />
+                </div>)
+              }
+              {row?.original?.channel_name == null && row?.original?.shop_name == null && <span>Custom</span>}
               <div>{(row?.original?.channel || '')?.toUpperCase()}</div>
               <div>
                 <CustomTooltip

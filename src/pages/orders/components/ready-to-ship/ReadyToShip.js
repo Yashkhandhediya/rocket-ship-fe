@@ -5,7 +5,7 @@ import moment from 'moment';
 import { Badge } from 'flowbite-react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { Woocommerce, filterIcon, moreAction, shopify } from '../../../../common/icons';
+import { Woocommerce, bigcommerce, filterIcon, moreAction, shopify } from '../../../../common/icons';
 import { filterReadyToShip, moreActionOptions } from '../utils';
 import DrawerWithSidebar from '../../../../common/components/drawer-with-sidebar/DrawerWithSidebar';
 import { ShipmentDrawerOrderDetails } from '../shipment-drawer-order-details';
@@ -134,8 +134,24 @@ export const ReadyToShip = () => {
                 </Link>
               </div>
               <div className="text-[11px]">{formattedDate}</div>
-              {row?.original?.partner_name == "shopify" && <img src={shopify} className="mr-2 w-4" />}
-              {row?.original?.partner_name == "woocommerce" && <img src={Woocommerce} className="mr-2 w-14" />}
+              {row?.original?.channel_name == "shopify" && (<div className="flex flex-col">
+                <div className="mt-2">{row?.original?.shop_name}</div>
+                <img src={shopify} className="mr-2 w-4" />
+              </div>)
+              }
+              {row?.original?.channel_name == "woocommerce" && (
+                <div className="flex flex-col">
+                <div className="mt-2">{row?.original?.shop_name}</div>
+                <img src={Woocommerce} className="mr-2 w-14" />
+                </div>)
+              }
+              {row?.original?.channel_name == "bigcommerce" && (
+                <div className="flex flex-col">
+                <div className="mt-2">{row?.original?.shop_name}</div>
+                <img src={bigcommerce} className="mr-2 w-14" />
+                </div>)
+              }
+              {row?.original?.channel_name == null && row?.original?.shop_name == null && <span>Custom</span>}
               <div>{(row?.original?.channel || '')?.toUpperCase()}</div>
               <div>
                 <CustomTooltip

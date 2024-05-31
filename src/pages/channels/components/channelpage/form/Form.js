@@ -13,6 +13,7 @@ const Form = () => {
     };
 
     const [url, setUrl] = useState('');
+    const [storeName, setStoreName] = useState('');
 
     const handleChange = (event) => {
         setUrl(event.target.value);
@@ -23,20 +24,21 @@ const Form = () => {
         
         // console.log(BACKEND_URL+`/shopify/redirect?url=${url}`)
 
-        // axios
-        //     .get(BACKEND_URL+`/shopify/redirect?url=${url}&user_id=${localStorage.getItem('user_id')}`)
-        //     .then(async (resp) => {
-        //         if (resp.status === 200) {
-        //             response = resp.data.auth_url;
-        //             console.log("REsponseeeeeeee", response)
-        //             window.location.href = response;
-        //         } else {
-        //             toast('Enter valid url', { type: 'error' });
-        //         }
-        //     })
-        //     .catch(() => {
-        //         toast('There is some error', { type: 'error' });
-        //     });
+        axios
+            .get(BACKEND_URL+`/shopify/redirect?url=${url}&user_id=${localStorage.getItem('user_id')}&shop_name=${storeName}`)
+
+            .then(async (resp) => {
+                if (resp.status === 200) {
+                    response = resp.data.auth_url;
+                    console.log("REsponseeeeeeee", response)
+                    window.location.href = response;
+                } else {
+                    toast('Enter valid url', { type: 'error' });
+                }
+            })
+            .catch(() => {
+                toast('There is some error', { type: 'error' });
+            });
     };
 
 
@@ -118,12 +120,24 @@ const Form = () => {
                     <span className='ml-9 mr-3 text-[12px] text-black'>Please provide below given credentials for your store :</span>
                 </div>
                 <div className='mt-3 mb-5 flex items-center justify-between'>
+                    <label htmlFor="storenameInput" className='ml-9 mr-3 text-[14px] font-semibold text-black text-[#999]'>Store Name</label>
+                    <input
+                        type="text"
+                        id="storenameInput"
+                        placeholder="Enter Store Name"
+                        className='rounded-lg mr-9 h-9 w-40 md:w-48 lg:w-56 xl:w-[70%]'
+                        value={storeName}
+                        onChange={(e) => setStoreName(e.target.value)}
+                    />
+                </div>
+
+                <div className='mt-3 mb-5 flex items-center justify-between'>
                     <label htmlFor="nameInput" className='ml-9 mr-3 text-[14px] font-semibold text-black text-[#999]'>Store Url</label>
                     <input
                         type="text"
                         id="nameInput"
-                        placeholder="Enter Channel Name"
-                        className='rounded-lg mr-9 h-9 w-40 md:w-48 lg:w-56 xl:w-64'
+                        placeholder="Enter Channel Name https://yourshopname.myshopify.com"
+                        className='rounded-lg mr-9 h-9 w-40 md:w-48 lg:w-56 xl:w-[70%]'
                         value={url}
                         onChange={handleChange}
                     />
