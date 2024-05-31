@@ -23,7 +23,70 @@ const COD_Reconciliation = ({ charges, data }) => {
                 ))}
             </div>
             <div>
-                {data.length > 0 ? ('ashjgfdsy') : (
+                {data.length > 0 ? (
+                        <div className="m-4">
+                            <div className="flex items-center border border-b-[#E5E7EB] text-left">
+                            <div className="w-[14.66%] border-r-2 py-2.5 pl-2">Order ID</div>
+                            <div className="w-[14.66%] border-r-2 py-2.5 pl-2">COD To Remitted</div>
+                            <div className="w-[14.66%] border-r-2 py-2.5 pl-2">Last COD Remitted</div>
+                            <div className="w-[14.66%] border-r-2 py-2.5 pl-2">Total COD Remitted</div>
+                            <div className="w-[16.66%] border-r-2 py-2.5 pl-2">Total Deduction From COD</div>
+                            <div className="w-[14.66%] border-r-2 py-2.5 pl-2">Remittence Initiated</div>
+                            <div className="w-[12.66%] border-r-2 py-2.5 pl-2">Status</div>
+                        </div>
+                        {/* table data */}
+                        <div className="flex flex-col items-center justify-center">
+                            {console.log(data)} {/* eslint-disable-line */}
+                            {Array.isArray(data) && data.length > 0 ? data.map((item, key) => {
+                            return (
+                                <div
+                                className="flex h-10 w-full flex-row items-center border border-b-[#E5E7EB] text-left"
+                                key={key}
+                                >
+                                <div className="flex h-full w-[14.66%] items-center border-r-2 pl-2 font-normal">{item.order_id}</div>
+                                <div className="flex flex-col h-full w-[14.66%] justify-center border-r-2 pl-2 font-normal">
+                                    <div>{item.cod_to_be_remitted}</div>
+                                </div>
+                                <div className="flex h-full w-[14.66%] flex-col justify-center gap-4 border-r-2 pl-2 text-left">
+                                    <div>{item.last_cod_remitted}</div>
+                                </div>
+                                <div className="h-full flex justify-center flex-col w-[14.66%] border-r-2 pl-2 font-normal">
+                                    <div>{`${item.total_cod_remitted}`}</div>
+                                   
+                                </div>
+                                <div className="h-full flex justify-center flex-col w-[16.66%] border-r-2 pl-2 font-normal">
+                                    <div>{`${item.total_deduction_from_cod}`}</div>
+                                    
+                                </div>
+                                <div className="h-full flex justify-center flex-col w-[14.66%] border-r-2 pl-2 font-normal">
+                                    <div><span className='text-red-800'>{item.remittance_initiated}</span></div>
+                                </div>
+                                <div className="px-2 flex item-center h-full w-[12.66%] items-center border-r-2 pl-2 font-normal">
+                                    <div className='rounded basis-full font-semibold bg-red-100 text-red-700 text-center'>{
+                                        item.status_id == 0 ? 'Pending' : item.status_id == 1 ? 'Approved' : 'Rejected'
+
+                                    }
+                                    </div>
+                                </div> 
+                                </div>
+                            );
+                            }) : (
+                        <div className='pt-16 mb-12 w-full flex justify-center items-center flex-col'>
+                        <img src={remitance} alt="" width={'200px'} />
+                        <div className='text-3xl mt-10 text-[#b54040] font-bold'>Your remittance is on its way.</div>
+                        <div className='text-[15px] text-[#313131] mt-2 font-semibold opacity-80'>
+                            Hey {localStorage.getItem('user_name')}, We release COD remittance 3 times in a week and on the 8th day from the date of delivery.
+                        </div>
+                        <div className="mt-8">
+                            <button className="bg-[#b54040] px-16 py-3 rounded-3xl text-white text-[13px]">
+                                Learn More
+                            </button>
+                        </div>
+                    </div>
+                            )}
+                        </div>
+                </div>
+                ) : (
                     <div className='pt-16 mb-12 w-full flex justify-center items-center flex-col'>
                         <img src={remitance} alt="" width={'200px'} />
                         <div className='text-3xl mt-10 text-[#b54040] font-bold'>Your remittance is on its way.</div>

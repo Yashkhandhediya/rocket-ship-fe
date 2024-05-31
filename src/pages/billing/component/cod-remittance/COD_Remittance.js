@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { COD_Reconciliation } from '../cod-reconciliation'
 import { useSearchParams,useNavigate } from 'react-router-dom';
 import { FutureCod } from '../future-cod';
@@ -76,7 +76,7 @@ const COD_Remittance = () => {
             console.log("Error Cod",err);
             toast("Error In Creation Of COD remittance",{type:'error'})
         })
-        
+
         setRemittanceInfo({
             order_id:0,
             cod_to_be_remitted: 0,
@@ -87,6 +87,20 @@ const COD_Remittance = () => {
             status_id: 0
         })
     }
+
+    const handleCODData = () => {
+        axios.post(BACKEND_URL + `/order/get_cod_remittance?user_id=${localStorage.getItem('user_id')}`)
+        .then((res) => {
+            console.log("COD DATA",res.data)
+            setData(res.data)
+        }).catch((err) => {
+            console.log("Error COD DATA",err)
+        })
+    }
+
+    useEffect(() => {
+        handleCODData()
+    },[])
 
     const charges = [
         {
