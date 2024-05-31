@@ -161,22 +161,48 @@ const WeightDiscrepancy = () => {
     setShow(true);
   }
 
-  const handleDiscrepancy = () => {
-    const formData = new FormData();
-    formData.append('file', img);
-    const headers = { 'Content-Type': 'multipart/form-data'};
-    axios.post(BACKEND_URL + `/weight_discrepancy/?user_id=${localStorage.getItem('user_id')}&charged_weight=${parseFloat(weightInfo?.charge_weight)}&excess_weight=${parseFloat(weightInfo?.excess_weight)}&excess_rate=${parseFloat(weightInfo?.excess_rate)}&order_id=${parseInt(weightInfo?.order_id)}`,
-      formData
-    ,{headers}).then((res) => {
-      console.log("Discrepancy Response ",res.data)
-      toast('Weight Discrepancy Created',{type:'success'})
-      // window.location.reload()
-      setShow(false)
-    }).catch((err) => {
-      console.log("Error in API",err)
-      toast('Error in Creating Weight Discrepancy ',{type:'error'})
-    })
-  }
+  const handleDiscrepancy = async () => {
+    const discrepancyData = {
+      charged_weight: parseFloat(weightInfo?.charge_weight),
+      excess_weight: parseFloat(weightInfo?.excess_weight),
+      excess_rate: parseFloat(weightInfo?.excess_rate),
+      order_id: parseInt(weightInfo?.order_id),
+    };
+  
+    const headers = { 'Content-Type': 'application/json' };
+  
+    try {
+      const response = await axios.post(
+        `${BACKEND_URL}/weight_discrepancy/?user_id=${localStorage.getItem('user_id')}`,
+        discrepancyData,
+        { headers }
+      );
+      const discrepancyId = response.data;
+  
+      const formData = new FormData();
+      formData.append('file', img);
+  
+      const imageUploadHeaders = { 'Content-Type': 'multipart/form-data' };
+  
+      const imageResponse = await axios.post(
+        `${BACKEND_URL}/weight_discrepancy/add_image?weight_discrepancy_id=${discrepancyId}`,
+        formData,
+        { headers: imageUploadHeaders }
+      );
+  
+      console.log("Image Upload Response", imageResponse.data);
+      toast('Weight Discrepancy Created', { type: 'success' });
+      setShow(false);
+    } catch (error) {
+      console.error("Error in API", error);
+      if (error.response && error.response.config.url.includes('/add_image')) {
+        toast('Error in Uploading Image', { type: 'error' });
+      } else {
+        toast('Error in Creating Weight Discrepancy', { type: 'error' });
+      }
+    }
+  };
+  
 
   const handleStatusInfo = (event) => {
     const { id, value } = event.target;
