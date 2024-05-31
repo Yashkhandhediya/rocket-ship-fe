@@ -15,7 +15,7 @@ const SignUpUser = () => {
     email_address: "",
     contact_no: "",
     password: "",
-    users_type_id:0
+    // users_type_id:0
   });
 
 
@@ -37,7 +37,7 @@ const SignUpUser = () => {
       contact_no:signupInput.contact_no,
       email_address:signupInput.email_address,
       company_id:signupInput.company_id,
-      users_type_id:signupInput.users_type_id
+      // users_type_id:signupInput.users_type_id
     },{headers}).then((res) => {
       console.log("Reponse of Sign up",res)
       if(res.data.msg == "User already exits"){
@@ -110,7 +110,7 @@ const SignUpUser = () => {
             value={signupInput['password']}
             onChange={handleChangeInput}
           />
-          <Field
+          {/* <Field
             type={'number'}
             id={'users_type_id'}
             label={'User Type Id'}
@@ -118,7 +118,7 @@ const SignUpUser = () => {
             required={true}
             value={signupInput['user_type_id']}
             onChange={handleChangeInput}
-          />
+          /> */}
           {/* <div className="mb-3 text-sm">
             {`By clicking Sign up for Free, you agree to Cloud Cargo's `}
             <Link to={'/login'} className="text-decoration-none text-red-700">
