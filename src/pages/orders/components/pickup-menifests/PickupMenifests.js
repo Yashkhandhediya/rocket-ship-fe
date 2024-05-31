@@ -80,7 +80,6 @@ const PickupMenifests = () => {
 
   const handleMenifest = (id) => {
     let temp_payload = flattenObject(resData,id)
-    console.log("kkkkkkkkkk",temp_payload)
     const headers={'Content-Type': 'application/json'};
 
     temp_payload['client_name']="cloud_cargo"
@@ -93,8 +92,8 @@ const PickupMenifests = () => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
         window.open(url);
-          console.log("General",response);
           toast('Menifest Download Successfully',{type:'success'})
+          window.location.reload();
         }
       ) .catch((error) => {
         console.error("Error:", error);
