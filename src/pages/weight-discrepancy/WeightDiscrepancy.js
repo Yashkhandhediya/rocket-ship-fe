@@ -25,17 +25,19 @@ const WeightDiscrepancy = () => {
   const [selectedFile,setSelectedFile] = useState(null)
   const [show,setShow] = useState(false)
   const [searchParams, setSearchParams] = useSearchParams();
+  // const [images,setImages] = useState([])
+  const [id,setId] = useState(null)
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const allWeightDiscrepanciesList = useSelector((state) => state?.weightDiscrepanciesList);
-
+  console.log("Informationnnnn",allWeightDiscrepanciesList)
   const [images, setImages] = useState({
     img_1: null,
 });
 
-  const [img,setImg] = useState('')
+  const [img,setImg] = useState(null)
 
   const [statusInfo,setStatusInfo] = useState({
     status_id:'',
@@ -55,8 +57,17 @@ const WeightDiscrepancy = () => {
       .get(BACKEND_URL + `/weight_discrepancy/get_weight_discrepancy?user_id=${localStorage.getItem('user_id')}`)
       .then(async (resp) => {
         if (resp.status === 200) {
-          dispatch(setAllWeightDiscrepancies(resp?.data.data || []));
+          console.log("Weight Info",resp?.data)
+          const discrepancies = Array.isArray(resp.data) ? resp.data : [];
+          if(discrepancies.length > 0){
+            dispatch(setAllWeightDiscrepancies(resp?.data));
+          }
           setIsLoading(false);
+          // const firstDiscrepancy = resp?.data?.data?.[0];
+          // if (firstDiscrepancy) {
+          //   setId(firstDiscrepancy.discrepancy_id);
+          // }
+          // console.log("iddddddddd",resp.data)
         } else {
           toast('There is some error while fetching weight discrepancies.', { type: 'error' });
           setIsLoading(false);
@@ -67,6 +78,18 @@ const WeightDiscrepancy = () => {
         setIsLoading(false);
       });
   };
+
+
+  // const fetchImg = (id) => {
+  //   axios.get(BACKEND_URL + `/weight_discrepancy/get_weight_discrepancy_courier_image?weight_discrepancy_id=${id}`,{ responseType: 'blob' })
+  //   .then((res) => {
+  //     console.log("Imageeeeee",res.data)
+  //     const imgUrl = URL.createObjectURL(res.data)
+  //     setImg(imgUrl)
+  //   }).catch((err) => {
+  //     console.log("Image Fetch Error",err)
+  //   })
+  // }
 
   useEffect(() => {
     if (!allWeightDiscrepanciesList) {
@@ -106,7 +129,7 @@ const WeightDiscrepancy = () => {
     setSelectedFile(formData);
     const headers = { 'Content-Type': 'multipart/form-data'};
     try {
-      const response = await axios.post(`${BACKEND_URL}/weight_discrepancy/import`, formData,{headers})
+      const response = await axios.post(`${BACKEND_URL}/weight_discrepancy/import/?user_id=${localStorage.getItem('user_id')}`, formData,{headers})
       if (!response?.data[0]?.success) {
           setSelectedFile(null)
           return toast(response?.data[0]?.error,{type:'error'})
@@ -131,7 +154,7 @@ const WeightDiscrepancy = () => {
             reader.readAsDataURL(file);
         }
         // handleUpload(name, file);
-        setImg(file.name)
+        setImg(e.target.files[0])
   };
 
   const handleShow = () => {
@@ -139,18 +162,15 @@ const WeightDiscrepancy = () => {
   }
 
   const handleDiscrepancy = () => {
-    axios.post(BACKEND_URL + `/weight_discrepancy/?user_id=${localStorage.getItem('user_id')}`,{
-      // "status_id": parseInt(statusInfo?.status_id),
-      // "status_name": statusInfo?.status_name,
-      "charged_weight": parseFloat(weightInfo?.charge_weight),
-      "excess_weight": parseFloat(weightInfo?.excess_weight),
-      "excess_rate": parseFloat(weightInfo?.excess_rate),
-      "courier_image": img,
-      "order_id":parseInt(weightInfo?.order_id)
-    }).then((res) => {
+    const formData = new FormData();
+    formData.append('file', img);
+    const headers = { 'Content-Type': 'multipart/form-data'};
+    axios.post(BACKEND_URL + `/weight_discrepancy/?user_id=${localStorage.getItem('user_id')}&charged_weight=${parseFloat(weightInfo?.charge_weight)}&excess_weight=${parseFloat(weightInfo?.excess_weight)}&excess_rate=${parseFloat(weightInfo?.excess_rate)}&order_id=${parseInt(weightInfo?.order_id)}`,
+      formData
+    ,{headers}).then((res) => {
       console.log("Discrepancy Response ",res.data)
       toast('Weight Discrepancy Created',{type:'success'})
-      window.location.reload()
+      // window.location.reload()
       setShow(false)
     }).catch((err) => {
       console.log("Error in API",err)
@@ -168,6 +188,7 @@ const WeightDiscrepancy = () => {
 
   const handleWeightInfo = (event) => {
     const { id, value } = event.target;
+    console.log("Infoooo",id,value)
     setWeightInfo({
       ...weightInfo,
       [id]:value

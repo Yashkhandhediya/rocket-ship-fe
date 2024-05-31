@@ -5,13 +5,43 @@ import { toast } from 'react-toastify';
 import { useSearchParams } from 'react-router-dom';
 import { DiscrepancyModal } from '../weightDiscrepancyModal';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 // import { noData } from '../../../../common/images';
 
-const DiscrepancyTable = ({ data, setLoading }) => {
+const DiscrepancyTable = ({ data,setLoading }) => {
+  console.log("Dataaaaaaa",data)
   const [show, setShow] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();  // eslint-disable-line
   const freezeStatus = searchParams.get('freeze_status');
+  const [images,setImages] = useState([])
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      const imagePromises = data.map(async (item) => {
+        try {
+          const response = await axios.get(BACKEND_URL + `/weight_discrepancy/get_weight_discrepancy_courier_image?weight_discrepancy_id=${item.weight_discrepancy.id}`, { responseType: 'blob' });
+          const imgUrl = URL.createObjectURL(response.data);
+          return { id: item.weight_discrepancy.id, image: imgUrl };
+        } catch (error) {
+          console.log("Image Fetch Error", error);
+          return { id: item.weight_discrepancy.id, image: null };
+        }
+      });
+
+      const fetchedImages = await Promise.all(imagePromises);
+      const imagesMap = fetchedImages.reduce((acc, img) => {
+        acc[img.id] = img.image;
+        return acc;
+      }, {});
+
+      setImages(imagesMap);
+    };
+
+    if (Array.isArray(data) && data.length > 0) {
+      fetchImages();
+    }
+  }, [data]);
 
   const getRemainingTime = (date) => {
     const statusDate = new Date(date);
@@ -28,7 +58,7 @@ const DiscrepancyTable = ({ data, setLoading }) => {
   }
 
   const updateStatus = (id) => {
-    axios.put(`${BACKEND_URL}/weight_discrepancy/update?id=${id}`, { "status_name": "Discrepancy Accepted" }, { headers: { 'Content-Type': 'application/json' } })
+    axios.put(`${BACKEND_URL}/weight_discrepancy/update?id=${id}&user_id=${localStorage.getItem('user_id')}`, { "status_name": "Discrepancy Accepted" }, { headers: { 'Content-Type': 'application/json','Authorization':ACCESS_TOKEN } })
       .then(res => {
         toast('Discrepancy Accepted Successfully', { type: 'success' });
         window.location.reload();
@@ -74,40 +104,45 @@ const DiscrepancyTable = ({ data, setLoading }) => {
               </div>
               <div className="flex h-full w-[10.66%] items-center border-r-2 pl-2 font-normal">{item.status_updated_on}</div>
               <div className="flex flex-col h-full w-[10.66%] justify-center border-r-2 pl-2 font-normal">
-                <div><strong>Product Name:</strong> {item.product_info[0].name}</div>
-                <div><strong>PID:</strong> {item.product_info[0].id}</div>
-                <div><strong>SKU:</strong> {item.product_info[0].sku}</div>
-                <div><strong>QTY:</strong> {item.product_info[0].quantity}</div>
+                <div><strong>Product Name:</strong> {item.order_data.product_info[0].name}</div>
+                <div><strong>PID:</strong> {item.order_data.product_info[0].id}</div>
+                <div><strong>SKU:</strong> {item.order_data.product_info[0].sku}</div>
+                <div><strong>QTY:</strong> {item.order_data.product_info[0].quantity}</div>
               </div>
               <div className="flex h-full w-[10.66%] flex-col justify-center gap-4 border-r-2 pl-2 text-left">
-                <div>AWB: {item.waybill_no}</div>
+                <div>AWB: {item.order_data.waybill_no}</div>
               </div>
               <div className="h-full flex justify-center flex-col w-[10.66%] border-r-2 pl-2 font-normal">
-                <div><strong>{`${item.applicable_weight} Kg`}</strong></div>
-                <div>Dead weight: {item.dead_weight} Kg</div>
-                <div>Volumetric Weight: {item.volumatric_weight}({item.length}x{item.width}x{item.height} cm)</div>
+                <div><strong>{`${item.order_data.applicable_weight} Kg`}</strong></div>
+                <div>Dead weight: {item.order_data.dead_weight} Kg</div>
+                <div>Volumetric Weight: {item.order_data.volumatric_weight}({item.order_data.length}x{item.order_data.width}x{item.order_data.height} cm)</div>
               </div>
               <div className="h-full flex justify-center flex-col w-[10.66%] border-r-2 pl-2 font-normal">
-                <div><strong>{`${item.charged_weight} Kg`}</strong></div>
-                <div>Dead weight: {item.dead_weight} Kg</div>
-                <div>Volumetric Weight: {item.volumatric_weight}({item.length}x{item.width}x{item.height} cm)</div>
+                <div><strong>{`${item.weight_discrepancy.charged_weight} Kg`}</strong></div>
+                <div>Dead weight: {item.order_data.dead_weight} Kg</div>
+                <div>Volumetric Weight: {item.order_data.volumatric_weight}({item.order_data.length}x{item.order_data.width}x{item.order_data.height} cm)</div>
               </div>
               <div className="h-full flex justify-center flex-col w-[10.66%] border-r-2 pl-2 font-normal">
-                <div><strong>Excess Weight: </strong><span className='text-red-800'>{item.excess_weight} kg</span></div>
-                <div><strong>Excess Charges: </strong><span className='text-red-800'>Rs{item.excess_rate}</span></div>
+                <div><strong>Excess Weight: </strong><span className='text-red-800'>{item.weight_discrepancy.excess_weight} kg</span></div>
+                <div><strong>Excess Charges: </strong><span className='text-red-800'>Rs{item.weight_discrepancy.excess_rate}</span></div>
               </div>
-              <div className="h-full flex justify-center flex-col w-[10.66%] items-center border-r-2 pl-2 font-normal">
+              <div className="h-full flex justify-center flex-col w-[10.66%] items-center border-r-2 pl-2 font-normal bg-none">
+              {images[item.weight_discrepancy.id] ? (
+                <img src={images[item.weight_discrepancy.id]} alt="Product" className="w-full h-full object-cover" />
+              ) : (
+                <div>No Image</div>
+              )}
               </div>
               <div className="px-2 flex item-center h-full w-[10.66%] items-center border-r-2 pl-2 font-normal">
-                <div className='rounded basis-full font-semibold bg-red-100 text-red-700 text-center'>{item.discrepancy_status_name}</div>
+                <div className='rounded basis-full font-semibold bg-red-100 text-red-700 text-center'>{item.weight_discrepancy.discrepancy_status_name}</div>
               </div>
               <div className="p-1 flex flex-col gap-2 h-full w-[10.66%] items-center justify-center border-r-2 font-normal">
-                {item.discrepancy_status_name == 'New Discrepancy' && getRemainingTime(item?.status_updated_on) > 0 &&
+                {item.weight_discrepancy.discrepancy_status_name == 'New Discrepancy' && getRemainingTime(item?.order_data.status_updated_on) > 0 &&
                 // {item.discrepancy_status_name == 'New Discrepancy'  &&
                   <>
                     <button className='border-2 p-1 border-red-600 rounded font-semibold text-red-600'
                       onClick={() => {
-                        updateStatus(item.discrepancy_id);
+                        updateStatus(item.weight_discrepancy.discrepancy_id);
                       }}>Accept Discrepancy</button>
                     <button
                       className='border-2 p-1 border-red-600 rounded font-semibold text-red-600'
@@ -117,20 +152,20 @@ const DiscrepancyTable = ({ data, setLoading }) => {
                       }}
                     >Dispute Discrepancy</button>
                     <div className='text-center text-red-600 font-bold'>
-                      {getRemainingTime(item?.status_updated_on)} working days remaining
+                      {getRemainingTime(item?.weight_discrepancy.status_updated_on)} working days remaining
                     </div>
                   </>}
-                {item.discrepancy_status_name == 'New Discrepancy' && getRemainingTime(item?.status_updated_on) == 0 &&
+                {item.weight_discrepancy.discrepancy_status_name == 'New Discrepancy' && getRemainingTime(item?.weight_discrepancy.status_updated_on) == 0 &&
                   <>
                     <button
                       className='border-2 p-1 border-red-600 rounded font-semibold text-red-600 opacity-45 cursor-not-allowed'
                       disabled
                     >Discrepancy Accepted Automatically</button>
                     <div className='text-center text-red-600 font-bold'>
-                      {getRemainingTime(item?.status_updated_on)} working days remaining
+                      {getRemainingTime(item?.weight_discrepancy.status_updated_on)} working days remaining
                     </div>
                   </>}
-                {item.discrepancy_status_name == 'Dispute Raised' &&
+                {item.weight_discrepancy.discrepancy_status_name == 'Dispute Raised' &&
                   <>
                     <button className='border-2 p-1 border-red-600 rounded font-semibold text-red-600 opacity-45' disabled>Dispute Discrepancy</button>
                   </>}
