@@ -36,7 +36,8 @@ const OTP_Input = ({ handleSendOTP, timer, setIsKYCCompleted,id=null }) => {
     const completeKYC = () => {
         if (isOtpEntered) {
             // API call to verify OTP
-            axios.post(BACKEND_URL + `/kyc/adhaar_submit_otp?reference_id=${id}&otp=${otp}`)
+            let temp_otp = otp.join('')
+            axios.post(BACKEND_URL + `/kyc/adhaar_submit_otp?reference_id=${id}&otp=${temp_otp}`)
             .then((res) => {
                 toast.success('KYC completed successfully', { type: 'success' })
                 setIsKYCCompleted(true)
