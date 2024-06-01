@@ -3,7 +3,7 @@ import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { MoreDropdown, CustomTooltip, CommonBadge, CustomDataTable } from '../../../../common/components';
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
-import { Woocommerce, bigLogo, bigcommerce, filterIcon, moreAction, shopify } from '../../../../common/icons';
+import { Woocommerce, bigLogo, bigcommerce, filterIcon, moreAction, shopify, wooLogo } from '../../../../common/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllOrders, setClonedOrder } from '../../../../redux';
 import axios from 'axios';
@@ -150,8 +150,8 @@ const InTransit = () => {
               }
               {row?.original?.channel_name == "WooCommerce" && (
                 <div className="flex flex-row">
-                <img src={Woocommerce} className="mr-2 mt-2 w-10" />
-                <div className="mt-5">{row?.original?.shop_name}</div>
+                <img src={wooLogo} className="mr-2 mt-2 w-7" />
+                <div className="mt-2">{row?.original?.shop_name}</div>
                 </div>)
               }
               {row?.original?.channel_name == "BigCommerce" && (

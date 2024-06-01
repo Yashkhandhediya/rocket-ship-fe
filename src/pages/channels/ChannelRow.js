@@ -26,7 +26,7 @@ const ChannelRow = ({
       <div className="flex-1">
         <span className="text-sm font-semibold">{storeName}</span>
         <br />
-        {/* <span className="text-sm  text-gray-500">{storeCode}</span> */}
+        <span className="text-sm text-gray-500">{storeCode}</span>
       </div>
 
       <div className="flex-1 text-center ">

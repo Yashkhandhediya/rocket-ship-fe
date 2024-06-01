@@ -1,6 +1,6 @@
 import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { Fragment, useState } from "react";
-import { Woocommerce, bigLogo, bigcommerce, filterIcon, moreAction, shopify } from "../../../../common/icons";
+import { Woocommerce, bigLogo, bigcommerce, filterIcon, moreAction, shopify, wooLogo } from "../../../../common/icons";
 import { MoreFiltersDrawer } from "../more-filters-drawer"; 
 import axios from 'axios';
 import { Badge } from 'flowbite-react';
@@ -164,8 +164,8 @@ const PickupMenifests = () => {
               }
               {row?.original?.channel_name == "WooCommerce" && (
                 <div className="flex flex-row">
-                <img src={Woocommerce} className="mr-2 mt-2 w-10" />
-                <div className="mt-5">{row?.original?.shop_name}</div>
+                <img src={wooLogo} className="mr-2 mt-2 w-7" />
+                <div className="mt-2">{row?.original?.shop_name}</div>
                 </div>)
               }
               {row?.original?.channel_name == "BigCommerce" && (

@@ -76,9 +76,9 @@ const Channels = () => {
               Connect & manage your sales channels to automate order syncing with Shiprocket
             </p>
           </div>
-          <button className="rounded bg-[#E02424] bg-opacity-25 px-4 py-2 text-[#E02424]">
+          {/* <button className="rounded bg-[#E02424] bg-opacity-25 px-4 py-2 text-[#E02424]">
             Connect New Channel
-          </button>
+          </button> */}
         </div>
 
         <div className="flex flex-col">
@@ -101,7 +101,7 @@ const Channels = () => {
               <ChannelRow
                 key={channel.id}
                 storeName={channel.store_name}
-                storeCode={channel.url}
+                storeCode={channel.name}
                 salesChannel={channelImage} // Corrected to use channelImage
                 lastOrderSync="Last Order Sync"
                 lastOrderSyncStatus={`Last Order Sync ${channel.lastOrderSyncStatus}`}
@@ -166,7 +166,7 @@ const Channels = () => {
               })
             )}
           </div>
-          <div className="flex justify-center">
+          {/* <div className="flex justify-center">
             <div
               className="mt-6 cursor-pointer font-semibold"
               onClick={() => {
@@ -175,7 +175,7 @@ const Channels = () => {
             >
               View all channels
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </PageWithSidebar>
