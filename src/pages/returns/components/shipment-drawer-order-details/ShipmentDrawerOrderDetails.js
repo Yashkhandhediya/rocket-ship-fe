@@ -5,35 +5,35 @@ import LabelValue from './components/LabelValue';
 import { useState } from 'react';
 
 const ShipmentDrawerOrderDetails = ({ orderDetails }) => {
-  console.log(orderDetails)
+  console.log("checkkkkkkkkkkkk",orderDetails)
   const [openMoreDetails, setOpenMoreDetails] = useState(false);
   return (
     <div>
       <LabelValue
         label={'Pickup From'}
-        value={`${orderDetails?.original?.user_info?.pincode}, ${orderDetails?.original?.user_info?.state}`}
+        value={`${orderDetails?.user_info?.pincode}, ${orderDetails?.user_info?.state}`}
         tooltipText={
           <div>
-            <div>{`${orderDetails?.original?.user_info?.complete_address}`}</div>
-            <div>{`${orderDetails?.original?.user_info?.state}-${orderDetails?.original?.user_info?.pincode}`}</div>
-            <div>{`${orderDetails?.original?.user_info?.contact_no}`}</div>
+            <div>{`${orderDetails?.user_info?.complete_address}`}</div>
+            <div>{`${orderDetails?.user_info?.state}-${orderDetails?.user_info?.pincode}`}</div>
+            <div>{`${orderDetails?.user_info?.contact_no}`}</div>
           </div>
         }
       />
       <LabelValue
         label={'Deliver To'}
-        value={`${orderDetails?.original?.buyer_info?.pincode}, ${orderDetails?.original?.buyer_info?.state}`}
+        value={`${orderDetails?.buyer_info?.pincode}, ${orderDetails?.buyer_info?.state}`}
         tooltipText={
           <div>
-            <div>{`${orderDetails?.original?.buyer_info?.complete_address}`}</div>
-            <div>{`${orderDetails?.original?.buyer_info?.state}-${orderDetails?.original?.buyer_info?.pincode}`}</div>
-            <div>{`${orderDetails?.original?.buyer_info?.contact_no}`}</div>
+            <div>{`${orderDetails?.buyer_info?.complete_address}`}</div>
+            <div>{`${orderDetails?.buyer_info?.state}-${orderDetails?.buyer_info?.pincode}`}</div>
+            <div>{`${orderDetails?.buyer_info?.contact_no}`}</div>
           </div>
         }
       />
-      <LabelValue label={'Order Value'} value={`₹ ${orderDetails?.original?.total_amount}`} />
-      <LabelValue label={'Payment Mode'} value={orderDetails?.original?.payment_type_name} />
-      <LabelValue label={'Applicable Weight (in Kg)'} value={`${orderDetails?.original?.applicable_weight} Kg`} />
+      <LabelValue label={'Order Value'} value={`₹ ${orderDetails?.total_amount}`} />
+      <LabelValue label={'Payment Mode'} value={orderDetails?.payment_type_name} />
+      <LabelValue label={'Applicable Weight (in Kg)'} value={`${orderDetails?.applicable_weight} Kg`} />
       <div className="text-left">
         <div className="mb-6 text-lg font-medium">{'Buyer Insights'}</div>
         <div>
