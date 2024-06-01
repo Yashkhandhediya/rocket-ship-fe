@@ -167,18 +167,18 @@ const Rto = () => {
                 </Link>
               </div>
               <div className="text-[11px]">{formattedDate}</div>
-              {row?.original?.channel_name == "shopify" && (<div className="flex flex-col">
+              {row?.original?.channel_name == "Shopify" && (<div className="flex flex-col">
                 <div className="mt-2">{row?.original?.shop_name}</div>
                 <img src={shopify} className="mr-2 w-4" />
               </div>)
               }
-              {row?.original?.channel_name == "woocommerce" && (
+              {row?.original?.channel_name == "Woocommerce" && (
                 <div className="flex flex-col">
                 <div className="mt-2">{row?.original?.shop_name}</div>
                 <img src={Woocommerce} className="mr-2 w-14" />
                 </div>)
               }
-              {row?.original?.channel_name == "bigcommerce" && (
+              {row?.original?.channel_name == "Bigcommerce" && (
                 <div className="flex flex-col">
                 <div className="mt-2">{row?.original?.shop_name}</div>
                 <img src={bigcommerce} className="mr-2 w-14" />
