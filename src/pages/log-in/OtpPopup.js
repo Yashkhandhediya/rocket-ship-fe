@@ -218,10 +218,10 @@ const OtpPopup = ({
                     </button>
                     <button
                       className="mb-2 mt-2 cursor-pointer justify-center text-[#7973ef]"
-                      onclick={() => {
+                      onClick={() => {
                         navigate('/login');
                       }}>
-                      <span className=""><i class="fa-solid fa-arrow-left"></i></span>
+                      <span className=""><i className="fa-solid fa-arrow-left"></i></span>
                       Back
                     </button>
                   </div>

@@ -315,7 +315,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           <div className="rounded-lg bg-white p-6 ">
             <div className="flex justify-between">
               <h2 className="mb-4 text-lg font-semibold">Enter Way Bill No.</h2>
-             <span onClick={() => {setShowPopup(false)}}><i class="fa-solid fa-xmark"></i></span> 
+             <span onClick={() => {setShowPopup(false)}}><i className="fa-solid fa-xmark"></i></span> 
             </div>
             <input
               type="text"
