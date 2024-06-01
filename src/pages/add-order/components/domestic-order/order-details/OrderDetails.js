@@ -10,6 +10,7 @@ import { cloneDeep, isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import { setEditOrder } from '../../../../../redux';
 import { useLocation } from 'react-router-dom';
+import Autosuggest from 'react-autosuggest';
 
 export let package_info = {
   length: 0,
@@ -23,6 +24,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   const location = useLocation();
   let {isEdit} = location?.state || {}
   const id_user = localStorage.getItem('user_id')
+  const [suggestions, setSuggestions] = useState([]);
   const [suggestionData,setSuggestionData] = useState([])
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestionProductData,setSuggestionProductData] = useState([])
@@ -355,6 +357,62 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     }
   };
 
+  const fetchSuggestions = async (value) => {
+    try {
+      const response = await axios.get(BACKEND_URL + "/product/get_product_details/");
+      const filteredSuggestions = response.data.filter(user =>
+        user.name && user.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setSuggestions(filteredSuggestions);
+    } catch (error) {
+      console.error("Error fetching suggestions:", error);
+    }
+  };
+
+  const onSuggestionsFetchRequested = ({ value }) => {
+    if (value) {
+      fetchSuggestions(value);
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([]);
+  };
+
+  const getSuggestionValue = (suggestion) => suggestion.name;
+
+  const renderSuggestion = (suggestion) => (
+    <div>
+      {suggestion.name}
+    </div>
+  );
+
+  const inputProps = {
+    placeholder: 'Search Product',
+    value: '',
+    onChange: (e, { newValue }) => {
+      const newProductFields = [...productFields];
+      if (focusedProductIndex >= 0 && focusedProductIndex < newProductFields.length) {
+        newProductFields[focusedProductIndex].name = newValue;
+        setProductFields(newProductFields);
+      }
+      setShowProductSuggestions(true);
+    },
+    id: 'user',
+    className: "block min-h-[36px] w-full rounded-md border border-gray-300 px-2.5 text-sm text-gray-900 focus:border-[#3181e8] focus:ring-[#3181e8] disabled:bg-neutral-300"
+  };
+
+  const theme = {
+    container: 'relative w-full',
+    input: 'w-full p-2 text-lg',
+    suggestionsContainer: 'absolute z-20 bg-white max-h-52 overflow-y-auto w-full shadow-md',
+    suggestionsList: 'list-none  m-0 p-0',
+    suggestion: 'p-2 cursor-pointer',
+    suggestionHighlighted: 'bg-gray-300'
+  };
+
   return (
     <div>
       <div className="mb-6 text-xl font-bold"> {'Order Details'} </div>
@@ -465,7 +523,31 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
             return (
               <div className="mb-4 border-b border-gray-200" key={index}>
                 <div className="mb-3 w-full md:flex">
-                  <div className="w-full px-2 pb-2 relative xl:w-4/12" onKeyDown={handleKeyDown}>
+                <div className="w-full px-2 pb-2 relative xl:w-4/12">
+                  <label className={`mb-2 flex items-center  text-xs font-medium text-gray-600`}>{`Product ${index + 1} Name`}</label>
+                  <Autosuggest
+                    suggestions={suggestions}
+                    onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                    onSuggestionsClearRequested={onSuggestionsClearRequested}
+                    getSuggestionValue={getSuggestionValue}
+                    renderSuggestion={renderSuggestion}
+                    inputProps={{
+                      ...inputProps,
+                      value: field.name,
+                      onChange: (e, { newValue }) => {
+                        const newProductFields = [...productFields];
+                        newProductFields[index].name = newValue;
+                        setProductFields(newProductFields);
+                        setShowProductSuggestions(true);
+                      }
+                    }}
+                    theme={theme}
+                  />
+                {productValidation && !field?.name?.length && (
+                  <p className="mt-1 text-xs text-red-500">Product Name is required.</p>
+                )}
+                </div>
+                  {/* <div className="w-full px-2 pb-2 relative xl:w-4/12" onKeyDown={handleKeyDown}>
                     <Field
                       id={'name'}
                       label={`Product ${index + 1} Name`}
@@ -494,7 +576,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                     {productValidation && !field?.name?.length && (
                       <p className="mt-1 text-xs text-red-500">Product Name is required.</p>
                     )}
-                  </div>
+                  </div> */}
                   <div className="w-full px-2 pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
                     <Field
                       type={'number'}
@@ -516,7 +598,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                     <Field
                       type={'number'}
                       id={'quantity'}
-                      label={'Quatity'}
+                      label={'Quantity'}
                       inputClassNames={'text-xs'}
                       labelClassNames={'text-xs'}
                       placeHolder={'0'}
