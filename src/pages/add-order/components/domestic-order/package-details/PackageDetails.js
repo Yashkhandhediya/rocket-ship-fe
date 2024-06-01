@@ -26,7 +26,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
   console.log('EDDDDDDDDDDD', editDetails);
   const [validationTriggered, setValidationTriggered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [courierType, setCourierType] = useState('air');
+  const [courierType, setCourierType] = useState('surface');
   const [formDirectField, setFormDirectField] = useState({
     length: 0,
     width: 0,

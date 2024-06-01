@@ -1,6 +1,6 @@
 import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { Fragment, useState } from "react";
-import { Woocommerce, bigcommerce, filterIcon, moreAction, shopify } from "../../../../common/icons";
+import { Woocommerce, bigLogo, bigcommerce, filterIcon, moreAction, shopify } from "../../../../common/icons";
 import { MoreFiltersDrawer } from "../more-filters-drawer"; 
 import axios from 'axios';
 import { Badge } from 'flowbite-react';
@@ -157,21 +157,21 @@ const PickupMenifests = () => {
                 </Link>
               </div>
               <div className="text-[11px]">{formattedDate}</div>
-              {row?.original?.channel_name == "shopify" && (<div className="flex flex-col">
+              {row?.original?.channel_name == "Shopify" && (<div className="flex flex-row">
+                <img src={shopify} className="mr-2 mt-2 w-4" />
                 <div className="mt-2">{row?.original?.shop_name}</div>
-                <img src={shopify} className="mr-2 w-4" />
               </div>)
               }
-              {row?.original?.channel_name == "woocommerce" && (
-                <div className="flex flex-col">
-                <div className="mt-2">{row?.original?.shop_name}</div>
-                <img src={Woocommerce} className="mr-2 w-14" />
+              {row?.original?.channel_name == "Woocommerce" && (
+                <div className="flex flex-row">
+                <img src={Woocommerce} className="mr-2 mt-2 w-10" />
+                <div className="mt-5">{row?.original?.shop_name}</div>
                 </div>)
               }
-              {row?.original?.channel_name == "bigcommerce" && (
-                <div className="flex flex-col">
+              {row?.original?.channel_name == "Bigcommerce" && (
+                <div className="flex flex-row">
+                <img src={bigLogo} className="mr-2 mt-2 w-4 h-4" />
                 <div className="mt-2">{row?.original?.shop_name}</div>
-                <img src={bigcommerce} className="mr-2 w-14" />
                 </div>)
               }
               {row?.original?.channel_name == null && row?.original?.shop_name == null && <span>Custom</span>}
