@@ -131,13 +131,13 @@ const Delivered = () => {
                 <div className="mt-2">{row?.original?.shop_name}</div>
               </div>)
               }
-              {row?.original?.channel_name == "Woocommerce" && (
+              {row?.original?.channel_name == "WooCommerce" && (
                 <div className="flex flex-row">
                 <img src={Woocommerce} className="mr-2 mt-2 w-10" />
                 <div className="mt-5">{row?.original?.shop_name}</div>
                 </div>)
               }
-              {row?.original?.channel_name == "Bigcommerce" && (
+              {row?.original?.channel_name == "BigCommerce" && (
                 <div className="flex flex-row">
                 <img src={bigLogo} className="mr-2 mt-2 w-4 h-4" />
                 <div className="mt-2">{row?.original?.shop_name}</div>
