@@ -268,7 +268,7 @@ export const New = () => {
           if (!row?.original?.width) missingInfo.push('Width');
           if (!row?.original?.length) missingInfo.push('Length');
           if (!row?.original?.volumatric_weight) missingInfo.push('Volumetric Weight');
-          if (!row?.original?.deadweight) missingInfo.push('Dead Weight');
+          if (!row?.original?.dead_weight) missingInfo.push('Dead Weight');
 
           return (
             <div className="flex flex-col gap-2 text-left text-xs">
