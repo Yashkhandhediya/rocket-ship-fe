@@ -89,6 +89,7 @@ const getEditDomesticOrderFields = (clonnedOrderDetails) => {
   const date = moment(new Date()).format('YYYY-MM-DD');
   const id = clonnedOrderDetails?.id;
   const order_id = clonnedOrderDetails?.order_id;
+  const channel_name = clonnedOrderDetails?.channel_name;
   const product_info = clonnedOrderDetails?.product_info?.map((product) => {
     return pick(product, domestic_product_info_fields);
   });
@@ -104,6 +105,7 @@ const getEditDomesticOrderFields = (clonnedOrderDetails) => {
     payment_details,
     date,
     product_info,
+    channel_name,
     ...direct_order_values,
   };
 };

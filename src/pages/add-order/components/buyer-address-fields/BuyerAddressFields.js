@@ -18,8 +18,10 @@ const BuyerAdressFields = ({
   const [isValidCity, setIsValidCity] = useState(true);
   const [isValidState, setIsValidState] = useState(true);
   const [isValidCountry, setIsValidCountry] = useState(true);
+  const [isResponseOk,setIsResponseOk] = useState(false)
 
   const fetchPincodeDetails = () => {
+    setIsResponseOk(true)
     try {
       axios
         .get(`${BACKEND_URL}/pincode/${values?.pincode}`)
@@ -32,6 +34,7 @@ const BuyerAdressFields = ({
             });
           } else {
             toast(`City/State not found for this pincode : ${values?.pincode || ''}`, { type: 'error' });
+            setIsResponseOk(false)
           }
         })
         .catch(() => {
@@ -44,8 +47,10 @@ const BuyerAdressFields = ({
   };
 
   useEffect(() => {
-    if (values?.pincode?.length >= 6) {
-      fetchPincodeDetails();
+    if(!isResponseOk){
+      if (values?.pincode?.length >= 6) {
+        fetchPincodeDetails();
+      }
     }
   }, [values?.pincode]);
 

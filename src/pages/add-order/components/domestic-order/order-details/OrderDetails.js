@@ -838,7 +838,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
             <div className="my-5 rounded-md bg-[#ecf2fe99] p-5 text-sm">
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Sub-total for Product'}</p>
-                <p className="w-6/12 text-end">{'₹ ' + (isEdit == 1 ? domesticOrderFormValues?.sub_total : (formDirectField.sub_total || 0))}</p>
+                <p className="w-6/12 text-end">{'₹ ' + ((isEdit == 1 && domesticOrderFormValues?.sub_total != null) ? domesticOrderFormValues?.sub_total  : (formDirectField.sub_total || 0))}</p>
               </div>
               {/* <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Other Charges'}</p>
