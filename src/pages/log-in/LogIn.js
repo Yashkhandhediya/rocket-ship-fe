@@ -76,7 +76,6 @@ const LogIn = () => {
       )
       .then((response) => {
         // id_user = response.data.user_id
-        debugger;
         localStorage.setItem('user_id', response.data.user_id);
         localStorage.setItem('company_id', response.data.company_id);
         localStorage.setItem('is_company', response.data.is_company);
@@ -108,7 +107,6 @@ const LogIn = () => {
           // navigate('/')
           setHandlePopup(true);
         } else if (response.data.msg) {
-          debugger;
           setSingleTimeLoginClick(0);
           toast(response.data.msg, { type: 'error' });
         }
