@@ -35,7 +35,7 @@ export const New = () => {
     const columnHelper = createColumnHelper();
     return [
       columnHelper.accessor('orderDetails', {
-        header: 'Order Details',
+        header: 'Return Details',
         cell: ({ row }) => {
           const formattedDate = row?.original?.created_date
             ? moment(row?.original?.created_date).format('DD MMM YYYY | hh:mm A')

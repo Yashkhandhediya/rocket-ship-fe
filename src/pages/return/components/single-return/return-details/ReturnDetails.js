@@ -272,7 +272,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
             <Field
               type={'date'}
               id={'date'}
-              label={'Order Date'}
+              label={'Return Date'}
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
               placeHolder={'Enter Order Date'}
