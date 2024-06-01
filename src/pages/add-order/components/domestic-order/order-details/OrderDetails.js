@@ -182,16 +182,16 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
       ...formDirectField,
       [id]: value,
     });
-    if(formDirectField?.channel != ''){
-      axios.get(BACKEND_URL + '/channel/get_channel_suggestions')
-      .then((res) => {
-        console.log("Suggestions",res.data)
-        setSuggestionData(res.data)
-        setShowSuggestions(true)
-      }).catch((err) => {
-        console.log("Error in Suggestion",err)
-      })
-  }
+  //   if(formDirectField?.channel != ''){
+  //     axios.get(BACKEND_URL + '/channel/get_channel_suggestions')
+  //     .then((res) => {
+  //       console.log("Suggestions",res.data)
+  //       setSuggestionData(res.data)
+  //       setShowSuggestions(true)
+  //     }).catch((err) => {
+  //       console.log("Error in Suggestion",err)
+  //     })
+  // }
   };
 
     // Handle suggestion selection
@@ -319,7 +319,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
       setFormDirectField({
         ...formDirectField,
         order_id:domesticOrderFormValues?.order_id,
-        channel: domesticOrderFormValues?.channel,
+        channel: domesticOrderFormValues?.channel_name || 'custom',
         date: moment(new Date()).format('YYYY-MM-DD'),
         tag: domesticOrderFormValues?.tag,
         reseller_name: domesticOrderFormValues?.reseller_name,
@@ -393,7 +393,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               <p className="mt-1 text-xs text-red-500">Order date is required.</p>
             )}
           </div>
-          <div className="px-2 pb-2 relative md:w-3/12 md:pb-0" onKeyDown={handleKeyDown}>
+          <div className="px-2 pb-2 relative md:w-3/12 md:pb-0">
             <Field
               type={'select'}
               id={'channel'}
@@ -408,8 +408,8 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               value={formDirectField?.channel}
               onChange={handleChannel}
             />
-              {showSuggestions && suggestionData.length > 0 && (
-                  <div className="absolute w-[30%] bg-white border border-gray-300 rounded shadow-md z-10">
+              {/* {showSuggestions && suggestionData.length > 0 && (
+                  <div className="absolute w-[60%] bg-white border border-gray-300 rounded shadow-md z-10">
                     {suggestionData.map((suggestion, index) => (
                       <div
                         key={index}
@@ -421,7 +421,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                       </div>
                     ))}
                   </div>
-              )}
+              )} */}
             {productValidation && !formDirectField?.channel && (
               <p className="mt-1 text-xs text-red-500">Order Channel is required.</p>
             )}
