@@ -359,11 +359,13 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
 
   const fetchSuggestions = async (value) => {
     try {
-      const response = await axios.get(BACKEND_URL + "/product/get_product_details/");
-      const filteredSuggestions = response.data.filter(user =>
-        user.name && user.name.toLowerCase().includes(value.toLowerCase())
-      );
-      setSuggestions(filteredSuggestions);
+        const response = await axios.get(`${BACKEND_URL}/product/get_product_suggestion/`, {
+            params: { string: value }
+        });
+        const filteredSuggestions = response.data.filter(user =>
+            user.name && user.name.toLowerCase().includes(value.toLowerCase())
+        );
+        setSuggestions(filteredSuggestions);
     } catch (error) {
       console.error("Error fetching suggestions:", error);
     }
