@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import Loader from '../../common/loader/Loader';
 import { BACKEND_URL } from '../../common/utils/env.config';
 
+export let resData = []
 const Returns = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const Returns = () => {
       .then(async (resp) => {
         if (resp.status === 200) {
           dispatch(setAllReturns(resp?.data || []));
+          resData = resp.data
           setIsLoading(false);
         } else {
           toast('There is some error while fetching returns.', { type: 'error' });

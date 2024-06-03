@@ -199,6 +199,7 @@ const handleCalculate = () => {
   }).catch((e) => {
       console.log("Error in rate calculate ",e)
       toast("Error in Rate Calculation",{type:"error"})
+      setLoading(false)
   })
 }
 
