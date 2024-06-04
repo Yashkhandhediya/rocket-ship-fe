@@ -171,6 +171,11 @@ const handleShip = (event) => {
 
 const handleCalculate = () => {
   setLoading(true)
+  if(!isValidPincode || !isValidDestPinCode){
+    toast("Please enter valid pincode", { type: 'error' });
+    setLoading(false)
+    return
+  }
   const headers = {'Content-Type': 'application/json'}
   axios.post(BACKEND_URL + '/order/rate_calculation',{
       pickup_pincode:isPickPinCode,
