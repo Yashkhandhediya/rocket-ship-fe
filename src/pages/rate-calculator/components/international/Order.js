@@ -4,7 +4,7 @@ import { purpose } from '../../common/data'
 import { CustomMultiSelect } from '../../../../common/components'
 import axios from 'axios'
 import { BACKEND_URL } from '../../../../common/utils/env.config'
-import { ACCESS_TOKEN } from '../../../../common/utils/config'
+// import { ACCESS_TOKEN } from '../../../../common/utils/config'
 
 
 const Order = () => {
@@ -27,7 +27,7 @@ const Order = () => {
     };
 
     const handleCalculate = () => {
-        const headers = {'Content-Type': 'application/json','Authorization':ACCESS_TOKEN}
+        const headers = {'Content-Type': 'application/json'}
         axios.post(BACKEND_URL + '/order/rate_calculation',{
             pickup_pincode:isPickPinCode,
             delivery_pincode:country,
