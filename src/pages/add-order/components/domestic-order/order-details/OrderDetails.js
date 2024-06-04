@@ -41,7 +41,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     category: '',
     hsn_code: '',
     sku: '',
-    discount: 0,
+    discount: '',
   };
 
   const [productValidation, setProductValidation] = useState(false);
@@ -65,13 +65,20 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     gift_wrap: 0,
     transaction_fee: 0,
     cod_charge:0,
-    discount: 0,
+    discount: '',
   });
 
   const subProductTotal =
     productFields?.reduce((total, product) => {
       return (total += product
         ? (Number(product?.unit_price || 0) - Number(product?.discount || 0)) * Number(product?.quantity || 0)
+        : 0);
+    }, 0) || 0;
+  
+    const discountValue =
+    productFields?.reduce((total, product) => {
+      return (total += product
+        ? Number(product?.discount || 0) * Number(product?.quantity || 0)
         : 0);
     }, 0) || 0;
 
@@ -690,9 +697,9 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                           label={'Product Discount'}
                           inputClassNames={'text-xs'}
                           labelClassNames={'text-xs'}
-                          placeHolder={'0.00'}
+                          placeHolder={'0'}
                           tooltip={'Discount given to the buyer on this product'}
-                          value={field?.discount || 0}
+                          value={field?.discount}
                           onChange={(e) => handleSetProductFields(e, index)}
                         />
                       </div>
@@ -828,7 +835,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                         'In case of discounts offered, the discount amount can be added here and will be deduced in your total order amount'
                       }
                       leftAddOn="₹"
-                      value={paymentDetails?.discount || 0}
+                      value={paymentDetails?.discount}
                       onChange={handleSetPaymentDetails}
                     />
                   </div>
@@ -863,7 +870,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Discounts'}</p>
                 <p className="w-6/12 text-end">
-                  {'₹ ' + (paymentDetails?.discount ? Number(paymentDetails?.discount) : 0)}
+                  {'₹ ' + discountValue}
                 </p>
               </div>
               <div className="mt-4 flex justify-between">
