@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 
 const Change_password = () => {
   // This is a dummy data, you can replace it with your own data
@@ -12,10 +11,11 @@ const Change_password = () => {
     confirmPassword: '',
   });
 
-  const id_user = localStorage.getItem('user_id');
-  const id_company = localStorage.getItem('company_id');
+  const [user_id, setUserId] = useState(
+    localStorage.getItem('company_id') || localStorage.getItem('user_id'),
+  );
 
-  const user_id = id_user || id_company;
+  console.log(user_id);
 
   const [passwordChanged, setPasswordChanged] = useState('');
 
@@ -26,14 +26,12 @@ const Change_password = () => {
       `https://myrcc.in:8050/login/password_change?old_password=${password.currentPassword}&user_id=${user_id}&new_password=${password.newPassword}`,
     );
     setPasswordChanged(response.data.massage);
-    setPassword({
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: '',
-    });
-    toast(passwordChanged);
     console.log(password); //eslint-disable-line
   };
+
+  useEffect(() => {
+    setUserId(localStorage.getItem('company_id') || localStorage.getItem('user_id'));
+  }, []);
 
   return (
     <PageWithSidebar>
@@ -47,6 +45,7 @@ const Change_password = () => {
           </Link>{' '}
           &gt; Company &gt; Change Password
         </div>
+        {passwordChanged && <p className="w-96 bg-red-100 p-2 text-red-800"> {passwordChanged}</p>}
         <div className="flex min-h-72 w-full flex-row items-center justify-center gap-5 px-3 py-5 text-[12px] font-bold text-[#666666]">
           <div className="flex flex-col items-end gap-4">
             <div className="flex h-9 items-center">Current Password</div>
