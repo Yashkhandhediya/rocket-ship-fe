@@ -34,7 +34,7 @@ const Change_password = () => {
           </Link>{' '}
           &gt; Company &gt; Change Password
         </div>
-        {passwordChanged && <p className="w-96 bg-red-100 p-2 text-red-800"> {passwordChanged}</p>}
+        {passwordChanged && <p className="w-20 bg-red-100 text-red-800"> {passwordChanged}</p>}
         <div className="flex min-h-72 w-full flex-row items-center justify-center gap-5 px-3 py-5 text-[12px] font-bold text-[#666666]">
           <div className="flex flex-col items-end gap-4">
             <div className="flex h-9 items-center">Current Password</div>
