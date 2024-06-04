@@ -15,6 +15,8 @@ const Change_password = () => {
     localStorage.getItem('company_id') || localStorage.getItem('user_id'),
   );
 
+  console.log(user_id, 'it is user id');
+
   const [passwordChanged, setPasswordChanged] = useState('');
 
   // This function is used to handle the form submit
