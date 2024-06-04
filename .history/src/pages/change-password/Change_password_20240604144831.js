@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { useState } from 'react';
-import axios from 'axios';
 
 const Change_password = () => {
   // This is a dummy data, you can replace it with your own data
@@ -11,15 +10,13 @@ const Change_password = () => {
     confirmPassword: '',
   });
 
-  const [passwordChanged, setPasswordChanged] = useState('');
-
   // This function is used to handle the form submit
   const handleSumbit = async () => {
     // You can use this data to send to the server
-    const response = await axios.get(
+    const response = await fetch(
       `https://myrcc.in:8050/login/password_change?old_password=${password.currentPassword}&user_id=1&new_password=${password.newPassword}`,
     );
-    setPasswordChanged(response.data.massage);
+    console.log(response);
     console.log(password); //eslint-disable-line
   };
   return (
@@ -34,7 +31,6 @@ const Change_password = () => {
           </Link>{' '}
           &gt; Company &gt; Change Password
         </div>
-        {passwordChanged && <p className="w-96 bg-red-100 p-2 text-red-800"> {passwordChanged}</p>}
         <div className="flex min-h-72 w-full flex-row items-center justify-center gap-5 px-3 py-5 text-[12px] font-bold text-[#666666]">
           <div className="flex flex-col items-end gap-4">
             <div className="flex h-9 items-center">Current Password</div>
