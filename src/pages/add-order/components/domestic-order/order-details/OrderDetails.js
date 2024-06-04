@@ -10,7 +10,7 @@ import { cloneDeep, isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import { setEditOrder } from '../../../../../redux';
 import { useLocation } from 'react-router-dom';
-// import Autosuggest from 'react-autosuggest';
+import Autosuggest from 'react-autosuggest';
 
 export let package_info = {
   length: 0,
@@ -536,7 +536,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                       className={`mb-2 flex items-center  text-xs font-medium text-gray-600`}>{`Product ${
                       index + 1
                     } Name`}</label>
-                    {/* <Autosuggest
+                    <Autosuggest
                     suggestions={suggestions}
                     onSuggestionsFetchRequested={onSuggestionsFetchRequested}
                     onSuggestionsClearRequested={onSuggestionsClearRequested}
@@ -553,7 +553,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                       }
                     }}
                     theme={theme}
-                  /> */}
+                  /> 
                     {productValidation && !field?.name?.length && (
                       <p className="mt-1 text-xs text-red-500">Product Name is required.</p>
                     )}
