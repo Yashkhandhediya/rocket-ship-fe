@@ -171,22 +171,22 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           </div>
         ),
       }),
-      columnHelper.accessor('action',{
-        header: 'Action',
-        cell: ({row}) => (
-          <div className="flex flex-col gap-1 py-2 text-left">
-            <Button
-              id={row?.original?.id}
-              className="rounded bg-red-600 w-[104px] h-[34px] text-white"
-              // onClick={() => {
-              //   console.log("PARTNER NAME",row?.original)
-              //   handleShipOrder(row?.original)}}
-              style={{':hover':{backgroundColor:'#DB5711'}}}>
-              {'Ship Now'}
-            </Button>
-          </div>
-        ),
-      }),
+      // columnHelper.accessor('action',{
+      //   header: 'Action',
+      //   cell: ({row}) => (
+      //     <div className="flex flex-col gap-1 py-2 text-left">
+      //       <Button
+      //         id={row?.original?.id}
+      //         className="rounded bg-red-600 w-[104px] h-[34px] text-white"
+      //         // onClick={() => {
+      //         //   console.log("PARTNER NAME",row?.original)
+      //         //   handleShipOrder(row?.original)}}
+      //         style={{':hover':{backgroundColor:'#DB5711'}}}>
+      //         {'Ship Now'}
+      //       </Button>
+      //     </div>
+      //   ),
+      // }),
     ];
   }
 
