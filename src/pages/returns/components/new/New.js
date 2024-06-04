@@ -188,7 +188,7 @@ export const New = () => {
                   id={row?.original?.id}
                   className="min-w-fit rounded bg-orange-700 px-4 py-1.5 text-white"
                   onClick={() => {
-                    axios.get(BACKEND_URL+'/order/track?order_id=' + row?.original?.id);
+                    axios.get(BACKEND_URL+'/return/track?order_id=' + row?.original?.id);
                     let newURL = `http://${window.location.host}/return-tracking?data=${encodeURIComponent('15')}`;
                     let newTab = window.open(newURL, '_blank');
                     if (newTab) {

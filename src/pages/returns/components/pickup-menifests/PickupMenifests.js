@@ -182,23 +182,15 @@ const getColumns = () => {
       header: 'Action',
       cell: ({row}) => (
         <div className="flex gap-2 text-left text-xs">
-          <button
-            id={row?.original?.id}
-            className="min-w-fit rounded bg-orange-700 px-4 py-1.5 text-white"
-            onClick={() => {
-              setScheduleModal({
-                isOpen: true,
-                pickupDetails: row?.original,
-              });
-              // const resp = axios.get(BACKEND_URL+'/order/track?order_id=' + row.id);
-              // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
-              // let newTab = window.open(newURL, '_blank');
-              // if (newTab) {
-              //   newTab.focus();
-              // }
-            }}>
-            {'Schedule Pickup'}
-          </button>
+           <button
+              id={row.id}
+              className="min-w-fit rounded bg-red-700 hover:bg-green-700 px-4 py-1.5 text-white"
+              onClick={(e) => { 
+                console.log(row.row.original.id)
+                handleMenifest(row.row.original.id)
+              }}>
+              {(row?.original?.status_name || '')?.toLowerCase() == 'new' ? 'Ship Now' : 'Download Menifest'}
+            </button>
           <div className="min-h-[32px] min-w-[32px]">
             <MoreDropdown
               renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
@@ -214,6 +206,29 @@ const getColumns = () => {
     }),
   ];
 };
+
+const handleMenifest = (id) => {
+  let temp_payload = flattenObject(resData,id)
+  const headers={'Content-Type': 'application/json'};
+
+  temp_payload['client_name']="cloud_cargo"
+  temp_payload['file_name']="manifest"
+
+  axios.post(MENIFEST_URL +'/bilty/print/',
+  temp_payload,
+   {headers}).then(
+      (response)=>{
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      window.open(url);
+        toast('Menifest Download Successfully',{type:'success'})
+        window.location.reload();
+      }
+    ) .catch((error) => {
+      console.error("Error:", error);
+      toast('Error in Menifest Download',{type:'error'})
+  });
+}
 
 function splitString(string, length) {
   let result = [];
