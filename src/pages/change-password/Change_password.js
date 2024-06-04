@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const Change_password = () => {
@@ -11,17 +11,21 @@ const Change_password = () => {
     confirmPassword: '',
   });
 
+  const user_id = localStorage.getItem('company_id') || localStorage.getItem('user_id');
+
   const [passwordChanged, setPasswordChanged] = useState('');
 
   // This function is used to handle the form submit
   const handleSumbit = async () => {
     // You can use this data to send to the server
     const response = await axios.get(
-      `https://myrcc.in:8050/login/password_change?old_password=${password.currentPassword}&user_id=1&new_password=${password.newPassword}`,
+      `https://myrcc.in:8050/login/password_change?old_password=${password.currentPassword}&user_id=${user_id}&new_password=${password.newPassword}`,
     );
+    console.log(response);
     setPasswordChanged(response.data.massage);
     console.log(password); //eslint-disable-line
   };
+
   return (
     <PageWithSidebar>
       <div className="header mx-2 border-b border-[#b3b3b3] bg-[#FAFBFC] p-2 text-xl">
