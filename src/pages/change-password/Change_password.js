@@ -11,7 +11,10 @@ const Change_password = () => {
     confirmPassword: '',
   });
 
-  const user_id = localStorage.getItem('company_id') || localStorage.getItem('user_id');
+
+  const [user_id, setUserId] = useState(
+    localStorage.getItem('company_id') || localStorage.getItem('user_id'),
+  );
 
   const [passwordChanged, setPasswordChanged] = useState('');
 
@@ -21,10 +24,13 @@ const Change_password = () => {
     const response = await axios.get(
       `https://myrcc.in:8050/login/password_change?old_password=${password.currentPassword}&user_id=${user_id}&new_password=${password.newPassword}`,
     );
-    console.log(response);
     setPasswordChanged(response.data.massage);
     console.log(password); //eslint-disable-line
   };
+
+  useEffect(() => {
+    setUserId(localStorage.getItem('company_id') || localStorage.getItem('user_id'));
+  }, []);
 
   return (
     <PageWithSidebar>
