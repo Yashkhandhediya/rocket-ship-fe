@@ -34,9 +34,6 @@ const id_user = localStorage.getItem('user_id');
     console.log(password); //eslint-disable-line
   };
 
-  useEffect(() => {
-    setUserId(localStorage.getItem('company_id') || localStorage.getItem('user_id'));
-  }, []);
 
   return (
     <PageWithSidebar>
