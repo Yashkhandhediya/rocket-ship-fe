@@ -171,8 +171,8 @@ const handleShip = (event) => {
 
 const handleCalculate = () => {
   setLoading(true)
-  if(!isValidPincode || !isValidDestPinCode){
-    toast("Please enter valid pincode", { type: 'error' });
+  if(!isValidPincode || !isValidDestPinCode || dimention.length == 0 || dimention.width==0 || dimention.height == 0 || dimention.volumetric_weight == 0 || shipmentPrice == null){
+    toast("Please Fill All Required Field.", { type: 'error' });
     setLoading(false)
     return
   }
@@ -309,7 +309,7 @@ const handleCalculate = () => {
       <p className="text-xs font-semibold text-gray-500 mt-1">Note: Minimum chargeable weight is 0.5Kg</p>
     </div>
     <div>
-      <label htmlFor="dimensions" className="text-sm font-semibold mb-1">Dimensions (Optional)</label>
+      <label htmlFor="dimensions" className="text-sm font-semibold mb-1">Dimensions</label>
       <div className="flex justify-between items-center">
       <div className='w-[30%] mr-2'>
                     <Field
