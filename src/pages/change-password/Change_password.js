@@ -13,11 +13,11 @@ const Change_password = () => {
   });
 
 
-  const [user_id, setUserId] = useState(
-    localStorage.getItem('company_id') || localStorage.getItem('user_id'),
-  );
+const id_user = localStorage.getItem('user_id');
+  const id_company = localStorage.getItem('company_id');
+  const is_company = localStorage.getItem('is_company');
 
-  const [passwordChanged, setPasswordChanged] = useState('');
+  const user_id = is_company == 1 ? id_company : id_user;
 
   // This function is used to handle the form submit
   const handleSumbit = async () => {
@@ -25,13 +25,12 @@ const Change_password = () => {
     const response = await axios.get(
       `https://myrcc.in:8050/login/password_change?old_password=${password.currentPassword}&user_id=${user_id}&new_password=${password.newPassword}`,
     );
-    setPasswordChanged(response.data.massage);
+    toast(response.data.massage);
     setPassword({
       currentPassword: '',
       newPassword: '',
       confirmPassword: '',
     });
-    toast(passwordChanged);
     console.log(password); //eslint-disable-line
   };
 
