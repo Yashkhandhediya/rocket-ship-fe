@@ -106,6 +106,7 @@ const Delivered = () => {
   }
 
   const handleReturn = (id) => {
+    console.log("IDDDDDDDDd",id)
     axios.post(BACKEND_URL + `/return/initiate_return?order_id=${id}&user_id=${localStorage.getItem('user_id')}`)
     .then((res) => {
       console.log("Repsonse Of Initiate Return",res.data)
@@ -273,7 +274,7 @@ const Delivered = () => {
             <button
               id={row.id}
               className="min-w-fit rounded bg-red-700 hover:bg-green-700 px-4 py-1.5 text-white"
-              onClick={() => handleReturn(row?.original?.id)}>
+              onClick={() => { console.log("roooooooo",row); handleReturn(row?.row?.original?.id)}}>
               {(row?.row?.original?.status_id) === 6 ? 'Create Return' : 'Ship Now'}
             </button>
             <div className="min-h-[32px] min-w-[32px]">
