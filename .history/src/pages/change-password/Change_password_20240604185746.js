@@ -12,10 +12,10 @@ const Change_password = () => {
     confirmPassword: '',
   });
 
+  const id_user = localStorage.getItem('user_id');
+  const id_company = localStorage.getItem('company_id');
 
-  const [user_id, setUserId] = useState(
-    localStorage.getItem('company_id') || localStorage.getItem('user_id'),
-  );
+  const user_id = id_user || id_company;
 
   const [passwordChanged, setPasswordChanged] = useState('');
 
@@ -34,10 +34,6 @@ const Change_password = () => {
     toast(passwordChanged);
     console.log(password); //eslint-disable-line
   };
-
-  useEffect(() => {
-    setUserId(localStorage.getItem('company_id') || localStorage.getItem('user_id'));
-  }, []);
 
   return (
     <PageWithSidebar>

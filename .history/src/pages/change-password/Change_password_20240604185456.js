@@ -12,10 +12,10 @@ const Change_password = () => {
     confirmPassword: '',
   });
 
+  const id_user = localStorage.getItem('user_id');
+  const id_company = localStorage.getItem('company_id');
 
-  const [user_id, setUserId] = useState(
-    localStorage.getItem('company_id') || localStorage.getItem('user_id'),
-  );
+  const user_id = id_user || id_company;
 
   const [passwordChanged, setPasswordChanged] = useState('');
 
@@ -35,10 +35,6 @@ const Change_password = () => {
     console.log(password); //eslint-disable-line
   };
 
-  useEffect(() => {
-    setUserId(localStorage.getItem('company_id') || localStorage.getItem('user_id'));
-  }, []);
-
   return (
     <PageWithSidebar>
       <div className="header mx-2 border-b border-[#b3b3b3] bg-[#FAFBFC] p-2 text-xl">
@@ -51,6 +47,7 @@ const Change_password = () => {
           </Link>{' '}
           &gt; Company &gt; Change Password
         </div>
+        {passwordChanged && <p className="w-96 bg-red-100 p-2 text-red-800"> {passwordChanged}</p>}
         <div className="flex min-h-72 w-full flex-row items-center justify-center gap-5 px-3 py-5 text-[12px] font-bold text-[#666666]">
           <div className="flex flex-col items-end gap-4">
             <div className="flex h-9 items-center">Current Password</div>
