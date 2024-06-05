@@ -1,5 +1,31 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { LogIn, Orders, SignUp, Dashboard, AddOrder, OrderTrackDetails, Return, Weight_Freeze, WeightDiscrepancy, Settings, Bank_details, Manage_pickup_add, Change_password, Company_Profile, Home, Book, Indent,Allindent,User, ForgotPassword, ResetPassword, AllUser,CompanyList,UserList, Catalogue } from '../pages';
+import {
+  LogIn,
+  Orders,
+  SignUp,
+  Dashboard,
+  AddOrder,
+  OrderTrackDetails,
+  Return,
+  Weight_Freeze,
+  WeightDiscrepancy,
+  Settings,
+  Bank_details,
+  Manage_pickup_add,
+  Change_password,
+  Company_Profile,
+  Home,
+  Book,
+  Indent,
+  Allindent,
+  User,
+  ForgotPassword,
+  ResetPassword,
+  AllUser,
+  CompanyList,
+  UserList,
+  Catalogue,
+} from '../pages';
 import Tracking from '../pages/tracking/Tracking';
 import ReturnTracking from '../pages/return-tracking/ReturnTracking';
 import PrivateRoute from './private-route/PrivateRoute';
@@ -11,6 +37,7 @@ import { RateCalculator } from '../pages/rate-calculator';
 import SignUpUser from '../pages/sign-up/SingUpUser';
 import { Channels } from '../pages/channels';
 import Channelpage from '../pages/channels/components/channelpage/Channelpage';
+import { CreateTicket } from '../pages/create-ticket';
 
 const routes = createBrowserRouter([
   {
@@ -138,12 +165,10 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<Wallet_history />} />,
   },
   {
-
     path: '/recharge-status',
     element: <PrivateRoute component={<Wallet_history />} />,
   },
   {
-
     path: '/passbook',
     element: <PrivateRoute component={<Passbook />} />,
   },
@@ -184,6 +209,10 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<Channelpage />} />,
   },
 
+  {
+    path: '/create-ticket',
+    element: <PrivateRoute component={<CreateTicket />} />,
+  },
 ]);
 
 export default routes;

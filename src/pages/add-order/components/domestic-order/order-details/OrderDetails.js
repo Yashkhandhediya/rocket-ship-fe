@@ -537,23 +537,23 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                       index + 1
                     } Name`}</label>
                     <Autosuggest
-                    suggestions={suggestions}
-                    onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                    onSuggestionsClearRequested={onSuggestionsClearRequested}
-                    getSuggestionValue={getSuggestionValue}
-                    renderSuggestion={renderSuggestion}
-                    inputProps={{
-                      ...inputProps,
-                      value: field.name,
-                      onChange: (e, { newValue }) => {
-                        const newProductFields = [...productFields];
-                        newProductFields[index].name = newValue;
-                        setProductFields(newProductFields);
-                        setShowProductSuggestions(true);
-                      }
-                    }}
-                    theme={theme}
-                  /> 
+                      suggestions={suggestions}
+                      onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                      onSuggestionsClearRequested={onSuggestionsClearRequested}
+                      getSuggestionValue={getSuggestionValue}
+                      renderSuggestion={renderSuggestion}
+                      inputProps={{
+                        ...inputProps,
+                        value: field.name,
+                        onChange: (e, { newValue }) => {
+                          const newProductFields = [...productFields];
+                          newProductFields[index].name = newValue;
+                          setProductFields(newProductFields);
+                          setShowProductSuggestions(true);
+                        },
+                      }}
+                      theme={theme}
+                    />
                     {productValidation && !field?.name?.length && (
                       <p className="mt-1 text-xs text-red-500">Product Name is required.</p>
                     )}
