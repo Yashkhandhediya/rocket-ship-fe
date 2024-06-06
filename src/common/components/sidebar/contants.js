@@ -94,10 +94,10 @@ if(localStorage.getItem('is_super') != 3){
           title: 'Channels',
           path: '/channels',
         },
-        // {
-        //   title: 'Catalogue',
-        //   path: '/catalogue',
-        // },
+        {
+          title: 'Catalogue',
+          path: '/catalogue',
+        },
         {
           title: 'Courier',
           path: '/',
