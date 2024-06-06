@@ -12,8 +12,7 @@ const Change_password = () => {
     confirmPassword: '',
   });
 
-
-const id_user = localStorage.getItem('user_id');
+  const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
 
@@ -22,18 +21,25 @@ const id_user = localStorage.getItem('user_id');
   // This function is used to handle the form submit
   const handleSumbit = async () => {
     // You can use this data to send to the server
-    const response = await axios.get(
-      `https://myrcc.in:8050/login/password_change?old_password=${password.currentPassword}&user_id=${user_id}&new_password=${password.newPassword}`,
-    );
-    toast(response.data.massage);
-    setPassword({
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: '',
-    });
+    try {
+      const response = await axios.get(
+        `https://myrcc.in:8050/login/password_change?old_password=${password.currentPassword}&user_id=${user_id}&new_password=${password.newPassword}`,
+      );
+      if (response.data.massage === 'entered password is incorrect') {
+        toast(response.data.massage, { type: 'error' });
+      } else {
+        toast(response.data.massage, { type: 'success' });
+      }
+      setPassword({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      });
+    } catch (err) {
+      console.log(err);
+    }
     console.log(password); //eslint-disable-line
   };
-
 
   return (
     <PageWithSidebar>
