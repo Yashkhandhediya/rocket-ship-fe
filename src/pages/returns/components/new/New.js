@@ -5,12 +5,12 @@ import { MoreDropdown, CustomTooltip, CustomDataTable } from '../../../../common
 import moment from 'moment';
 import { Badge } from 'flowbite-react';
 import { filterIcon, moreAction } from '../../../../common/icons';
-import { moreActionOptions, allFilterFields } from '../utils';
+import { moreActionOptions, allFilterFields, allEditFields } from '../utils';
 import DrawerWithSidebar from '../../../../common/components/drawer-with-sidebar/DrawerWithSidebar';
 import { ShipmentDrawerOrderDetails } from '../shipment-drawer-order-details';
 import ShipmentDrawerSelectCourier from '../shipment-drawer-select-courier/ShipmentDrawerSelectCourier';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllReturns, setClonedOrder } from '../../../../redux';
+import { setAllReturns, setClonedOrder, setEditOrder } from '../../../../redux';
 import { toast } from 'react-toastify';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
 import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
@@ -19,6 +19,8 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { CommonBadge } from '../../../../common/components/common-badge';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Returns';
+import { getEditReturnFields } from '../../../../common/utils/ordersUtils';
+import EditDrawer from '../edit-drawer/EditDrawer';
 
 export const New = () => {
   const dispatch = useDispatch();
@@ -32,6 +34,7 @@ export const New = () => {
     orderDetails: {},
   });
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
+  const [openEditDrawer, setOpenEditDrawer] = useState(false);
 
   const getColumns = () => {
     const columnHelper = createColumnHelper();
@@ -205,6 +208,7 @@ export const New = () => {
                     downloadInvoice : () => handleInvoice(row?.original?.id),
                     cloneOrder: () => cloneOrder(row),
                     cancelOrder: () => cancelOrder(row?.original?.id),
+                    editOrder: () => editOrder(row?.original)
                   })}
                 />
               </div>
@@ -214,6 +218,25 @@ export const New = () => {
       }),
     ];
   };
+
+  function editOrder(orderDetails) {
+    setOpenEditDrawer(true)
+    // let data = {
+    //   isEdit:true,
+    //   order_id:orderDetails?.id
+    // }
+    axios.get(BACKEND_URL + `/return/get_return_detail?id=${orderDetails?.id}`)
+    .then((res) => {
+      console.log("Response Of Get Order While Edit ",res)
+      const editedOrder = getEditReturnFields(res.data);
+      console.log("GHHHH",editedOrder)
+      dispatch(setEditOrder(editedOrder));
+      dispatch(setSingleReturn(editedOrder))
+    }).catch((err) => {
+      console.log("Error While Edit Order ",err)
+    })
+    // navigate('/add-return',{state:data});
+  }
 
   function splitString(string, length) {
     let result = [];
@@ -373,6 +396,10 @@ export const New = () => {
           />
         }
       />
+      <EditDrawer isOpen={openEditDrawer}
+      onClose={() => setOpenEditDrawer(false)}
+      fieldNames={allEditFields}
+       />
       <MoreFiltersDrawer
         isOpen={openFilterDrawer}
         onClose={() => setOpenFilterDrawer(false)}

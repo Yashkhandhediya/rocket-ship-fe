@@ -2,12 +2,12 @@ export const moreActionOptions = (actions) => [
   {
     label: 'Download Invoice',
     key: 'downloadInvoice',
-    onClick: () => {},
+    onClick: actions?.downloadInvoice,
   },
   {
     label: 'Edit Order',
     key: 'editOrder',
-    onClick: () => {},
+    onClick: actions?.editOrder,
   },
   { type: 'divider' },
   {
@@ -70,6 +70,13 @@ export const allFilterFields = [
   'Search Multiple Order Ids',
   'SKU',
   'Couriers',
+];
+
+
+export const allEditFields = [
+  'Package & Dimensions',
+  'Warehouse Address',
+  'Return Reasons',
 ];
 
 export const fieldDefaultValues = {
