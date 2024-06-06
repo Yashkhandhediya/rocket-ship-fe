@@ -41,7 +41,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     category: '',
     hsn_code: '',
     sku: '',
-    discount: '',
+    discount: 0,
   };
 
   const [productValidation, setProductValidation] = useState(false);
