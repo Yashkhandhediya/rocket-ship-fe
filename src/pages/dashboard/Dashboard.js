@@ -316,7 +316,7 @@ const Dashboard = () => {
                     />
                   </div>
                 </div>
-                <div className='flex justify-between gap-5'>
+                <div className='flex justify-between gap-8'>
                   <DonutChart data={sampleData1} title={"Couriers Split"} />
                   <DonutChart data={sampleData2} title={"Overall Shipment Status"} />
                   <DonutChart data={{}} title={"Delivery Performance"} />
