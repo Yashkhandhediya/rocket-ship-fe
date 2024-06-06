@@ -17,6 +17,7 @@ const Passbook = () => {
     const [toDate, setToDate] = useState(todayDate);
     const [isLoading, setIsLoading] = useState(false);
     const [usableAmount, setUsableAmount] = useState(0);
+    const [holdAmount, setHoldAmount] = useState(0);
     const [currentPage, setCurrentPage] = useState(2);
     const [itemsPerPage,setItemsPerPage] = useState(10);
     const [currentItems, setCurrentItems] = useState([]);
@@ -56,6 +57,7 @@ const Passbook = () => {
             toast.error('From date should be less than To date');
         }
     };
+    const totalBalance = parseInt(usableAmount) + parseInt(holdAmount)
     const charges = [
         {
             label: 'Current Usable Balance',
@@ -63,11 +65,11 @@ const Passbook = () => {
         },
         {
             label: 'Balance On Hold',
-            value: '₹ 0.00'
+            value: '₹ ' + holdAmount
         },
         {
             label: 'Total Balance',
-            value: '₹ 0.00'
+            value: '₹ ' +  totalBalance
         }
     ]
 
@@ -78,6 +80,7 @@ const Passbook = () => {
         try {
             const response = await axios.post(`${BACKEND_URL}/account_transaction/account_report?page_number=1&page_size=${itemsPerPage}`, { date_from: fromDate, date_to: toDate, user_id: temp_id });
             setData(response.data.report);
+            setHoldAmount(response.data.report[0].balance)
             let total = Math.ceil(response.data.report.length / 10)
             setTotalPage(total)
             setCurrentItems(response.data.report.slice(itemsPerPage-10, itemsPerPage));
@@ -121,7 +124,8 @@ const Passbook = () => {
                 amount = amount - item.debit;
             }
         }, 0);
-        data.length !== 0 && setUsableAmount(amount !== 0 && amount.toFixed(2));
+        data.length !== 0 && setUsableAmount(amount > 0 ? amount.toFixed(2) :  0);
+
         setIsLoading(false);
         return amount.toFixed(2);
     }
@@ -238,7 +242,7 @@ const Passbook = () => {
                                 <div className='flex flex-row w-full border border-collapse bg-[#FAFAFA]' key={index}>
                                     <div className='pl-2 border-r-2 pr-2 w-full py-2'>{getDate(item.date)}</div>
                                     <div className='pl-2 border-r-2 pr-2 w-full py-2'>{item.voucher_id ? item.voucher_id : '-'}</div>
-                                    <div className='pl-2 border-r-2 pr-2 w-full py-2'>{Number.isInteger(Number(item.voucher_type)) ? item.voucher_type : 'N.A'}</div>
+                                    <div className='pl-2 border-r-2 pr-2 w-full py-2'>{(item.way_bill_no) ? item.way_bill_no : 'N.A'}</div>
                                     <div className='pl-2 border-r-2 pr-2 w-full py-2'>N.A.</div>
                                     <div className='pl-2 border-r-2 pr-2 w-full py-2'>{item.credit ? '₹' + item.credit : '-'}</div>
                                     <div className='pl-2 border-r-2 pr-2 w-full py-2'>{item.debit ? '₹' + item.debit : '-'}</div>

@@ -12,13 +12,16 @@ import { ShipmentOverview } from './components/shipment-overview';
 
 const Dashboard = () => {
   const navigate = useNavigate()
+  const id_user = localStorage.getItem('user_id')
   const company_id = localStorage.getItem('company_id')
   const oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().slice(0, 10);
   const todayDate = new Date().toISOString().slice(0, 10);
   const [fromDate, setFromDate] = useState(oneMonthAgo.toString())
   const [toDate, setToDate] = useState(todayDate.toString())
   const [todayOrder, setTodayOrder] = useState(0)
+  const [todayRevenue, setTodayRevenue] = useState(0)
   const [yesterdayOrder, setYesterdayOrder] = useState(0)
+  const [yesterdayRevenue, setYesterdayRevenue] = useState(0)
   const [shipData, setShipData] = useState([])
   const [result, setResult] = useState([]);
   const [flag, setFlag] = useState(false)
@@ -70,40 +73,29 @@ const Dashboard = () => {
     { label: 'Total Shipment', key: 'total_counts' }
   ];
 
-  function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
-  
-  function generateColors(dataLength) {
-    return Array.from({ length: dataLength }, () => getRandomColor());
-  }
-  
+  const backgroundColor = ["#bcbaff", "#ffb98f", "#60eba0", "#4f7de9", "#f47ac2", "#daf490", "#c88888" ]
+
   const sampleData1 = {
-    labels: ['Delivered', 'RTO', 'Undelivered'],
+    labels: shipData.map(item => item.partner_name),
     datasets: [
       {
         label: 'Example Dataset',
-        data: [300, 50, 100],
-        backgroundColor: generateColors(3),
+        data: shipData.map(item => item.status_count),
+        backgroundColor: backgroundColor,
       },
     ],
   };
-  
+
   const sampleData2 = {
-    labels: ['Delivered', 'RTO', 'Undelivered', 'Lost', 'Intransit', 'Return'],
+    labels: shipmentDetails.map(item => item.label),
     datasets: [
       {
         label: 'Example Dataset',
-        data: [300, 50, 100, 35, 45, 65],
-        backgroundColor: generateColors(6),
+        data: shipmentDetails.map(item => item.value),
+        backgroundColor: backgroundColor,
       },
     ],
-  };  
+  };
 
   const tabs = [
     'Overview',
@@ -118,10 +110,12 @@ const Dashboard = () => {
   ];
 
   const handleData = () => {
-    axios.post(BACKEND_URL + `/dashboard/order_analysis/?company_id=${company_id}&start_date=${fromDate}&end_date=${toDate}`)
+    axios.post(BACKEND_URL + `/dashboard/user_order_analysis/?user_id=${id_user}&start_date=${fromDate}&end_date=${toDate}`)
       .then((res) => {
         setTodayOrder(res.data.todays_order_count)
         setYesterdayOrder(res.data.yesterdays_order_count)
+        setTodayRevenue(res.data.todays_revenue)
+        setYesterdayRevenue(res.data.yesterdays_revenue)
         let total = 0
         const data = res.data.order_details
         for (const key in data) {
@@ -131,11 +125,11 @@ const Dashboard = () => {
         }
         setShipmentDetail({
           total_shipment: total,
-          pickup_pending: 0,
-          in_transit: res.data.order_details['5'],
-          delivered: res.data.order_details['6'],
-          ndr_pending: 0,
-          rto: res.data.order_details['7']
+          pickup_pending: res.data.order_details['invoiced'] + res.data.order_details['manifested'] || 0,
+          in_transit: res.data.order_details['In transit'] || 0,
+          delivered: res.data.order_details['Delivered'] || 0,
+          ndr_pending: res.data.order_details['ndr_initiated'] || 0,
+          rto: res.data.order_details['RTO'] || 0
         })
         setShipData(res.data.shipment_details)
         setFlag(true)
@@ -284,12 +278,12 @@ const Dashboard = () => {
                       mainText={
                         <span className='flex'>
                           <em className="fa fa fa-inr mr-1 text-lg text-left font-semibold"></em>
-                          {todayOrder}
+                          {todayRevenue}
                         </span>
                       }
                       subText={
                         <span>
-                          Yesterday <em className="fa fa fa-inr mr-1 text-xs"></em>{yesterdayOrder}
+                          Yesterday <em className="fa fa fa-inr mr-1 text-xs"></em>{yesterdayRevenue}
                         </span>
                       }
                     />
@@ -311,7 +305,7 @@ const Dashboard = () => {
                       mainText={
                         <span className='flex'>
                           <em className="fa fa fa-inr mr-1 text-lg text-left font-semibold"></em>
-                          {todayOrder}
+                          700
                         </span>
                       }
                     />
@@ -323,22 +317,22 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className='flex justify-between gap-5'>
-                <DonutChart data={sampleData1} title={"Couriers Split"} />
-                <DonutChart data={sampleData2} title={"Overall Shipment Status"} />
-                <DonutChart data={{}} title={"Delivery Performance"} />
+                  <DonutChart data={sampleData1} title={"Couriers Split"} />
+                  <DonutChart data={sampleData2} title={"Overall Shipment Status"} />
+                  <DonutChart data={{}} title={"Delivery Performance"} />
                 </div>
                 <ShipmentOverview
-                title={"Shipment Overview By Courier"}
-                fromDate={fromDate}
-                setFromDate={setFromDate}
-                toDate={toDate}
-                setToDate={setToDate}
-                handleDateChange={handleDateChange}
-                shipData={shipData}
-                result={result}
-                columnNames={columnNames}
-                noShipment={noShipment}
-              />
+                  title={"Shipment Overview By Courier"}
+                  fromDate={fromDate}
+                  setFromDate={setFromDate}
+                  toDate={toDate}
+                  setToDate={setToDate}
+                  handleDateChange={handleDateChange}
+                  shipData={shipData}
+                  result={result}
+                  columnNames={columnNames}
+                  noShipment={noShipment}
+                />
               </div>
             )}
             {activeTab === 'Orders' && (
