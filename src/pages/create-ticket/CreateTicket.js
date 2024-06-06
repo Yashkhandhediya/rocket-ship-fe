@@ -7,11 +7,16 @@ function CreateTicket() {
   return (
     <PageWithSidebar>
       <div className="h-full bg-[#f8f8f8] pl-4">
-        <div className="py-4">
-          <p className="text-xl font-bold">Support</p>
-          <p className="py-1 text-[12px] font-semibold">
-            Get help by creating a ticket or reading help articles
-          </p>
+        <div className="flex items-center justify-between py-4">
+          <div>
+            <p className="text-xl font-bold">Support</p>
+            <p className="py-1 text-[12px] font-semibold">
+              Get help by creating a ticket or reading help articles
+            </p>
+          </div>
+          <button className="rounded bg-red-800 px-6 py-2 font-semibold text-white shadow">
+            Create Ticket
+          </button>
         </div>
         <div className="flex gap-6">
           <button className="flex w-64 items-center gap-2 rounded-lg border-2 border-red-600 bg-white px-4 py-2 shadow-xl">
