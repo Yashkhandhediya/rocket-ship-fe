@@ -32,6 +32,7 @@ const BuyerAdressFields = ({
               state: resp.data?.State,
               country: resp.data?.Country,
             });
+            setIsResponseOk(false)
           } else {
             toast(`City/State not found for this pincode : ${values?.pincode || ''}`, { type: 'error' });
             setIsResponseOk(false)
@@ -39,6 +40,7 @@ const BuyerAdressFields = ({
         })
         .catch(() => {
           toast(`Unable to get location from this pincode: ${values.pincode}`, { type: 'error' });
+          setIsResponseOk(false)
         });
     } catch (e) {
       // eslint-disable-next-line no-console
