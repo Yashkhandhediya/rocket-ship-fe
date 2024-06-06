@@ -5,6 +5,7 @@ import { BACKEND_URL } from "../../../../common/utils/env.config";
 import { toast } from "react-toastify";
 
 const COD_Reconciliation = ({ charges, data }) => {
+    console.log("COncil",data)
     const updateStatus = (id,status_name) => {
         axios.put(BACKEND_URL + `/order/cod_remittance_update_status/${id}?status_name=${status_name}`)
         .then((res) => {
@@ -58,40 +59,43 @@ const COD_Reconciliation = ({ charges, data }) => {
                                 className="flex h-12 w-full flex-row items-center border border-b-[#E5E7EB] text-left"
                                 key={key}
                                 >
-                                <div className="flex h-full w-[13.66%] items-center border-r-2 pl-2 font-normal">{item.order.id}</div>
+                                <div className="flex h-full w-[13.66%] items-center border-r-2 pl-2 font-normal">{item.order_id}</div>
                                 <div className="flex flex-col h-full w-[13.66%] justify-center border-r-2 pl-2 font-normal">
-                                    <div>{item.COD_Remittance.cod_to_be_remitted}</div>
+                                    <div>{item.cod_to_be_remitted}</div>
                                 </div>
                                 <div className="flex h-full w-[13.66%] flex-col justify-center gap-4 border-r-2 pl-2 text-left">
-                                    <div>{item.COD_Remittance.last_cod_remitted}</div>
+                                    <div>{item.last_cod_remitted}</div>
                                 </div>
                                 <div className="h-full flex justify-center flex-col w-[13.66%] border-r-2 pl-2 font-normal">
-                                    <div>{`${item.COD_Remittance.total_cod_remitted}`}</div>
+                                    <div>{`${item.total_cod_remitted}`}</div>
                                    
                                 </div>
                                 <div className="h-full flex justify-center flex-col w-[16.66%] border-r-2 pl-2 font-normal">
-                                    <div>{`${item.COD_Remittance.total_deduction_from_cod}`}</div>
+                                    <div>{`${item.total_deduction_from_cod}`}</div>
                                     
                                 </div>
                                 <div className="h-full flex justify-center flex-col w-[13.66%] border-r-2 pl-2 font-normal">
-                                    <div><span className='text-red-800'>{item.COD_Remittance.remittance_initiated}</span></div>
+                                    <div><span className='text-red-800'>{item.remittance_initiated}</span></div>
                                 </div>
                                 <div className="px-2 flex item-center h-full w-[12.66%] items-center border-r-2 pl-2 font-normal">
                                     <div className='rounded basis-full font-semibold bg-red-100 text-red-700 text-center'>{
-                                        item.COD_Remittance.status
+                                        item.status
                                     }
                                     </div>
                                 </div> 
                                 <div className="px-2 flex item-center h-full w-[12.66%] items-center border-r-2 pl-2 font-normal">
-                                <button className='border-2 p-1 mr-2 border-red-400 rounded font-semibold text-red-600'
+                                <button className={`border-2 p-1 mr-2 border-red-400 rounded font-semibold text-red-600 ${item.status === 'done' ? 'cursor-not-allowed': ''}`}
                                     onClick={() => {
-                                        updateStatus(item.COD_Remittance.id,"done");
-                                    }}>Done</button>
-                                    <button
-                                    className='border-2 p-1 border-red-400 rounded font-semibold text-red-600'
-                                    onClick={() => {
-                                        updateStatus(item.COD_Remittance.id,"inprogress");
+                                        updateStatus(item.id,"done");
                                     }}
+                                    disabled={item.status === 'done'}
+                                    >Done</button>
+                                    <button
+                                    className={`border-2 p-1 border-red-400 rounded font-semibold text-red-600 ${(item.status === 'inprogress' || item.status === 'done') ? 'cursor-not-allowed': ''}`}
+                                    onClick={() => {
+                                        updateStatus(item.id,"inprogress");
+                                    }}
+                                    disabled={item.status === 'inprogress' || item.status === 'done'}
                                     >InProgrss</button>
                                 </div> 
                                 </div>
