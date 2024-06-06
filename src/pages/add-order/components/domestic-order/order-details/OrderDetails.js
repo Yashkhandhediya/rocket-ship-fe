@@ -532,10 +532,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               <div className="mb-4 border-b border-gray-200" key={index}>
                 <div className="mb-3 w-full md:flex">
                   <div className="relative w-full px-2 pb-2 xl:w-4/12">
-                    <label
-                      className={`mb-2 flex items-center  text-xs font-medium text-gray-600`}>{`Product ${
-                      index + 1
-                    } Name`}</label>
+                    <label className={`mb-2 flex items-center text-xs font-medium text-gray-600`}>{`Product ${index + 1} Name`}</label>
                     <Autosuggest
                       suggestions={suggestions}
                       onSuggestionsFetchRequested={onSuggestionsFetchRequested}
@@ -552,42 +549,25 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                           setShowProductSuggestions(true);
                         },
                       }}
+                      onSuggestionSelected={(event, { suggestion }) => {
+                        const newProductFields = [...productFields];
+                        const responseSchema = {
+                          name: suggestion.name,
+                          hsn_code: suggestion.hsn_code,
+                          sku: suggestion.sku,
+                        };
+                        newProductFields[index] = {
+                          ...newProductFields[index],
+                          ...responseSchema,
+                        };
+                        setProductFields(newProductFields);
+                      }}
                       theme={theme}
                     />
                     {productValidation && !field?.name?.length && (
                       <p className="mt-1 text-xs text-red-500">Product Name is required.</p>
                     )}
                   </div>
-                  {/* <div className="w-full px-2 pb-2 relative xl:w-4/12" onKeyDown={handleKeyDown}>
-                    <Field
-                      id={'name'}
-                      label={`Product ${index + 1} Name`}
-                      inputClassNames={'text-xs'}
-                      labelClassNames={'text-xs'}
-                      placeHolder={'Enter or search your product name'}
-                      required={true}
-                      value={field?.name || ''}
-                      onChange={(e) => handleSetProductFields(e, index)}
-                      onBlur={() => setShowProductSuggestions(false)}
-                    />
-                      {showProductSuggestions && suggestionProductData.length > 0 && (
-                        <div className="absolute w-[70%] bg-white border border-gray-300 rounded shadow-md z-10 max-h-40 overflow-y-auto">
-                          {suggestionProductData.map((suggestion, i) => (
-                            <div
-                              key={i}
-                              className={`p-2 cursor-pointer ${focusedProductIndex === i ? 'bg-gray-200' : 'hover:bg-gray-100'}`}
-                              onMouseDown={() => handleProductSuggestionClick(suggestion,index)}
-                              onMouseEnter={() => handleProductSuggestionHover(suggestion,index,i)}
-                            >
-                              {suggestion.name}
-                            </div>
-                          ))}
-                        </div>
-                    )}
-                    {productValidation && !field?.name?.length && (
-                      <p className="mt-1 text-xs text-red-500">Product Name is required.</p>
-                    )}
-                  </div> */}
                   <div className="w-full px-2 pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
                     <Field
                       type={'number'}
@@ -602,10 +582,10 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
                     {productValidation && (!field?.unit_price || field?.unit_price < 1) && (
-                      <p className="mt-1 text-xs text-red-500">Unit price should be greter than 0.</p>
+                      <p className="mt-1 text-xs text-red-500">Unit price should be greater than 0.</p>
                     )}
                   </div>
-                  <div className="w-full px-2  pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
+                  <div className="w-full px-2 pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
                     <Field
                       type={'number'}
                       id={'quantity'}
@@ -621,7 +601,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
                     {productValidation && (!field?.quantity || field?.quantity < 1) && (
-                      <p className="mt-1 text-xs text-red-500">Quantity should be greter than 0.</p>
+                      <p className="mt-1 text-xs text-red-500">Quantity should be greater than 0.</p>
                     )}
                   </div>
                   <div className="w-10/12 px-2 pb-2 md:w-4/12 md:pb-0 xl:w-3/12">
@@ -660,9 +640,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                           inputClassNames={'text-xs'}
                           labelClassNames={'text-xs'}
                           placeHolder={'Enter your product HSN code'}
-                          tooltip={
-                            'HSN code is a 6-digit uniform code that classifies 5000+ products and is accepted worldwide.'
-                          }
+                          tooltip={'HSN code is a 6-digit uniform code that classifies 5000+ products and is accepted worldwide.'}
                           value={field?.hsn_code || ''}
                           onChange={(e) => handleSetProductFields(e, index)}
                         />
@@ -680,7 +658,6 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                         />
                       </div>
                       <div className="w-full px-2 pb-2 lg:w-2/12">
-                        {/* missing field in API */}
                         <Field
                           type={'number'}
                           id={'tax_rate'}
@@ -711,6 +688,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               </div>
             );
           })}
+
           <div>
             <button
               className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-xs text-orange-700'}
