@@ -21,10 +21,6 @@ const DonutChart = ({ data, title }) => {
               display: true,
               position: 'bottom',
             },
-            title: {
-              display: true,
-              text: title,
-            }
           }
         }
       });
