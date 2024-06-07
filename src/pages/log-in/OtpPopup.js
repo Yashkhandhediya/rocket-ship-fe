@@ -29,7 +29,7 @@ const OtpPopup = ({
   // Function to handle input change and move focus to the next input
   const handleInputChange = (e, index) => {
     const maxLength = 1;
-    const value = e.target.value;
+    const value = e.target.value.slice(0, maxLength);
 
     setOTP((prevOTP) => {
       const newOTP = [...prevOTP];
@@ -93,6 +93,28 @@ const OtpPopup = ({
     // Clean up the interval when the component unmounts
     return () => clearInterval(intervalId);
   }, []);
+
+  const handlePaste = (e) => {
+    e.preventDefault();
+    const pasteData = e.clipboardData.getData('text');
+    const otpDigits = pasteData.split('').slice(0, 6); 
+
+    setOTP((prevOTP) => {
+      const newOTP = prevOTP.map((char, idx) => otpDigits[idx] || char);
+      return newOTP;
+    });
+
+    otpDigits.forEach((char, idx) => {
+      if (inputRefs[idx] && inputRefs[idx].current) {
+        inputRefs[idx].current.value = char;
+      }
+    });
+
+    const firstEmptyIndex = otpDigits.length;
+    if (firstEmptyIndex < inputRefs.length) {
+      inputRefs[firstEmptyIndex].current.focus();
+    }
+  };
 
   const handleSubmitOtp = (e) => {
     e.preventDefault();
@@ -192,6 +214,7 @@ const OtpPopup = ({
                         id=""
                         onChange={(e) => handleInputChange(e, index)}
                         onKeyDown={(e) => handleKeyDown(index, e)}
+                        onPaste={handlePaste}
                       />
                     </div>
                   ))}
