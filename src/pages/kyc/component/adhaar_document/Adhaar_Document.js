@@ -82,7 +82,7 @@ const Adhaar_Document = ({ triggerValidation,setTriggerValidations,setIsKYCCompl
                 <div className="flex justify-start gap-4 mt-6">
                     <button
                         type="button"
-                        className={`dark:focus:ring-red-900 rounded-lg ${isValidAdhaar && adhaarNumber.length ? "bg-red-600" : "bg-[#FAFAFA] border text-[#c6c6c6] border-[#e5e5e5]"} transition-colors duration-300 px-8 py-2 text-[0.8rem] font-medium text-white focus:outline-none focus:ring-4 focus:ring-red-300`}
+                        className={`dark:focus:ring-red-900 rounded-lg ${isValidAdhaar && adhaarNumber.length ? "bg-red-600" : "bg-red-600 border text-[#c6c6c6] border-[#e5e5e5]"} transition-colors duration-300 px-8 py-2 text-[0.8rem] font-medium text-white focus:outline-none focus:ring-4 focus:ring-red-300`}
                         disabled={!isValidAdhaar}
                         onClick={() => handleSendOTP()}
                     >
