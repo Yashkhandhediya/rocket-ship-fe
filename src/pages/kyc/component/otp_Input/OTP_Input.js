@@ -80,7 +80,7 @@ const OTP_Input = ({ handleSendOTP, timer, setIsKYCCompleted,id=null }) => {
                 ))}
             </div>
             <div className="flex justify-start mt-2 gap-4 items-center text-[12px] font-medium">
-                <button className={`px-12 py-2 text-white ${isOtpEntered ? "bg-red-600" : "bg-[#FAFAFA] border text-[#c6c6c6] border-[#e5e5e5]"} transition-colors duration-200 rounded-md`}
+                <button className={`px-12 py-2 text-white ${isOtpEntered ? "bg-red-600" : "bg-red-600 border text-[#c6c6c6] border-[#e5e5e5]"} transition-colors duration-200 rounded-md`}
                     disabled={!isOtpEntered}
                     onClick={() => { completeKYC() }}
                 >
