@@ -2,38 +2,39 @@ import { All, Delivered, InTransit, New, PickupMenifests, ReadyToShip, Rto } fro
 
 export const returnsTabs = [
   {
-    title: 'New',
-    id: 'new',
-    panel: <New />,
-  },
-  {
-    title: 'Ready To Ship',
-    id: 'readyToShip',
+    title: 'Returns Request',
+    id: 'returnsReequest',
     panel: <ReadyToShip />,
   },
   {
-    title: 'Pickups & Menifests',
-    id: 'pickupsAndMenifests',
+    title: 'New Returns',
+    id: 'newReturns',
+    panel: <New />,
+  },
+
+  {
+    title: 'Return Pickup Scheduled',
+    id: 'returnPickupScheduled',
     panel: <PickupMenifests />,
   },
   {
-    title: 'In Transit',
+    title: 'Intransit',
     id: 'inTransit',
     panel: <InTransit />,
   },
   {
-    title: 'Delivered',
-    id: 'delivered',
+    title: 'Return Received',
+    id: 'returnReceived',
     panel: <Delivered />,
-  },
-  {
-    title: 'RTO',
-    id: 'rto',
-    panel: <Rto />,
   },
   {
     title: 'All',
     id: 'all',
     panel: <All />,
+  },
+  {
+    title: 'Pending for Refund',
+    id: 'pendingforRefund',
+    panel: <Rto />,
   },
 ];
