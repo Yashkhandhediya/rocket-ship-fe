@@ -1,5 +1,4 @@
 import axios from 'axios';
-import React from 'react';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useState, useEffect } from 'react';
 import { CustomDataTable } from '../../common/components';
@@ -10,7 +9,7 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { user } from '../../common/icons/sidebar-icons';
 
-const User = () => {
+const Users = () => {
   let amount = 0;
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState([]);
@@ -67,13 +66,13 @@ const User = () => {
     setShowPopup(true);
   };
 
-  const handleOrder = (row) => {
+  const handleReturn = (row) => {
     const id = row?.original?.id;
     const data = {
       id: id,
       flag: true,
     };
-    navigate('/orders', { state: { data: data } });
+    navigate('/returns', { state: { data: data } });
   };
 
   const handleKYC = (row) => {
@@ -284,9 +283,9 @@ const User = () => {
                   className={`min-w-fit rounded bg-blue-500 px-4 py-1.5 text-white hover:bg-green-600 ${
                     !disableButtons ? 'cursor-not-allowed' : ''
                   }`}
-                  onClick={() => handleOrder(row)}
+                  onClick={() => handleReturn(row)}
                   disabled={!disableButtons}>
-                  {'Show Order'}
+                  {'Show Returns'}
                 </button>
               }
               {showKYCBtn && (
@@ -395,4 +394,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default Users;

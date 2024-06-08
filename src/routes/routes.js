@@ -30,7 +30,7 @@ import Tracking from '../pages/tracking/Tracking';
 import ReturnTracking from '../pages/return-tracking/ReturnTracking';
 import PrivateRoute from './private-route/PrivateRoute';
 import { SellerKYC } from '../pages/kyc';
-import { Returns } from '../pages/returns';
+import { AllUsers, Returns } from '../pages/returns';
 import { COD_Remittance, Passbook, ShippingCharges, Wallet_history } from '../pages/billing/component';
 import { Adhaar_Document } from '../pages/kyc/component/adhaar_document';
 import { RateCalculator } from '../pages/rate-calculator';
@@ -103,6 +103,10 @@ const routes = createBrowserRouter([
   {
     path: '/all-user',
     element: <PrivateRoute component={<AllUser />} />,
+  },
+  {
+    path: '/all-users',
+    element: <PrivateRoute component={<AllUsers />} />,
   },
   {
     path: '/orders',
