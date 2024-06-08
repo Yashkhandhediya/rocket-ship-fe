@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState, useMemo } from 'react';
+import { Fragment, useEffect, useState, useMemo, useRef } from 'react';
 import { Checkbox, Field, RightDrawer, CustomMultiSelect } from '../../../../common/components';
 import { fieldDefaultValues } from '../utils';
 import { CustomTooltip } from '../../../../common/components';
@@ -13,17 +13,22 @@ const EditDrawer = ({ isOpen, onClose, fieldNames = [], data }) => {
   const [validationTriggered, setValidationTriggered] = useState(false);
   const [addressList, setAddressList] = useState([]);
   const id_user = localStorage.getItem('user_id');
+  const id_company = localStorage.getItem('company_id');
+  const is_company = localStorage.getItem('is_company');
   const domesticReturnFormValues = useSelector((state) => state?.addReturn?.single_return) || {};
   console.log(
     'Returnnnnnnnnn',
     domesticReturnFormValues?.pickup_address?.id,
     domesticReturnFormValues.return_reason,
   );
+
+  const hasFetched = useRef(false);
+
   const fetchUserAddressList = () => {
     axios
       .get(BACKEND_URL + '/address', {
         params: {
-          user_id: id_user,
+          user_id: is_company ? id_company : id_user,
         },
       })
       .then((resp) => {
@@ -40,7 +45,10 @@ const EditDrawer = ({ isOpen, onClose, fieldNames = [], data }) => {
 
   useEffect(() => {
     if (!addressList?.length) {
-      fetchUserAddressList();
+      if (!hasFetched.current) {
+        fetchUserAddressList();
+        hasFetched.current = true;
+      }
     }
   }, []);
 

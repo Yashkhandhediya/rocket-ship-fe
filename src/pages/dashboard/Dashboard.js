@@ -1,7 +1,7 @@
 import axios from 'axios';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { BACKEND_URL } from '../../common/utils/env.config';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { noShipment } from '../../common/images';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
@@ -11,30 +11,31 @@ import ShipmentDetailCard from './components/shipment-card/ShipmentDetailCard';
 import { ShipmentOverview } from './components/shipment-overview';
 
 const Dashboard = () => {
-  const navigate = useNavigate()
-  const id_user = localStorage.getItem('user_id')
-  const company_id = localStorage.getItem('company_id')
+  const navigate = useNavigate();
+  const id_user = localStorage.getItem('user_id');
+  const company_id = localStorage.getItem('company_id');
   const oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().slice(0, 10);
   const todayDate = new Date().toISOString().slice(0, 10);
-  const [fromDate, setFromDate] = useState(oneMonthAgo.toString())
-  const [toDate, setToDate] = useState(todayDate.toString())
-  const [todayOrder, setTodayOrder] = useState(0)
-  const [todayRevenue, setTodayRevenue] = useState(0)
-  const [yesterdayOrder, setYesterdayOrder] = useState(0)
-  const [yesterdayRevenue, setYesterdayRevenue] = useState(0)
-  const [shipData, setShipData] = useState([])
+  const [fromDate, setFromDate] = useState(oneMonthAgo.toString());
+  const [toDate, setToDate] = useState(todayDate.toString());
+  const [todayOrder, setTodayOrder] = useState(0);
+  const [todayRevenue, setTodayRevenue] = useState(0);
+  const [yesterdayOrder, setYesterdayOrder] = useState(0);
+  const [yesterdayRevenue, setYesterdayRevenue] = useState(0);
+  const [shipData, setShipData] = useState([]);
   const [result, setResult] = useState([]);
-  const [flag, setFlag] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [flag, setFlag] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('Overview');
+  const hasFetched = useRef(false);
   const [shipmentDetail, setShipmentDetail] = useState({
     total_shipment: 0,
     pickup_pending: 0,
     in_transit: 0,
     delivered: 0,
     ndr_pending: 0,
-    rto: 0
-  })
+    rto: 0,
+  });
 
   const shipmentDetails = [
     { label: 'Total Shipments', value: shipmentDetail.total_shipment },
@@ -70,28 +71,28 @@ const Dashboard = () => {
     { label: 'NDR Pending', key: 'ndr_pending' },
     { label: 'RTO', key: '6' },
     { label: 'Lost/Damaged', key: 'lost_damaged' },
-    { label: 'Total Shipment', key: 'total_counts' }
+    { label: 'Total Shipment', key: 'total_counts' },
   ];
 
-  const backgroundColor = ["#bcbaff", "#ffb98f", "#60eba0", "#4f7de9", "#f47ac2", "#daf490", "#c88888" ]
+  const backgroundColor = ['#bcbaff', '#ffb98f', '#60eba0', '#4f7de9', '#f47ac2', '#daf490', '#c88888'];
 
   const sampleData1 = {
-    labels: shipData.map(item => item.partner_name),
+    labels: shipData.map((item) => item.partner_name),
     datasets: [
       {
         label: 'Example Dataset',
-        data: shipData.map(item => item.status_count),
+        data: shipData.map((item) => item.status_count),
         backgroundColor: backgroundColor,
       },
     ],
   };
 
   const sampleData2 = {
-    labels: shipmentDetails.map(item => item.label),
+    labels: shipmentDetails.map((item) => item.label),
     datasets: [
       {
         label: 'Example Dataset',
-        data: shipmentDetails.map(item => item.value),
+        data: shipmentDetails.map((item) => item.value),
         backgroundColor: backgroundColor,
       },
     ],
@@ -106,18 +107,22 @@ const Dashboard = () => {
     'RTO',
     'Courier',
     'Delays',
-    'Tracking Page'
+    'Tracking Page',
   ];
 
   const handleData = () => {
-    axios.post(BACKEND_URL + `/dashboard/user_order_analysis/?user_id=${id_user}&start_date=${fromDate}&end_date=${toDate}`)
+    axios
+      .post(
+        BACKEND_URL +
+          `/dashboard/user_order_analysis/?user_id=${id_user}&start_date=${fromDate}&end_date=${toDate}`,
+      )
       .then((res) => {
-        setTodayOrder(res.data.todays_order_count)
-        setYesterdayOrder(res.data.yesterdays_order_count)
-        setTodayRevenue(res.data.todays_revenue)
-        setYesterdayRevenue(res.data.yesterdays_revenue)
-        let total = 0
-        const data = res.data.order_details
+        setTodayOrder(res.data.todays_order_count);
+        setYesterdayOrder(res.data.yesterdays_order_count);
+        setTodayRevenue(res.data.todays_revenue);
+        setYesterdayRevenue(res.data.yesterdays_revenue);
+        let total = 0;
+        const data = res.data.order_details;
         for (const key in data) {
           if (Object.prototype.hasOwnProperty.call(data, key)) {
             total += data[key];
@@ -129,29 +134,29 @@ const Dashboard = () => {
           in_transit: res.data.order_details['In transit'] || 0,
           delivered: res.data.order_details['Delivered'] || 0,
           ndr_pending: res.data.order_details['ndr_initiated'] || 0,
-          rto: res.data.order_details['RTO'] || 0
-        })
-        setShipData(res.data.shipment_details)
-        setFlag(true)
-        setLoading(false)
-      }).catch((err) => {
-        console.log("ERRRRRR", err)
+          rto: res.data.order_details['RTO'] || 0,
+        });
+        setShipData(res.data.shipment_details);
+        setFlag(true);
+        setLoading(false);
       })
-  }
-
+      .catch((err) => {
+        console.log('ERRRRRR', err);
+      });
+  };
 
   const StatusCounts = (data) => {
     // Calculate the total status count based on partner_name and status_id
     const calculateStatusCounts = () => {
       const counts = {};
 
-      data.forEach(entry => {
+      data.forEach((entry) => {
         const partnerName = entry.partner_name.trim();
         const statusId = entry.status_id;
         const statusCount = entry.status_count;
 
         if (!counts[partnerName]) {
-          counts[partnerName] = {};  // Initialize as an empty object
+          counts[partnerName] = {}; // Initialize as an empty object
         }
 
         if (counts[partnerName][statusId]) {
@@ -176,19 +181,17 @@ const Dashboard = () => {
         return {
           partner_name: partnerName,
           status_counts: statusArray,
-          total_counts: total
+          total_counts: total,
         };
-
       });
       // Update the state with the calculated results
       setResult(resultArray);
-      console.log("RESUUUUUU", result)
+      console.log('RESUUUUUU', result);
     };
 
     // Call the function to calculate the status counts
     calculateStatusCounts();
-
-  }
+  };
 
   const checkDate = (fromDate, toDate) => {
     const from = new Date(fromDate);
@@ -197,44 +200,49 @@ const Dashboard = () => {
   };
 
   const handleDateChange = () => {
-    setLoading(true)
+    setLoading(true);
     if (checkDate(fromDate, toDate)) {
-      handleData()
-      StatusCounts(shipData)
+      handleData();
+      StatusCounts(shipData);
     } else {
       toast.error('From date should be less than To date');
     }
   };
 
-
   useEffect(() => {
     if (!flag) {
-      handleData()
+      if (!hasFetched.current) {
+        handleData();
+        hasFetched.current = true;
+      }
     }
-    StatusCounts(shipData)
-
-  }, [fromDate, toDate, shipData])
+    StatusCounts(shipData);
+  }, [fromDate, toDate, shipData]);
 
   return (
     <PageWithSidebar>
       <div className="flex w-full flex-col px-5 py-1 pb-4">
         <div className="flex items-center">
-          <span className='font-bold text-xl'>Dashboard</span>
-          <div className='ml-4'>
-            <select id="travel-type" name="travel-type" className="block w-auto px-3 py-2 text-base border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          <span className="text-xl font-bold">Dashboard</span>
+          <div className="ml-4">
+            <select
+              id="travel-type"
+              name="travel-type"
+              className="block w-auto rounded-md border border-gray-300 px-3 py-2 text-base shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
               <option value="domestic">Domestic</option>
               <option value="international">International</option>
             </select>
           </div>
         </div>
-        <div className="flex flex-col w-full">
-          <div className="flex w-full border-b gap-10">
+        <div className="flex w-full flex-col">
+          <div className="flex w-full gap-10 border-b">
             {tabs.map((tab) => (
               <div
                 key={tab}
-                className={`px-4 py-2 cursor-pointer ${activeTab === tab ? 'border-b-2 border-[#912517]' : 'border-b-2 border-transparent'}`}
-                onClick={() => setActiveTab(tab)}
-              >
+                className={`cursor-pointer px-4 py-2 ${
+                  activeTab === tab ? 'border-b-2 border-[#912517]' : 'border-b-2 border-transparent'
+                }`}
+                onClick={() => setActiveTab(tab)}>
                 {tab}
               </div>
             ))}
@@ -244,16 +252,33 @@ const Dashboard = () => {
               <div style={{ textAlign: 'center' }}>
                 {loading && <Loader />}
                 {/* <h1>Dashboard</h1> */}
-                {localStorage.getItem('is_kyc') == 1 && <div className="w-[98%] p-2 mt-2 ml-4 mr-4 bg-red-600 border shadow-md rounded-lg hover:underline">
-                  <Link to={'/seller/kyc'} className='text-white'>Click here to complete your KYC and get non-disrupted shipping and COD remittances</Link>
-                </div>}
+                {localStorage.getItem('is_kyc') == 1 && (
+                  <div className="ml-4 mr-4 mt-2 w-[98%] rounded-lg border bg-red-600 p-2 shadow-md hover:underline">
+                    <Link to={'/seller/kyc'} className="text-white">
+                      Click here to complete your KYC and get non-disrupted shipping and COD remittances
+                    </Link>
+                  </div>
+                )}
                 <div>
-                  <div className="flex items-center justify-between md:w-full flex-col lg:flex-row">
+                  <div className="flex flex-col items-center justify-between md:w-full lg:flex-row">
                     <Card
                       bgColor="bg-[#dadafc]"
                       icon={
-                        <svg className="w-12 h-12 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                          <path stroke="red" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-3 5h3m-6 0h.01M12 16h3m-6 0h.01M10 3v4h4V3h-4Z" />
+                        <svg
+                          className="dark:text-white h-12 w-12 text-gray-800"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          fill="none"
+                          viewBox="0 0 24 24">
+                          <path
+                            stroke="red"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1"
+                            d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-3 5h3m-6 0h.01M12 16h3m-6 0h.01M10 3v4h4V3h-4Z"
+                          />
                         </svg>
                       }
                       title="Today's Orders"
@@ -266,63 +291,82 @@ const Dashboard = () => {
                       bgColor="bg-[#dadafc]"
                     />
                   </div>
-                  <div className="flex items-center justify-between md:w-full flex-col lg:flex-row">
+                  <div className="flex flex-col items-center justify-between md:w-full lg:flex-row">
                     <Card
                       bgColor="bg-[#c2e7c7]"
                       icon={
-                        <svg className="w-12 h-12 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                          <path stroke="red" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-3 5h3m-6 0h.01M12 16h3m-6 0h.01M10 3v4h4V3h-4Z" />
+                        <svg
+                          className="dark:text-white h-12 w-12 text-gray-800"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          fill="none"
+                          viewBox="0 0 24 24">
+                          <path
+                            stroke="red"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1"
+                            d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-3 5h3m-6 0h.01M12 16h3m-6 0h.01M10 3v4h4V3h-4Z"
+                          />
                         </svg>
                       }
                       title="Today's Revenue"
                       mainText={
-                        <span className='flex'>
-                          <em className="fa fa fa-inr mr-1 text-lg text-left font-semibold"></em>
+                        <span className="flex">
+                          <em className="fa fa fa-inr mr-1 text-left text-lg font-semibold"></em>
                           {todayRevenue}
                         </span>
                       }
                       subText={
                         <span>
-                          Yesterday <em className="fa fa fa-inr mr-1 text-xs"></em>{yesterdayRevenue}
+                          Yesterday <em className="fa fa fa-inr mr-1 text-xs"></em>
+                          {yesterdayRevenue}
                         </span>
                       }
                     />
-                    <ShipmentDetailCard
-                      title="NDR Details"
-                      details={ndrDetails}
-                      bgColor="bg-gray-100"
-                    />
+                    <ShipmentDetailCard title="NDR Details" details={ndrDetails} bgColor="bg-gray-100" />
                   </div>
-                  <div className="flex items-center justify-between md:w-full flex-col lg:flex-row">
+                  <div className="flex flex-col items-center justify-between md:w-full lg:flex-row">
                     <Card
                       bgColor="bg-[#dadafc]"
                       icon={
-                        <svg className="w-12 h-12 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                          <path stroke="red" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-3 5h3m-6 0h.01M12 16h3m-6 0h.01M10 3v4h4V3h-4Z" />
+                        <svg
+                          className="dark:text-white h-12 w-12 text-gray-800"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          fill="none"
+                          viewBox="0 0 24 24">
+                          <path
+                            stroke="red"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1"
+                            d="M15 4h3a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3m0 3h6m-3 5h3m-6 0h.01M12 16h3m-6 0h.01M10 3v4h4V3h-4Z"
+                          />
                         </svg>
                       }
                       title="Average Shipping"
                       mainText={
-                        <span className='flex'>
-                          <em className="fa fa fa-inr mr-1 text-lg text-left font-semibold"></em>
+                        <span className="flex">
+                          <em className="fa fa fa-inr mr-1 text-left text-lg font-semibold"></em>
                           700
                         </span>
                       }
                     />
-                    <ShipmentDetailCard
-                      title="COD Status"
-                      details={codDetails}
-                      bgColor="bg-gray-100"
-                    />
+                    <ShipmentDetailCard title="COD Status" details={codDetails} bgColor="bg-gray-100" />
                   </div>
                 </div>
-                <div className='flex justify-between gap-8'>
-                  <DonutChart data={sampleData1} title={"Couriers Split"} />
-                  <DonutChart data={sampleData2} title={"Overall Shipment Status"} />
-                  <DonutChart data={{}} title={"Delivery Performance"} />
+                <div className="flex justify-between gap-8">
+                  <DonutChart data={sampleData1} title={'Couriers Split'} />
+                  <DonutChart data={sampleData2} title={'Overall Shipment Status'} />
+                  <DonutChart data={{}} title={'Delivery Performance'} />
                 </div>
                 <ShipmentOverview
-                  title={"Shipment Overview By Courier"}
+                  title={'Shipment Overview By Courier'}
                   fromDate={fromDate}
                   setFromDate={setFromDate}
                   toDate={toDate}
@@ -335,16 +379,8 @@ const Dashboard = () => {
                 />
               </div>
             )}
-            {activeTab === 'Orders' && (
-              <div>
-                Orders Content
-              </div>
-            )}
-            {activeTab === 'Shipments' && (
-              <div>
-                Shipment Content
-              </div>
-            )}
+            {activeTab === 'Orders' && <div>Orders Content</div>}
+            {activeTab === 'Shipments' && <div>Shipment Content</div>}
           </div>
         </div>
       </div>

@@ -6,8 +6,6 @@ import { toast } from 'react-toastify';
 import ResetPassword from './ResetPassword';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-
-
 const OtpPopup = ({
   userType = 'user',
   username,
@@ -97,7 +95,7 @@ const OtpPopup = ({
   const handlePaste = (e) => {
     e.preventDefault();
     const pasteData = e.clipboardData.getData('text');
-    const otpDigits = pasteData.split('').slice(0, 6); 
+    const otpDigits = pasteData.split('').slice(0, 6);
 
     setOTP((prevOTP) => {
       const newOTP = prevOTP.map((char, idx) => otpDigits[idx] || char);
@@ -133,11 +131,13 @@ const OtpPopup = ({
         if (is_super == 3) {
           toast('Login Success', { type: 'success' });
           navigate('/company-list');
+          window.location.reload();
           return;
         }
         if (response.data.flag == 1 && is_super != 3) {
           toast('Login Success', { type: 'success' });
           navigate('/seller/home');
+          window.location.reload();
         } else {
           setMessage(true);
           toast('OTP Mismatched', { type: 'error' });
@@ -244,7 +244,9 @@ const OtpPopup = ({
                       onClick={() => {
                         navigate('/login');
                       }}>
-                      <span className=""><i className="fa-solid fa-arrow-left"></i></span>
+                      <span className="">
+                        <i className="fa-solid fa-arrow-left"></i>
+                      </span>
                       Back
                     </button>
                   </div>
