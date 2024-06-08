@@ -93,7 +93,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     let resp = await axios.post(BACKEND_URL + `/order?user_id=${id_user}`, {
       ...domesticOrderFormValues,
       ...formDirectField,
-      order_type: 'domestic',
+      order_type: 'international',
       date: date,
     });
     if (resp.status == 200) {
