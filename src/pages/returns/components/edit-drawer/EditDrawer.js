@@ -325,6 +325,10 @@ const EditDrawer = ({ isOpen, onClose, fieldNames = [], data }) => {
   }, [fieldNames]);
 
   const handleEditOrder = async () => {
+    if(formDirectField.dead_weight == '' || formDirectField.length == 0 || formDirectField.width == 0 || formDirectField.height == 0 || domesticReturnFormValues?.pickup_address?.id == null){
+        toast("Please Fill All Required Field",{type:'error'})
+        return
+    }
     try {
       const response = await axios.put(
         `${BACKEND_URL}/return/update_return_info?return_id=${domesticReturnFormValues?.id}`,
