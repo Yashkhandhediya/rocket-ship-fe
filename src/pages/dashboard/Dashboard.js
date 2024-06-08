@@ -22,6 +22,7 @@ const Dashboard = () => {
   const [todayRevenue, setTodayRevenue] = useState(0)
   const [yesterdayOrder, setYesterdayOrder] = useState(0)
   const [yesterdayRevenue, setYesterdayRevenue] = useState(0)
+  const [averageShipment, setAverageShipment] = useState(0)
   const [shipData, setShipData] = useState([])
   const [result, setResult] = useState([]);
   const [flag, setFlag] = useState(false)
@@ -79,7 +80,6 @@ const Dashboard = () => {
     labels: shipData.map(item => item.partner_name),
     datasets: [
       {
-        label: 'Example Dataset',
         data: shipData.map(item => item.status_count),
         backgroundColor: backgroundColor,
       },
@@ -90,7 +90,6 @@ const Dashboard = () => {
     labels: shipmentDetails.map(item => item.label),
     datasets: [
       {
-        label: 'Example Dataset',
         data: shipmentDetails.map(item => item.value),
         backgroundColor: backgroundColor,
       },
@@ -116,6 +115,7 @@ const Dashboard = () => {
         setYesterdayOrder(res.data.yesterdays_order_count)
         setTodayRevenue(res.data.todays_revenue)
         setYesterdayRevenue(res.data.yesterdays_revenue)
+        setAverageShipment(res.data.average_shipment)
         let total = 0
         const data = res.data.order_details
         for (const key in data) {
@@ -305,7 +305,7 @@ const Dashboard = () => {
                       mainText={
                         <span className='flex'>
                           <em className="fa fa fa-inr mr-1 text-lg text-left font-semibold"></em>
-                          700
+                          {averageShipment}
                         </span>
                       }
                     />
