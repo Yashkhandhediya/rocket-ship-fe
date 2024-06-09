@@ -136,7 +136,7 @@ const SignUpUser = () => {
               value={signupInput['company_name']}
               onChange={handleChangeInput}
             />
-            {error && <p className="w-1/2 text-xs text-red-500">{error?.email_address}</p>}
+            {error && <p className="w-1/2 text-xs text-red-500">{error?.company_name}</p>}
 
             <Field
               type={'tel'}
