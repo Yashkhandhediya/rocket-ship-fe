@@ -113,6 +113,14 @@ export const ReadyToShip = () => {
     });
   }
 
+   // Calculate the total number of items ready to ship
+   const totalItemsReadyToShip = readyShipOrdersList.reduce((total, order) => {
+    return total + order.product_info.reduce((orderTotal, product) => {
+      return orderTotal + product.quantity;
+    }, 0);
+  }, 0);
+
+  console.log('items ready to ship', totalItemsReadyToShip)
 
   const getColumns = () => {
     const columnHelper = createColumnHelper();

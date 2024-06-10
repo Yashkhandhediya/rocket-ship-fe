@@ -27,6 +27,9 @@ const Delivered = () => {
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
 
 
+  const totalItemsDelivered = newOrdersList.length;
+  console.log('delivered items', totalItemsDelivered)
+
   function formatDate(dateString) {
     const options = { day: 'numeric', month: 'short', year: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);

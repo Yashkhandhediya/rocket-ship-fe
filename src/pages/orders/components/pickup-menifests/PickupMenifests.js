@@ -30,6 +30,20 @@ const PickupMenifests = () => {
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
 
 
+  const getTotalItems = () => {
+    let totalItems = 0;
+    newOrdersList.forEach((order) => {
+      order.product_info.forEach((product) => {
+        totalItems += product.quantity;
+      });
+    });
+    return totalItems;
+  };
+
+  // Call getTotalItems to get the total count
+  const totalItemsInPickupsAndManifests = getTotalItems();
+  console.log('pickup and menifest items', totalItemsInPickupsAndManifests)
+
   function flattenObject(obj, id) {
     const keyCounts = {};
     for(let i=0;i<resData.length;i++){
