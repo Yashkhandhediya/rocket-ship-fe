@@ -38,6 +38,8 @@ import SignUpUser from '../pages/sign-up/SingUpUser';
 import { Channels } from '../pages/channels';
 import Channelpage from '../pages/channels/components/channelpage/Channelpage';
 import { CreateTicket } from '../pages/create-ticket';
+import { Courier } from '../pages/courier';
+import { CourierLog } from '../pages/courier/CourierLogs';
 
 const routes = createBrowserRouter([
   {
@@ -217,6 +219,14 @@ const routes = createBrowserRouter([
     path: '/create-ticket',
     element: <PrivateRoute component={<CreateTicket />} />,
   },
+  {
+    path:'/user-couriers',
+    element: <PrivateRoute component={<Courier />} />
+  },
+  {
+    path:'/courier-log',
+    element: <PrivateRoute component={<CourierLog />}/>
+  }
 ]);
 
 export default routes;
