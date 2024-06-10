@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { MoreDropdown, CustomTooltip, CustomDataTable } from '../../../../common/components';
 import moment from 'moment';
@@ -53,7 +53,7 @@ export const New = () => {
         result.push(string.substr(i, length));
     }
     return result;
-}
+  }
 
   function flattenObject(obj, id) {
     const keyCounts = {};
@@ -83,7 +83,7 @@ export const New = () => {
     }
     flatten(obj);
     return flattened;
-}
+  }
 
   // const handleRequestShipment = (id) => {
   //   debugger
@@ -164,6 +164,24 @@ export const New = () => {
     temp_list = []
     console.log("PAYLOADDDDDDDDD",temp_list)
   }
+
+
+  const countTotalItems = () => {
+    let totalItems = 0;
+    // Iterate through each order in newOrdersList
+    newOrdersList.forEach(order => {
+      // If the order has product_info, add the length of product_info array to totalItems
+      if (order.product_info) {
+        totalItems += order.product_info.length;
+      }
+    });
+    return totalItems;
+  };
+
+  // Call the countTotalItems function to get the total number of items
+  const totalItems = countTotalItems();
+  console.log('Total number of items:', totalItems);
+
 
   const getColumns = () => {
     const columnHelper = createColumnHelper();

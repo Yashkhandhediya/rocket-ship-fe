@@ -37,6 +37,9 @@ const Rto = () => {
     return result;
 }
 
+  const totalItemsInRTO = newOrdersList.length;
+  console.log('items in rto', totalItemsInRTO)
+
   const handleMenifest = (id) => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)

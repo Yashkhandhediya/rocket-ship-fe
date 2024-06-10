@@ -100,7 +100,7 @@ if(localStorage.getItem('is_super') != 3){
         },
         {
           title: 'Courier',
-          path: '/',
+          path: '/user-couriers',
         },
         {
           title: 'Packaging',

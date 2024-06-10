@@ -44,9 +44,14 @@ const ShipmentOverview = ({ title, fromDate, setFromDate, toDate, setToDate, han
 
       <div className="w-full mt-2 overflow-x-auto flex flex-col justify-evenly">
         <div className="w-full flex flex-row justify-between">
-          {columnNames.map(col => (
-            <div key={col.label} className="px-4 py-2 text-left font-semibold text-sm">{col.label}</div>
-          ))}
+        {columnNames.map((col, index) => (
+          <div 
+            key={col.label} 
+            className={`flex-1 px-4 py-2 ${index === 0 ? 'text-left' : 'text-center'} font-semibold text-sm`}
+          >
+            {col.label}
+          </div>
+        ))}
         </div>
         <div className="mt-4 ml-4 mx-4 border-b border-gray-300"></div>
         <div className="w-full flex flex-col justify-center items-center">
@@ -58,12 +63,12 @@ const ShipmentOverview = ({ title, fromDate, setFromDate, toDate, setToDate, han
           ) : (
             result.map((item, index) => (
               <div className='flex flex-row w-full border border-collapse bg-[#FAFAFA]' key={index}>
-                {columnNames.map(col => (
-                  <div key={col.key} className={`px-4 py-2 ${col.key === 'partner_name' ? 'text-left' : 'text-right'}`}>
-                    {item[col.key]}
-                  </div>
-                ))}
-              </div>
+              {columnNames.map((col, colIndex) => (
+                <div key={col.key} className={`flex flex-1 px-4 py-2 ${colIndex === 0 ? '' : 'justify-center'}`}>
+                  {item[col.key]}
+                </div>
+              ))}
+            </div>
             ))
           )}
         </div>

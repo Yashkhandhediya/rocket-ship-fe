@@ -34,6 +34,9 @@ const InTransit = () => {
     return result;
 }
 
+const totalItemsInTransit = newOrdersList.length;
+console.log('total number of items in transit', totalItemsInTransit)
+
   const handleMenifest = (id) => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)

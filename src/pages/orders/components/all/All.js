@@ -32,6 +32,9 @@ export const All = () => {
     return result;
 }
 
+  const totalItems = allOrdersList.length;
+  console.log('items in all', totalItems)
+
   const handleMenifest = (id) => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)

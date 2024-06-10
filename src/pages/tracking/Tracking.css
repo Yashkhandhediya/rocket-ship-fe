@@ -36,10 +36,23 @@
   background: white;
   display: flex;
   justify-content: center;
+  /* justify-content: space-around; */
   align-items: center;
   border-radius: 5px;
   min-height: 60px;
   font-size: 0.9rem;
+}
+
+.buyer-confirm-msg-container button {
+  margin-right: 15rem;
+}
+
+.buyer-confirm-msg-container .left-arrow{
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 12px solid black;
 }
 
 .buyer-confirm-msg-container a {
