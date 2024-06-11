@@ -1,38 +1,96 @@
 import { Link, generatePath, useNavigate } from 'react-router-dom';
-import { Fragment, useState } from "react";
-import { Woocommerce, bigLogo, bigcommerce, filterIcon, moreAction, shopify, wooLogo } from "../../../../common/icons";
-import { MoreFiltersDrawer } from "../more-filters-drawer"; 
+import { Fragment, useState, useEffect } from 'react';
+import {
+  Woocommerce,
+  bigLogo,
+  bigcommerce,
+  filterIcon,
+  moreAction,
+  shopify,
+  wooLogo,
+} from '../../../../common/icons';
+import { MoreFiltersDrawer } from '../more-filters-drawer';
 import axios from 'axios';
 import { Badge } from 'flowbite-react';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { filterPickupMenifests, moreActionOptions } from "../utils";
+import { filterPickupMenifests, moreActionOptions } from '../utils';
 import { createColumnHelper } from '@tanstack/react-table';
 import moment from 'moment';
-import { CommonBadge, CustomDataTable, CustomTooltip, MoreDropdown } from '../../../../common/components';
+import {
+  CommonBadge,
+  CustomDataTable,
+  CustomTooltip,
+  Loader,
+  MoreDropdown,
+} from '../../../../common/components';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { setAllOrders, setClonedOrder } from '../../../../redux';
 import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { resData } from '../../Orders';
+import { Button } from 'flowbite-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 // import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
-
-
 const PickupMenifests = () => {
+  const id_user = localStorage.getItem('user_id');
+  const id_company = localStorage.getItem('company_id');
+  const is_company = localStorage.getItem('is_company');
+
+  const user_id = is_company == 1 ? id_company : id_user;
+
+  const [itemsPerPage, setItemsPerPage] = useState(15);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+
+  // Handler function to update the state when the selected value changes
+  const handleChange = (event) => {
+    setItemsPerPage(event.target.value);
+  };
+
+  const handlePageIncrement = () => {
+    setPage((prev) => prev + 1);
+  };
+
+  const handlePageDecrement = () => {
+    setPage((prev) => (prev <= 1 ? prev : prev - 1));
+  };
+
+  const [manifestedOrdersList, setManifestedOrders] = useState([]);
+
+  const fetchManifestedOrders = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `${BACKEND_URL}/order/get_filtered_orders?created_by=${user_id}&status=manifested&page=${page}&page_size=${itemsPerPage}`,
+      );
+      setManifestedOrders(response.data);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchManifestedOrders();
+  }, [itemsPerPage, page]);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log("daklfmdsf",typeof resData,resData)
+  console.log('daklfmdsf', typeof resData, resData);
   const flattened = {};
-  const allOrdersList = useSelector((state) => state?.ordersList) || [];
-  const newOrdersList =
-    allOrdersList?.filter((order) => (order?.status_id) === 3) || [];
+  // const allOrdersList = useSelector((state) => state?.ordersList) || [];
+  // const newOrdersList =
+  //   allOrdersList?.filter((order) => (order?.status_id) === 3) || [];
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
-
 
   const getTotalItems = () => {
     let totalItems = 0;
-    newOrdersList.forEach((order) => {
+    manifestedOrdersList.forEach((order) => {
       order.product_info.forEach((product) => {
         totalItems += product.quantity;
       });
@@ -42,42 +100,38 @@ const PickupMenifests = () => {
 
   // Call getTotalItems to get the total count
   const totalItemsInPickupsAndManifests = getTotalItems();
-  console.log('pickup and menifest items', totalItemsInPickupsAndManifests)
+  console.log('pickup and menifest items', totalItemsInPickupsAndManifests);
 
   function flattenObject(obj, id) {
     const keyCounts = {};
-    for(let i=0;i<resData.length;i++){
-          if(resData[i].id == id){
-            obj = resData[i];
-            break;
-          }
-        }
-  
-    function flatten(obj, parentKey = '') {
-            for (let key in obj) {
-                let propName = parentKey ? `${key}` : key;
-                
-                // Check if the key already exists, if yes, increment count
-                if (flattened[propName] !== undefined) {
-                    keyCounts[propName] = (keyCounts[propName] || 0) + 1;
-                    propName = `${propName}${keyCounts[propName]}`;
-                }
-                
-                if (typeof obj[key] === 'object' && obj[key] !== null) {
-                    flatten(obj[key], propName);
-                } else {
-                    flattened[propName] = obj[key];
-                }
-            }
-        
+    for (let i = 0; i < resData.length; i++) {
+      if (resData[i].id == id) {
+        obj = resData[i];
+        break;
+      }
     }
-  
+
+    function flatten(obj, parentKey = '') {
+      for (let key in obj) {
+        let propName = parentKey ? `${key}` : key;
+
+        // Check if the key already exists, if yes, increment count
+        if (flattened[propName] !== undefined) {
+          keyCounts[propName] = (keyCounts[propName] || 0) + 1;
+          propName = `${propName}${keyCounts[propName]}`;
+        }
+
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
+          flatten(obj[key], propName);
+        } else {
+          flattened[propName] = obj[key];
+        }
+      }
+    }
+
     flatten(obj);
     return flattened;
-}
-
-
-
+  }
 
   function formatDate(dateString) {
     const options = { day: 'numeric', month: 'short', year: 'numeric' };
@@ -87,68 +141,65 @@ const PickupMenifests = () => {
   function splitString(string, length) {
     let result = [];
     for (let i = 0; i < string.length; i += length) {
-        result.push(string.substr(i, length));
+      result.push(string.substr(i, length));
     }
     return result;
-}
+  }
 
   const handleMenifest = (id) => {
-    let temp_payload = flattenObject(resData,id)
-    const headers={'Content-Type': 'application/json'};
+    let temp_payload = flattenObject(resData, id);
+    const headers = { 'Content-Type': 'application/json' };
 
-    temp_payload['client_name']="cloud_cargo"
-    temp_payload['file_name']="manifest"
+    temp_payload['client_name'] = 'cloud_cargo';
+    temp_payload['file_name'] = 'manifest';
 
-    axios.post(MENIFEST_URL +'/bilty/print/',
-    temp_payload,
-     {headers}).then(
-        (response)=>{
+    axios
+      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
+      .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
         window.open(url);
-          toast('Menifest Download Successfully',{type:'success'})
-          window.location.reload();
-        }
-      ) .catch((error) => {
-        console.error("Error:", error);
-        toast('Error in Menifest Download',{type:'error'})
-    });
-  }
+        toast('Menifest Download Successfully', { type: 'success' });
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        toast('Error in Menifest Download', { type: 'error' });
+      });
+  };
 
   const handleInvoice = (id) => {
-    let temp_payload = flattenObject(resData,id)
-    console.log("kkkkkkkkkk",temp_payload)
-    const headers={'Content-Type': 'application/json'};
+    let temp_payload = flattenObject(resData, id);
+    console.log('kkkkkkkkkk', temp_payload);
+    const headers = { 'Content-Type': 'application/json' };
     // console.log("jtttttttttt",temp_payload['complete_address1'],temp_payload['complete_address1'].length)
-    let temp_str = splitString(temp_payload['complete_address1'],35)
-    let temp1 = splitString(temp_payload['complete_address'],35)
+    let temp_str = splitString(temp_payload['complete_address1'], 35);
+    let temp1 = splitString(temp_payload['complete_address'], 35);
 
     for (let i = 0; i < temp1.length; i++) {
-      temp_payload[`${i+1}_complete_address_`] = temp1[i];
+      temp_payload[`${i + 1}_complete_address_`] = temp1[i];
     }
-    
-    for(let i=0;i<temp_str.length;i++){
-      temp_payload[`complete_address1_${i+1}`] = temp_str[i]
+
+    for (let i = 0; i < temp_str.length; i++) {
+      temp_payload[`complete_address1_${i + 1}`] = temp_str[i];
     }
     // console.log("llljjjjjj",temp_str)
-    temp_payload['client_name']="cloud_cargo"
-    temp_payload['file_name']="invoice"
-    axios.post(MENIFEST_URL +'/bilty/print/',
-    temp_payload,
-     {headers}).then(
-        (response)=>{
+    temp_payload['client_name'] = 'cloud_cargo';
+    temp_payload['file_name'] = 'invoice';
+    axios
+      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
+      .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
         window.open(url);
-          console.log("General",response);
-          toast('Invoice Download Successfully',{type:'success'})
-        }
-      ) .catch((error) => {
-        console.error("Error:", error);
-        toast('Error in Invoice Download',{type:'error'})
-    });
-  }
-
+        console.log('General', response);
+        toast('Invoice Download Successfully', { type: 'success' });
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        toast('Error in Invoice Download', { type: 'error' });
+      });
+  };
 
   const getColumns = () => {
     const columnHelper = createColumnHelper();
@@ -157,7 +208,7 @@ const PickupMenifests = () => {
       columnHelper.accessor('orderDetails', {
         header: 'Order Details',
         cell: ({ row }) => {
-          console.log("hellooooo",row)
+          console.log('hellooooo', row);
           const formattedDate = row?.original?.created_date
             ? moment(row?.original?.created_date).format('DD MMM YYYY | hh:mm A')
             : 'No date available.';
@@ -171,23 +222,24 @@ const PickupMenifests = () => {
                 </Link>
               </div>
               <div className="text-[11px]">{formattedDate}</div>
-              {row?.original?.channel_name == "Shopify" && (<div className="flex flex-row">
-                <img src={shopify} className="mr-2 mt-2 w-4" />
-                <div className="mt-2">{row?.original?.shop_name}</div>
-              </div>)
-              }
-              {row?.original?.channel_name == "WooCommerce" && (
+              {row?.original?.channel_name == 'Shopify' && (
                 <div className="flex flex-row">
-                <img src={wooLogo} className="mr-2 mt-2 w-7" />
-                <div className="mt-2">{row?.original?.shop_name}</div>
-                </div>)
-              }
-              {row?.original?.channel_name == "BigCommerce" && (
+                  <img src={shopify} className="mr-2 mt-2 w-4" />
+                  <div className="mt-2">{row?.original?.shop_name}</div>
+                </div>
+              )}
+              {row?.original?.channel_name == 'WooCommerce' && (
                 <div className="flex flex-row">
-                <img src={bigLogo} className="mr-2 mt-2 w-4 h-4" />
-                <div className="mt-2">{row?.original?.shop_name}</div>
-                </div>)
-              }
+                  <img src={wooLogo} className="mr-2 mt-2 w-7" />
+                  <div className="mt-2">{row?.original?.shop_name}</div>
+                </div>
+              )}
+              {row?.original?.channel_name == 'BigCommerce' && (
+                <div className="flex flex-row">
+                  <img src={bigLogo} className="mr-2 mt-2 h-4 w-4" />
+                  <div className="mt-2">{row?.original?.shop_name}</div>
+                </div>
+              )}
               {row?.original?.channel_name == null && row?.original?.shop_name == null && <span>Custom</span>}
               <div>{(row?.original?.channel || '')?.toUpperCase()}</div>
               <div>
@@ -245,29 +297,30 @@ const PickupMenifests = () => {
       columnHelper.accessor('pickup/rtoAddress', {
         header: 'Pickup/RTO Address',
         cell: (row) => (
-          
           <div className="flex flex-col gap-1 text-left text-xs">
             <div>
-            <CustomTooltip
-                  text={
-                    <>
-                      {row?.row?.original?.user_info?.tag && (
-                        <div className="font-medium">{`${row?.row?.original?.user_info?.tag}`}</div>
-                      )}
-                      {row?.row?.original?.user_info?.complete_address && (
-                        <div>{`${row?.row?.original?.user_info?.complete_address ?? ''}`}</div>
-                      )}
-                      {row?.row?.original?.user_info?.city && <div>{row?.row?.original?.user_info?.city ?? ''}</div>}
-                      <div>
-                        {row?.row?.original?.user_info?.state ?? ''}-{row?.row?.original?.user_info?.pincode}
-                      </div>
-                      <div>{row?.row?.original?.user_info?.contact_no}</div>
-                    </>
-                  }>
-                  <div className="relative cursor-pointer whitespace-pre-wrap pb-0.5 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-[#555]">
-                    {row?.original?.user_info?.tag || 'Primary'}
-                  </div>
-                </CustomTooltip>
+              <CustomTooltip
+                text={
+                  <>
+                    {row?.row?.original?.user_info?.tag && (
+                      <div className="font-medium">{`${row?.row?.original?.user_info?.tag}`}</div>
+                    )}
+                    {row?.row?.original?.user_info?.complete_address && (
+                      <div>{`${row?.row?.original?.user_info?.complete_address ?? ''}`}</div>
+                    )}
+                    {row?.row?.original?.user_info?.city && (
+                      <div>{row?.row?.original?.user_info?.city ?? ''}</div>
+                    )}
+                    <div>
+                      {row?.row?.original?.user_info?.state ?? ''}-{row?.row?.original?.user_info?.pincode}
+                    </div>
+                    <div>{row?.row?.original?.user_info?.contact_no}</div>
+                  </>
+                }>
+                <div className="relative cursor-pointer whitespace-pre-wrap pb-0.5 before:absolute before:bottom-0 before:w-full before:border before:border-dashed before:border-[#555]">
+                  {row?.original?.user_info?.tag || 'Primary'}
+                </div>
+              </CustomTooltip>
             </div>
           </div>
         ),
@@ -311,10 +364,10 @@ const PickupMenifests = () => {
           <div className="flex gap-2 text-left text-xs">
             <button
               id={row.id}
-              className="min-w-fit rounded bg-red-700 hover:bg-green-700 px-4 py-1.5 text-white"
-              onClick={(e) => { 
-                console.log(row.row.original.id)
-                handleMenifest(row.row.original.id)
+              className="min-w-fit rounded bg-red-700 px-4 py-1.5 text-white hover:bg-green-700"
+              onClick={(e) => {
+                console.log(row.row.original.id);
+                handleMenifest(row.row.original.id);
               }}>
               {(row?.original?.status_name || '')?.toLowerCase() == 'new' ? 'Ship Now' : 'Download Menifest'}
             </button>
@@ -322,7 +375,7 @@ const PickupMenifests = () => {
               <MoreDropdown
                 renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                 options={moreActionOptions({
-                  downloadInvoice : () => handleInvoice(row?.original?.id),
+                  downloadInvoice: () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row?.original),
                   cancelOrder: () => cancelOrder(row?.row?.original),
                 })}
@@ -335,25 +388,29 @@ const PickupMenifests = () => {
   };
 
   function cancelOrder(orderDetails) {
-    const headers={'Content-Type': 'application/json'};
-    console.log("ORDER DETAILSSSSSSSS",orderDetails)
-    if(orderDetails.partner_id == 1 || orderDetails.partner_id == 2){
-      toast("Cancel Functionality Is Not Providing By This Partner",{type:"error"})
-    }else{
+    const headers = { 'Content-Type': 'application/json' };
+    console.log('ORDER DETAILSSSSSSSS', orderDetails);
+    if (orderDetails.partner_id == 1 || orderDetails.partner_id == 2) {
+      toast('Cancel Functionality Is Not Providing By This Partner', { type: 'error' });
+    } else {
       axios
-      .post(`${BACKEND_URL}/order/${orderDetails?.id}/cancel_shipment`, {
-        partner_id:orderDetails?.partner_id
-      },{headers})
-      .then((resp) => {
-        if (resp?.status === 200) {
-          // dispatch(setAllOrders(null));
-          toast('Order cancelled successfully', { type: 'success' });
-          window.location.reload()
-        }
-      })
-      .catch(() => {
-        toast('Unable to cancel Order', { type: 'error' });
-      });
+        .post(
+          `${BACKEND_URL}/order/${orderDetails?.id}/cancel_shipment`,
+          {
+            partner_id: orderDetails?.partner_id,
+          },
+          { headers },
+        )
+        .then((resp) => {
+          if (resp?.status === 200) {
+            // dispatch(setAllOrders(null));
+            toast('Order cancelled successfully', { type: 'success' });
+            window.location.reload();
+          }
+        })
+        .catch(() => {
+          toast('Unable to cancel Order', { type: 'error' });
+        });
     }
   }
 
@@ -395,6 +452,8 @@ const PickupMenifests = () => {
 
   return (
     <div className="mt-5">
+      {loading && <Loader />}
+
       <div className="mb-4 flex w-full">
         <div>
           <button
@@ -417,14 +476,49 @@ const PickupMenifests = () => {
       /> */}
       <CustomDataTable
         columns={getColumns()}
-        rowData={newOrdersList}
+        rowData={manifestedOrdersList}
         enableRowSelection={true}
         shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
         onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}
         rowSubComponent={rowSubComponent}
-        enablePagination={true}
+        enablePagination={false}
         tableWrapperStyles={{ height: '78vh' }}
       />
+      <div className="flex w-full flex-wrap-reverse justify-between gap-2 rounded-lg bg-white px-4 py-2">
+        <div className="mr-2 flex items-center">
+          <div className="mr-4 text-xs text-black">{'Items per page: '}</div>
+          <div>
+            <select
+              id="select"
+              value={itemsPerPage}
+              className="block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              onChange={handleChange}>
+              <option value="15">15</option>
+              <option value="30">30</option>
+              <option value="60">60</option>
+            </select>
+          </div>
+        </div>
+        <div className="flex items-center text-xs">
+          <Button
+            color="light"
+            className="mr-6 border-0 *:px-3 *:text-xs *:font-normal"
+            onClick={handlePageDecrement}
+            disabled={page === 1 ? true : false}>
+            <FontAwesomeIcon icon={faArrowLeft} className="mx-2 h-4 w-3" />
+            {'PREV'}
+          </Button>
+          <button className="rounded-lg border-0 bg-gray-100 px-3 py-2 font-medium" disabled={true}>
+            {page}
+          </button>
+          <Button
+            color="light"
+            className="ml-6 border-0 *:px-3  *:text-xs *:font-normal"
+            onClick={handlePageIncrement}>
+            {'NEXT'} <FontAwesomeIcon icon={faArrowRight} className="mx-2 h-4 w-3" />
+          </Button>
+        </div>
+      </div>
       <MoreFiltersDrawer
         isOpen={openFilterDrawer}
         onClose={() => setOpenFilterDrawer(false)}
