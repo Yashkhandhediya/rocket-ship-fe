@@ -59,7 +59,7 @@ const Navbar = () => {
       ),
       onClick: () => {
         console.log('User'); //eslint-disable-line
-        navigate('/user-profile')
+        localStorage.getItem('is_company') == 0 ? navigate('/user-profile') : navigate('/company-general-details')
       },
     },
     {

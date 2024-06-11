@@ -59,7 +59,14 @@ const Company_profile = () => {
     axios.get(BACKEND_URL + `/company/${localStorage.getItem('company_id')}`)
     .then((res) => {
       console.log("Company Data ",res.data)
-      setData(res.data)
+      // setData(res.data)
+      setCompanyDetails({
+        ...companyDetails,
+        companyName: res.data.name,
+        // website: res.data.website,
+        email: res.data.email,
+        // logo: res.data.logo
+      })
     }).catch((err) => {
       toast("error in fetching data",{type:'error'})
     })
