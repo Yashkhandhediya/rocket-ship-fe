@@ -59,6 +59,7 @@ const Navbar = () => {
       ),
       onClick: () => {
         console.log('User'); //eslint-disable-line
+        navigate('/user-profile')
       },
     },
     {
