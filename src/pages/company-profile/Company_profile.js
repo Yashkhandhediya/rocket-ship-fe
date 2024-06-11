@@ -41,7 +41,7 @@ const Company_profile = () => {
     // }
 
     console.log(companyDetails); //eslint-disable-line
-    axios.post(BACKEND_URL + `/company/update_company?company_id=${companyDetails?.companyId}&company_name=${companyDetails?.companyName.toString()}`
+    axios.put(BACKEND_URL + `/company/update_company?company_id=${companyDetails?.companyId}&company_name=${companyDetails?.companyName.toString()}`
     ).then((res) => {
       console.log("Info",res.data)
       toast("Company Info Saved",{type:'success'})
