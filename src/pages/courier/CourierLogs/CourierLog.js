@@ -1,18 +1,21 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PageWithSidebar from '../../../common/components/page-with-sidebar/PageWithSidebar';
 import { Link } from 'react-router-dom';
 import Pagination from '../pagination/Pagination';
 import { noData } from '../../../common/images';
+import axios from 'axios';
+import { BACKEND_URL } from '../../../common/utils/env.config';
+import { toast } from 'react-toastify';
 
 function CourierLog() {
     const tempdata = [
-        { courierName: 'Xpressbees Surface', createdAt: '08/06/2024 13:46:26', status: 'Activated', user: 'Tech Easy' },
-        { courierName: 'Xpressbees Surface', createdAt: '08/06/2024 13:46:17', status: 'Deactivated', user: 'Tech Easy' },
-        { courierName: 'Xpressbees Surface', createdAt: '08/06/2024 13:42:13', status: 'Activated', user: 'Tech Easy' },
-        { courierName: 'Xpressbees Surface', createdAt: '08/06/2024 13:41:57', status: 'Deactivated', user: 'Tech Easy' },
-        { courierName: 'India Post', createdAt: '08/06/2024 13:20:30', status: 'Activated', user: 'Tech Easy' },
-        { courierName: 'India Post', createdAt: '08/06/2024 13:06:09', status: 'Deactivated', user: 'Tech Easy' },
-        { courierName: 'India Post', createdAt: '08/06/2024 13:06:09', status: 'Deactivated', user: 'Tech Easy' },
+        // { courierName: 'Xpressbees Surface', createdAt: '08/06/2024 13:46:26', status: 'Activated', user: 'Tech Easy' },
+        // { courierName: 'Xpressbees Surface', createdAt: '08/06/2024 13:46:17', status: 'Deactivated', user: 'Tech Easy' },
+        // { courierName: 'Xpressbees Surface', createdAt: '08/06/2024 13:42:13', status: 'Activated', user: 'Tech Easy' },
+        // { courierName: 'Xpressbees Surface', createdAt: '08/06/2024 13:41:57', status: 'Deactivated', user: 'Tech Easy' },
+        // { courierName: 'India Post', createdAt: '08/06/2024 13:20:30', status: 'Activated', user: 'Tech Easy' },
+        // { courierName: 'India Post', createdAt: '08/06/2024 13:06:09', status: 'Deactivated', user: 'Tech Easy' },
+        // { courierName: 'India Post', createdAt: '08/06/2024 13:06:09', status: 'Deactivated', user: 'Tech Easy' },
       ];
     const [data, setData] = useState(tempdata);
     const [totalData, setTotalData] = useState([]);
@@ -27,6 +30,22 @@ function CourierLog() {
       }
 
       const currentPageData = data.slice((page - 1) * per_page, page * per_page);
+
+      const handleLogData = () => {
+        axios.get(BACKEND_URL + `/userpartner/update_status_history?user_id=${localStorage.getItem('user_id')}&page=${page}&page_size=${per_page}`)
+        .then((res) => {
+          console.log("Log Data",res.data)
+          setData(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+          toast("Error In Fetching Log Data",{type:'error'})
+        })
+      }
+
+      useEffect(() => {
+        handleLogData()
+      },[page,per_page])
 
   return (
     <PageWithSidebar>
@@ -55,7 +74,7 @@ function CourierLog() {
                 </li>
                 <li>
                     <Link
-                    to="/user-couriers"
+                    to="/courier-rule"
                     className="text-gray-600 hover:bg-gray-100 rounded-md px-4 py-2 block font-medium"
                     >
                     Courier Rules
