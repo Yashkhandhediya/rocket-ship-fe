@@ -1,14 +1,30 @@
-import { bill, book, dashboard, help, home, homeActive, manage, order, settings,tool, user,weight,return1, boost, newHome } from '../../icons/sidebar-icons';
+import {
+  bill,
+  book,
+  dashboard,
+  help,
+  home,
+  homeActive,
+  manage,
+  order,
+  settings,
+  tool,
+  user,
+  weight,
+  return1,
+  boost,
+  newHome,
+} from '../../icons/sidebar-icons';
 import { logout } from './utils';
 
-const is_admin = localStorage.getItem('is_admin')
-const user_id = localStorage.getItem('user_id')
-const is_company = localStorage.getItem('is_company')
-const is_super = localStorage.getItem('is_super')
+const is_admin = localStorage.getItem('is_admin');
+const user_id = localStorage.getItem('user_id');
+const is_company = localStorage.getItem('is_company');
+const is_super = localStorage.getItem('is_super');
 
-export let sidebarLinks = []
+export let sidebarLinks = [];
 
-if(localStorage.getItem('is_super') != 3){
+if (localStorage.getItem('is_super') != 3) {
   sidebarLinks = [
     {
       title: 'Home',
@@ -16,12 +32,14 @@ if(localStorage.getItem('is_super') != 3){
       icon: newHome,
       hoverIcon: newHome,
     },
-    (parseInt(is_company) ? {
-      title: 'Add User',
-      path: '/signup-user',
-      icon: user,
-      hoverIcon: user,
-    } : null),
+    parseInt(is_company)
+      ? {
+          title: 'Add User',
+          path: '/signup-user',
+          icon: user,
+          hoverIcon: user,
+        }
+      : null,
     {
       title: 'Dashboard',
       path: '/dashboard',
@@ -33,24 +51,24 @@ if(localStorage.getItem('is_super') != 3){
       // path: '/book',
       icon: book,
       hoverIcon: book,
-      subMenuOptions:[
-        !parseInt(is_admin) &&{
-          title:"Book",
-          path:"/book"
+      subMenuOptions: [
+        !parseInt(is_admin) && {
+          title: 'Book',
+          path: '/book',
         },
-        !parseInt(is_admin) &&{
-          title:"Create Indent",
-          path:"/indent"
+        !parseInt(is_admin) && {
+          title: 'Create Indent',
+          path: '/indent',
         },
-        !parseInt(is_admin) &&{
-          title:"All Indent",
-          path:"/all-indent/"+user_id
+        !parseInt(is_admin) && {
+          title: 'All Indent',
+          path: '/all-indent/' + user_id,
         },
         parseInt(is_admin) && {
-          title:"User Booking",
-          path:"/User"
-        }
-      ].filter(option => option),
+          title: 'User Booking',
+          path: '/User',
+        },
+      ].filter((option) => option),
     },
     {
       title: 'Orders',
@@ -108,7 +126,7 @@ if(localStorage.getItem('is_super') != 3){
         },
         {
           title: 'Customers',
-          path: '/',
+          path: '/customers',
         },
       ],
     },
@@ -184,12 +202,11 @@ if(localStorage.getItem('is_super') != 3){
       title: 'Logout',
       icon: home,
       hoverIcon: homeActive,
-      onClick: logout
+      onClick: logout,
     },
-  ].filter(option => option !== null) 
-}
-else if(localStorage.getItem('is_super') == 3){
-sidebarLinks = [
+  ].filter((option) => option !== null);
+} else if (localStorage.getItem('is_super') == 3) {
+  sidebarLinks = [
     {
       title: 'KYC',
       path: '/company-list',
@@ -207,6 +224,6 @@ sidebarLinks = [
       path: '/billing-charge-details?page=1&perPage=15&to=&from=&status=0&search=&courier_id=',
       icon: weight,
       hoverIcon: weight,
-    }
-  ]
+    },
+  ];
 }

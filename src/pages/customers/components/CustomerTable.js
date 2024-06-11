@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import { toast } from 'react-toastify';
+import { Loader } from '../../../common/components';
 
 function CustomerTable() {
   const [searchText, setSearchText] = useState('');
@@ -41,6 +42,7 @@ function CustomerTable() {
 
   return (
     <div>
+      {isLoading && <Loader />}
       <form className="my-4 flex h-8 w-1/4 items-center gap-2 overflow-hidden rounded border border-zinc-400 bg-white text-[12px]">
         <input
           type="text"
