@@ -41,6 +41,9 @@ import { CreateTicket } from '../pages/create-ticket';
 import { Courier } from '../pages/courier';
 import { CourierLog } from '../pages/courier/CourierLogs';
 import { Customers } from '../pages/customers';
+import CourierRule from '../pages/courier/CourierRules/CourierRule';
+import { Rule } from '../pages/courier/Rule';
+import { UserProfile } from '../common/components/profile';
 
 const routes = createBrowserRouter([
   {
@@ -232,6 +235,18 @@ const routes = createBrowserRouter([
     path: '/customers',
     element: <PrivateRoute component={<Customers />} />,
   },
+  {
+    path:'/courier-rule',
+    element:<PrivateRoute component={<CourierRule />} />
+  },
+  {
+    path:'/add-rule',
+    element:<PrivateRoute component={<Rule />} />
+  },
+  {
+    path:'/user-profile',
+    element:<PrivateRoute component={<UserProfile />}/>
+  }
 ]);
 
 export default routes;
