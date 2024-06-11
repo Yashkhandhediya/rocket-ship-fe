@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import './Tracking.css'
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -9,6 +9,7 @@ import { BACKEND_URL } from "../../common/utils/env.config";
 export default function ReturnTracking() {
     const [shipmentData, setShipmentData] = useState();
     const { orderId } = useParams();
+    const navigate = useNavigate();
 
     const fetchTrackShipmentOrder = () => {
     // Parse query parameters from the URL
@@ -57,6 +58,11 @@ export default function ReturnTracking() {
             });
     }
 
+    const handleGoBack = () => {
+        // Navigate back to the orders page
+        navigate('/returns');
+    };
+
     return (
         <div className="tarcking-main">
             <div className="name-header">
@@ -65,6 +71,9 @@ export default function ReturnTracking() {
             <div className="info-main">
                 <div className="info-container">
                     <div className="buyer-confirm-msg-container">
+                        <button onClick={handleGoBack}>
+                            <div className="left-arrow"></div>
+                        </button>
                         <span>You dont have access to take any action on the
                             tracking page. <a>Click here</a> to verify yourself as a buyer.</span>
                     </div>
