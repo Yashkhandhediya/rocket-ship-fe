@@ -1,10 +1,12 @@
 // src/App.js
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { cheap, custom, rated, recommand, truck } from '../../common/icons';
 import { toast } from 'react-toastify';
 import Card from './Card/Card';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { BACKEND_URL } from '../../common/utils/env.config';
 
 const couriers = [
   {
@@ -41,8 +43,39 @@ function Courier() {
     ];
 
     const hanldePriority = () => {
-        toast("Courier Priority Has Been SetUp",{type:'success'})
+        axios.put(BACKEND_URL + `/userpartner/update_courier_priority?user_id=${localStorage.getItem('user_id')}&courier_priority_id=${activeCard}`)
+        .then((res) => {
+            toast("Courier Priority Has Been SetUp",{type:'success'})
+        })
+        .catch((err) => {
+            toast("Error Occured in Priority Setup",{type:'error'})
+        })
     }
+
+    const handleCourierPriority = () => {
+        axios.get(BACKEND_URL + `/userpartner/courier_priority?user_id=${localStorage.getItem('user_id')}`)
+        .then((res) => {
+            console.log("RESPONSEEEEEEE",res.data)
+           if(res.data.courier_priority_type  == "recommended by cargo"){
+            setActiveCard(3)
+           }else if(res.data.courier_priority_type == "fastest"){
+            setActiveCard(1)
+           }else if(res.data.courier_priority_type == "cheapest"){
+            setActiveCard(2);
+           }else if(res.data.courier_priority_type == "custom"){
+            setActiveCard(4);
+           }else{
+            setActiveCard(5);
+           }
+        }).catch((err) => {
+            console.log("Error In Resposne ",err)
+        })
+    }
+
+    useEffect(() => {
+      handleCourierPriority()
+    }, [])
+    
 
 
   return (
@@ -73,7 +106,7 @@ function Courier() {
                 </li>
                 <li>
                     <Link
-                    to="/user-couriers"
+                    to="/courier-rule"
                     className="text-gray-600 hover:bg-gray-100 rounded-md px-4 py-2 block font-medium"
                     >
                     Courier Rules
@@ -146,8 +179,6 @@ function Courier() {
                 Save Courier Priority
             </button>
          </div>
-
-        
 
         </div>
         </div>
