@@ -10,7 +10,7 @@ function Details({ title, info }) {
         {title !== 'Other Details' && <FontAwesomeIcon icon={faEdit} />}
       </div>
       <div className="flex gap-4 py-4 text-[12px]">
-        <div className="flex flex-col gap-5 text-left">
+        <div className="flex w-1/2 flex-col gap-5 text-left">
           {title === 'Delivery Address (default)' && (
             <>
               <p>
@@ -52,7 +52,7 @@ function Details({ title, info }) {
           )}
         </div>
         {title === 'Delivery Address (default)' && (
-          <div className="flex flex-col gap-5 text-left">
+          <div className="flex w-1/2 flex-col gap-5 text-left">
             <p>
               <strong>Line 2</strong> : {info?.address}
             </p>
