@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../../common/components';
+import { Link } from 'react-router-dom';
 
 function CustomerTable() {
   const [searchText, setSearchText] = useState('');
@@ -101,7 +102,9 @@ function CustomerTable() {
                   <td className="border px-4 py-4 text-left">{data?.channel_name}</td>
                   <td className=" border px-4 py-4 text-left">
                     <div>
-                      <button className="text-red-800">View Details</button>
+                      <Link to={`/customer-overview/${data.buyer_id}`} className="text-red-800">
+                        View Details
+                      </Link>
                       <button className="text-red-800">Add Order</button>
                     </div>
                   </td>
