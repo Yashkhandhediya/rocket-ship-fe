@@ -39,6 +39,7 @@ const UserProfile = () => {
     axios.get(BACKEND_URL + `/users/${localStorage.getItem('user_id')}`)
     .then((res) => {
       console.log("Response User Data",res.data)
+      localStorage.setItem('user_name',res.data.first_name)
       setData(res.data)
       setFirstName(res.data.first_name)
       setLastName(res.data.last_name)
