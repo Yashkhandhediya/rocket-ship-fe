@@ -51,10 +51,10 @@ const Company_profile = () => {
   }
 
   const handleData = () => {
-    if(localStorage.getItem('is_company') == 0){
-      toast("User Can't See Company Data",{type:'error'})
-      return;
-    }
+    // if(localStorage.getItem('is_company') == 0){
+    //   toast("User Can't See Company Data",{type:'error'})
+    //   return;
+    // }
 
     axios.get(BACKEND_URL + `/company/${localStorage.getItem('company_id')}`)
     .then((res) => {

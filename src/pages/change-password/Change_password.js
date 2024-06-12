@@ -21,6 +21,11 @@ const Change_password = () => {
   // This function is used to handle the form submit
   const handleSumbit = async () => {
     // You can use this data to send to the server
+    if(password.currentPassword == password.newPassword){
+      toast.error("New password cannot be the same as current password");
+      return;
+    }
+    
     try {
       const response = await axios.get(
         `https://myrcc.in:8050/login/password_change?old_password=${password.currentPassword}&user_id=${user_id}&new_password=${password.newPassword}`,

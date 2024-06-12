@@ -25,8 +25,9 @@ const EditDrawer = ({ isOpen, onClose, fieldNames = [], data }) => {
   const hasFetched = useRef(false);
 
   const fetchUserAddressList = () => {
+    const custom_id = is_company == 1 ? id_company : id_user;
     axios
-      .get(BACKEND_URL + `/address/?user_id=${id_user}`, )
+      .get(BACKEND_URL + `/address/?user_id=${custom_id}`, )
       .then((resp) => {
         if (resp.status == 200) {
           setAddressList(resp?.data || []);

@@ -155,11 +155,17 @@ const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
     if (isPickPinCode?.length >= 6 && isValidPincode) {
       fetchPincodeDetails();
     }
+    if(isPickPinCode?.length < 6){
+      onCityChange(null);
+    }
   }, [isPickPinCode]);
 
   useEffect(() => {
     if (isDeliveryPinCode?.length >= 6 && isValidDestPinCode) {
       fetchDestinationPincodeDetails(isDeliveryPinCode);
+    }
+    if(isDeliveryPinCode?.length < 6){
+      onDestinationChange(null);
     }
   }, [isDeliveryPinCode]);
 
