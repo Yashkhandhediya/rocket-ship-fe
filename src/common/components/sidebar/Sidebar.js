@@ -16,7 +16,7 @@ const Sidebar = () => {
   return (
     <div
       id="mySidebar"
-      className="group/sidebar hover:z-100 fixed left-0 top-0 z-10 h-full w-[70px] overflow-x-hidden overflow-y-hidden bg-[#912517] text-white transition-all duration-500 hover:w-[218px] hover:overflow-y-auto [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar]:w-1"
+      className="group/sidebar hover:z-100 fixed left-0 top-0 z-50 h-full w-[70px] overflow-x-hidden overflow-y-hidden bg-[#912517] text-white transition-all duration-500 hover:w-[218px] hover:overflow-y-auto [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar]:w-1"
       onMouseLeave={handleMouseLeave}
     >
       <div className="z-100 sticky top-0 h-[62px] w-full translate-y-0 bg-[#912517] pb-4 pl-5 pr-3.5 pt-2.5">
