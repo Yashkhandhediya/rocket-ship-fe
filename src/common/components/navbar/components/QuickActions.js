@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const QuickActions = () => {
   const navigate = useNavigate();
-
+  const is_company = localStorage.getItem('is_company')
   const quickActions = [
     {
       label: 'Add Order',
@@ -22,7 +22,9 @@ const QuickActions = () => {
         </svg>
       ),
       onClick: () => {
-        navigate('/add-order');
+        if(is_company == 0){
+          navigate('/add-order');
+        }
       },
       tooltip: 'Add your order by manually entering the customer and product details.',
     },

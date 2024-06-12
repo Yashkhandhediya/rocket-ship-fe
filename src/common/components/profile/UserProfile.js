@@ -51,6 +51,8 @@ const UserProfile = () => {
   const handleCancel = () => {
     setEditFirstName(false);
     setEditLastName(false);
+    setFirstName(data.first_name)
+    setLastName(data.last_name)
   }
 
   const handleUpdate = () => {
