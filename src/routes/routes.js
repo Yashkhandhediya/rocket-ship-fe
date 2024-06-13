@@ -45,9 +45,11 @@ import { Customers } from '../pages/customers';
 import CourierRule from '../pages/courier/CourierRules/CourierRule';
 import { Rule } from '../pages/courier/Rule';
 import { UserProfile } from '../common/components/profile';
-import { CustomerOverview } from '../pages/customer-overview';
+import { Customer, CustomerOverview } from '../pages/customer-overview';
 import { User_Management } from '../pages/manage-role/user-management';
 import { CustomerEdit } from '../pages/customer-edit';
+import { CustomerAddresses } from '../pages/customer-addresses';
+import { CustomerAddressEdit } from '../pages/customer-address-edit';
 
 const routes = createBrowserRouter([
   {
@@ -256,8 +258,16 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<CustomerOverview />} />,
   },
   {
+    path: '/customer-addresses/:buyerId',
+    element: <PrivateRoute component={<CustomerAddresses />} />,
+  },
+  {
     path: '/customer/edit/:buyerId',
     element: <PrivateRoute component={<CustomerEdit />} />,
+  },
+  {
+    path: '/customer/address/edit/:buyerId',
+    element: <PrivateRoute component={<CustomerAddressEdit />} />,
   },
   {
     path: '/manage-user',
