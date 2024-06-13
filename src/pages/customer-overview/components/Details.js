@@ -1,13 +1,23 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { Link, useParams } from 'react-router-dom';
 
 function Details({ title, info }) {
+  const { buyerId } = useParams();
+
   return (
     <div className="h-60 w-full rounded-xl bg-white p-4 text-gray-500">
       <div className="flex items-center justify-between border-b pb-4">
         <h3 className="text-lg font-semibold">{title}</h3>
-        {title !== 'Other Details' && <FontAwesomeIcon icon={faEdit} />}
+        {title !== 'Other Details' && (
+          <Link
+            to={
+              title === 'Customer Contact Details' ? `/customer/edit/${buyerId}` : `/customer/edit/${buyerId}`
+            }>
+            <FontAwesomeIcon icon={faEdit} />
+          </Link>
+        )}
       </div>
       <div className="flex gap-4 py-4 text-[12px]">
         <div className="flex w-1/2 flex-col gap-5 text-left">
