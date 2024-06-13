@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../../common/components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function CustomerTable() {
   const [searchText, setSearchText] = useState('');
@@ -14,6 +14,7 @@ function CustomerTable() {
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
+  const navigate = useNavigate()
 
   const user_id = is_company == 1 ? id_company : id_user;
 
@@ -40,6 +41,12 @@ function CustomerTable() {
   useEffect(() => {
     fetchCustomersData();
   }, []);
+
+  const handleGoBackToAddOrder = (customer) => {
+    // Navigate to the order page with customer details as URL parameters
+    navigate(`/add-order?buyerName=${customer.buyer_name}&buyerPhone=${customer.buyer_phone}&buyerEmail=${customer.buyer_email}&buyerAddress=${customer.address.address}&buyerCity=${customer.address.city}&buyerState=${customer.address.state}&buyerPincode=${customer.address.pincode}`);
+  };
+
 
   return (
     <div>
@@ -105,7 +112,7 @@ function CustomerTable() {
                       <Link to={`/customer-overview/${data.buyer_id}`} className="text-red-800">
                         View Details
                       </Link>
-                      <button className="text-red-800">Add Order</button>
+                      <button  onClick={() => handleGoBackToAddOrder(data)} className="text-red-800">Add Order</button>
                     </div>
                   </td>
                 </tr>

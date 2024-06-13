@@ -14,29 +14,48 @@ export default function BuyerDetails({ handleFormData, formData, currentStep, ha
   const location = useLocation()
   let {isEdit,order_id} = location?.state || {}
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order) || {};
+  const queryParams = new URLSearchParams(location.search); 
 
   const [isSameBilingAddress, setIsSameBilingAddress] = useState(true);
   const [triggerBuyerValidations, setTriggerBuyerValidations] = useState(false);
   const [disableAddressLocationField, setDisableAddressLocationField] = useState(false);
   const [disableBillingLocationField, setDisableBillingLocationField] = useState(false);
 
+  // const [buyerInfo, setBuyerInfo] = useState({
+  //   contact_no: formData?.buyer_info?.contact_no || '',
+  //   first_name: formData?.buyer_info?.first_name || '',
+  //   email_address: formData?.buyer_info?.email_address || '',
+  // });
+
   const [buyerInfo, setBuyerInfo] = useState({
-    contact_no: formData?.buyer_info?.contact_no || '',
-    first_name: formData?.buyer_info?.first_name || '',
-    email_address: formData?.buyer_info?.email_address || '',
+    contact_no: queryParams.get('buyerPhone') || '',
+    first_name: queryParams.get('buyerName') || '',
+    email_address: queryParams.get('buyerEmail') || '',
   });
+
   const [companyInfo, setCompanyInfo] = useState({
     name: formData?.company_info?.name || '',
     gst: formData?.company_info?.gst || '',
   });
+
+  // const [addressInfo, setAddressInfo] = useState({
+  //   complete_address: formData?.address_info?.complete_address || '',
+  //   landmark: formData?.address_info?.complete_address || '',
+  //   pincode: formData?.address_info?.pincode || '',
+  //   city: formData?.address_info?.city || '',
+  //   state: formData?.address_info?.state || '',
+  //   country: 'India',
+  // });
+
   const [addressInfo, setAddressInfo] = useState({
-    complete_address: formData?.address_info?.complete_address || '',
-    landmark: formData?.address_info?.complete_address || '',
-    pincode: formData?.address_info?.pincode || '',
-    city: formData?.address_info?.city || '',
-    state: formData?.address_info?.state || '',
+    complete_address: queryParams.get('buyerAddress') || '',
+    landmark: '', // You may adjust this if you have landmark info in URL parameters
+    pincode: queryParams.get('buyerPincode') || '',
+    city: queryParams.get('buyerCity') || '',
+    state: queryParams.get('buyerState') || '',
     country: 'India',
   });
+
   const [billingInfo, setBillingInfo] = useState({
     contact_no: formData?.address_info?.contact_no || '',
     first_name: formData?.address_info?.first_name || '',
