@@ -5,7 +5,9 @@ import { useEffect, useState } from 'react';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../../common/components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from 'flowbite-react';
+import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 function CustomerTable() {
   const [searchText, setSearchText] = useState('');
@@ -62,6 +64,13 @@ function CustomerTable() {
   useEffect(() => {
     fetchCustomersData();
   }, []);
+
+  const handleGoBackToAddOrder = (customer) => {
+    // Navigate to the order page with customer details as URL parameters
+    navigate(`/add-order?buyerName=${customer.buyer_name}&buyerPhone=${customer.buyer_phone}&buyerEmail=${customer.buyer_email}&buyerAddress=${customer.address.address}&buyerCity=${customer.address.city}&buyerState=${customer.address.state}&buyerPincode=${customer.address.pincode}`);
+  };
+
+
 
   return (
     <div>
