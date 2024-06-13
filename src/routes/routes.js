@@ -47,6 +47,7 @@ import { Rule } from '../pages/courier/Rule';
 import { UserProfile } from '../common/components/profile';
 import { CustomerOverview } from '../pages/customer-overview';
 import { User_Management } from '../pages/manage-role/user-management';
+import { CustomerEdit } from '../pages/customer-edit';
 
 const routes = createBrowserRouter([
   {
@@ -255,13 +256,17 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<CustomerOverview />} />,
   },
   {
-    path:'/manage-user',
-    element:<PrivateRoute component={<Manage_user />}/>
+    path: '/customer/edit/:buyerId',
+    element: <PrivateRoute component={<CustomerEdit />} />,
   },
   {
-    path:'/user-management',
-    element:<PrivateRoute component={<User_Management />} />
-  }
+    path: '/manage-user',
+    element: <PrivateRoute component={<Manage_user />} />,
+  },
+  {
+    path: '/user-management',
+    element: <PrivateRoute component={<User_Management />} />,
+  },
 ]);
 
 export default routes;
