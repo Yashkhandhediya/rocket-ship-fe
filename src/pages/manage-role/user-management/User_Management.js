@@ -1,18 +1,23 @@
 import React, {useState,useEffect} from 'react'
 import PageWithSidebar from '../../../common/components/page-with-sidebar/PageWithSidebar'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { CustomMultiSelect } from '../../../common/components'
 import { modules, personalInfo } from './constants'
 import axios from 'axios'
 import { BACKEND_URL } from '../../../common/utils/env.config'
 import { toast } from 'react-toastify'
+import {Loader}  from '../../../common/components'
 
 const User_Management = () => {
     const navigate = useNavigate()
+    const location = useLocation()
+    const { userData, isEdit = false } = location?.state || {};
+    console.log("UYYYYYYYY",userData)
     const [showPersonalInfo,setShowPersonalInfo] = useState('')
     const [moduleList,setModuleList] = useState([])
     const [isOpen, setIsOpen] = useState(false);
     const [focusedIndex, setFocusedIndex] = useState(-1);
+    const [isLoading,setIsLoading] = useState(false);
     const [userInfo,setUserInfo] = useState({
         full_name:'',
         email_address:''
@@ -32,6 +37,7 @@ const User_Management = () => {
       const handleKeyDown = (e) => {
         if (e.key === 'Backspace' && moduleList.length > 0) {
           setModuleList(moduleList.slice(0, -1));
+          setModulesId(modulesId.slice(0,-1));
         }
         if (e.key === 'ArrowDown') {
             setFocusedIndex((prevIndex) => (prevIndex + 1) % filteredModules.length);
@@ -54,8 +60,44 @@ const User_Management = () => {
         }
     }, [focusedIndex]);
 
+    useEffect(() => {
+        if(userData){
+            setUserInfo({...userInfo,
+                full_name:userData?.user?.name,
+                email_address:userData?.user?.email})
+            
+            setShowPersonalInfo(userData?.user?.show_info ==  1 ? 'Yes' : 'No')
+            setModuleList(userData?.module.map((mod) => mod.module_name))
+            setModulesId(userData?.module.map((mod) => mod.id))
+        }
+    },[userData])
+
     const handleAddUser = () => {
+        setIsLoading(true);
         axios.post(BACKEND_URL + '/roleuser/add_user',{
+            "first_name": userInfo?.full_name,
+            "email_address": userInfo?.email_address,
+            "company_id": parseInt(localStorage.getItem('company_id')),
+            "created_by": parseInt(localStorage.getItem('company_id')),
+            "show_info": showPersonalInfo == "Yes" ? 1 : 0,
+            "modules_id": modulesId
+        })
+        .then((res) => {
+            console.log("Resposne Add User",res.data)
+            setIsLoading(false);
+            toast('User Added Successfully',{type:'success'})
+            navigate('/manage-user')
+        })
+        .catch((err) => {
+            console.log("Error Add User",err)
+            toast('Error Adding User',{type:'error'})
+            setIsLoading(false);
+        })
+    }
+
+    const handleUpdate = () => {
+        setIsLoading(true);
+        axios.put(BACKEND_URL + `/roleuser/update_user?role_user_id=${userData?.user?.id}`,{
             "first_name": userInfo?.full_name,
             "email_address": userInfo?.email_address,
             "company_id": parseInt(localStorage.getItem('company_id')),
@@ -65,26 +107,34 @@ const User_Management = () => {
         })
         .then((res) => {
             console.log("Resposne Add User",res.data)
-            toast('User Added Successfully',{type:'success'})
+            setIsLoading(false);
+            toast('User Updated Successfully',{type:'success'})
             navigate('/manage-user')
         })
         .catch((err) => {
             console.log("Error Add User",err)
-            toast('Error Adding User',{type:'error'})
+            setIsLoading(false);
+            toast('Error Updating User',{type:'error'})
         })
     }
 
   return (
     <PageWithSidebar>
+        {isLoading && <Loader />}
         <div className="header bg-[#FAFBFC] border-b border-[#b3b3b3] p-2 text-xl ml-2">Settings-Manage Users</div>
       <div className="bg-[#EDEDED] w-full px-6 pb-16 mx-2">
         <div className="pt-2 pb-5 text-[#656565] font-bold">
           <Link to={'/settings'} className="text-green-500 font-semibold">Settings</Link> &gt; User Role Management &gt; Manage Users
         </div>
         <div className="bg-white flex flex-col gap-4 p-4 min-h-[550px]">
-          <div className="text-[#656565] text-lg font-bold mt-4">Add New User</div>
+        
+          <Link className='text-red-500 flex flex-row font-semibold' to={'/manage-user'}>
+          <svg xmlns="http://www.w3.org/2000/svg" className='w-8 h-8 -mt-1' viewBox="0 0 24 24"><path d="M19 12a1 1 0 0 1-1 1H8.414l1.293 1.293a1 1 0 0 1-1.414 1.414l-3-3a1 1 0 0 1 0-1.414l3-3a1 1 0 0 1 1.414 1.414L8.414 11H18a1 1 0 0 1 1 1z" style={{fill:"#f97c4b"}} data-name="Left"/></svg>
+          Back To Manage Users</Link>
+
+          <div className="text-[#656565] text-lg font-bold">{isEdit ? 'Update User' :'Add New User'}</div>
           <div className="border-b border-gray-200 -mt-3"></div>
-          <div className="text-[10px] -mt-1">Add a user to your account. An email will be sent to the email address specified with instructions and a temporary password to login.</div>
+          <div className="text-[10px] -mt-1">{isEdit? 'User can only update the Name and Module access. Cloud Cargo does not allow updation of email ID.' :'Add a user to your account. An email will be sent to the email address specified with instructions and a temporary password to login.'}</div>
         
         <div>
             <div className="mb-4 w-[50%]">
@@ -167,8 +217,8 @@ const User_Management = () => {
 
             <button
             className="px-3 py-1 bg-blue-600 text-white rounded-sm hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300"
-            onClick={() => handleAddUser()}>
-            Add User
+            onClick={() => {isEdit ? handleUpdate() : handleAddUser()}}>
+            {isEdit ? 'Update User' : 'Add User'}
             </button>
         </div>
         </div>

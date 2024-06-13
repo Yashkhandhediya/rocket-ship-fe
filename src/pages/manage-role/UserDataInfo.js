@@ -1,23 +1,50 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { BACKEND_URL } from '../../common/utils/env.config';
 
 
 const UserDataInfo = ({
+  key,
   userName,
   userEmail,
   module,
   userStatus,
   LastLogin,
   PII,
+  data,
+  info
 }) => {
+  console.log("ooooooo",info,key)
   const [enabled, setEnabled] = React.useState(userStatus);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEdit,setIsEdit] = useState(true)
   const navigate = useNavigate();
 
   const handleToggle = () => {
     setEnabled(!enabled);
     toast(` ${enabled ? 'User DeActivate Successfully' : 'User Activated Successfully.'}`, { type: 'info' });
   };
+
+  const handleModuleClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleEdit = () => {
+    axios.get(BACKEND_URL + `/roleuser/user_role/${info?.user?.id}`)
+    .then((res) => {
+      console.log("Single User Info",res.data)
+      navigate('/user-management',{state:{userData:res.data,isEdit}})
+    }).catch((err) => {
+      console.log(err);
+      toast('Error in fetching Data',{type:'error'})
+    })
+  }
 
   return (
     <div className="m-2 flex items-center justify-between border-b bg-white p-4 shadow-sm">
@@ -30,7 +57,7 @@ const UserDataInfo = ({
       </div>
 
       <div className="flex-1 text-center">
-        <Link className='text-red-600 font-semibold' >{`${module.length} Modules Selected`}</Link>
+        <Link className='text-red-600 font-semibold' onClick={() => handleModuleClick()} >{`${module.length} Modules Selected`}</Link>
       </div>
 
 
@@ -65,10 +92,29 @@ const UserDataInfo = ({
 
       
       <div className="flex-1 text-center">
-        <button className="w-32 font-normal rounded-md border border-[#E02424] bg-white py-0.5" onClick={() => {
-                navigate('/user-management');
-              }}> Edit</button>
+        <button className="w-32 font-normal rounded-md border border-[#E02424] bg-white py-0.5" onClick={() => handleEdit()}> Edit</button>
       </div>
+
+
+      {isModalOpen && <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex">
+      <div className="relative mt-16 p-4 w-full max-w-md m-auto flex-col flex bg-white rounded-lg shadow-lg">
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-semibold">Selected Modules</h3>
+          <button className="text-gray-600" onClick={() => closeModal()}>
+            ×
+          </button>
+        </div>
+        <div className="mt-2">
+        <ul>
+          {data.map((mod, index) => (
+            <li className='mb-2 bg-gray-100 font-semibold p-2 text-xs' key={index}>{mod.module_name}</li>
+          ))}
+        </ul>
+        </div>
+      </div>
+    </div>}
+
+
     </div>
   );
 };

@@ -16,7 +16,7 @@ const Manage_user = () => {
 
 
   const handleData = () => {
-    axios.get(BACKEND_URL + `/roleuser/created_user_roles?created_user_id=${localStorage.getItem('user_id')}`)
+    axios.get(BACKEND_URL + `/roleuser/created_user_roles?created_by=${localStorage.getItem('company_id')}`)
     .then((res) => {
       console.log("Response User Data",res.data)
       setData(res.data)
@@ -82,6 +82,8 @@ const Manage_user = () => {
                 userStatus={item?.user?.show_info}
                 LastLogin="NA"
                 PII="No"
+                data={item?.module}
+                info={item}
               />
             );
           })}
