@@ -25,6 +25,7 @@ import {
   CompanyList,
   UserList,
   Catalogue,
+  Manage_user,
 } from '../pages';
 import Tracking from '../pages/tracking/Tracking';
 import ReturnTracking from '../pages/return-tracking/ReturnTracking';
@@ -45,6 +46,7 @@ import CourierRule from '../pages/courier/CourierRules/CourierRule';
 import { Rule } from '../pages/courier/Rule';
 import { UserProfile } from '../common/components/profile';
 import { CustomerOverview } from '../pages/customer-overview';
+import { User_Management } from '../pages/manage-role/user-management';
 
 const routes = createBrowserRouter([
   {
@@ -252,6 +254,14 @@ const routes = createBrowserRouter([
     path: '/customer-overview/:buyerId',
     element: <PrivateRoute component={<CustomerOverview />} />,
   },
+  {
+    path:'/manage-user',
+    element:<PrivateRoute component={<Manage_user />}/>
+  },
+  {
+    path:'/user-management',
+    element:<PrivateRoute component={<User_Management />} />
+  }
 ]);
 
 export default routes;

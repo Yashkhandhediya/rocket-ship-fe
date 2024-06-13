@@ -5,12 +5,16 @@ import { useEffect, useState } from 'react';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../../common/components';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function CustomerTable() {
   const [searchText, setSearchText] = useState('');
   const [customersData, setCustomersData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [itemsPerPage, setItemsPerPage] = useState(15);
+  const [page, setPage] = useState(1);
+  const [incrementDisabled, setIncrementDisable] = useState(false);
+
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
@@ -22,18 +26,35 @@ function CustomerTable() {
     setSearchText(e.target.value);
   };
 
+  const handleChange = (event) => {
+    setItemsPerPage(event.target.value);
+  };
+
+  const handlePageIncrement = () => {
+    setPage((prev) => prev + 1);
+  };
+
+  const handlePageDecrement = () => {
+    setPage((prev) => (prev <= 1 ? prev : prev - 1));
+  };
+
   const fetchCustomersData = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.post(`${BACKEND_URL}/users/get_customer_details?user_id=${user_id}`);
-      if (response.status === 200) {
+      const response = await axios.post(
+        `${BACKEND_URL}/users/get_customer_details?user_id=${user_id}&page=${page}&page_size=${itemsPerPage}`,
+      );
+      if (response.status === 200 && Array.isArray(response.data)) {
         setCustomersData(response.data);
-        setIsLoading(false);
+        setIncrementDisable(false);
       } else {
-        toast(`There is some error while fetching orders`, { type: 'error' });
+        toast(`${response.data.message}`, { type: 'error' });
+        setIncrementDisable(true);
       }
+      setIsLoading(false);
     } catch (err) {
       setIsLoading(false);
+      setIncrementDisable(false);
       toast(`There is some error while fetching orders`, { type: 'error' });
     }
   };
@@ -41,12 +62,6 @@ function CustomerTable() {
   useEffect(() => {
     fetchCustomersData();
   }, []);
-
-  const handleGoBackToAddOrder = (customer) => {
-    // Navigate to the order page with customer details as URL parameters
-    navigate(`/add-order?buyerName=${customer.buyer_name}&buyerPhone=${customer.buyer_phone}&buyerEmail=${customer.buyer_email}&buyerAddress=${customer.address.address}&buyerCity=${customer.address.city}&buyerState=${customer.address.state}&buyerPincode=${customer.address.pincode}`);
-  };
-
 
   return (
     <div>
@@ -76,16 +91,16 @@ function CustomerTable() {
           </tr>
         </thead>
         <tbody>
-          {customersData &&
+          {customersData.length !== 0 &&
             customersData.map((data, index) => {
-              if (
-                (data.buyer_email === null || data.buyer_email === '') &&
-                data.buyer_name === ' ' &&
-                data.buyer_phone === '' &&
-                data.address.address === null
-              ) {
-                return;
-              }
+              // if (
+              //   (data.buyer_email === null || data.buyer_email === '') &&
+              //   data.buyer_name === ' ' &&
+              //   data.buyer_phone === '' &&
+              //   data.address.address === null
+              // ) {
+              //   return;
+              // }
               return (
                 <tr
                   key={data.buyer_id}
@@ -108,7 +123,7 @@ function CustomerTable() {
                   </td>
                   <td className="border px-4 py-4 text-left">{data?.channel_name}</td>
                   <td className=" border px-4 py-4 text-left">
-                    <div>
+                    <div className="flex flex-col items-center justify-center">
                       <Link to={`/customer-overview/${data.buyer_id}`} className="text-red-800">
                         View Details
                       </Link>
@@ -120,17 +135,42 @@ function CustomerTable() {
             })}
         </tbody>
       </table>
-      <div className=" flex w-1/2 items-center justify-between p-2 text-[12px] text-gray-500">
-        <div className="flex items-center gap-2">
-          <p>items per page:</p>
-          <select className="rounded-lg text-[14px] text-gray-500 focus:ring-0">
-            <option>15</option>
-            <option>30</option>
-            <option>60</option>
-            <option>100</option>
-          </select>
+      <div className="flex w-full flex-wrap-reverse justify-between gap-2 rounded-lg bg-white px-4 py-2">
+        <div className="mr-2 flex items-center">
+          <div className="mr-4 text-xs text-black">{'Items per page: '}</div>
+          <div>
+            <select
+              id="select"
+              value={itemsPerPage}
+              className="block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+              onChange={handleChange}>
+              <option value="15">15</option>
+              <option value="30">30</option>
+              <option value="60">60</option>
+              <option value="100">100</option>
+            </select>
+          </div>
         </div>
-        <p>1-6 of 6</p>
+        <div className="flex items-center text-xs">
+          <Button
+            color="light"
+            className="mr-6 border-0 *:px-3 *:text-xs *:font-normal"
+            onClick={handlePageDecrement}
+            disabled={page === 1 ? true : false}>
+            <FontAwesomeIcon icon={faArrowLeft} className="mx-2 h-4 w-3" />
+            {'PREV'}
+          </Button>
+          <button className="rounded-lg border-0 bg-gray-100 px-3 py-2 font-medium" disabled={true}>
+            {page}
+          </button>
+          <Button
+            color="light"
+            className="ml-6 border-0 *:px-3  *:text-xs *:font-normal"
+            disabled={incrementDisabled ? true : false}
+            onClick={handlePageIncrement}>
+            {'NEXT'} <FontAwesomeIcon icon={faArrowRight} className="mx-2 h-4 w-3" />
+          </Button>
+        </div>
       </div>
     </div>
   );
