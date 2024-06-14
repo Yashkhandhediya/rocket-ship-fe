@@ -167,6 +167,8 @@ const Navbar = () => {
         localStorage.removeItem('user_name');
         localStorage.removeItem('access_token');
         localStorage.removeItem('is_super');
+        localStorage.removeItem('modules');
+        localStorage.removeItem('setting_modules');
         window.location.href = '/login';
       },
     },
@@ -189,6 +191,8 @@ const Navbar = () => {
       if (response.data.wallet_balance == null || response.data.wallet_balance <= 0) {
         localStorage.setItem('balance', 0.0);
         localStorage.setItem('company_id',response.data.company_id)
+        localStorage.setItem('modules',response.data.modules.module)
+        localStorage.setItem('setting_modules',response.data.modules.setting_module)
         console.log('BALLLLLLLL', balance);
       } else {
         localStorage.setItem('balance', response.data.wallet_balance);

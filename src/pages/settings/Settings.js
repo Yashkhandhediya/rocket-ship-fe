@@ -1,8 +1,20 @@
 import { Link } from "react-router-dom"
 import PageWithSidebar from "../../common/components/page-with-sidebar/PageWithSidebar"
+import { settings_modules } from "../manage-role/user-management/constants"
 
 const Settings = () => {
-  const settings = [
+  let settings = []
+
+  const mapModuleToLink = (module) => ({
+    title: module.label,
+    items: module.items,
+    icon: module.icon,
+  });
+
+  const setting_module = localStorage.getItem('setting_modules')
+  if(setting_module?.length == 0){
+  settings = 
+  [
     {
       title: 'Company Profile',
       items: [
@@ -262,6 +274,12 @@ const Settings = () => {
       </svg>
     },
   ]
+}else{
+  settings = settings_modules
+  .filter((module) => setting_module.includes(module.id))
+  .map((module) => mapModuleToLink(module))
+  .filter((link) => link !== null);
+}
   return (
     <PageWithSidebar>
       <div className="header bg-[#FAFBFC] border-b border-[#b3b3b3] p-2 text-xl mx-2">Settings</div>
