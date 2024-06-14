@@ -2,7 +2,7 @@ import React, {useState,useEffect} from 'react'
 import PageWithSidebar from '../../../common/components/page-with-sidebar/PageWithSidebar'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { CustomMultiSelect } from '../../../common/components'
-import { modules, personalInfo } from './constants'
+import { modules, personalInfo, settings_modules } from './constants'
 import axios from 'axios'
 import { BACKEND_URL } from '../../../common/utils/env.config'
 import { toast } from 'react-toastify'
@@ -15,7 +15,9 @@ const User_Management = () => {
     console.log("UYYYYYYYY",userData)
     const [showPersonalInfo,setShowPersonalInfo] = useState('')
     const [moduleList,setModuleList] = useState([])
+    const [settingModuleList,setSettingModuleList] = useState([])
     const [isOpen, setIsOpen] = useState(false);
+    const [isSettingOpen, setIsSettingOpen] = useState(false);
     const [focusedIndex, setFocusedIndex] = useState(-1);
     const [isLoading,setIsLoading] = useState(false);
     const [userInfo,setUserInfo] = useState({
@@ -23,6 +25,7 @@ const User_Management = () => {
         email_address:''
     })
     const [modulesId,setModulesId] = useState([])
+    const [settingModulesId,setSettingModulesId] = useState([])
 
     const handleSelect = (option,id) => {
         if (moduleList.includes(option)) {
@@ -31,6 +34,16 @@ const User_Management = () => {
         } else {
           setModuleList([...moduleList, option]);
           setModulesId([...modulesId, id]);
+        }
+      };
+
+      const handleSettingSelect = (option,id) => {
+        if (settingModuleList.includes(option)) {
+          setSettingModuleList(settingModuleList.filter((item) => item !== option));
+          setSettingModulesId(settingModuleList.filter((item) => item !== id));
+        } else {
+          setSettingModuleList([...settingModuleList, option]);
+          setSettingModulesId([...settingModulesId, id]);
         }
       };
 
@@ -50,7 +63,25 @@ const User_Management = () => {
         }
       };
 
+      const handleSettingKeyDown = (e) => {
+        if (e.key === 'Backspace' && settingModuleList.length > 0) {
+          setSettingModuleList(settingModuleList.slice(0, -1));
+          setSettingModulesId(settingModulesId.slice(0,-1));
+        }
+        if (e.key === 'ArrowDown') {
+            setFocusedIndex((prevIndex) => (prevIndex + 1) % filteredSettingModules.length);
+        } else if (e.key === 'ArrowUp') {
+            setFocusedIndex((prevIndex) => (prevIndex === 0 ? filteredSettingModules.length - 1 : prevIndex - 1));
+        } else if (e.key === 'Enter') {
+            if (focusedIndex >= 0 && focusedIndex < settings_modules.length) {
+                handleSelect(filteredSettingModules[focusedIndex]?.value);
+            }
+        }
+        setFocusedIndex(-1)
+      };
+
       const filteredModules = modules.filter(module => !moduleList.includes(module.value));
+      const filteredSettingModules = settings_modules.filter(module => !settingModuleList.includes(module.value));
 
     useEffect(() => {
         if (focusedIndex >= 0) {
@@ -68,7 +99,9 @@ const User_Management = () => {
             
             setShowPersonalInfo(userData?.user?.show_info ==  1 ? 'Yes' : 'No')
             setModuleList(userData?.module.map((mod) => mod.module_name))
+            setSettingModuleList(userData?.setting_module.map((mod) => mod.module_name))
             setModulesId(userData?.module.map((mod) => mod.id))
+            setSettingModulesId(userData?.setting_module.map((mod) => mod.id))
         }
     },[userData])
 
@@ -80,7 +113,8 @@ const User_Management = () => {
             "company_id": parseInt(localStorage.getItem('company_id')),
             "created_by": parseInt(localStorage.getItem('company_id')),
             "show_info": showPersonalInfo == "Yes" ? 1 : 0,
-            "modules_id": modulesId
+            "modules_id": modulesId,
+            "setting_modules_id":settingModulesId
         })
         .then((res) => {
             console.log("Resposne Add User",res.data)
@@ -103,7 +137,8 @@ const User_Management = () => {
             "company_id": parseInt(localStorage.getItem('company_id')),
             "created_user_id": parseInt(localStorage.getItem('user_id')),
             "show_info": showPersonalInfo == "Yes" ? 1 : 0,
-            "modules_id": modulesId
+            "modules_id": modulesId,
+            "setting_modules_id":settingModulesId
         })
         .then((res) => {
             console.log("Resposne Add User",res.data)
@@ -197,6 +232,40 @@ const User_Management = () => {
                 </div>
                 )}
             </div>
+
+
+            {modulesId.includes(5) && <div className="mb-4 w-[50%]">
+            <label htmlFor="module" className="block text-sm font-medium text-gray-700">
+                Settings Module <span className="text-red-500">*</span>
+            </label>
+
+                {(
+                <div className='mt-2 relative' tabIndex={0} onKeyDown={handleSettingKeyDown} onBlur={() => setIsSettingOpen(false)} onClick={() => setIsSettingOpen(true)}>
+                    <div className="flex flex-wrap p-2 py-4 border border-gray-200 rounded-sm shadow-sm focus:outline-none focus:border-blue-50">
+                    {settingModuleList.map((option) => (
+                        <div key={option} className="bg-blue-500 text-white text-xs px-2 py-1 m-1 rounded">
+                        {option}
+                        </div>
+                    ))}
+                    <div className="flex-grow" />
+                </div>
+
+                    <div className="absolute z-10 w-full bg-white rounded-sm max-h-36 overflow-auto">
+                    {isSettingOpen && filteredSettingModules.map((option,index) => (
+                        <div
+                        id={`option-${index}`}
+                        key={option.value}
+                        className={`p-2 cursor-pointer ${settingModuleList.includes(option.value) ? 'bg-gray-200' : ''} ${index === focusedIndex ? 'bg-blue-100' : ''}`}
+                        onMouseEnter={() => setFocusedIndex(index)}
+                        onClick={() => handleSettingSelect(option.value,option.id)}
+                        >
+                        {option.label}
+                        </div>
+                    ))}
+                    </div>
+                </div>
+                )}
+            </div>}
 
             <div className="mb-6 w-[50%]">
             <label htmlFor="showInfo" className="block text-sm font-medium text-gray-700">

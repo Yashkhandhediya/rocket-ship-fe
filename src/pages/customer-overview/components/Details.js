@@ -13,7 +13,9 @@ function Details({ title, info }) {
         {title !== 'Other Details' && (
           <Link
             to={
-              title === 'Customer Contact Details' ? `/customer/edit/${buyerId}` : `/customer/edit/${buyerId}`
+              title === 'Customer Contact Details'
+                ? `/customer/edit/${buyerId}`
+                : `/customer/address/edit/${buyerId}`
             }>
             <FontAwesomeIcon icon={faEdit} />
           </Link>

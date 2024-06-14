@@ -11,6 +11,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
+import Customer from './Customer';
 
 function CustomerOverview() {
   const [viewData, setViewData] = useState([]);
@@ -114,6 +115,7 @@ function CustomerOverview() {
 
 
   return (
+<<<<<<< HEAD
     <PageWithSidebar>
       {showSuccess && (
         <div className="bg-green-500 text-white py-2 px-4 flex items-center">
@@ -139,24 +141,26 @@ function CustomerOverview() {
             <FontAwesomeIcon icon={faPlus} />
             <span>Add Cutomer</span>
           </button>
+=======
+    <Customer>
+      {loading && <Loader />}
+      <div className="h-screen bg-zinc-200 px-4 py-8">
+        <div className="flex w-full gap-4">
+          {ordersOverviewData &&
+            ordersOverviewData.map((data, index) => {
+              return <OrdersOverview key={index} {...data} />;
+            })}
+>>>>>>> afce9c573fb06b21cc72570f973312e661a3d361
         </div>
-        <div className="h-screen bg-zinc-200 px-4 py-8">
-          <div className="flex w-full gap-4">
-            {ordersOverviewData &&
-              ordersOverviewData.map((data, index) => {
-                return <OrdersOverview key={index} {...data} />;
-              })}
-          </div>
-          <div className="flex w-full gap-8 pt-8">
-            {customerContactDetails &&
-              customerContactDetails.map((data, index) => {
-                return <Details key={index} {...data} />;
-              })}
-          </div>
-          <ShipmentTable orderDetails={viewData?.order_details} />
+        <div className="flex w-full gap-8 pt-8">
+          {customerContactDetails &&
+            customerContactDetails.map((data, index) => {
+              return <Details key={index} {...data} />;
+            })}
         </div>
+        <ShipmentTable orderDetails={viewData?.order_details} />
       </div>
-    </PageWithSidebar>
+    </Customer>
   );
 }
 

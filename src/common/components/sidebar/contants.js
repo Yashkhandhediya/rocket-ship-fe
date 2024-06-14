@@ -16,14 +16,26 @@ import {
   newHome,
 } from '../../icons/sidebar-icons';
 import { logout } from './utils';
+import { modules } from '../../../pages/manage-role/user-management/constants';
 
 const is_admin = localStorage.getItem('is_admin');
 const user_id = localStorage.getItem('user_id');
 const is_company = localStorage.getItem('is_company');
 const is_super = localStorage.getItem('is_super');
+const access_modules = localStorage.getItem('modules');
+console.log("Modules Length",access_modules)
 
 export let sidebarLinks = [];
 
+const mapModuleToLink = (module) => ({
+  title: module.label,
+  path: module.url,
+  icon: module.icon,
+  hoverIcon: module.icon,
+});
+
+
+if(access_modules == null || access_modules?.length == 0){
 if (localStorage.getItem('is_super') != 3) {
   sidebarLinks = [
     {
@@ -226,4 +238,10 @@ if (localStorage.getItem('is_super') != 3) {
       hoverIcon: weight,
     },
   ];
+}
+}else{
+  sidebarLinks = modules
+  .filter((module) => access_modules?.includes(module.id))
+  .map((module) => mapModuleToLink(module))
+  .filter((link) => link !== null);
 }
