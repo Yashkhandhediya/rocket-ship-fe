@@ -12,7 +12,7 @@ const Settings = () => {
   });
 
   const setting_module = localStorage.getItem('setting_modules')
-  if(setting_module?.length == 0){
+  if(setting_module == null || setting_module?.length == 0){
   settings = 
   [
     {
@@ -276,7 +276,7 @@ const Settings = () => {
   ]
 }else{
   settings = settings_modules
-  .filter((module) => setting_module.includes(module.id))
+  .filter((module) => setting_module?.includes(module.id))
   .map((module) => mapModuleToLink(module))
   .filter((link) => link !== null);
 }
