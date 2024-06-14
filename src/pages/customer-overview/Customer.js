@@ -10,7 +10,7 @@ function Customer({ children }) {
   const { buyerId } = useParams();
 
   return (
-    <PageWithSidebar>
+    
       <div className="ml-2">
         <div className="flex items-center justify-between bg-red-100 p-1">
           <div className="flex items-center gap-2">
@@ -33,7 +33,7 @@ function Customer({ children }) {
         </div>
         {children}
       </div>
-    </PageWithSidebar>
+   
   );
 }
 

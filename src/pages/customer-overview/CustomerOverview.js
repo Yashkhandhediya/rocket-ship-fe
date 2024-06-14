@@ -115,9 +115,8 @@ function CustomerOverview() {
 
 
   return (
-<<<<<<< HEAD
     <PageWithSidebar>
-      {showSuccess && (
+        {showSuccess && (
         <div className="bg-green-500 text-white py-2 px-4 flex items-center">
           <span className="flex-grow text-center">Customer details updated successfully!</span>
           <button onClick={handleDismissSuccess} className="text-white">X</button>
@@ -125,7 +124,7 @@ function CustomerOverview() {
       )}
       <div className="ml-2">
         {loading && <Loader />}
-        <div className="flex items-center justify-between bg-red-100 p-1">
+        {/* <div className="flex items-center justify-between bg-red-100 p-1">
           <div className="flex items-center gap-2">
             <Link to={`/customers`}>
               <FontAwesomeIcon icon={faArrowLeft} className="rounded bg-red-800 p-1 text-lg text-white" />
@@ -137,30 +136,32 @@ function CustomerOverview() {
             </Link>
             <Link className="px-2 text-[17px]">Addresses</Link>
           </div>
+          </div>
           <button className="flex items-center gap-2 rounded bg-gray-200 px-4 py-1 text-sm text-red-800">
             <FontAwesomeIcon icon={faPlus} />
             <span>Add Cutomer</span>
-          </button>
-=======
-    <Customer>
-      {loading && <Loader />}
-      <div className="h-screen bg-zinc-200 px-4 py-8">
-        <div className="flex w-full gap-4">
-          {ordersOverviewData &&
-            ordersOverviewData.map((data, index) => {
-              return <OrdersOverview key={index} {...data} />;
-            })}
->>>>>>> afce9c573fb06b21cc72570f973312e661a3d361
+          </button> */}
+         
+        <Customer>
+          {loading && <Loader />}
+          <div className="h-screen bg-zinc-200 px-4 py-8">
+            <div className="flex w-full gap-4">
+              {ordersOverviewData &&
+                ordersOverviewData.map((data, index) => {
+                  return <OrdersOverview key={index} {...data} />;
+                })}
+            </div>
+            <div className="flex w-full gap-8 pt-8">
+              {customerContactDetails &&
+                customerContactDetails.map((data, index) => {
+                  return <Details key={index} {...data} />;
+                })}
+            </div>
+            <ShipmentTable orderDetails={viewData?.order_details} />
+          </div>
+        </Customer>
         </div>
-        <div className="flex w-full gap-8 pt-8">
-          {customerContactDetails &&
-            customerContactDetails.map((data, index) => {
-              return <Details key={index} {...data} />;
-            })}
-        </div>
-        <ShipmentTable orderDetails={viewData?.order_details} />
-      </div>
-    </Customer>
+    </PageWithSidebar>
   );
 }
 
