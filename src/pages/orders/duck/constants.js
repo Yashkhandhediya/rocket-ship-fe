@@ -4,60 +4,52 @@ export const ordersTabs = [
   {
     title: 'New',
     id: 'new',
-    panel: <New />,
   },
   {
     title: 'Ready To Ship',
-    id: 'readyToShip',
-    panel: <ReadyToShip />,
+    id: 'invoiced',
   },
   {
     title: 'Pickups & Menifests',
-    id: 'pickupsAndMenifests',
-    panel: <PickupMenifests />,
+    id: 'manifested',
   },
   {
     title: 'In Transit',
-    id: 'inTransit',
-    panel: <InTransit />,
+    id: 'in transit',
   },
   {
     title: 'Delivered',
-    id: 'delivered',
-    panel: <Delivered />,
+    id: 'Delivered',
   },
   {
     title: 'RTO',
-    id: 'rto',
-    panel: <Rto />,
+    id: 'RTO',
   },
   {
     title: 'All',
     id: 'all',
-    panel: <All />,
   },
 ];
 
-
 export const trip_status_filter = [
   {
-    title:'All',
-    id:'all'
+    title: 'All',
+    id: 'all',
   },
   {
-    title:'Booking Price Pending',
-    id:'booking_price_pending'
+    title: 'Booking Price Pending',
+    id: 'booking_price_pending',
   },
   {
-    title:'Booking Pending',
-    id:'booking_pending'
+    title: 'Booking Pending',
+    id: 'booking_pending',
   },
   {
-    title:'Booking Confirmed',
-    id:'booking_confirmed'
+    title: 'Booking Confirmed',
+    id: 'booking_confirmed',
   },
   {
-    title:'Booking Rejected',
-    id:'booking_rejected'
-  }
+    title: 'Booking Rejected',
+    id: 'booking_rejected',
+  },
 ];

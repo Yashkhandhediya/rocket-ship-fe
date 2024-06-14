@@ -1,5 +1,4 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Tabs } from '../../common/components/tabs';
 import { ordersTabs } from './duck';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import axios from 'axios';
@@ -10,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import Loader from '../../common/loader/Loader';
 import { isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../common/utils/env.config';
+import Tabs from './Tabs';
 
 export let resData = [];
 const Orders = () => {

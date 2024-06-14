@@ -13,7 +13,7 @@ const Tabs = ({ tabs, tabClassNames, panelClassNames, onTabChange = () => {} }) 
   };
 
   useEffect(() => {
-    setActiveTab(JSON.parse(localStorage.getItem('activeTab')));
+    localStorage.setItem('activeTab', activeTab.toString());
   }, []);
 
   return (

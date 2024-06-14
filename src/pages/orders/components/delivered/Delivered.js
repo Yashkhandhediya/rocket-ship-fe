@@ -35,49 +35,49 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 // import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
-const Delivered = () => {
+const Delivered = ({ data, isLoading }) => {
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
 
   const user_id = is_company == 1 ? id_company : id_user;
 
-  const [itemsPerPage, setItemsPerPage] = useState(15);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  // const [itemsPerPage, setItemsPerPage] = useState(15);
+  // const [page, setPage] = useState(1);
+  // const [loading, setLoading] = useState(false);
 
   // Handler function to update the state when the selected value changes
-  const handleChange = (event) => {
-    setItemsPerPage(event.target.value);
-  };
+  // const handleChange = (event) => {
+  //   setItemsPerPage(event.target.value);
+  // };
 
-  const handlePageIncrement = () => {
-    setPage((prev) => prev + 1);
-  };
+  // const handlePageIncrement = () => {
+  //   setPage((prev) => prev + 1);
+  // };
 
-  const handlePageDecrement = () => {
-    setPage((prev) => (prev <= 1 ? prev : prev - 1));
-  };
+  // const handlePageDecrement = () => {
+  //   setPage((prev) => (prev <= 1 ? prev : prev - 1));
+  // };
 
-  const [deliverOrderList, setDeliverOrderList] = useState([]);
+  // const [deliverOrderList, setDeliverOrderList] = useState([]);
 
-  const fetchManifestedOrders = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        `${BACKEND_URL}/order/get_filtered_orders?created_by=${user_id}&status=manifested&page=${page}&page_size=${itemsPerPage}`,
-      );
-      setDeliverOrderList(response.data);
-      setLoading(false);
-    } catch (err) {
-      setLoading(false);
-      console.log(err);
-    }
-  };
+  // const fetchManifestedOrders = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await axios.get(
+  //       `${BACKEND_URL}/order/get_filtered_orders?created_by=${user_id}&status=manifested&page=${page}&page_size=${itemsPerPage}`,
+  //     );
+  //     setDeliverOrderList(response.data);
+  //     setLoading(false);
+  //   } catch (err) {
+  //     setLoading(false);
+  //     console.log(err);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchManifestedOrders();
-  }, [itemsPerPage, page]);
+  // useEffect(() => {
+  //   fetchManifestedOrders();
+  // }, [itemsPerPage, page]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -87,7 +87,7 @@ const Delivered = () => {
   //   allOrdersList?.filter((order) => (order?.status_id) === 6) || [];
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
 
-  const totalItemsDelivered = deliverOrderList.length;
+  const totalItemsDelivered = data.length;
   console.log('delivered items', totalItemsDelivered);
 
   function formatDate(dateString) {
@@ -399,7 +399,7 @@ const Delivered = () => {
 
   return (
     <div className="mt-5">
-      {loading && <Loader />}
+      {isLoading && <Loader />}
       <div className="mb-4 flex w-full">
         <div>
           <button
@@ -422,7 +422,7 @@ const Delivered = () => {
     /> */}
       <CustomDataTable
         columns={getColumns()}
-        rowData={deliverOrderList}
+        rowData={data}
         enableRowSelection={true}
         shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
         onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}
@@ -430,7 +430,7 @@ const Delivered = () => {
         enablePagination={false}
         tableWrapperStyles={{ height: '78vh' }}
       />
-      <div className="flex w-full flex-wrap-reverse justify-between gap-2 rounded-lg bg-white px-4 py-2">
+      {/* <div className="flex w-full flex-wrap-reverse justify-between gap-2 rounded-lg bg-white px-4 py-2">
         <div className="mr-2 flex items-center">
           <div className="mr-4 text-xs text-black">{'Items per page: '}</div>
           <div>
@@ -464,7 +464,7 @@ const Delivered = () => {
             {'NEXT'} <FontAwesomeIcon icon={faArrowRight} className="mx-2 h-4 w-3" />
           </Button>
         </div>
-      </div>
+      </div> */}
       <MoreFiltersDrawer
         isOpen={openFilterDrawer}
         onClose={() => setOpenFilterDrawer(false)}

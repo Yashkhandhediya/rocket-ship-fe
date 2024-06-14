@@ -39,49 +39,49 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
-export const ReadyToShip = () => {
+export const ReadyToShip = ({ data, isLoading }) => {
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
 
   const user_id = is_company == 1 ? id_company : id_user;
 
-  const [itemsPerPage, setItemsPerPage] = useState(15);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  // const [itemsPerPage, setItemsPerPage] = useState(15);
+  // const [page, setPage] = useState(1);
+  // const [loading, setLoading] = useState(false);
 
-  // Handler function to update the state when the selected value changes
-  const handleChange = (event) => {
-    setItemsPerPage(event.target.value);
-  };
+  // // Handler function to update the state when the selected value changes
+  // const handleChange = (event) => {
+  //   setItemsPerPage(event.target.value);
+  // };
 
-  const handlePageIncrement = () => {
-    setPage((prev) => prev + 1);
-  };
+  // const handlePageIncrement = () => {
+  //   setPage((prev) => prev + 1);
+  // };
 
-  const handlePageDecrement = () => {
-    setPage((prev) => (prev <= 1 ? prev : prev - 1));
-  };
+  // const handlePageDecrement = () => {
+  //   setPage((prev) => (prev <= 1 ? prev : prev - 1));
+  // };
 
-  const [readyShipOrdersList, setReadyShipOrders] = useState([]);
+  // const [readyShipOrdersList, setReadyShipOrders] = useState([]);
 
-  const fetchReadyShipOrders = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        `${BACKEND_URL}/order/get_filtered_orders?created_by=${user_id}&status=invoiced&page=${page}&page_size=${itemsPerPage}`,
-      );
-      setReadyShipOrders(response.data);
-      setLoading(false);
-    } catch (err) {
-      setLoading(false);
-      console.log(err);
-    }
-  };
+  // const fetchReadyShipOrders = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await axios.get(
+  //       `${BACKEND_URL}/order/get_filtered_orders?created_by=${user_id}&status=invoiced&page=${page}&page_size=${itemsPerPage}`,
+  //     );
+  //     setReadyShipOrders(response.data);
+  //     setLoading(false);
+  //   } catch (err) {
+  //     setLoading(false);
+  //     console.log(err);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchReadyShipOrders();
-  }, [itemsPerPage, page]);
+  // useEffect(() => {
+  //   fetchReadyShipOrders();
+  // }, [itemsPerPage, page]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -172,7 +172,7 @@ export const ReadyToShip = () => {
   };
 
   // Calculate the total number of items ready to ship
-  const totalItemsReadyToShip = readyShipOrdersList.reduce((total, order) => {
+  const totalItemsReadyToShip = data.reduce((total, order) => {
     return (
       total +
       order.product_info.reduce((orderTotal, product) => {
@@ -439,7 +439,7 @@ export const ReadyToShip = () => {
 
   return (
     <div className="mt-5">
-      {loading && <Loader />}
+      {isLoading && <Loader />}
 
       <div className="mb-4 flex w-full">
         <div>
@@ -453,7 +453,7 @@ export const ReadyToShip = () => {
       </div>
       <CustomDataTable
         columns={getColumns()}
-        rowData={readyShipOrdersList}
+        rowData={data}
         enableRowSelection={true}
         shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
         onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}
@@ -462,7 +462,7 @@ export const ReadyToShip = () => {
         tableWrapperStyles={{ height: '78vh' }}
       />
 
-      <div className="flex w-full flex-wrap-reverse justify-between gap-2 rounded-lg bg-white px-4 py-2">
+      {/* <div className="flex w-full flex-wrap-reverse justify-between gap-2 rounded-lg bg-white px-4 py-2">
         <div className="mr-2 flex items-center">
           <div className="mr-4 text-xs text-black">{'Items per page: '}</div>
           <div>
@@ -496,7 +496,7 @@ export const ReadyToShip = () => {
             {'NEXT'} <FontAwesomeIcon icon={faArrowRight} className="mx-2 h-4 w-3" />
           </Button>
         </div>
-      </div>
+      </div> */}
       {/* <DataTable
         columns={columns}
         data={readyShipOrdersList || []}
