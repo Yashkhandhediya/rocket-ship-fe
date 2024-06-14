@@ -240,7 +240,7 @@ if (localStorage.getItem('is_super') != 3) {
 }
 }else{
   sidebarLinks = modules
-  .filter((module) => access_modules.includes(module.id))
+  .filter((module) => access_modules?.includes(module.id))
   .map((module) => mapModuleToLink(module))
   .filter((link) => link !== null);
 }
