@@ -157,6 +157,14 @@ export default function BuyerDetails({ handleFormData, formData, currentStep, ha
   };
 
   useEffect(() => {
+    if (!isEmpty(addressInfo) && !isEmpty(buyerInfo)) {
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, newUrl);
+    }
+  }, [addressInfo, buyerInfo]);
+  
+
+  useEffect(() => {
     if (addressInfo?.city || addressInfo?.state) {
       setAddressInfo({
         ...addressInfo,
