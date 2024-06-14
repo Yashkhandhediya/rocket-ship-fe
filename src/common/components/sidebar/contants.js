@@ -23,6 +23,7 @@ const user_id = localStorage.getItem('user_id');
 const is_company = localStorage.getItem('is_company');
 const is_super = localStorage.getItem('is_super');
 const access_modules = localStorage.getItem('modules');
+console.log("Modules Length",access_modules)
 
 export let sidebarLinks = [];
 
@@ -34,7 +35,7 @@ const mapModuleToLink = (module) => ({
 });
 
 
-if(access_modules?.length == 0){
+if(access_modules == null || access_modules?.length == 0){
 if (localStorage.getItem('is_super') != 3) {
   sidebarLinks = [
     {
