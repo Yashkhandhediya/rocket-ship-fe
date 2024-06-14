@@ -21,6 +21,9 @@ function CustomerOverview() {
   const is_company = localStorage.getItem('is_company');
 
   const user_id = is_company == 1 ? id_company : id_user;
+  const queryParams = new URLSearchParams(location.search);
+  const isSuccess = queryParams.get('success');
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const fetchCustomerViewDetails = async () => {
     setLoading(true);
@@ -90,8 +93,34 @@ function CustomerOverview() {
     fetchCustomerViewDetails();
   }, []);
 
+  useEffect(() => {
+    console.log(isSuccess)
+    if (isSuccess === 'true') {
+      setShowSuccess(true);
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+      const timer = setTimeout(() => {
+        console.log("Timeout triggered");
+
+        setShowSuccess(false);
+      }, 5000);
+      return () => clearTimeout(5000);
+    }
+  }, [isSuccess]);
+
+  const handleDismissSuccess = () => {
+    setShowSuccess(false);
+  };
+
+
   return (
     <PageWithSidebar>
+      {showSuccess && (
+        <div className="bg-green-500 text-white py-2 px-4 flex items-center">
+          <span className="flex-grow text-center">Customer details updated successfully!</span>
+          <button onClick={handleDismissSuccess} className="text-white">X</button>
+        </div>
+      )}
       <div className="ml-2">
         {loading && <Loader />}
         <div className="flex items-center justify-between bg-red-100 p-1">
