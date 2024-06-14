@@ -50,6 +50,7 @@ import { User_Management } from '../pages/manage-role/user-management';
 import { CustomerEdit } from '../pages/customer-edit';
 import { CustomerAddresses } from '../pages/customer-addresses';
 import { CustomerAddressEdit } from '../pages/customer-address-edit';
+import { AddCustomer } from '../pages/add-customer';
 
 const routes = createBrowserRouter([
   {
@@ -264,6 +265,10 @@ const routes = createBrowserRouter([
   {
     path: '/customer/edit/:buyerId',
     element: <PrivateRoute component={<CustomerEdit />} />,
+  },
+  {
+    path: '/add-customer',
+    element: <PrivateRoute component={<AddCustomer />} />,
   },
   {
     path: '/customer/address/edit/:buyerId',
