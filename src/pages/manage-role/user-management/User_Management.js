@@ -117,6 +117,11 @@ const User_Management = () => {
             "setting_modules_id":settingModulesId
         })
         .then((res) => {
+            if(res.data == "user already exist"){
+                setIsLoading(false)
+                toast.error("User already exist");
+                return;
+            }
             console.log("Resposne Add User",res.data)
             setIsLoading(false);
             toast('User Added Successfully',{type:'success'})
