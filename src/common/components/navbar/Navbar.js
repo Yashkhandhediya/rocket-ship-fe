@@ -191,8 +191,8 @@ const Navbar = () => {
       if (response.data.wallet_balance == null || response.data.wallet_balance <= 0) {
         localStorage.setItem('balance', 0.0);
         localStorage.setItem('company_id',response.data.company_id)
-        localStorage.setItem('modules',response.data.modules.module)
-        localStorage.setItem('setting_modules',response.data.modules.setting_module)
+        localStorage.setItem('modules',response.data.modules.module.map((mod)=> mod.id))
+        localStorage.setItem('setting_modules',response.data.modules.setting_module.map((mod)=> mod.id))
         console.log('BALLLLLLLL', balance);
       } else {
         localStorage.setItem('balance', response.data.wallet_balance);
