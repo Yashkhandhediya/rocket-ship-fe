@@ -285,7 +285,7 @@ const Settings = () => {
 if (is_company == 1) {
   settings.push({
     title: 'User Role Management',
-    items: [{ title: 'Manage Roles', link: '/role-management' }],
+    items: [{ title: 'Manage Roles', link: '/manage-user' }],
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#B07828" className="w-6 h-6">
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM12 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM14.25 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM16.5 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM18.75 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM21 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM2.25 12h19.5m-18 6v3m16.5-3v3M12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Zm7.5-6.75h.75A.75.75 0 0 1 21 9.75v9a.75.75 0 0 1-.75.75h-.75m0-12H16.5v-3a1.5 1.5 0 0 1 3 0v3Zm-1.5-12h-15a1.5 1.5 0 0 0-1.5 1.5v3h15V3a1.5 1.5 0 0 0-1.5-1.5Z" />
