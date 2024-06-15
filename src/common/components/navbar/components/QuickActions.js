@@ -1,10 +1,35 @@
 import React from 'react';
 import { Tooltip } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
+import { modules } from '../../../../pages/manage-role/user-management/constants';
+import { toast } from 'react-toastify';
 
 const QuickActions = () => {
   const navigate = useNavigate();
-  const is_company = localStorage.getItem('is_company')
+  const is_company = localStorage.getItem('is_company');
+  const access_modules = localStorage.getItem('modules');
+  console.log('Modules Length', access_modules);
+  const accessModules = modules.filter((module) => access_modules?.includes(module.id));
+  console.log(accessModules);
+
+  const hasAccessModule = (label, link) => {
+    if (access_modules?.length == 0) {
+      if (label === 'Add Order' && is_company == 0) {
+        return navigate(link);
+      } else {
+        return navigate(link);
+      }
+    }
+    return accessModules.find((module) => {
+      if (label === module.label) {
+        navigate(link);
+        return true;
+      } else {
+        return toast("You don't have access to this module", { type: 'error' });
+      }
+    });
+  };
+
   const quickActions = [
     {
       label: 'Add Order',
@@ -21,10 +46,13 @@ const QuickActions = () => {
           />
         </svg>
       ),
+      // onClick: () => {
+      //   if (is_company == 0) {
+      //     navigate('/add-order');
+      //   }
+      // },
       onClick: () => {
-        if(is_company == 0){
-          navigate('/add-order');
-        }
+        hasAccessModule('Add Order', '/add-order');
       },
       tooltip: 'Add your order by manually entering the customer and product details.',
     },
@@ -42,7 +70,7 @@ const QuickActions = () => {
         </svg>
       ),
       onClick: () => {
-        console.log('Create a quick Shipment');
+        hasAccessModule('Create Quick Shipment', '/');
       },
       tooltip:
         'Ship a single shipment by entering order details, selecting a courier, and scheduling pickup all at once.',
@@ -59,7 +87,7 @@ const QuickActions = () => {
         </svg>
       ),
       onClick: () => {
-        navigate('/rate-calculator');
+        hasAccessModule('Rate Calculator', '/rate-calculator');
       },
       tooltip:
         'Enter the pickup pincode, delivery pincode, and approx. package weight to calculate the shipping rate.',
@@ -76,7 +104,7 @@ const QuickActions = () => {
         </svg>
       ),
       onClick: () => {
-        navigate('/create-ticket');
+        hasAccessModule('Create Ticket', '/create-ticket');
       },
       tooltip:
         'Create a support ticket to report issues with the Panel, Pickup, Delivery, Tracking, Billing.',
@@ -93,7 +121,7 @@ const QuickActions = () => {
         </svg>
       ),
       onClick: () => {
-        console.log('Track Shipment');
+        hasAccessModule('Track Shipment', '/');
       },
       tooltip: 'Get real-time shipment status, estimated delivery date, and more by tracking your shipments.',
     },
