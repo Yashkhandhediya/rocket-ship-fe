@@ -25,10 +25,10 @@ const Change_password = () => {
       toast.error("New password cannot be the same as current password");
       return;
     }
-    
+    const temp_url = is_company == 0 ? `https://myrcc.in:8050/login/password_change?old_password=${password.currentPassword}&user_id=${user_id}&new_password=${password.newPassword}`
+    : `https://myrcc.in:8050/login/password_change?old_password=${password.currentPassword}&company_id=${user_id}&new_password=${password.newPassword}`
     try {
-      const response = await axios.get(
-        `https://myrcc.in:8050/login/password_change?old_password=${password.currentPassword}&user_id=${user_id}&new_password=${password.newPassword}`,
+      const response = await axios.get(`${temp_url}`,
       );
       if (response.data.massage === 'entered password is incorrect') {
         toast(response.data.massage, { type: 'error' });
