@@ -4,6 +4,7 @@ import { settings_modules } from "../manage-role/user-management/constants"
 
 const Settings = () => {
   let settings = []
+  const is_company = localStorage.getItem('is_company')
 
   const mapModuleToLink = (module) => ({
     title: module.label,
@@ -193,18 +194,18 @@ const Settings = () => {
         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" />
       </svg>
     },
-    {
-      title: 'User Role Management',
-      items: [
-        {
-          title: 'Manage Users',
-          link: '/manage-user'
-        }
-      ],
-      icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#B07828" className="w-6 h-6">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" />
-      </svg>
-    },
+    // {
+    //   title: 'User Role Management',
+    //   items: [
+    //     {
+    //       title: 'Manage Users',
+    //       link: '/manage-user'
+    //     }
+    //   ],
+    //   icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#B07828" className="w-6 h-6">
+    //     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" />
+    //   </svg>
+    // },
     {
       title: 'Tracking Page',
       items: [
@@ -279,6 +280,18 @@ const Settings = () => {
   .filter((module) => setting_module?.includes(module.id))
   .map((module) => mapModuleToLink(module))
   .filter((link) => link !== null);
+}
+
+if (is_company == 1) {
+  settings.push({
+    title: 'User Role Management',
+    items: [{ title: 'Manage Roles', link: '/role-management' }],
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#B07828" className="w-6 h-6">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM12 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM14.25 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM16.5 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM18.75 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM21 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM2.25 12h19.5m-18 6v3m16.5-3v3M12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Zm7.5-6.75h.75A.75.75 0 0 1 21 9.75v9a.75.75 0 0 1-.75.75h-.75m0-12H16.5v-3a1.5 1.5 0 0 1 3 0v3Zm-1.5-12h-15a1.5 1.5 0 0 0-1.5 1.5v3h15V3a1.5 1.5 0 0 0-1.5-1.5Z" />
+      </svg>
+    ),
+  });
 }
   return (
     <PageWithSidebar>
