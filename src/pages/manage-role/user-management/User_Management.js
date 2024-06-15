@@ -83,6 +83,14 @@ const User_Management = () => {
         setFocusedIndex(-1)
       };
 
+      const handleRemoveModule = (index) => {
+        setModuleList((prevState) => prevState.filter((_, i) => i !== index));
+      };
+    
+      const handleRemoveSettingModule = (index) => {
+        setSettingModuleList((prevState) => prevState.filter((_, i) => i !== index));
+      };
+
       const filteredModules = modules.filter(module => !moduleList.includes(module.value));
       const filteredSettingModules = settings_modules.filter(module => !settingModuleList.includes(module.value));
 
