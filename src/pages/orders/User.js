@@ -10,6 +10,7 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { user } from '../../common/icons/sidebar-icons';
 
+export let temp_user_id; 
 const User = () => {
   let amount = 0;
   const [isLoading, setIsLoading] = useState(true);
@@ -69,6 +70,7 @@ const User = () => {
 
   const handleOrder = (row) => {
     const id = row?.original?.id;
+    temp_user_id = row?.original?.id
     const data = {
       id: id,
       flag: true,

@@ -9,6 +9,7 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
+import { temp_user_id } from './User';
 
 const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
   const [activeTab, setActiveTab] = useState(JSON.parse(localStorage.getItem('activeTab')));
@@ -42,10 +43,11 @@ const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
 
   const fetchOrdersData = async (tid) => {
     const user_id = is_company == 1 ? id_company : id_user;
+    const show_user_id = temp_user_id != undefined ? temp_user_id : user_id
     try {
       setLoading(true);
       const response = await axios.get(
-        `${BACKEND_URL}/order/get_filtered_orders?created_by=${user_id}&${
+        `${BACKEND_URL}/order/get_filtered_orders?created_by=${show_user_id}&${
           tid.id !== 'all' && `status=${tid.id}`
         }&page=${page}&page_size=${itemsPerPage}`,
       );
