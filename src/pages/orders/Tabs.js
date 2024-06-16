@@ -26,7 +26,7 @@ const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
   const [loading, setLoading] = useState(false);
 
   const tabID = tabs.find((_, i) => i === activeTab);
-  // console.log(tabID.id);
+  console.log('lllllllllllkl',tabID);
 
   // Handler function to update the state when the selected value changes
   const handleChange = (event) => {
@@ -41,12 +41,12 @@ const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
     setPage((prev) => (prev <= 1 ? prev : prev - 1));
   };
 
-  const fetchOrdersData = async (id) => {
+  const fetchOrdersData = async (tid) => {
     try {
       setLoading(true);
       const response = await axios.get(
         `${BACKEND_URL}/order/get_filtered_orders?created_by=${user_id}&${
-          id !== 'all' && `status=${id}`
+          tid.id !== 'all' && `status=${tid.id}`
         }&page=${page}&page_size=${itemsPerPage}`,
       );
       setData(response.data);
@@ -65,7 +65,7 @@ const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
 
   useEffect(() => {
     localStorage.setItem('activeTab', activeTab);
-    fetchOrdersData(tabID.id);
+    fetchOrdersData(tabID);
   }, [itemsPerPage, page, activeTab]);
 
   return (
