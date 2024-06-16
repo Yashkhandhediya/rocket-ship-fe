@@ -26,7 +26,7 @@ const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
   const [loading, setLoading] = useState(false);
 
   const tabID = tabs.find((_, i) => i === activeTab);
-  console.log(tabID.id);
+  // console.log(tabID.id);
 
   // Handler function to update the state when the selected value changes
   const handleChange = (event) => {
@@ -64,7 +64,7 @@ const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
   };
 
   useEffect(() => {
-    localStorage.setItem('activeTab', activeTab.toString());
+    localStorage.setItem('activeTab', activeTab);
     fetchOrdersData(tabID.id);
   }, [itemsPerPage, page, activeTab]);
 
