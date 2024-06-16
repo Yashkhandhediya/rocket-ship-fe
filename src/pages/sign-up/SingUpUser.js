@@ -5,6 +5,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { homelogo } from '../../common/images';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const SignUpUser = () => {
   const navigate = useNavigate();
@@ -48,9 +49,10 @@ const SignUpUser = () => {
     }
     setFlag(1);
     const headers = { 'Content-Type': 'application/json' };
-    axios
+    if(localStorage.getItem('access_token') != null){
+      axios
       .post(
-        BACKEND_URL + '/users/',
+        BACKEND_URL + '/users/signup',
         {
           first_name: signupInput.first_name,
           last_name: signupInput.last_name,
@@ -75,6 +77,35 @@ const SignUpUser = () => {
         console.log('Error in signup', err);
         toast('Some Error in Sign Up', { type: 'error' });
       });
+    }else{
+    axios
+      .post(
+        BACKEND_URL + '/users/create_user_and_company',
+        {
+          first_name: signupInput.first_name,
+          last_name: signupInput.last_name,
+          password: signupInput.password,
+          contact_no: signupInput.contact_no,
+          email_address: signupInput.email_address,
+          // company_id: signupInput.company_id,
+          // users_type_id:signupInput.users_type_id
+        },
+        { headers },
+      )
+      .then((res) => {
+        console.log('Reponse of Sign up', res);
+        if (res.data.msg == 'User already exits') {
+          toast('User Already Exists', { type: 'error' });
+        } else {
+          toast('User Added SuccessFully', { type: 'success' });
+          navigate('/seller/home');
+        }
+      })
+      .catch((err) => {
+        console.log('Error in signup', err);
+        toast('Some Error in Sign Up', { type: 'error' });
+      });
+    }
   };
 
   return (
