@@ -18,7 +18,6 @@ const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
 
-  const user_id = is_company == 1 ? id_company : id_user;
 
   const [data, setData] = useState([]);
   const [itemsPerPage, setItemsPerPage] = useState(15);
@@ -42,6 +41,7 @@ const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
   };
 
   const fetchOrdersData = async (tid) => {
+    const user_id = is_company == 1 ? id_company : id_user;
     try {
       setLoading(true);
       const response = await axios.get(

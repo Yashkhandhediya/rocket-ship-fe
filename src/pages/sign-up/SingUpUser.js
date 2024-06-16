@@ -16,7 +16,7 @@ const SignUpUser = () => {
     email_address: '',
     contact_no: '',
     password: '',
-    // users_type_id:0
+    users_type_id:1
   });
 
   const [error, setError] = useState({});
@@ -50,7 +50,7 @@ const SignUpUser = () => {
     const headers = { 'Content-Type': 'application/json' };
     axios
       .post(
-        BACKEND_URL + '/users/create_user_and_company',
+        BACKEND_URL + '/users/',
         {
           first_name: signupInput.first_name,
           last_name: signupInput.last_name,
@@ -58,7 +58,7 @@ const SignUpUser = () => {
           contact_no: signupInput.contact_no,
           email_address: signupInput.email_address,
           company_id: signupInput.company_id,
-          // users_type_id:signupInput.users_type_id
+          users_type_id:signupInput.users_type_id
         },
         { headers },
       )
@@ -127,7 +127,7 @@ const SignUpUser = () => {
             />
             {error && <p className="w-1/2 text-xs text-red-500">{error?.email_address}</p>}
 
-            <Field
+            {/* <Field
               type={'company'}
               id={'company_name'}
               label={'Company Name'}
@@ -136,7 +136,7 @@ const SignUpUser = () => {
               value={signupInput['company_name']}
               onChange={handleChangeInput}
             />
-            {error && <p className="w-1/2 text-xs text-red-500">{error?.company_name}</p>}
+            {error && <p className="w-1/2 text-xs text-red-500">{error?.company_name}</p>} */}
 
             <Field
               type={'tel'}
