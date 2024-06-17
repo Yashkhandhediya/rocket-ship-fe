@@ -9,6 +9,7 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
+import { temp_user_id } from './User';
 
 const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
   const [activeTab, setActiveTab] = useState(JSON.parse(localStorage.getItem('activeTab')));
@@ -18,7 +19,6 @@ const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
 
-  const user_id = is_company == 1 ? id_company : id_user;
 
   const [data, setData] = useState([]);
   const [itemsPerPage, setItemsPerPage] = useState(15);
@@ -26,7 +26,7 @@ const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
   const [loading, setLoading] = useState(false);
 
   const tabID = tabs.find((_, i) => i === activeTab);
-  console.log(tabID.id);
+  console.log('lllllllllllkl',tabID);
 
   // Handler function to update the state when the selected value changes
   const handleChange = (event) => {
@@ -41,12 +41,14 @@ const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
     setPage((prev) => (prev <= 1 ? prev : prev - 1));
   };
 
-  const fetchOrdersData = async (id) => {
+  const fetchOrdersData = async (tid) => {
+    const user_id = is_company == 1 ? id_company : id_user;
+    const show_user_id = temp_user_id != undefined ? temp_user_id : user_id
     try {
       setLoading(true);
       const response = await axios.get(
-        `${BACKEND_URL}/order/get_filtered_orders?created_by=${user_id}&${
-          id !== 'all' && `status=${id}`
+        `${BACKEND_URL}/order/get_filtered_orders?created_by=${show_user_id}&${
+          tid.id !== 'all' && `status=${tid.id}`
         }&page=${page}&page_size=${itemsPerPage}`,
       );
       setData(response.data);
@@ -64,8 +66,8 @@ const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
   };
 
   useEffect(() => {
-    localStorage.setItem('activeTab', activeTab.toString());
-    fetchOrdersData(tabID.id);
+    localStorage.setItem('activeTab', activeTab);
+    fetchOrdersData(tabID);
   }, [itemsPerPage, page, activeTab]);
 
   return (

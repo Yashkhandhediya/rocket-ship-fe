@@ -3,6 +3,7 @@ import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithS
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { BACKEND_URL } from '../../common/utils/env.config';
 
 const Change_password = () => {
   // This is a dummy data, you can replace it with your own data
@@ -25,8 +26,8 @@ const Change_password = () => {
       toast.error("New password cannot be the same as current password");
       return;
     }
-    const temp_url = is_company == 0 ? `https://myrcc.in:8050/login/password_change?old_password=${password.currentPassword}&user_id=${user_id}&new_password=${password.newPassword}`
-    : `https://myrcc.in:8050/login/password_change?old_password=${password.currentPassword}&company_id=${user_id}&new_password=${password.newPassword}`
+    const temp_url = is_company == 0 ? `${BACKEND_URL}/login/password_change?old_password=${password.currentPassword}&user_id=${user_id}&new_password=${password.newPassword}`
+    : `${BACKEND_URL}/login/password_change?old_password=${password.currentPassword}&company_id=${user_id}&new_password=${password.newPassword}`
     try {
       const response = await axios.get(`${temp_url}`,
       );
