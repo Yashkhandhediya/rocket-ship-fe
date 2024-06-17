@@ -22,20 +22,11 @@ const Orders = () => {
   const dispatch = useDispatch();
   let flag = false;
   flag = location?.state?.data?.flag !== undefined ? location.state.data.flag : false;
-  // let cuser_id = location?.state?.data?.id
   let cuser_id = location?.state?.data?.id !== undefined ? location.state.data.id : id_user;
 
   const id = is_company ? cuser_id : id_user;
 
   console.log('FLAGGG', flag, cuser_id);
-
-  // let filterTabs;
-
-  // if(localStorage.getItem('is_company') == 0){
-  //   filterTabs = ordersTabs.filter(tab => tab.id === 'new')
-  // }else{
-  //   filterTabs = ordersTabs
-  // }
 
   const allOrdersList = useSelector((state) => state?.ordersList);
   const hasFetched = useRef(false);
@@ -62,19 +53,6 @@ const Orders = () => {
         toast('There is some error while fetching orders.', { type: 'error' });
         setIsLoading(false);
       });
-    // else{
-    //   axios.get(BACKEND_URL + `/order/get_filtered_orders_company?created_by=${cuser_id}`).then
-    //   ((res) => {
-    //     console.log("RESSSSSSSS",res)
-    //     dispatch(setAllOrders(res?.data || []));
-    //     setIsLoading(false);
-    //     flag = false
-    //   }).catch((err) => {
-    //     console.log("ERRRRR",err)
-    //     toast('There is some error while fetching orders.', { type: 'error' });
-    //     setIsLoading(false);
-    //   })
-    // }
   };
 
   let count = 1;
@@ -110,13 +88,21 @@ const Orders = () => {
       <div className="h-full w-full bg-[#f4f4f4] px-4 text-center">
         <div className="flex items-center justify-between px-1.5 pb-3 pt-4">
           <h1 className="text-xl font-bold">Orders</h1>
-          {is_company == 0 && (
+          <div>
             <button
-              className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-sm font-medium text-orange-600'}
-              onClick={() => navigate('/add-order')}>
-              + Add Order
+              className="rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-sm font-medium text-orange-600 mr-2"
+              onClick={() => navigate('/all-user')}>
+              Back
+              {/* Back Button */}
             </button>
-          )}
+            {is_company == 0 && (
+              <button
+                className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-sm font-medium text-orange-600'}
+                onClick={() => navigate('/add-order')}>
+                + Add Order
+              </button>
+            )}
+          </div>
         </div>
         <div>
           <Tabs tabs={ordersTabs} tabClassNames={'mr-6 px-3 py-3.5 text-[#7f7f7f] font-medium'} />
