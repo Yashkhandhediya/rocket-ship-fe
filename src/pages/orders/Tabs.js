@@ -12,13 +12,12 @@ import { toast } from 'react-toastify';
 import { temp_user_id } from './User';
 
 const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
-  const [activeTab, setActiveTab] = useState(JSON.parse(localStorage.getItem('activeTab')));
+  const [activeTab, setActiveTab] = useState(JSON.parse(localStorage.getItem('activeOrderTab')) || 0);
   console.log('Activeeeeeeee', activeTab);
 
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
-
 
   const [data, setData] = useState([]);
   const [itemsPerPage, setItemsPerPage] = useState(15);
@@ -26,7 +25,7 @@ const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
   const [loading, setLoading] = useState(false);
 
   const tabID = tabs.find((_, i) => i === activeTab);
-  console.log('lllllllllllkl',tabID);
+  console.log('lllllllllllkl', tabID);
 
   // Handler function to update the state when the selected value changes
   const handleChange = (event) => {
@@ -43,7 +42,7 @@ const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
 
   const fetchOrdersData = async (tid) => {
     const user_id = is_company == 1 ? id_company : id_user;
-    const show_user_id = temp_user_id != undefined ? temp_user_id : user_id
+    const show_user_id = temp_user_id != undefined ? temp_user_id : user_id;
     try {
       setLoading(true);
       const response = await axios.get(
@@ -62,7 +61,7 @@ const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
   const handleClick = (index) => {
     setActiveTab(index);
     onTabChange(index);
-    localStorage.setItem('activeTab', JSON.stringify(index));
+    localStorage.setItem('activeOrderTab', JSON.stringify(index));
   };
 
   useEffect(() => {

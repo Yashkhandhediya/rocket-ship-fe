@@ -10,24 +10,21 @@ const QuickActions = () => {
   const access_modules = localStorage.getItem('modules');
   console.log('Modules Length', access_modules);
   const accessModules = modules.filter((module) => access_modules?.includes(module.id));
-  console.log(accessModules);
+  console.log(accessModules.length);
 
   const hasAccessModule = (label, link) => {
-    if (access_modules?.length == 0) {
-      if (label === 'Add Order' && is_company == 0) {
-        return navigate(link);
-      } else {
-        return navigate(link);
-      }
+    if (access_modules == null) {
+      navigate(link);
+    } else {
+      accessModules.find((module) => {
+        if (label === module.label) {
+          navigate(link);
+          return true;
+        } else {
+          return toast("You don't have access to this module", { type: 'error' });
+        }
+      });
     }
-    return accessModules.find((module) => {
-      if (label === module.label) {
-        navigate(link);
-        return true;
-      } else {
-        return toast("You don't have access to this module", { type: 'error' });
-      }
-    });
   };
 
   const quickActions = [
@@ -52,6 +49,7 @@ const QuickActions = () => {
       //   }
       // },
       onClick: () => {
+        console.log('clicked');
         hasAccessModule('Add Order', '/add-order');
       },
       tooltip: 'Add your order by manually entering the customer and product details.',
