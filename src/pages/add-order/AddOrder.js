@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { BulkOrder, DomesticOrder, InternationalOrder } from './components';
+import { BulkOrder, DomesticOrder, InternationalOrder, QuickShipment } from './components';
 import { Tabs } from '../../common/components';
 import { blackLeftArrow } from '../../common/icons';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
@@ -27,7 +27,7 @@ const AddOrder = () => {
     {
       title: 'Quick Shipment',
       id: 'quick-shipment',
-      panel: <>{'Quick Shipment'}</>,
+      panel: <QuickShipment/>,
       tooltip: 'Ship an order quickly by  adding buyer & package details and selecting courier all at once.',
     },
   ];
