@@ -83,7 +83,6 @@ const LogIn = () => {
         localStorage.setItem('balance', response.data.wallet_balance);
         localStorage.setItem('is_kyc', response.data.kyc_status_id);
         localStorage.setItem('is_super', response.data.user_type_id);
-
         const user_id =
           userType === 'user' ? localStorage.getItem('user_id') : localStorage.getItem('company_id');
         if (response.data.access_token) {

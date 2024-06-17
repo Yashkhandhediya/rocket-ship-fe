@@ -92,6 +92,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
             dispatch(setAllOrders(null));
             if (resp?.data?.success) {
               closeShipmentDrawer();
+              window.location.reload();
             }
           }
         })
@@ -257,7 +258,6 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
     ];
   };
 
-
   const rowSubComponent = () => {
     const services = [];
     return (
@@ -315,7 +315,12 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           <div className="rounded-lg bg-white p-6 ">
             <div className="flex justify-between">
               <h2 className="mb-4 text-lg font-semibold">Enter Way Bill No.</h2>
-             <span onClick={() => {setShowPopup(false)}}><i className="fa-solid fa-xmark"></i></span> 
+              <span
+                onClick={() => {
+                  setShowPopup(false);
+                }}>
+                <i className="fa-solid fa-xmark"></i>
+              </span>
             </div>
             <input
               type="text"
