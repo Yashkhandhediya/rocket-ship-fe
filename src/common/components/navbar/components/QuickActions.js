@@ -68,7 +68,8 @@ const QuickActions = () => {
         </svg>
       ),
       onClick: () => {
-        hasAccessModule('Create Quick Shipment', '/');
+        localStorage.setItem('activeTab', 3);
+        hasAccessModule('Create Quick Shipment', '/add-order');
       },
       tooltip:
         'Ship a single shipment by entering order details, selecting a courier, and scheduling pickup all at once.',
