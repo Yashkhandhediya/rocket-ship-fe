@@ -9,6 +9,14 @@ function CourierRule() {
     const handleRule = () => {
         navigate('/add-rule')
     }
+    const [activeTab, setActiveTab] = useState('Active');
+
+    const tabs = [
+        'Active',
+        'Inactive',
+        'Archived',
+        'All'
+    ]
 
   return (
     <PageWithSidebar>
@@ -66,9 +74,18 @@ function CourierRule() {
             </div>
         </div>
         <div className="w-3/4">
-            <h1 className="text-xl">
-                Body Section
-            </h1>
+            <div className="flex w-full gap-10 border-b">
+                {tabs.map((tab) => (
+                <div
+                    key={tab}
+                    className={`cursor-pointer px-4 py-2 ${
+                    activeTab === tab ? 'border-b-2 border-[#912517]' : 'border-b-2 border-transparent'
+                    }`}
+                    onClick={() => setActiveTab(tab)}>
+                    {tab}
+                </div>
+                ))}
+            </div>
         </div>
       </div>
     </div>

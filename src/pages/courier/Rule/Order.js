@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { weights } from '../constants';
 import { CustomMultiSelect, Field } from '../../../common/components';
 
-function Weight({show,onClose}) {
+function Order({show,onClose}) {
   const [weightType, setWeightType] = useState('');
   const [isShow,setIsShow] = useState(show)
   const [isInputShow,setIsInputShow] = useState(false)
@@ -53,7 +53,7 @@ const handleFieldChange = (value) => {
         return (
             isShow && (<div className="mt-2 border-2 rounded-md p-3">
                 <div className="flex flex-row justify-between items-center">
-                    <h2 className='font-semibold text-gray-500'>Weight</h2>
+                    <h2 className='font-semibold text-gray-500'>Order Value</h2>
                     <button onClick={() => handleClose()}>
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -88,10 +88,10 @@ const handleFieldChange = (value) => {
                                         onChange={(e) => handleValueChange(field, e.target.value)}
                                         type='number'
                                         placeholder="For E.g. 0.50"
-                                        leftAddOn='Kg.'
+                                        leftAddOn='Rs.'
                                     />
                                     <div className="text-xs">(Max 3 digits after decimal place)</div>
-                                    <div className="text-xs">Note: The minimum chargeable value is 0.50 Kg</div>
+                                    <div className="text-xs">Note: The minimum chargeable value is 0.50 Rs.</div>
                                     </div>
                                 </div>
                                 ))}
@@ -101,4 +101,4 @@ const handleFieldChange = (value) => {
         );
 }
 
-export default Weight;
+export default Order;
