@@ -1,7 +1,8 @@
 import { Tabs } from '../../../common/components';
 import ActivityLogTab from './ActivityLogTab';
+import TrackingInfo from './TrackingInfo';
 
-const OrderTrackRightContainer = () => {
+const OrderTrackRightContainer = ({ flag }) => {
   const tabsData = [
     {
       title: 'Activity Log',
@@ -11,7 +12,7 @@ const OrderTrackRightContainer = () => {
     {
       title: 'Tracking Info',
       id: 'tracking-Info',
-      panel: <> NO Data Available</>,
+      panel: <TrackingInfo flag={flag} />,
     },
   ];
 
