@@ -271,7 +271,7 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<AddCustomer />} />,
   },
   {
-    path: '/customer/address/edit/:buyerId',
+    path: '/customer/:buyerId/address/edit/:addressId',
     element: <PrivateRoute component={<CustomerAddressEdit />} />,
   },
   {
