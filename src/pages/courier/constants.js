@@ -1,3 +1,5 @@
+const { values } = require("lodash")
+
 const condition = [
     {label:"Select Condition Type",value:"Select Condition Type"},
     {label:"Payment Mode",value:"Payment Mode"},
@@ -47,11 +49,30 @@ const city = [
     {label:"Ahmedabad",value:"Ahmedabad"}
 ]
 
+const modes = [
+    {label:"Air",value:"Air"},
+    {label:"Surface",value:"Surface"},
+]
+
+const regions = [
+    {label:'Domestic',value:'Domestic'},
+    {label:'International',value:'International'},
+    {label:'Domestic Return',value:'Domestic Return'},
+]
+
+const sorts = [
+    {label:'Newest',value:'Newest'},
+    {label:'Direct',value:'Direct'},
+]
+
 module.exports = {
     condition:condition,
     paymentMethod:paymentMethod,
     weights:weights,
     awbTime:awbTime,
     states:states,
-    city:city
+    city:city,
+    modes:modes,
+    regions:regions,
+    sorts:sorts
 }

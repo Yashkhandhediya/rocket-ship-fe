@@ -66,7 +66,7 @@ function CourierLog() {
                 </li>
                 <li>
                     <Link
-                    to="/user"
+                    to="/courier-selection"
                     className="text-gray-600 hover:bg-gray-100 rounded-md px-4 py-2 block font-medium"
                     >
                     Courier Selection
@@ -115,8 +115,8 @@ function CourierLog() {
                 ) : (
                     currentPageData.map((item, index) => (
                         <div className='flex flex-row items-center h-12 w-full border bg-[#FAFAFA]' key={index}>
-                            <div className='p-2 h-full font-semibold text-sm w-1/12 flex-grow'>{item.courierName}</div>
-                            <div className='p-2 h-full font-semibold text-sm border-l-2 border-r-2 w-2/12 flex-grow'>{item.createdAt}</div>
+                            <div className='p-2 h-full font-semibold text-sm w-1/12 flex-grow'>{item.partner_name}</div>
+                            <div className='p-2 h-full font-semibold text-sm border-l-2 border-r-2 w-2/12 flex-grow'>{item.created_date}</div>
                             <div className='p-2 h-full font-semibold text-sm border-r-2 w-1/12 flex-grow'>{item.status}</div>
                             <div className='p-1 h-full font-semibold text-sm border-r-2 w-[12%] flex-grow'>{item.user}</div>
                         </div>

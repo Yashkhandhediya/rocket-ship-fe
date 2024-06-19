@@ -8,20 +8,6 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 
-const couriers = [
-  {
-    name: 'India Post Tracked Packet Service',
-    features: {
-      callBeforeDelivery: 'Not Available',
-      deliveryBoyNumber: 'Not Available',
-      POD: 'On Request',
-      trackingService: 'MIS',
-    },
-    activationDate: 'Jun 8, 2024',
-  },
-  // Add more courier details as needed
-];
-
 
 function Courier() {
     // const [activeTab, setActiveTab] = useState('Activated');
@@ -98,7 +84,7 @@ function Courier() {
                 </li>
                 <li>
                     <Link
-                    to="/user"
+                    to="/courier-selection"
                     className="text-gray-600 hover:bg-gray-100 rounded-md px-4 py-2 block font-medium"
                     >
                     Courier Selection

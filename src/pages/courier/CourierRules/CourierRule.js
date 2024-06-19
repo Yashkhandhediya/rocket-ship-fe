@@ -47,7 +47,7 @@ function CourierRule() {
                 </li>
                 <li>
                     <Link
-                    to="/user"
+                    to="/courier-selection"
                     className="text-gray-600 hover:bg-gray-100 rounded-md px-4 py-2 block font-medium"
                     >
                     Courier Selection
