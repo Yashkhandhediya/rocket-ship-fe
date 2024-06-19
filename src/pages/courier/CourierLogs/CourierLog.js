@@ -47,6 +47,18 @@ function CourierLog() {
         handleLogData()
       },[page,per_page])
 
+      function formatDate(inputTimestamp) {
+        const date = new Date(inputTimestamp);
+        date.setHours(12, 25, 27);
+        const formattedDate = ('0' + date.getDate()).slice(-2) + '/' +
+                              ('0' + (date.getMonth() + 1)).slice(-2) + '/' +
+                              date.getFullYear() + ' ' +
+                              ('0' + date.getHours()).slice(-2) + ':' +
+                              ('0' + date.getMinutes()).slice(-2) + ':' +
+                              ('0' + date.getSeconds()).slice(-2);
+        return formattedDate;
+    }
+
   return (
     <PageWithSidebar>
       <div className="min-h-screen bg-gray-100 p-6">
@@ -116,7 +128,7 @@ function CourierLog() {
                     currentPageData.map((item, index) => (
                         <div className='flex flex-row items-center h-12 w-full border bg-[#FAFAFA]' key={index}>
                             <div className='p-2 h-full font-semibold text-sm w-1/12 flex-grow'>{item.partner_name}</div>
-                            <div className='p-2 h-full font-semibold text-sm border-l-2 border-r-2 w-2/12 flex-grow'>{item.created_date}</div>
+                            <div className='p-2 h-full font-semibold text-sm border-l-2 border-r-2 w-2/12 flex-grow'>{formatDate(item.created_date)}</div>
                             <div className='p-2 h-full font-semibold text-sm border-r-2 w-1/12 flex-grow'>{item.status}</div>
                             <div className='p-1 h-full font-semibold text-sm border-r-2 w-[12%] flex-grow'>{item.user}</div>
                         </div>
