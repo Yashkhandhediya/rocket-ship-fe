@@ -34,6 +34,7 @@ function CustomerOverview() {
       );
       console.log(response);
       setViewData(response.data);
+      console.log(response.data);
       setLoading(false);
     } catch (err) {
       toast('There is Error while fetching', { type: 'error' });
@@ -72,6 +73,7 @@ function CustomerOverview() {
     {
       title: 'Delivery Address (default)',
       info: {
+        addressId: viewData?.address_id,
         address: viewData?.buyer_info?.address,
         city: viewData?.buyer_info?.city,
         country: viewData?.buyer_info?.country,
@@ -95,13 +97,13 @@ function CustomerOverview() {
   }, []);
 
   useEffect(() => {
-    console.log(isSuccess)
+    console.log(isSuccess);
     if (isSuccess === 'true') {
       setShowSuccess(true);
       window.history.replaceState({}, document.title, window.location.pathname);
 
       const timer = setTimeout(() => {
-        console.log("Timeout triggered");
+        console.log('Timeout triggered');
 
         setShowSuccess(false);
       }, 5000);
@@ -113,13 +115,14 @@ function CustomerOverview() {
     setShowSuccess(false);
   };
 
-
   return (
     <PageWithSidebar>
-        {showSuccess && (
-        <div className="bg-green-500 text-white py-2 px-4 flex items-center">
+      {showSuccess && (
+        <div className="flex items-center bg-green-500 px-4 py-2 text-white">
           <span className="flex-grow text-center">Customer details updated successfully!</span>
-          <button onClick={handleDismissSuccess} className="text-white">X</button>
+          <button onClick={handleDismissSuccess} className="text-white">
+            X
+          </button>
         </div>
       )}
       <div className="ml-2">
@@ -141,7 +144,7 @@ function CustomerOverview() {
             <FontAwesomeIcon icon={faPlus} />
             <span>Add Cutomer</span>
           </button> */}
-         
+
         <Customer>
           {loading && <Loader />}
           <div className="h-screen bg-zinc-200 px-4 py-8">
@@ -160,7 +163,7 @@ function CustomerOverview() {
             <ShipmentTable orderDetails={viewData?.order_details} />
           </div>
         </Customer>
-        </div>
+      </div>
     </PageWithSidebar>
   );
 }

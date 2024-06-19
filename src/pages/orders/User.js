@@ -10,7 +10,7 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { user } from '../../common/icons/sidebar-icons';
 
-export let temp_user_id; 
+export let temp_user_id;
 const User = () => {
   let amount = 0;
   const [isLoading, setIsLoading] = useState(true);
@@ -70,7 +70,7 @@ const User = () => {
 
   const handleOrder = (row) => {
     const id = row?.original?.id;
-    temp_user_id = row?.original?.id
+    temp_user_id = row?.original?.id;
     const data = {
       id: id,
       flag: true,
@@ -266,7 +266,7 @@ const User = () => {
         header: 'Action',
         cell: ({ row }) => {
           const disableButtons = row?.original?.kyc_status_id === 3;
-          const showKYCBtn = row?.original?.kyc_status_id !== 3;
+          const showKYCBtn = row?.original?.kyc_status_id === 2;
           return (
             <div className="flex gap-2 text-left text-xs">
               {

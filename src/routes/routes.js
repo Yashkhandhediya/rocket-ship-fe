@@ -51,6 +51,7 @@ import { CustomerEdit } from '../pages/customer-edit';
 import { CustomerAddresses } from '../pages/customer-addresses';
 import { CustomerAddressEdit } from '../pages/customer-address-edit';
 import { AddCustomer } from '../pages/add-customer';
+import Courier_Selection from '../pages/courier/courier-selection/Courier_Selection';
 
 const routes = createBrowserRouter([
   {
@@ -271,7 +272,7 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<AddCustomer />} />,
   },
   {
-    path: '/customer/address/edit/:buyerId',
+    path: '/customer/:buyerId/address/edit/:addressId',
     element: <PrivateRoute component={<CustomerAddressEdit />} />,
   },
   {
@@ -282,6 +283,10 @@ const routes = createBrowserRouter([
     path: '/user-management',
     element: <PrivateRoute component={<User_Management />} />,
   },
+  {
+    path:'/courier-selection',
+    element:<PrivateRoute component={<Courier_Selection />} /> 
+  }
 ]);
 
 export default routes;

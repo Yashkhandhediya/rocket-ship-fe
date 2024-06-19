@@ -1,3 +1,5 @@
+const { values } = require("lodash")
+
 const condition = [
     {label:"Select Condition Type",value:"Select Condition Type"},
     {label:"Payment Mode",value:"Payment Mode"},
@@ -14,7 +16,7 @@ const condition = [
     {label:"AWB Assigned Time",value:"AWB Assigned Time"},
     {label:"Order Tags",value:"Order Tags"},
     {label:"Product Category",value:"Product Category"},
-    {label:"Pickup Location ID",value:"ServPickup Location ID"},
+    {label:"Pickup Location ID",value:"Pickup Location ID"},
 ]
 
 const paymentMethod = [
@@ -24,13 +26,53 @@ const paymentMethod = [
 
 const weights = [
     {label:"Select",value:"Select"},
-    {label:"Greater Than Equals To (>=)",value:"Greater Than Equals To (>=)"},
-    {label:"Less Than Equals To (<=)",value:"Less Than Equals To (<=)"},
-    {label:"Equals To (=)",value:"Equals To (=)"},
+    {label:"Greater Than Equals To (>=)",value:"Greater Than Equals To"},
+    {label:"Less Than Equals To (<=)",value:"Less Than Equals To"},
+    {label:"Equals To (=)",value:"Equals To"},
+]
+
+const awbTime = [
+    {label:"Select",value:"Select"},
+    {label:"Before",value:"Before To"},
+    {label:"After",value:"After To"},
+    {label:"Between",value:"Between"}
+]
+
+const states = [
+    {label:"Gujarat",value:"Gujarat"},
+    {label:"Goa",value:"Goa"},
+
+]
+
+const city = [
+    {label:"Bhavnagar",value:"Bhavnagar"},
+    {label:"Ahmedabad",value:"Ahmedabad"}
+]
+
+const modes = [
+    {label:"Air",value:"Air"},
+    {label:"Surface",value:"Surface"},
+]
+
+const regions = [
+    {label:'Domestic',value:'Domestic'},
+    {label:'International',value:'International'},
+    {label:'Domestic Return',value:'Domestic Return'},
+]
+
+const sorts = [
+    {label:'Newest',value:'Newest'},
+    {label:'Direct',value:'Direct'},
 ]
 
 module.exports = {
     condition:condition,
     paymentMethod:paymentMethod,
-    weights:weights
+    weights:weights,
+    awbTime:awbTime,
+    states:states,
+    city:city,
+    modes:modes,
+    regions:regions,
+    sorts:sorts
 }

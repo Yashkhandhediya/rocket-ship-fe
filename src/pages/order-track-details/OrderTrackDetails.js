@@ -26,17 +26,17 @@ import { setAllOrders } from '../../redux';
 // import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const OrderTrackDetails = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { orderId } = useParams();
   const [searchParam] = useSearchParams();
-  const flag = searchParam.get('flag')
-  console.log("FLAAAAA",flag)
+  const flag = searchParam.get('flag');
+  console.log('FLAAAAA', flag);
   const [copyTooltip, setCopyTooltip] = useState('Click to Copy');
   const [orderDetails, setOrderDetails] = useState(null);
   const [shipmentDrawerOpen, setShipmentDrawerOpen] = useState(false);
 
-  let resData = {}
+  let resData = {};
   const flattened = {};
 
   const copyOrderId = () => {
@@ -48,7 +48,7 @@ const OrderTrackDetails = () => {
   };
 
   const fetchOrderDetails = async () => {
-    const apiURL = flag == 1 ? '/return/get_return_detail' : '/order/get_order_detail'
+    const apiURL = flag == 1 ? '/return/get_return_detail' : '/order/get_order_detail';
     await axios
       .get(BACKEND_URL + apiURL, {
         params: {
@@ -57,9 +57,9 @@ const OrderTrackDetails = () => {
       })
       .then((resp) => {
         if (resp.status === 200) {
-          console.log("Ogggggggggggg",resp.data)
+          console.log('Ogggggggggggg', resp.data);
           setOrderDetails(resp?.data || {});
-          resData = resp?.data
+          resData = resp?.data;
         }
       });
   };
@@ -73,74 +73,69 @@ const OrderTrackDetails = () => {
   function splitString(string, length) {
     let result = [];
     for (let i = 0; i < string.length; i += length) {
-        result.push(string.substr(i, length));
+      result.push(string.substr(i, length));
     }
     return result;
-}
-
-
-function flattenObject(obj, id) {
-  const keyCounts = {};
-
-  function flatten(obj, parentKey = '') {
-          for (let key in obj) {
-              let propName = parentKey ? `${key}` : key;
-              
-              // Check if the key already exists, if yes, increment count
-              if (flattened[propName] !== undefined) {
-                  keyCounts[propName] = (keyCounts[propName] || 0) + 1;
-                  propName = `${propName}${keyCounts[propName]}`;
-              }
-              
-              if (typeof obj[key] === 'object' && obj[key] !== null) {
-                  flatten(obj[key], propName);
-              } else {
-                  flattened[propName] = obj[key];
-              }
-          }
   }
-  flatten(obj);
-  return flattened;
-}
 
+  function flattenObject(obj, id) {
+    const keyCounts = {};
+
+    function flatten(obj, parentKey = '') {
+      for (let key in obj) {
+        let propName = parentKey ? `${key}` : key;
+
+        // Check if the key already exists, if yes, increment count
+        if (flattened[propName] !== undefined) {
+          keyCounts[propName] = (keyCounts[propName] || 0) + 1;
+          propName = `${propName}${keyCounts[propName]}`;
+        }
+
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
+          flatten(obj[key], propName);
+        } else {
+          flattened[propName] = obj[key];
+        }
+      }
+    }
+    flatten(obj);
+    return flattened;
+  }
 
   const handleInvoice = (id) => {
-    let temp_payload = flattenObject(orderDetails,id)
-    console.log("kkkkkkkkkk",temp_payload)
-    const headers={'Content-Type': 'application/json'};
+    let temp_payload = flattenObject(orderDetails, id);
+    console.log('kkkkkkkkkk', temp_payload);
+    const headers = { 'Content-Type': 'application/json' };
 
-    let temp_str = splitString(temp_payload['complete_address'],35)
-    let temp1 = splitString(temp_payload['complete_address'],35)
-    console.log("jtttttttt",temp_str)
-    console.log("Jayyyyyy",temp1)
+    let temp_str = splitString(temp_payload['complete_address'], 35);
+    let temp1 = splitString(temp_payload['complete_address'], 35);
+    console.log('jtttttttt', temp_str);
+    console.log('Jayyyyyy', temp1);
     for (let i = 0; i < temp1.length; i++) {
-      temp_payload[`${i+1}_complete_address_`] = temp1[i];
+      temp_payload[`${i + 1}_complete_address_`] = temp1[i];
     }
 
-    for(let i=0;i<temp_str.length;i++){
-      temp_payload[`complete_address1_${i+1}`] = temp_str[i]
+    for (let i = 0; i < temp_str.length; i++) {
+      temp_payload[`complete_address1_${i + 1}`] = temp_str[i];
     }
 
+    temp_payload['client_name'] = 'cloud_cargo';
+    temp_payload['file_name'] = 'invoice';
 
-    temp_payload['client_name']="cloud_cargo"
-    temp_payload['file_name']="invoice"
-
-    axios.post(MENIFEST_URL +'/bilty/print/',
-    temp_payload,
-     {headers}).then(
-        (response)=>{
+    axios
+      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
+      .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
         window.open(url);
-          console.log("General",response);
-          toast('Invoice Download Successfully',{type:'success'})
-        }
-      ) .catch((error) => {
-        console.error("Error:", error);
-        toast('Error in Invoice Download',{type:'error'})
-    });
-  }
-
+        console.log('General', response);
+        toast('Invoice Download Successfully', { type: 'success' });
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        toast('Error in Invoice Download', { type: 'error' });
+      });
+  };
 
   function cancelOrder(orderDetails) {
     axios
@@ -153,13 +148,13 @@ function flattenObject(obj, id) {
         if (resp?.status === 200) {
           dispatch(setAllOrders(null));
           toast('Order cancelled successfully', { type: 'success' });
-          window.location.reload()
+          window.location.reload();
         }
       })
       .catch(() => {
         toast('Unable to cancel Order', { type: 'error' });
       });
-      window.location.reload();
+    window.location.reload();
   }
 
   function cloneOrder(orderDetails) {
@@ -176,7 +171,7 @@ function flattenObject(obj, id) {
           <div className="w-full">
             <div className="flex items-center justify-between px-2 md:w-8/12">
               <div className="flex items-center">
-                <Link to={flag==1 ? `/returns`: `/orders`}>
+                <Link to={flag == 1 ? `/returns` : `/orders`}>
                   <img src={blackLeftArrow} className="mr-0.5 h-4 w-4 cursor-pointer" />
                 </Link>
                 <div className="flex items-center text-lg font-medium">
@@ -201,15 +196,20 @@ function flattenObject(obj, id) {
                 </Badge>
               </div>
               <div className="flex gap-1.5">
-                {orderDetails?.status_name == "new" && <button
-                  className="min-w-fit rounded bg-orange-700 px-6 py-2 text-xs font-medium text-white"
-                  onClick={() => setShipmentDrawerOpen(true)}>
-                  {'Ship Now'}
-                </button>}
+                {orderDetails?.status_name == 'new' && (
+                  <button
+                    className="min-w-fit rounded bg-orange-700 px-6 py-2 text-xs font-medium text-white"
+                    onClick={() => setShipmentDrawerOpen(true)}>
+                    {'Ship Now'}
+                  </button>
+                )}
                 <MoreDropdown
                   renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                   options={moreActionOptions({
-                    downloadInvoice : () => {console.log("jauuuu",orderDetails?.id);handleInvoice(orderDetails?.id)},
+                    downloadInvoice: () => {
+                      console.log('jauuuu', orderDetails?.id);
+                      handleInvoice(orderDetails?.id);
+                    },
                     cloneOrder: () => cloneOrder(orderDetails),
                     cancelOrder: () => cancelOrder(orderDetails?.id),
                   })}
@@ -225,7 +225,7 @@ function flattenObject(obj, id) {
                 <AppChangesCard />
               </div>
               <div className="px-2 md:w-4/12">
-                <OrderTrackRightContainer />
+                <OrderTrackRightContainer flag={flag} />
               </div>
             </div>
           </div>

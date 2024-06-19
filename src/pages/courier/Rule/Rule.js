@@ -4,8 +4,23 @@ import { CustomMultiSelect } from '../../../common/components';
 import { condition } from '../constants';
 import Payment from './Payment';
 import Weight from './Weight';
+import Zone from './Zone';
+import Order from './Order';
+import DG from './DG';
+import Service from './Service';
+import Channel from './Channel';
+import Product from './Product';
+import Order_tag from './Order_tag';
+import Pickup from './Pickup';
+import Sku from './Sku';
+import Pincode from './Pincode';
+import Awb from './Awb';
+import State from './State';
+import City from './City';
+import { useNavigate } from 'react-router-dom';
 
 const Rule = () => {
+    const navigate = useNavigate()
     const [shippingRuleName, setShippingRuleName] = useState('');
     const [shippingRuleType, setShippingRuleType] = useState('domestic');
     const [scheduleRule, setScheduleRule] = useState('no');
@@ -33,6 +48,10 @@ const Rule = () => {
     };
 
     const availableConditions = condition.filter(cond => !conditions.includes(cond.label));
+
+    const handleCancel = () => {
+        navigate('/courier-rule')
+    }
 
   return (
     <PageWithSidebar>
@@ -132,6 +151,19 @@ const Rule = () => {
 
                         {conditions.includes("Payment Mode") && <Payment show={true} onClose={() => handleRemoveCondition("Payment Mode")} />}
                         {conditions.includes("Weight") && <Weight show={true} onClose={() => handleRemoveCondition("Weight")} />}
+                        {conditions.includes("Zone Wise") && <Zone show={true} onClose={() => handleRemoveCondition("Zone Wise")} />}
+                        {conditions.includes("Order Value") && <Order show={true} onClose={() => handleRemoveCondition("Order Value")} />}
+                        {conditions.includes("Dangerous Goods(DG)") && <DG show={true} onClose={() => handleRemoveCondition("Dangerous Goods(DG)")} />}
+                        {conditions.includes("Service Codes") && <Service show={true} onClose={() => handleRemoveCondition("Service Codes")} />}
+                        {conditions.includes("Channel Id") && <Channel show={true} onClose={() => handleRemoveCondition("Channel Id")} />}
+                        {conditions.includes("Product Category") && <Product show={true} onClose={() => handleRemoveCondition("Product Category")} />}
+                        {conditions.includes("Order Tags") && <Order_tag show={true} onClose={() => handleRemoveCondition("Order Tags")} />}
+                        {conditions.includes("Pickup Location ID") && <Pickup show={true} onClose={() => handleRemoveCondition("Pickup Location ID")} />}
+                        {conditions.includes("State") && <State show={true} onClose={() => handleRemoveCondition("State")} />} 
+                        {conditions.includes("City") && <City show={true} onClose={() => handleRemoveCondition("City")} />} 
+                        {conditions.includes("Pincode") && <Pincode show={true} onClose={() => handleRemoveCondition("Pincode")} />} 
+                        {conditions.includes("Product SKU") && <Sku show={true} onClose={() => handleRemoveCondition("Product SKU")} />}
+                        {conditions.includes("AWB Assigned Time") && <Awb show={true} onClose={() => handleRemoveCondition("AWB Assigned Time")} />}
 
                         <div className="mt-8">
                                 <h2 className='font-semibold text-gray-500'>Select Shipment Conditions</h2>
@@ -158,7 +190,7 @@ const Rule = () => {
                     </div>
 
                     <div className="mt-2 flex flex-row justify-end">
-                        <button className="p-2 border rounded-md bg-red-500 text-white mr-2">Cancel</button>
+                        <button className="p-2 border rounded-md bg-red-500 text-white mr-2" onClick={()=> handleCancel()}>Cancel</button>
                         <button className="p-2 border rounded-md bg-blue-600 text-white ml-2">Proceed</button>
                     </div>
                 </div>

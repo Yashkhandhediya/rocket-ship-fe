@@ -5,6 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 
 function Details({ title, info }) {
   const { buyerId } = useParams();
+  const addressId = info?.addressId;
 
   return (
     <div className="h-60 w-full rounded-xl bg-white p-4 text-gray-500">
@@ -15,7 +16,7 @@ function Details({ title, info }) {
             to={
               title === 'Customer Contact Details'
                 ? `/customer/edit/${buyerId}`
-                : `/customer/address/edit/${buyerId}`
+                : `/customer/${buyerId}/address/edit/${addressId}`
             }>
             <FontAwesomeIcon icon={faEdit} />
           </Link>

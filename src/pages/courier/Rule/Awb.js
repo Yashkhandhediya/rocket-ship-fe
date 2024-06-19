@@ -1,17 +1,17 @@
 // src/App.js
 import React, { useState, useEffect } from 'react';
-import { weights } from '../constants';
+import { awbTime } from '../constants';
 import { CustomMultiSelect, Field } from '../../../common/components';
 
-function Weight({show,onClose}) {
-  const [weightType, setWeightType] = useState('');
+function Awb({show,onClose}) {
+  const [awbType, setAwbType] = useState('');
   const [isShow,setIsShow] = useState(show)
   const [isInputShow,setIsInputShow] = useState(false)
   const [additionalFields, setAdditionalFields] = useState([]);
   const [fieldValues, setFieldValues] = useState({
-    'Greater Than': '',
-    'Less Than': '',
-    'Equals To': ''
+    'Before': '',
+    'After': '',
+    'Between': {'start':'','end':''}
   });
 
   useEffect(() => {
@@ -28,18 +28,19 @@ function Weight({show,onClose}) {
 //   };
 
 const handleFieldChange = (value) => {
-    if (value === 'Equals To') {
-      setAdditionalFields(['Equals To']);
-    } else {
-      setAdditionalFields((prevFields) => {
-        let updatedFields = prevFields.filter((field) => field !== 'Equals To');
+    if (value) {
+      setAdditionalFields([value]);
+    } 
+    // else {
+    //   setAdditionalFields((prevFields) => {
+    //     let updatedFields = prevFields.filter((field) => field !== 'Equals To');
     
-        if (!updatedFields.includes(value) && updatedFields.length < 3) {
-          updatedFields.push(value);
-        }
-        return updatedFields;
-      });
-    }
+    //     if (!updatedFields.includes(value) && updatedFields.length < 1) {
+    //       updatedFields.push(value);
+    //     }
+    //     return updatedFields;
+    //   });
+    // }
   };
 
   const handleValueChange = (type, newValue) => {
@@ -53,7 +54,7 @@ const handleFieldChange = (value) => {
         return (
             isShow && (<div className="mt-2 border-2 rounded-md p-3">
                 <div className="flex flex-row justify-between items-center">
-                    <h2 className='font-semibold text-gray-500'>Weight</h2>
+                    <h2 className='font-semibold text-gray-500'>Awb Assigned Time</h2>
                     <button onClick={() => handleClose()}>
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -65,34 +66,42 @@ const handleFieldChange = (value) => {
                             <div className="w-[25%]">
                             <CustomMultiSelect
                                 isMulti={false}
-                                options={weights}
-                                selected={weightType}
+                                options={awbTime}
+                                selected={awbType}
                                 closeMenuOnSelect={true}
-                                placeholder={weightType || "Select"}
+                                placeholder={awbType || "Select"}
                                 hideSelectedOptions={false}
                                 onChange={(value) => {
-                                    setWeightType(value)
+                                    setAwbType(value)
                                     handleFieldChange(value)
                                 }} 
                             />
                             </div>
                             <button className="ml-2 mt-2 bg-blue-800 text-xl font-bold text-white p-1 rounded-md" onClick={()=> setIsInputShow(true)}>+</button>
                         </div>
-                            {(weightType != "Select" && isInputShow) && <div className="w-full flex flex-col mt-2">
+                            {(awbType != "Select" && isInputShow) && <div className="w-[50%] flex flex-col mt-2">
                                 {additionalFields.map((field, index) => (
                                 <div key={index} className="w-full flex items-center space-x-4 mt-2">
-                                <h2 className='w-[30%] mb-8'>{`${field} : `}</h2>
-                                <div className="w-full flex flex-col">
+                                <h2 className='w-[20%]'>{`${field} : `}</h2>
+                                {(field=='After To' || field == 'Before To') && <div className="w-[20%] flex flex-col">
                                     <Field 
-                                        value={fieldValues[field] || 'For E.g. 0.50'}
+                                        value={fieldValues[field]}
                                         onChange={(e) => handleValueChange(field, e.target.value)}
-                                        type='number'
-                                        placeholder="For E.g. 0.50"
-                                        leftAddOn='Kg.'
+                                        type='time'
                                     />
-                                    <div className="text-xs">(Max 3 digits after decimal place)</div>
-                                    <div className="text-xs">Note: The minimum chargeable value is 0.50 Kg</div>
-                                    </div>
+                                    </div>}
+                                {(field == 'Between') && <div className="w-[20%] flex flex-col">
+                                    <Field 
+                                        value={fieldValues[field.start]}
+                                        onChange={(e) => handleValueChange(field, e.target.value)}
+                                        type='time'
+                                    />
+                                    <Field 
+                                        value={fieldValues[field.end]}
+                                        onChange={(e) => handleValueChange(field, e.target.value)}
+                                        type='time'
+                                    />
+                                    </div>}
                                 </div>
                                 ))}
                             </div>}
@@ -101,4 +110,4 @@ const handleFieldChange = (value) => {
         );
 }
 
-export default Weight;
+export default Awb;
