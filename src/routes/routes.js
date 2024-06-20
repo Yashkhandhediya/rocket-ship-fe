@@ -261,7 +261,7 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<CustomerOverview />} />,
   },
   {
-    path: '/customer-addresses/:buyerId',
+    path: '/customer/:buyerId/addresses/:addressId',
     element: <PrivateRoute component={<CustomerAddresses />} />,
   },
   {
@@ -285,6 +285,7 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<User_Management />} />,
   },
   {
+<<<<<<< Updated upstream
     path:'/courier-selection',
     element:<PrivateRoute component={<Courier_Selection />} /> 
   },
@@ -292,6 +293,11 @@ const routes = createBrowserRouter([
     path:'/custom-priority',
     element:<PrivateRoute component={<Priority />}/>
   }
+=======
+    path: '/courier-selection',
+    element: <PrivateRoute component={<Courier_Selection />} />,
+  },
+>>>>>>> Stashed changes
 ]);
 
 export default routes;

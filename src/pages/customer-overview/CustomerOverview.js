@@ -145,7 +145,7 @@ function CustomerOverview() {
             <span>Add Cutomer</span>
           </button> */}
 
-        <Customer>
+        <Customer addressId={viewData?.address_id}>
           {loading && <Loader />}
           <div className="h-screen bg-zinc-200 px-4 py-8">
             <div className="flex w-full gap-4">
