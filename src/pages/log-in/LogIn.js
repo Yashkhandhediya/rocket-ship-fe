@@ -1,33 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Field } from '../../common/components';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { type } from '@testing-library/user-event/dist/type';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import OtpPopup from './OtpPopup';
-import { transport } from '../../common/images';
-import { homelogo } from '../../common/images';
-import { LogoRCSL } from '../../common/images';
+import { homelogo, LogoRCSL } from '../../common/images';
 // import { GoogleLogin } from 'react-google-login';
 // import {gapi} from 'gapi-script'
 
-// export let id_user;
-
 export let type_user;
+
 const LogIn = () => {
   const navigate = useNavigate();
   const [userId, setUserId] = useState(null);
   const [companyId, setCompanyId] = useState(null);
   const [handlePopup, setHandlePopup] = useState(false);
-  const [singleTimeLoginClick, setSingleTimeLoginClick] = useState(0);
   const [loginInput, setLoginInput] = useState({
     username: '',
     password: '',
   });
   const [userType, setUserType] = useState('user');
-  type_user = userType;
+  type_user = userType; 
 
+  
   const handleChangeInput = (e) => {
     const { id, value } = e.target;
     setLoginInput({
@@ -39,11 +34,9 @@ const LogIn = () => {
   const handleForgotPassword = () => {
     type_user = userType;
     // console.log("DATAAAAAAAAA",data)
-
     navigate('/forgotpassword');
   };
-
-  //   var SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
+    //   var SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
 
   //   function start() {
   //     gapi.client.init({
@@ -54,9 +47,8 @@ const LogIn = () => {
   //   gapi.load("client:auth2", start);
 
   const handleSubmit = () => {
-    setSingleTimeLoginClick(1);
-    if (loginInput.username == '' || loginInput.password == '') {
-      toast('Email and Password Both are required', { type: 'error' });
+    if (loginInput.username === '' || loginInput.password === '') {
+      toast('Email and Password both are required', { type: 'error' });
       return;
     }
     localStorage.setItem('user_email', loginInput.username);
@@ -65,6 +57,7 @@ const LogIn = () => {
     console.log('backend url', BACKEND_URL);
     const apiURL = userType === 'user' ? '/login/access-token' : '/company/access-token';
     const otpURL = userType === 'user' ? '/login' : '/company';
+
     axios
       .post(
         BACKEND_URL + apiURL,
@@ -72,10 +65,9 @@ const LogIn = () => {
           username: loginInput.username,
           password: loginInput.password,
         },
-        { headers },
+        { headers }
       )
       .then((response) => {
-        // id_user = response.data.user_id
         localStorage.setItem('user_id', response.data.user_id);
         localStorage.setItem('company_id', response.data.company_id);
         localStorage.setItem('is_company', response.data.is_company);
@@ -94,25 +86,28 @@ const LogIn = () => {
             .post(
               BACKEND_URL + `${otpURL}/generate_otp?email_id=${loginInput.username}&user_id=${user_id}`,
               { email_id: String(loginInput.username), user_id: String(response.data.user_id) },
-              { headers },
+              { headers }
             )
             .then((otpResponse) => {
+              setHandlePopup(true);
               console.log(otpResponse);
             })
             .catch((otpError) => {
               console.error('Error fetching OTP:', otpError);
+              toast('Error generating OTP', { type: 'error' });
             });
-          // toast('Login Success',{type:'success'})
+             // toast('Login Success',{type:'success'})
           // navigate('/')
-          setHandlePopup(true);
         } else if (response.data.msg) {
-          setSingleTimeLoginClick(0);
           toast(response.data.msg, { type: 'error' });
         }
+      })
+      .catch((error) => {
+        console.error('Login error:', error);
+        toast('An error occurred during login', { type: 'error' });
       });
   };
-
-  // const onSuccess = (response) => {
+   // const onSuccess = (response) => {
   //   console.log('Login Success:', response);
   //   // Handle the response here, e.g., send it to your backend for authentication
   // };
@@ -126,7 +121,7 @@ const LogIn = () => {
     <>
       <div className="flex-column flex h-full">
         <div className="flex h-full w-[49%] flex-col items-center justify-center">
-          <img src={homelogo} className="h-full w-[97%] object-cover"></img>
+          <img src={homelogo} className="h-full w-[97%] object-cover" alt="Logo"></img>
         </div>
         <div className="mt-8 flex h-full w-[49%] flex-col items-center justify-center">
           <div className="mb-8 text-center text-4xl font-bold">
@@ -137,14 +132,13 @@ const LogIn = () => {
               <div className="mb-2 text-center">
                 <h3 className="m-0 text-xl font-medium">Login to Cloud Cargo</h3>
               </div>
-              {/* <GoogleLogin
+                 {/* <GoogleLogin
                 clientId="285163063974-00ubuj8sg12diejh6j2hn3mq845d5ngn.apps.googleusercontent.com"
                 buttonText="Login"
                 onSuccess={onSuccess}
                 onFailure={onError}
                 cookiePolicy={"single_host_origin"}
             /> */}
-
               <div className="mb-3 flex flex-row">
                 <div className="p-2">
                   <input
@@ -175,24 +169,32 @@ const LogIn = () => {
               </div>
               <span className="my-2 inline-flex w-full border border-dashed border-gray-400"></span>
               <form>
-                <Field
-                  type={'email'}
-                  id={'username'}
-                  label={'Email ID'}
-                  placeHolder={'Enter your email ID'}
-                  required={true}
-                  value={loginInput['username']}
-                  onChange={handleChangeInput}
-                />
-                <Field
-                  type={'password'}
-                  id={'password'}
-                  label={'Password'}
-                  placeHolder={'Enter password'}
-                  required={true}
-                  value={loginInput['password']}
-                  onChange={handleChangeInput}
-                />
+                <div className="mb-3">
+                  <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                    Email ID
+                  </label>
+                  <input
+                    type="email"
+                    id="username"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Enter your email ID"
+                    value={loginInput.username}
+                    onChange={handleChangeInput}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Enter password"
+                    value={loginInput.password}
+                    onChange={handleChangeInput}
+                  />
+                </div>
                 <div className="mb-3 text-sm">
                   <Link onClick={handleForgotPassword} className="text-decoration-none text-red-700">
                     Forgot Password?
@@ -201,22 +203,20 @@ const LogIn = () => {
                 <button
                   type="button"
                   className="dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 mb-2 w-full rounded-lg bg-red-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300"
-                  onClick={() => {
-                    if (singleTimeLoginClick == 0) {
-                      handleSubmit();
-                    }
-                  }}>
+                  onClick={handleSubmit}
+                >
                   Login
                 </button>
                 <div className="text-center">
                   <p className="text-sm">
                     New to Cloud Cargo?{' '}
-                    {/* <Link to={'/signup'} className="text-decoration-none text-red-700">
+                       {/* <Link to={'/signup'} className="text-decoration-none text-red-700">
                 Sign Up Now
               </Link> */}
                     <Link
                       to={userType === 'user' ? '/signup-user' : '/signup'}
-                      className="text-decoration-none text-red-700">
+                      className="text-decoration-none text-red-700"
+                    >
                       Sign Up Now
                     </Link>
                   </p>
@@ -225,16 +225,11 @@ const LogIn = () => {
             </div>
           )}
           {handlePopup && (
-            <OtpPopup
-              userType={userType}
-              username={loginInput.username}
-              userId={userId}
-              companyId={companyId}
-            />
+            <OtpPopup userType={userType} username={loginInput.username} userId={userId} companyId={companyId} />
           )}
           <div className="ml-auto mt-4 flex flex-row items-end justify-between">
             <h1 className="ml-auto mr-4 text-xl font-bold text-red-700">Powered By</h1>
-            <img src={LogoRCSL} className="h-25 mx-20 ml-auto mt-10 w-32"></img>
+            <img src={LogoRCSL} className="h-25 mx-20 ml-auto mt-10 w-32" alt="Powered By Logo"></img>
           </div>
         </div>
       </div>
