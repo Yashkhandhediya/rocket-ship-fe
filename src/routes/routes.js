@@ -285,19 +285,13 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<User_Management />} />,
   },
   {
-<<<<<<< Updated upstream
-    path:'/courier-selection',
-    element:<PrivateRoute component={<Courier_Selection />} /> 
-  },
-  {
-    path:'/custom-priority',
-    element:<PrivateRoute component={<Priority />}/>
-  }
-=======
     path: '/courier-selection',
     element: <PrivateRoute component={<Courier_Selection />} />,
   },
->>>>>>> Stashed changes
+  {
+    path: '/custom-priority',
+    element: <PrivateRoute component={<Priority />} />,
+  },
 ]);
 
 export default routes;
