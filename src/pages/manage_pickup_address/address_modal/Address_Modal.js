@@ -7,7 +7,7 @@ import OTP_Modal from '../otp_modal/OTP_Modal';
 import DifferentRTOAddress from '../different_rto_address/Different_RTO_Address';
 import { useNavigate } from 'react-router-dom';
 
-const Address_Modal = ({ setShow, addressId, addressData }) => {
+const Address_Modal = ({ setShow, addressId, addressData, fetchUserAddressList }) => {
   const [showOTP, setShowOTP] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [rtoPhoneVerified, setRTOPhoneVerified] = useState(false);
@@ -19,6 +19,7 @@ const Address_Modal = ({ setShow, addressId, addressData }) => {
   const is_company = localStorage.getItem('is_company');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  console.log(dataAddress, addressId);
 
   const user_id = is_company == 1 ? id_company : id_user;
 
@@ -50,6 +51,8 @@ const Address_Modal = ({ setShow, addressId, addressData }) => {
     rtoCity: '',
     rtoState: '',
   });
+
+  console.log(dataAddress, addressId, address);
 
   const handleClose = () => {
     // iterate through all the keys in address and set them to empty string
@@ -93,6 +96,33 @@ const Address_Modal = ({ setShow, addressId, addressData }) => {
       return;
     }
     setAddress({ ...address, [name]: value });
+  };
+
+  const handlePostAddress = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(`${BACKEND_URL}/address/?created_by=${user_id}`, {
+        contact_no: address.phone,
+        first_name: address.contactName,
+        email_address: address.email,
+        complete_address: address.addressLine1,
+        tag: address.nickName,
+        pincode: address.pincode,
+        city: address.city,
+        state: address.state,
+      });
+      if (response.status === 200) {
+        setShow(false);
+        toast('Address Added Successfully', { type: 'success' });
+        fetchUserAddressList();
+      } else {
+        toast('There is some error while fetching orders.', { type: 'error' });
+      }
+    } catch (err) {
+      toast('There is some error while fetching orders.', { type: 'error' });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const fetchPinCodeDetails = async (pincode, isRTO) => {
@@ -594,7 +624,7 @@ const Address_Modal = ({ setShow, addressId, addressData }) => {
                   className="mb-1 mr-1 rounded-lg border bg-[#B07828] px-6 py-2 text-sm font-semibold text-white shadow outline-none transition-all duration-150 ease-linear hover:shadow-lg focus:outline-none"
                   type="button"
                   onClick={() => {
-                    console.log('Save Address');
+                    handlePostAddress();
                   }} //eslint-disable-line
                 >
                   {'Save Address'}

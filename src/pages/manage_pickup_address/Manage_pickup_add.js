@@ -68,6 +68,11 @@ const Manage_pickup_add = () => {
     setOpenRTOIndex((prevIndex) => (prevIndex === index ? null : index));
   };
 
+  const handleAddPickupAdress = () => {
+    setAddressId(null);
+    setShowAddressModal(true);
+  };
+
   useEffect(() => {
     fetchUserAddressList();
   }, []);
@@ -82,6 +87,7 @@ const Manage_pickup_add = () => {
           addressId={addressId}
           addressData={pickupAddress}
           userId={user_id}
+          fetchUserAddressList={fetchUserAddressList}
         />
       )}
       <div className="header mx-2 border-b border-[#b3b3b3] bg-[#FAFBFC] p-2 text-xl">
@@ -171,7 +177,7 @@ const Manage_pickup_add = () => {
                 </button>
                 <button
                   className="flex flex-row items-center gap-1 rounded-sm bg-[#895d20] p-1 pr-2 text-white"
-                  onClick={() => setShowAddressModal(true)}>
+                  onClick={() => handleAddPickupAdress()}>
                   <svg
                     className="h-6 w-6 pr-1 text-white"
                     aria-hidden="true"
