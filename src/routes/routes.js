@@ -52,6 +52,7 @@ import { CustomerAddresses } from '../pages/customer-addresses';
 import { CustomerAddressEdit } from '../pages/customer-address-edit';
 import { AddCustomer } from '../pages/add-customer';
 import Courier_Selection from '../pages/courier/courier-selection/Courier_Selection';
+import Priority from '../pages/courier/Rule/Priority';
 
 const routes = createBrowserRouter([
   {
@@ -286,6 +287,10 @@ const routes = createBrowserRouter([
   {
     path:'/courier-selection',
     element:<PrivateRoute component={<Courier_Selection />} /> 
+  },
+  {
+    path:'/custom-priority',
+    element:<PrivateRoute component={<Priority />}/>
   }
 ]);
 

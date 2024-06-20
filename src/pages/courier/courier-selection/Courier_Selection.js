@@ -74,8 +74,18 @@ function Courier_Selection() {
 
   return (
     <PageWithSidebar>
-      <div className="min-h-screen bg-gray-100 p-6">
-        <h2 className="text-xl font-semibold mb-4">Settings - Courier Selection</h2>
+    <div className="bg-gray-50">
+        <h2 className="text-xl mb-4 ml-4 mt-2">Settings - Courier Selection</h2>
+    </div>
+    <div className="border border-gray-300 ml-2 mr-2"></div>
+      <div className="min-h-screen bg-gray-100 p-6 ml-2 mr-2">
+      <div className="-mt-4 font-bold text-[#656565]">
+          <Link to={'/settings'} className="font-semibold text-green-500">
+            Settings
+          </Link>{' '}
+          &gt; Courier &gt; Courier Selection
+        </div>
+        
         <div className="bg-gray-100 p-3 rounded-sm">
           <div className="flex">
             <div className="w-64">

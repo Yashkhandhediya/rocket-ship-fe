@@ -53,6 +53,14 @@ const Rule = () => {
         navigate('/courier-rule')
     }
 
+    const handleProceed = () => {
+        if (!shippingRuleName) {
+            setIsValidShipRuleName(false);
+            return;
+        }
+        navigate('/custom-priority')
+    }
+
   return (
     <PageWithSidebar>
     <div className="min-h-screen bg-gray-100 flex flex-col p-4">
@@ -191,7 +199,7 @@ const Rule = () => {
 
                     <div className="mt-2 flex flex-row justify-end">
                         <button className="p-2 border rounded-md bg-red-500 text-white mr-2" onClick={()=> handleCancel()}>Cancel</button>
-                        <button className="p-2 border rounded-md bg-blue-600 text-white ml-2">Proceed</button>
+                        <button className="p-2 border rounded-md bg-blue-600 text-white ml-2" onClick={() => handleProceed()}>Proceed</button>
                     </div>
                 </div>
        
