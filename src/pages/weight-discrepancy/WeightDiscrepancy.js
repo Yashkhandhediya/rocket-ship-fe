@@ -534,21 +534,12 @@ const WeightDiscrepancy = () => {
             </select>
             {/* </div> */}
           </div>
-<<<<<<< Updated upstream
-          <div className='flex gap-2 items-center'>
-          {/* <button className='py-1 px-2 bg-red-700 border rounded-md' title='create' onClick={handleShow}>
+          <div className="flex items-center gap-2">
+            {/* <button className='py-1 px-2 bg-red-700 border rounded-md' title='create' onClick={handleShow}>
              <span className="text-white text-base">
               Create
              </span> 
           </button> */}
-            <button className='py-1 px-2 bg-gray-700' title='export'>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" x="0" y="0" viewBox="0 0 50 50" id="download">
-                <path d="m24 32.5 8-8h-6v-18h-4v18h-6l8 8zm18-26H30v3.97h12v28.06H6V10.47h12V6.5H6c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h36c2.21 0 4-1.79 4-4v-28c0-2.21-1.79-4-4-4z" fill='white'></path>
-=======
-          <div className="flex items-center gap-2">
-            <button className="rounded-md border bg-red-700 px-2 py-1" title="create" onClick={handleShow}>
-              <span className="text-base text-white">Create</span>
-            </button>
             <button className="bg-gray-700 px-2 py-1" title="export">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -561,22 +552,6 @@ const WeightDiscrepancy = () => {
                 <path
                   d="m24 32.5 8-8h-6v-18h-4v18h-6l8 8zm18-26H30v3.97h12v28.06H6V10.47h12V6.5H6c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h36c2.21 0 4-1.79 4-4v-28c0-2.21-1.79-4-4-4z"
                   fill="white"></path>
-              </svg>
-            </button>
-            <button className="bg-gray-700 px-2 py-1" title="Upload" onClick={handleImport}>
-              <svg width="20" height="20" x="0" y="0" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg">
-                <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-                <g id="SVGRepo_iconCarrier">
-                  {' '}
-                  <path
-                    d="M7 10H6.2C5.0799 10 4.51984 10 4.09202 10.218C3.71569 10.4097 3.40973 10.7157 3.21799 11.092C3 11.5198 3 12.0799 3 13.2V16.8C3 17.9201 3 18.4802 3.21799 18.908C3.40973 19.2843 3.71569 19.5903 4.09202 19.782C4.51984 20 5.0799 20 6.2 20H17.8C18.9201 20 19.4802 20 19.908 19.782C20.2843 19.5903 20.5903 19.2843 20.782 18.908C21 18.4802 21 17.9201 21 16.8V13.2C21 12.0799 21 11.5198 20.782 11.092C20.5903 10.7157 20.2843 10.4097 19.908 10.218C19.4802 10 18.9201 10 17.8 10H17M12 4V16M12 4L9 7M12 4L15 7"
-                    stroke="#ffffff"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"></path>{' '}
-                </g>
->>>>>>> Stashed changes
               </svg>
             </button>
             <input
