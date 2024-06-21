@@ -102,7 +102,7 @@ const DiscrepancyTable = ({ data,setLoading }) => {
               <div className="flex h-full w-[4%] items-center justify-center border-r-2 pl-2">
                 <input type="checkbox" />
               </div>
-              <div className="flex h-full w-[10.66%] items-center border-r-2 pl-2 font-normal">{item.status_updated_on}</div>
+              <div className="flex h-full w-[10.66%] items-center border-r-2 pl-2 font-normal">{item.generation_date}</div>
               <div className="flex flex-col h-full w-[10.66%] justify-center border-r-2 pl-2 font-normal">
                 <div><strong>Product Name:</strong> {item.order_data.product_info[0].name}</div>
                 <div><strong>PID:</strong> {item.order_data.product_info[0].id}</div>
@@ -134,11 +134,12 @@ const DiscrepancyTable = ({ data,setLoading }) => {
               )}
               </div>
               <div className="px-2 flex item-center h-full w-[10.66%] items-center border-r-2 pl-2 font-normal">
-                <div className='rounded basis-full font-semibold bg-red-100 text-red-700 text-center'>{item.weight_discrepancy.discrepancy_status_name}</div>
+                <div className='rounded basis-full font-semibold bg-red-100 text-red-700 text-center'>{item.weight_discrepancy.weight_discrepancy_status_name}</div>
               </div>
               <div className="p-1 flex flex-col gap-2 h-full w-[10.66%] items-center justify-center border-r-2 font-normal">
-                {item.weight_discrepancy.discrepancy_status_name == 'New Discrepancy' && getRemainingTime(item?.order_data.status_updated_on) > 0 &&
-                // {item.discrepancy_status_name == 'New Discrepancy'  &&
+                {console.log("Hi")}
+                {item.weight_discrepancy.weight_discrepancy_status_name == 'New Discrepancy' && getRemainingTime(item?.weight_discrepancy.generation_date) > 0 &&
+                // {item.weight_discrepancy_status_name == 'New Discrepancy'  &&
                   <>
                     <button className='border-2 p-1 border-red-600 rounded font-semibold text-red-600'
                       onClick={() => {
@@ -152,20 +153,20 @@ const DiscrepancyTable = ({ data,setLoading }) => {
                       }}
                     >Dispute Discrepancy</button>
                     <div className='text-center text-red-600 font-bold'>
-                      {getRemainingTime(item?.weight_discrepancy.status_updated_on)} working days remaining
+                      {getRemainingTime(item?.weight_discrepancy.generation_date)} working days remaining
                     </div>
                   </>}
-                {item.weight_discrepancy.discrepancy_status_name == 'New Discrepancy' && getRemainingTime(item?.weight_discrepancy.status_updated_on) == 0 &&
+                {item.weight_discrepancy.weight_discrepancy_status_name == 'New Discrepancy' && getRemainingTime(item?.weight_discrepancy.generation_date) == 0 &&
                   <>
                     <button
                       className='border-2 p-1 border-red-600 rounded font-semibold text-red-600 opacity-45 cursor-not-allowed'
                       disabled
                     >Discrepancy Accepted Automatically</button>
                     <div className='text-center text-red-600 font-bold'>
-                      {getRemainingTime(item?.weight_discrepancy.status_updated_on)} working days remaining
+                      {getRemainingTime(item?.weight_discrepancy.generation_date)} working days remaining
                     </div>
                   </>}
-                {item.weight_discrepancy.discrepancy_status_name == 'Dispute Raised' &&
+                {item.weight_discrepancy.weight_discrepancy_status_name == 'Dispute Raised' &&
                   <>
                     <button className='border-2 p-1 border-red-600 rounded font-semibold text-red-600 opacity-45' disabled>Dispute Discrepancy</button>
                   </>}
