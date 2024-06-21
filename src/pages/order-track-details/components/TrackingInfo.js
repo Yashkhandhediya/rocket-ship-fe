@@ -12,6 +12,7 @@ function TrackingInfo() {
   const { orderId } = useParams();
   const [loading, setLoading] = useState(false);
   const flag = searchParam.get('flag');
+  const status_name = searchParam.get('status')
 
   const fetchOrderDetails = async () => {
     setLoading(true);
@@ -32,7 +33,9 @@ function TrackingInfo() {
   };
 
   useEffect(() => {
-    fetchOrderDetails();
+    if(status_name != 'new'){
+      fetchOrderDetails();
+    }
   }, []);
 
   const renderTimelinePoint = (isActive) => {

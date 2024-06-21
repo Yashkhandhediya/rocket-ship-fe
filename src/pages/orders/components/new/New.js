@@ -249,7 +249,7 @@ export const New = ({ data, isLoading }) => {
             <div className="flex flex-col gap-2 text-left text-xs">
               <div className="pb-0.5">
                 <Link
-                  to={generatePath(`/track-order/:orderId`, { orderId: row?.original?.id || 1 })}
+                  to={generatePath(`/track-order/:orderId`, { orderId: row?.original?.id || 1 }) + `?status=new` }
                   className="border-b-2 border-b-orange-600 text-orange-600">
                   {row?.original?.id}
                 </Link>
