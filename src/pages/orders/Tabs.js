@@ -10,11 +10,11 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { temp_user_id } from './User';
+import { useSelector } from 'react-redux';
 
-const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
-  const [activeTab, setActiveTab] = useState(JSON.parse(localStorage.getItem('activeOrderTab')) || 0);
+const Tabs = ({ tabs, tabClassNames, activeTab, setActiveTab, onTabChange = () => {} }) => {
   console.log('Activeeeeeeee', activeTab);
-
+  const filteredOrders = useSelector((state) => state.filteredOrdersList);
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
@@ -65,7 +65,6 @@ const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
   };
 
   useEffect(() => {
-    localStorage.setItem('activeTab', activeTab);
     fetchOrdersData(tabID);
   }, [itemsPerPage, page, activeTab]);
 
@@ -104,7 +103,8 @@ const Tabs = ({ tabs, tabClassNames, onTabChange = () => {} }) => {
           {activeTab === 3 && <InTransit data={data} isLoading={loading} />}
           {activeTab === 4 && <Delivered data={data} isLoading={loading} />}
           {activeTab === 5 && <Rto data={data} isLoading={loading} />}
-          {activeTab === 6 && <All data={data} isLoading={loading} />}
+          {activeTab === 6 && <All data={!filteredOrders ? data : filteredOrders} isLoading={loading} />}
+
           <div className="flex w-full flex-wrap-reverse justify-between gap-2 rounded-lg bg-white px-4 py-2">
             <div className="mr-2 flex items-center">
               <div className="mr-4 text-xs text-black">{'Items per page: '}</div>
