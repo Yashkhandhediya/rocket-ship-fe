@@ -414,11 +414,11 @@ const WeightDiscrepancy = () => {
             {/* </div> */}
           </div>
           <div className='flex gap-2 items-center'>
-          <button className='py-1 px-2 bg-red-700 border rounded-md' title='create' onClick={handleShow}>
+          {/* <button className='py-1 px-2 bg-red-700 border rounded-md' title='create' onClick={handleShow}>
              <span className="text-white text-base">
               Create
              </span> 
-          </button>
+          </button> */}
             <button className='py-1 px-2 bg-gray-700' title='export'>
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" x="0" y="0" viewBox="0 0 50 50" id="download">
                 <path d="m24 32.5 8-8h-6v-18h-4v18h-6l8 8zm18-26H30v3.97h12v28.06H6V10.47h12V6.5H6c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h36c2.21 0 4-1.79 4-4v-28c0-2.21-1.79-4-4-4z" fill='white'></path>

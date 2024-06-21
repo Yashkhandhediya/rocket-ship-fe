@@ -204,12 +204,12 @@ const Orders = () => {
             )}
           </div>
           <div>
-            <button
+            {is_company == 1 && <button
               className="mr-2 rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-sm font-medium text-orange-600"
               onClick={() => navigate('/all-user')}>
               Back
               {/* Back Button */}
-            </button>
+            </button>}
             {is_company == 0 && (
               <button
                 className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-sm font-medium text-orange-600'}
