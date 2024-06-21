@@ -143,7 +143,7 @@ const DiscrepancyTable = ({ data,setLoading }) => {
                   <>
                     <button className='border-2 p-1 border-red-600 rounded font-semibold text-red-600'
                       onClick={() => {
-                        updateStatus(item.weight_discrepancy.discrepancy_id);
+                        updateStatus(item.weight_discrepancy.id);
                       }}>Accept Discrepancy</button>
                     <button
                       className='border-2 p-1 border-red-600 rounded font-semibold text-red-600'

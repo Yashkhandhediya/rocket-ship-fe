@@ -4,11 +4,12 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { freezeGuide } from '../../../../common/images';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
   const [weightDiscrepancyData, setWeightDiscrepancyData] = useState({
-    product_id: data.product_info[0].id,
-    category: data.product_info[0].category,
+    product_id: data.order_data.product_info[0].id,
+    category: data.order_data.product_info[0].category,
     length_img: null,
     width_img: null,
     height_img: null,
@@ -41,7 +42,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
     setLoading(true);
     const formData = new FormData();
     formData.append('file', file);
-    axios.post(`${BACKEND_URL}/image/upload_image?product_id=${data.id}`, { file: file }, { headers: { 'Content-Type': 'multipart/form-data' } })
+    axios.post(`${BACKEND_URL}/image/upload_image?product_id=${data?.order_data?.product_info?.[0]?.id}`, { file: file }, { headers: { 'Content-Type': 'multipart/form-data','Authorization':ACCESS_TOKEN } })
       .then((response) => {
         setWeightDiscrepancyData({ ...weightDiscrepancyData, [name]: response.data.filepath })
       }).catch((error) => {
@@ -59,8 +60,8 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
     if (weightDiscrepancyData.category === '') {
       return toast('Please enter product category', { type: 'error' })
     }
-    const headers = { 'Content-Type': 'application/json' };
-    const url = `${BACKEND_URL}/weight_discrepancy/dispute?id=${data.discrepancy_id}`
+    const headers = { 'Content-Type': 'application/json','Authorization':ACCESS_TOKEN };
+    const url = `${BACKEND_URL}/weight_discrepancy/dispute?id=${data.weight_discrepancy.id}`
     axios.put(url, weightDiscrepancyData, { headers })
       .then((response) => {
         if (response.status === 200) {
@@ -289,9 +290,9 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
                 </div>
                 <div className='flex'>
                   <div className='w-[60%] text-gray-400 border-2'>
-                    <div>Product Id: {data?.product_info?.[0]?.id}</div>
-                    <div>Name: {data?.product_info?.[0]?.name}</div>
-                    <div>SKU Id: {data?.product_info?.[0]?.sku}</div>
+                    <div>Product Id: {data?.order_data?.product_info?.[0]?.id}</div>
+                    <div>Name: {data?.order_data?.product_info?.[0]?.name}</div>
+                    <div>SKU Id: {data?.order_data?.product_info?.[0]?.sku}</div>
                   </div>
                   <div className='flex items-center gap-2 px-2 w-[40%] border-2'>
                     <div className='w-[33.33%]'>
