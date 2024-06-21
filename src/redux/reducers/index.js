@@ -7,6 +7,7 @@ import addReturn from './addReturnReducer';
 import returnsList from './setReturnsReducer';
 import weightDiscrepanciesList from './setWeightDiscrepanciesReducer';
 import filteredOrdersList from './setFilteredOrders';
+import filteredReturnOrdersList from './setFilteredReturnOrders';
 export default combineReducers({
   ordersList,
   clonedOrder,
@@ -15,5 +16,6 @@ export default combineReducers({
   returnsList,
   weightDiscrepanciesList,
   filteredOrdersList,
+  filteredReturnOrdersList,
   editOrder,
 });

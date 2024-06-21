@@ -14,7 +14,7 @@ import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
-import { resData } from "../../Returns"
+import { resData } from '../../Returns';
 
 export const All = () => {
   const dispatch = useDispatch();
@@ -22,81 +22,80 @@ export const All = () => {
   const flattened = {};
   const allOrdersList = useSelector((state) => state?.returnsList) || [];
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
+  const filteredReturnOrder = useSelector((state) => state?.filteredReturnOrdersList);
 
   function splitString(string, length) {
     let result = [];
     for (let i = 0; i < string.length; i += length) {
-        result.push(string.substr(i, length));
+      result.push(string.substr(i, length));
     }
     return result;
-}
+  }
 
-function flattenObject(obj, id) {
-  const keyCounts = {};
-  for(let i=0;i<resData.length;i++){
-        if(resData[i].id == id){
-          obj = resData[i];
-          break;
+  function flattenObject(obj, id) {
+    const keyCounts = {};
+    for (let i = 0; i < resData.length; i++) {
+      if (resData[i].id == id) {
+        obj = resData[i];
+        break;
+      }
+    }
+
+    function flatten(obj, parentKey = '') {
+      for (let key in obj) {
+        let propName = parentKey ? `${key}` : key;
+
+        // Check if the key already exists, if yes, increment count
+        if (flattened[propName] !== undefined) {
+          keyCounts[propName] = (keyCounts[propName] || 0) + 1;
+          propName = `${propName}${keyCounts[propName]}`;
+        }
+
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
+          flatten(obj[key], propName);
+        } else {
+          flattened[propName] = obj[key];
         }
       }
-
-  function flatten(obj, parentKey = '') {
-          for (let key in obj) {
-              let propName = parentKey ? `${key}` : key;
-              
-              // Check if the key already exists, if yes, increment count
-              if (flattened[propName] !== undefined) {
-                  keyCounts[propName] = (keyCounts[propName] || 0) + 1;
-                  propName = `${propName}${keyCounts[propName]}`;
-              }
-              
-              if (typeof obj[key] === 'object' && obj[key] !== null) {
-                  flatten(obj[key], propName);
-              } else {
-                  flattened[propName] = obj[key];
-              }
-          }
-  }
-  flatten(obj);
-  return flattened;
-}
-
-
-const handleInvoice = (id) => {
-  let temp_payload = flattenObject(resData,id)
-  console.log("kkkkkkkkkk",temp_payload)
-  const headers={'Content-Type': 'application/json'};
-  let temp_str = splitString(temp_payload['complete_address1'],35)
-  console.log("jtttttttt",temp_str)
-
-  let temp1 = splitString(temp_payload['complete_address'],35)
-
-  for (let i = 0; i < temp1.length; i++) {
-    temp_payload[`${i+1}_complete_address_`] = temp1[i];
-  }
-  
-  for(let i=0;i<temp_str.length;i++){
-    temp_payload[`complete_address1_${i+1}`] = temp_str[i]
+    }
+    flatten(obj);
+    return flattened;
   }
 
-  temp_payload['client_name']="cloud_cargo"
-  temp_payload['file_name']="invoice"
+  const handleInvoice = (id) => {
+    let temp_payload = flattenObject(resData, id);
+    console.log('kkkkkkkkkk', temp_payload);
+    const headers = { 'Content-Type': 'application/json' };
+    let temp_str = splitString(temp_payload['complete_address1'], 35);
+    console.log('jtttttttt', temp_str);
 
-  axios.post(MENIFEST_URL +'/bilty/print/',
-  temp_payload,
-   {headers}).then(
-      (response)=>{
-      const blob = new Blob([response.data], { type: 'application/pdf' });
-      const url = window.URL.createObjectURL(blob);
-      window.open(url);
-        console.log("General",response);
-        toast('Invoice Download Successfully',{type:'success'})
-      }
-    ) .catch((error) => {
-      console.error("Error:", error);
-      toast('Error in Invoice Download',{type:'error'})
-  });
-}
+    let temp1 = splitString(temp_payload['complete_address'], 35);
+
+    for (let i = 0; i < temp1.length; i++) {
+      temp_payload[`${i + 1}_complete_address_`] = temp1[i];
+    }
+
+    for (let i = 0; i < temp_str.length; i++) {
+      temp_payload[`complete_address1_${i + 1}`] = temp_str[i];
+    }
+
+    temp_payload['client_name'] = 'cloud_cargo';
+    temp_payload['file_name'] = 'invoice';
+
+    axios
+      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
+      .then((response) => {
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+        console.log('General', response);
+        toast('Invoice Download Successfully', { type: 'success' });
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        toast('Error in Invoice Download', { type: 'error' });
+      });
+  };
 
   const getColumns = () => {
     const columnHelper = createColumnHelper();
@@ -179,7 +178,7 @@ const handleInvoice = (id) => {
               <CustomTooltip
                 text={
                   <>
-                    <div className='text-wrap'>{`${row?.original?.user_info?.address_line1 ?? ''} ${
+                    <div className="text-wrap">{`${row?.original?.user_info?.address_line1 ?? ''} ${
                       row?.original?.user_info?.address_line2 ?? ''
                     }`}</div>
                     <div>{row?.original?.user_info?.city ?? ''}</div>
@@ -209,10 +208,10 @@ const handleInvoice = (id) => {
                   'Not Assigned'
                 ) : (
                   <Link
-                  to={generatePath(`/return-tracking/:orderId`, { orderId: row?.original?.id || 1 })}
-                  className="border-b-2 border-b-red-700 text-red-700">
-                  {'Track order'}
-                </Link>
+                    to={generatePath(`/return-tracking/:orderId`, { orderId: row?.original?.id || 1 })}
+                    className="border-b-2 border-b-red-700 text-red-700">
+                    {'Track order'}
+                  </Link>
                 )}
               </div>
             </div>
@@ -228,7 +227,7 @@ const handleInvoice = (id) => {
             </div>
           );
         },
-      }), 
+      }),
       columnHelper.accessor('action', {
         header: 'Action',
         cell: (row) => (
@@ -237,13 +236,13 @@ const handleInvoice = (id) => {
               id={row.id}
               className="min-w-fit rounded bg-orange-700 px-4 py-1.5 text-white"
               onClick={() => {}}>
-            {(row?.original?.status_name || '')?.toLowerCase() == 'new' ? 'Ship Now' : 'Download Menifest'}
+              {(row?.original?.status_name || '')?.toLowerCase() == 'new' ? 'Ship Now' : 'Download Menifest'}
             </button>
             <div className="min-h-[32px] min-w-[32px]">
               <MoreDropdown
                 renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                 options={moreActionOptions({
-                  downloadInvoice : () => handleInvoice(row?.original?.id),
+                  downloadInvoice: () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row?.original),
                   cancelOrder: () => cancelOrder(row?.original),
                 })}
@@ -314,7 +313,7 @@ const handleInvoice = (id) => {
       /> */}
       <CustomDataTable
         columns={getColumns()}
-        rowData={allOrdersList}
+        rowData={filteredReturnOrder ? filteredReturnOrder : allOrdersList}
         enableRowSelection={true}
         shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
         onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}

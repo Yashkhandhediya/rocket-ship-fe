@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { infoIcon } from '../../icons';
 import { CustomTooltip } from '../custom-tooltip';
 
-const Tabs = ({ tabs, tabClassNames, panelClassNames, onTabChange = () => {} }) => {
-  const [activeTab, setActiveTab] = useState(JSON.parse(localStorage.getItem('activeTab')) || 0);
+const Tabs = ({ tabs, tabClassNames, activeTab, setActiveTab, panelClassNames, onTabChange = () => {} }) => {
   console.log('Activeeeeeeee', activeTab);
 
   const handleClick = (index) => {
@@ -13,7 +12,7 @@ const Tabs = ({ tabs, tabClassNames, panelClassNames, onTabChange = () => {} }) 
   };
 
   useEffect(() => {
-    localStorage.setItem('activeTab', activeTab.toString());
+    localStorage.setItem('activeTab', JSON.stringify(activeTab));
   }, []);
 
   return (
