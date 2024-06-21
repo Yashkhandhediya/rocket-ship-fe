@@ -37,6 +37,7 @@ const WeightDiscrepancy = () => {
   const [searchBy, setSearchBy] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [filteredWD, setFilteredWD] = useState(null);
+  console.log("TESSSSSST")
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
