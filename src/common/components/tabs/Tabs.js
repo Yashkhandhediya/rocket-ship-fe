@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { infoIcon } from '../../icons';
 import { CustomTooltip } from '../custom-tooltip';
 
-const Tabs = ({ tabs, tabClassNames, activeTab, setActiveTab, panelClassNames, onTabChange = () => {} }) => {
+const Tabs = ({ tabs, tabClassNames, panelClassNames, onTabChange = () => {} }) => {
+  const [activeTab, setActiveTab] = useState(JSON.parse(localStorage.getItem('activeTab')) || 0);
   console.log('Activeeeeeeee', activeTab);
 
   const handleClick = (index) => {
