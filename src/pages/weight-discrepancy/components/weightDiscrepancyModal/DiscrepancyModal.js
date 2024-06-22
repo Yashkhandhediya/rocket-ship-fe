@@ -61,7 +61,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
       return toast('Please enter product category', { type: 'error' })
     }
     const headers = { 'Content-Type': 'application/json','Authorization':ACCESS_TOKEN };
-    const url = `${BACKEND_URL}/weight_discrepancy/dispute?id=${data.weight_discrepancy.id}?user_id=${localStorage.getItem('user_id')}`
+    const url = `${BACKEND_URL}/weight_discrepancy/dispute?id=${data.weight_discrepancy.id}&user_id=${localStorage.getItem('user_id')}`
     axios.put(url, weightDiscrepancyData, { headers })
       .then((response) => {
         if (response.status === 200) {
