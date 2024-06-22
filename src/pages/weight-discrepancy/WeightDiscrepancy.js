@@ -37,12 +37,18 @@ const WeightDiscrepancy = () => {
   const [searchBy, setSearchBy] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [filteredWD, setFilteredWD] = useState(null);
-  console.log("TESSSSSST")
+  console.log('TESSSSSST');
+  const [selectedStatus, setSelectedStatus] = useState(null);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  console.log(filteredWDId, filteredWD);
+  // console.log(filteredWDId, filteredWD);
+
+  const handleSelectedStatus = (e) => {
+    setFilteredWD(null);
+    setSelectedStatus(e.target.value);
+  };
 
   const [query, setQuery] = useState('');
 
@@ -59,6 +65,16 @@ const WeightDiscrepancy = () => {
   const [images, setImages] = useState({
     img_1: null,
   });
+
+  const allWeightDiscrepanciesData = allWeightDiscrepanciesList?.filter((data) => {
+    if (selectedStatus === 'All Statuses' || selectedStatus === null) {
+      return data;
+    } else {
+      return data.weight_discrepancy.weight_discrepancy_status_name === selectedStatus;
+    }
+  });
+
+  console.log(status);
 
   const [img, setImg] = useState(null);
 
@@ -402,7 +418,7 @@ const WeightDiscrepancy = () => {
                   style={{ border: 'none', outline: 'none', width: '130px', fontSize: '13px' }}
                 />
               </div>
-              {query.length != 0 && (
+              {query?.length != 0 && (
                 <div
                   className={`absolute w-full cursor-pointer rounded-lg bg-white p-4 text-[12px] shadow-lg hover:bg-gray-200  ${
                     errorMsg ? 'text-red-800' : 'text-gray-400'
@@ -495,41 +511,45 @@ const WeightDiscrepancy = () => {
               </svg> */}
             </div>
             {/* <div className='order-input flex gap-1 py-1 px-2 rounded-md border overflow-hidden'> */}
-            <select name="date-range" className="h-8 rounded-md border-0 text-sm outline-none">
-              <option value="all-statuses" className="">
+            <select
+              name="date-range"
+              value={selectedStatus}
+              onChange={(e) => handleSelectedStatus(e)}
+              className="h-8 rounded-md border-0 text-sm outline-none">
+              <option value="All Statuses" className="">
                 All Statuses
               </option>
-              <option value="new" className="">
+              <option value="New Discrepancy" className="">
                 New Discrepancy
               </option>
-              <option value="auto-accepted-discrepancy" className="">
+              <option value="Auto Accepted Discrepancy" className="">
                 Auto Accepted Discrepancy
               </option>
-              <option value="discrepancy-accepted" className="">
+              <option value="Discrepancy Accepted" className="">
                 Discrepancy Accepted
               </option>
-              <option value="dispute-raise" className="">
+              <option value="Dispute Raise" className="">
                 Dispute Raise
               </option>
-              <option value="dispute-accepted-by-courier" className="">
+              <option value="Dispute Accepted by Courier" className="">
                 Dispute Accepted by Courier
               </option>
-              <option value="dispute-rejected-by-courier" className="">
+              <option value="Dispute Rejected by Courier" className="">
                 Dispute Rejected by Courier
               </option>
-              <option value="sr-credit" className="">
+              <option value="SR Credit" className="">
                 SR Credit
               </option>
-              <option value="escalation-raise" className="">
+              <option value="Escalation Raise" className="">
                 Escalation Raise
               </option>
-              <option value="escalation in-progress" className="">
+              <option value="Escalation In Progress" className="">
                 Escalation In Progress
               </option>
-              <option value="escalation-resolved" className="">
+              <option value="Escalation Resolved" className="">
                 Escalation Resolved
               </option>
-              <option value="escalation-closed" className="">
+              <option value="Escalation Closed" className="">
                 Escalation Closed
               </option>
             </select>
@@ -570,7 +590,8 @@ const WeightDiscrepancy = () => {
       </div>
       <div>
         <DiscrepancyTable
-          data={filteredWD ? filteredWD : allWeightDiscrepanciesList}
+          // data={filteredWD ? filteredWD : allWeightDiscrepanciesList}
+          data={filteredWD ? filteredWD : allWeightDiscrepanciesData}
           setLoading={setIsLoading}
         />
       </div>
