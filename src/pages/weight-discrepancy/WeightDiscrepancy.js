@@ -66,6 +66,10 @@ const WeightDiscrepancy = () => {
     img_1: null,
   });
 
+  const discrepanciesAccepted = allWeightDiscrepanciesList?.filter(
+    (data) => data.weight_discrepancy.weight_discrepancy_status_name === 'Discrepancy Accepted',
+  );
+
   const allWeightDiscrepanciesData = allWeightDiscrepanciesList?.filter((data) => {
     if (selectedStatus === 'All Statuses' || selectedStatus === null) {
       return data;
@@ -368,7 +372,7 @@ const WeightDiscrepancy = () => {
           <div className="flex flex-1 basis-full flex-col gap-2 rounded-xl border border-rose-700 bg-pink-50 p-4 md:basis-2/5 xl:basis-1/5">
             <div className="text-sm">Discrepancies Accepted</div>
             <div className="flex items-end justify-between">
-              <strong className="text-2xl">0</strong>
+              <strong className="text-2xl">{discrepanciesAccepted.length}</strong>
               <div className="align-baseline text-sm text-gray-500">Last 30 Days</div>
             </div>
           </div>
