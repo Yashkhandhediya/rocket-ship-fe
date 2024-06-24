@@ -113,7 +113,7 @@ const Settings = () => {
           },
           {
             title: 'Billing Address',
-            link: '/',
+            link: '/billing-address',
           },
         ],
         icon: (
