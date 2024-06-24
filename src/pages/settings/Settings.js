@@ -169,11 +169,11 @@ const Settings = () => {
         items: [
           {
             title: 'Label Preferences',
-            link: '/',
+            link: '/label-buyer-settings',
           },
           {
             title: 'Invoice Preferences',
-            link: '/',
+            link: '/invoice-preferences',
           },
           {
             title: 'Proof of Delivery (POD)',

@@ -26,7 +26,9 @@ import {
   UserList,
   Catalogue,
   Manage_user,
+ 
 } from '../pages';
+
 import Tracking from '../pages/tracking/Tracking';
 import ReturnTracking from '../pages/return-tracking/ReturnTracking';
 import PrivateRoute from './private-route/PrivateRoute';
@@ -53,6 +55,9 @@ import { CustomerAddressEdit } from '../pages/customer-address-edit';
 import { AddCustomer } from '../pages/add-customer';
 import Courier_Selection from '../pages/courier/courier-selection/Courier_Selection';
 import Priority from '../pages/courier/Rule/Priority';
+import { InvoicePreferences, LabelPreferences } from '../pages/Label-Invoice';
+
+
 
 const routes = createBrowserRouter([
   {
@@ -292,6 +297,14 @@ const routes = createBrowserRouter([
     path: '/custom-priority',
     element: <PrivateRoute component={<Priority />} />,
   },
+  {
+    path: '/label-buyer-settings',
+    element: <PrivateRoute component={<LabelPreferences/>} />
+  },
+  {
+    path:'/invoice-preferences',
+    element: <PrivateRoute component={<InvoicePreferences/>} />
+  }
 ]);
 
 export default routes;
