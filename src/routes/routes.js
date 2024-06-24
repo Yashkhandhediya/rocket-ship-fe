@@ -299,7 +299,6 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<Priority />} />,
   },
   {
-
     path: '/label-buyer-settings',
     element: <PrivateRoute component={<LabelPreferences/>} />
   },
@@ -307,8 +306,9 @@ const routes = createBrowserRouter([
     path:'/invoice-preferences',
     element: <PrivateRoute component={<InvoicePreferences/>} />
   },
-    path: '/billing-address',
-    element: <PrivateRoute component={<BillingAddress />} />,
+  {
+    path:'/billing-address',
+    element: <PrivateRoute component={<BillingAddress/>} />
   },
   {
     path: '/shiprocket-bank-details',
