@@ -55,6 +55,7 @@ import Courier_Selection from '../pages/courier/courier-selection/Courier_Select
 import Priority from '../pages/courier/Rule/Priority';
 import { BillingAddress } from '../pages/billing-address';
 import { ShiprocketBankDetails } from '../pages/shiprocket-bank-details';
+import { ReturnSettings } from '../pages/return-settings';
 
 const routes = createBrowserRouter([
   {
@@ -301,6 +302,10 @@ const routes = createBrowserRouter([
   {
     path: '/shiprocket-bank-details',
     element: <PrivateRoute component={<ShiprocketBankDetails />} />,
+  },
+  {
+    path: '/return-settings',
+    element: <PrivateRoute component={<ReturnSettings />} />,
   },
 ]);
 
