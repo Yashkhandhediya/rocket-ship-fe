@@ -18,7 +18,7 @@ const InvoicePreferences = () => {
             <Link to={'/settings'} className="font-semibold text-green-500">
               Settings
             </Link>{' '}
-            &gt; Label, Invoice & POD &gt; Label Preferences
+            &gt; Label, Invoice & POD &gt; Invoice Preferences
           </div>
           <div className="flex flex-col gap-3 bg-white p-4">
             <div className="pt-6 text-lg font-bold text-[#656565]">Accounting Details</div>
