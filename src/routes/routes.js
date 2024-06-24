@@ -54,6 +54,7 @@ import { AddCustomer } from '../pages/add-customer';
 import Courier_Selection from '../pages/courier/courier-selection/Courier_Selection';
 import Priority from '../pages/courier/Rule/Priority';
 import { BillingAddress } from '../pages/billing-address';
+import { ShiprocketBankDetails } from '../pages/shiprocket-bank-details';
 
 const routes = createBrowserRouter([
   {
@@ -296,6 +297,10 @@ const routes = createBrowserRouter([
   {
     path: '/billing-address',
     element: <PrivateRoute component={<BillingAddress />} />,
+  },
+  {
+    path: '/shiprocket-bank-details',
+    element: <PrivateRoute component={<ShiprocketBankDetails />} />,
   },
 ]);
 
