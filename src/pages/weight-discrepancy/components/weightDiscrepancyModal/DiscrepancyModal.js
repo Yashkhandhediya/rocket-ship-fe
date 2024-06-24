@@ -26,7 +26,15 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
   });
 
   const handleFileChange = (e) => {
+    let temp_name;
     const { name } = e.target;
+    if(name == 'length_img' || name == 'width_img' || name == 'height_img' || name == 'weight_img'){
+      const temp = name.split('_')
+      temp_name = temp[0] + "_image"
+    }else{
+      const temp = name.split('_')
+      temp_name = temp[1] + "_image"
+    }
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -35,14 +43,29 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
       };
       reader.readAsDataURL(file);
     }
-    handleUpload(name, file);
+    handleUpload(name, file,temp_name);
   };
 
-  const handleUpload = (name, file) => {
+  // const handleUpload = (name, file) => {
+  //   setLoading(true);
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+  //   axios.post(`${BACKEND_URL}/image/upload_image?product_id=${data?.order_data?.product_info?.[0]?.id}`, { file: file }, { headers: { 'Content-Type': 'multipart/form-data','Authorization':ACCESS_TOKEN } })
+  //     .then((response) => {
+  //       setWeightDiscrepancyData({ ...weightDiscrepancyData, [name]: response.data.filepath })
+  //     }).catch((error) => {
+  //       toast('Something went wrong while uploading image', { type: 'error' })
+  //       console.log(error); //eslint-disable-line
+  //     })
+  //   setLoading(false);
+  // }
+
+  const handleUpload = (name, file,temp_name) => {
     setLoading(true);
     const formData = new FormData();
-    formData.append('file', file);
-    axios.post(`${BACKEND_URL}/image/upload_image?product_id=${data?.order_data?.product_info?.[0]?.id}`, { file: file }, { headers: { 'Content-Type': 'multipart/form-data','Authorization':ACCESS_TOKEN } })
+    const filename = `${data?.order_data?.product_info?.[0]?.id}_${data?.order_data?.waybill_no}_${temp_name}`;
+    formData.append('file', file,filename);
+    axios.post(`${BACKEND_URL}/weight_discrepancy/add_image?weight_discrepancy_id=${data?.weight_discrepancy?.id}&image_type=${data?.order_data?.product_info?.[0]?.id + "_" + temp_name}`, { file: file }, { headers: { 'Content-Type': 'multipart/form-data','Authorization':ACCESS_TOKEN } })
       .then((response) => {
         setWeightDiscrepancyData({ ...weightDiscrepancyData, [name]: response.data.filepath })
       }).catch((error) => {
@@ -51,6 +74,35 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
       })
     setLoading(false);
   }
+
+
+  const imageTypes = [
+    { type: 'length_image', key: 'length_img' },
+    { type: 'width_image', key: 'width_img' },
+    { type: 'height_image', key: 'height_img' },
+    { type: 'weight_image', key: 'weight_img' },
+    { type: 'label_image', key: 'with_label_img' },
+  ];
+
+  const handleImageData = (imageType, key) => {
+    axios.get(BACKEND_URL + `/weight_discrepancy/get_weight_discrepancy_courier_image?weight_discrepancy_id=${data?.weight_discrepancy?.id}&image_type=${data?.weight_discrepancy?.id}&image_type=${data?.order_data?.product_info?.[0]?.id + "_" +imageType}`,{ responseType: 'blob' })
+    .then((res) => {
+      console.log("Imgeeeeeeee",res.data)
+      const imgUrl = URL.createObjectURL(res.data)
+      setImages(prevImages => ({ ...prevImages, [key]: imgUrl }));
+    })
+    .catch((err) => {
+      console.log("ERRRRRRRRRRR",err)
+    })
+  }
+
+  useEffect(() => {
+    if (data?.weight_discrepancy?.id) {
+      imageTypes.forEach(({ type, key }) => {
+        handleImageData(type, key);
+      });
+    }
+  }, [data?.weight_discrepancy?.id]);
 
 
   const handleWeightFreezeSubmit = () => {
