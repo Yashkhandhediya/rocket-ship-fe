@@ -56,8 +56,9 @@ import { AddCustomer } from '../pages/add-customer';
 import Courier_Selection from '../pages/courier/courier-selection/Courier_Selection';
 import Priority from '../pages/courier/Rule/Priority';
 import { InvoicePreferences, LabelPreferences } from '../pages/Label-Invoice';
-
-
+import { BillingAddress } from '../pages/billing-address';
+import { ShiprocketBankDetails } from '../pages/shiprocket-bank-details';
+import { ReturnSettings } from '../pages/return-settings';
 
 const routes = createBrowserRouter([
   {
@@ -298,13 +299,25 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<Priority />} />,
   },
   {
+
     path: '/label-buyer-settings',
     element: <PrivateRoute component={<LabelPreferences/>} />
   },
   {
     path:'/invoice-preferences',
     element: <PrivateRoute component={<InvoicePreferences/>} />
-  }
+  },
+    path: '/billing-address',
+    element: <PrivateRoute component={<BillingAddress />} />,
+  },
+  {
+    path: '/shiprocket-bank-details',
+    element: <PrivateRoute component={<ShiprocketBankDetails />} />,
+  },
+  {
+    path: '/return-settings',
+    element: <PrivateRoute component={<ReturnSettings />} />,
+  },
 ]);
 
 export default routes;

@@ -113,7 +113,11 @@ const Settings = () => {
           },
           {
             title: 'Billing Address',
-            link: '/',
+            link: '/billing-address',
+          },
+          {
+            title: 'Shiprocket Bank Details',
+            link: '/shiprocket-bank-details',
           },
         ],
         icon: (
