@@ -85,7 +85,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
   ];
 
   const handleImageData = (imageType, key) => {
-    axios.get(BACKEND_URL + `/weight_discrepancy/get_weight_discrepancy_courier_image?weight_discrepancy_id=${data?.weight_discrepancy?.id}&image_type=${data?.weight_discrepancy?.id}&image_type=${data?.order_data?.product_info?.[0]?.id + "_" +imageType}`,{ responseType: 'blob' })
+    axios.get(BACKEND_URL + `/weight_discrepancy/get_weight_discrepancy_courier_image?weight_discrepancy_id=${data?.weight_discrepancy?.id}&image_type=${imageType}`,{ responseType: 'blob' })
     .then((res) => {
       console.log("Imgeeeeeeee",res.data)
       const imgUrl = URL.createObjectURL(res.data)
