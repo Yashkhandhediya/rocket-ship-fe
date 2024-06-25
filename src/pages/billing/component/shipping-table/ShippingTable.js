@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 
 const ShippingTable = ({ data }) => {
+  console.log("GHHHHHHHHH",data)
   const getDate = (date) => {
     const [day, month, year] = date.split('-').reverse();
     const d = day.slice(0, 2);
@@ -22,9 +23,10 @@ const ShippingTable = ({ data }) => {
         <td className=" border border-gray-200 px-4 py-4 text-left">{data?.on_hold_amount}</td>
 
         <td className=" border border-gray-200 px-4 py-4 text-left">
-          {data?.total_freight_charges.map((charge, index) => {
+          {/* {data?.total_freight_charges.map((charge, index) => {
             return <p key={index}>{charge === 'null' ? '' : charge}</p>;
-          })}
+          })} */}
+          <p>{data?.total_freight_charges === 'null' ? '0' : data?.total_freight_charges}</p>
         </td>
         <td className="flex flex-col border border-gray-200 px-4 py-4 text-left">
           <div>
