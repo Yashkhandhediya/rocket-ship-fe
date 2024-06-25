@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { Link, NavLink } from 'react-router-dom';
 import ReturnProcessDetail from './components/ReturnProcessDetail';
@@ -6,8 +6,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { returnProcessDetails } from './constants';
 import { returnReasonsList } from './constants';
+import { faUpload } from '@fortawesome/free-solid-svg-icons';
+import { faDownload } from '@fortawesome/free-solid-svg-icons';
 
 function ReturnSettings() {
+  const [isApproveRequest, setIsApproveRequest] = useState(false);
+  const [allowedValue, setAllowedValue] = useState('allowedCustomizeList');
+
+  const fileInputRef = React.useRef(null);
+
+  const handleButtonClick = () => {
+    fileInputRef.current.click();
+  };
+
   return (
     <PageWithSidebar>
       <div className="px-4 pt-8">
@@ -76,11 +87,37 @@ function ReturnSettings() {
                 </div>
                 <div className=" flex items-center gap-2">
                   <label className="relative inline-flex cursor-pointer items-center">
-                    <input type="checkbox" value="" className="peer sr-only" />
+                    <input
+                      type="checkbox"
+                      value={isApproveRequest}
+                      onChange={() => setIsApproveRequest((prev) => !prev)}
+                      className="peer sr-only"
+                    />
                     <div className="dark:border-gray-600 peer h-5 w-9 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-0.5 after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-0 rtl:peer-checked:after:-translate-x-full"></div>
                   </label>
                 </div>
               </div>
+              {isApproveRequest && (
+                <div className="my-4 flex w-full flex-wrap rounded-lg bg-red-50 px-4 pt-4">
+                  {returnReasonsList &&
+                    returnReasonsList.map((list, index) => {
+                      return (
+                        <div key={index} className="mb-5 flex w-1/4 gap-2">
+                          <input type="checkbox" />
+                          <div className="text-[12px]">
+                            <p className="font-semibold">{list.title}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  <div className="my-5 flex w-1/4 gap-2">
+                    <input type="checkbox" />
+                    <div className="text-[12px]">
+                      <p className="font-semibold">select all</p>
+                    </div>
+                  </div>
+                </div>
+              )}
               <div className="mb-4 flex justify-between">
                 <div>
                   <p className="text-sm font-semibold">
@@ -107,7 +144,16 @@ function ReturnSettings() {
                   </p>
                   <div className="my-3">
                     <div>
-                      <input type="radio" id="allProducts" className="mr-3" value="ftl" name="type" />
+                      <input
+                        type="radio"
+                        id="allProducts"
+                        className="mr-3"
+                        value={allowedValue}
+                        onChange={() => {
+                          setAllowedValue('allProducts');
+                        }}
+                        name="type"
+                      />
                       <label
                         htmlFor="allProducts"
                         className="mb-2 inline-flex items-center text-xs font-medium text-gray-900">
@@ -115,13 +161,55 @@ function ReturnSettings() {
                       </label>
                     </div>
                     <div>
-                      <input type="radio" id="customizeProducts" className="mr-3" value="ftl" name="type" />
+                      <input
+                        type="radio"
+                        id="customizeProducts"
+                        value={allowedValue}
+                        checked={allowedValue === 'allowedCustomizeList'}
+                        onChange={() => setAllowedValue('allowedCustomizeList')}
+                        className="mr-3"
+                        name="type"
+                      />
                       <label
                         htmlFor="customizeProducts"
                         className="mb-2 inline-flex items-center text-xs font-medium text-gray-900">
-                        All Products SKUs are allowed to be return
+                        Customize the list for returnable products{' '}
                       </label>
                     </div>
+                    {allowedValue === 'allowedCustomizeList' && (
+                      <div className="my-4 rounded-lg bg-red-50 p-4">
+                        <p className="text-[12px] font-semibold">
+                          Please upload the list of SKU’s that are eligible for return{' '}
+                          <span className="text-[10px] text-gray-500">
+                            (Only csv file formal will be accepted.)
+                          </span>
+                        </p>
+                        <div className="  w-full py-2">
+                          <div className="mt-1 flex items-center">
+                            <input
+                              ref={fileInputRef}
+                              type="file"
+                              className="hidden"
+                              onChange={(e) => {
+                                // Handle file selection
+                                console.log(e.target.files);
+                              }}
+                            />
+                            <button
+                              type="button"
+                              onClick={handleButtonClick}
+                              className="flex cursor-pointer items-center gap-2 rounded-md border border-red-300 bg-white px-8 py-3 text-red-800 shadow-sm  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                              <FontAwesomeIcon icon={faUpload} className="ml-2 h-4 w-4 text-red-800" />
+                              <span className="text-[12px]">Browse and Upload (csv)</span>
+                            </button>
+                          </div>
+                          <p className="mt-4 flex gap-2 font-medium text-red-800">
+                            <FontAwesomeIcon icon={faDownload} className="ml-2 h-4 w-4 text-red-800" />
+                            <span className="text-[12px]">Download Sample file</span>
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
