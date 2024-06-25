@@ -26,7 +26,6 @@ import {
   UserList,
   Catalogue,
   Manage_user,
- 
 } from '../pages';
 
 import Tracking from '../pages/tracking/Tracking';
@@ -58,7 +57,7 @@ import Priority from '../pages/courier/Rule/Priority';
 import { InvoicePreferences, LabelPreferences } from '../pages/Label-Invoice';
 import { BillingAddress } from '../pages/billing-address';
 import { ShiprocketBankDetails } from '../pages/shiprocket-bank-details';
-import { ReturnSettings } from '../pages/return-settings';
+import { RefundSetting, ReturnSettings } from '../pages/return-settings';
 
 const routes = createBrowserRouter([
   {
@@ -300,15 +299,15 @@ const routes = createBrowserRouter([
   },
   {
     path: '/label-buyer-settings',
-    element: <PrivateRoute component={<LabelPreferences/>} />
+    element: <PrivateRoute component={<LabelPreferences />} />,
   },
   {
-    path:'/invoice-preferences',
-    element: <PrivateRoute component={<InvoicePreferences/>} />
+    path: '/invoice-preferences',
+    element: <PrivateRoute component={<InvoicePreferences />} />,
   },
   {
-    path:'/billing-address',
-    element: <PrivateRoute component={<BillingAddress/>} />
+    path: '/billing-address',
+    element: <PrivateRoute component={<BillingAddress />} />,
   },
   {
     path: '/shiprocket-bank-details',
@@ -317,6 +316,10 @@ const routes = createBrowserRouter([
   {
     path: '/return-settings',
     element: <PrivateRoute component={<ReturnSettings />} />,
+  },
+  {
+    path: '/refund-settings',
+    element: <PrivateRoute component={<RefundSetting />} />,
   },
 ]);
 

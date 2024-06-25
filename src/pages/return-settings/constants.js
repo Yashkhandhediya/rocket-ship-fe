@@ -79,3 +79,34 @@ export const returnReasonsList = [
     isMandatory: false,
   },
 ];
+
+export const selectRefundDetails = [
+  {
+    title: '2. Back to source',
+    description:
+      'The refunded amount is credited back by using the original payment method. This is only applicable for Prepaid orders.',
+  },
+  {
+    title: '3. Store Credits',
+    description:
+      'You will be able to create a coupon code which will be sent to the buyer through e-mail.The amount of the credit depends on the item’s price and purchase date. If this mode is choosen by the buyer, you can customize the validity of the credits and refund the amount as their store credits.',
+  },
+];
+
+export const instantRefundDetails = [
+  {
+    title: '4a. UPI Transfer',
+    description:
+      'You will be able to instantly refund the money back to the buyer by entering the UPI address upon selecting UPI method from the ‘Returns’ on the Shiprocket Platform.',
+  },
+  {
+    title: '4b. Bank Transfer',
+    description:
+      'You will be able to transfer money to the account given by the buyer. You will be asked to enter the Bank Account details onselecting the ‘Bank Transfer’ mode of refund from the ‘Returns’ on Shiprocket panel.',
+  },
+  {
+    title: '4c. Payout Link',
+    description:
+      'On selecting payout link at the Shiprocket panel, a link will be created for the refund which will be sent to the buyer through SMS or Email for the refund amount after confirmation.',
+  },
+];
