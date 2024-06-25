@@ -532,8 +532,8 @@ const WeightDiscrepancy = () => {
               <option value="Discrepancy Accepted" className="">
                 Discrepancy Accepted
               </option>
-              <option value="Dispute Raise" className="">
-                Dispute Raise
+              <option value="Dispute Raised" className="">
+                Dispute Raised
               </option>
               <option value="Dispute Accepted by Courier" className="">
                 Dispute Accepted by Courier
