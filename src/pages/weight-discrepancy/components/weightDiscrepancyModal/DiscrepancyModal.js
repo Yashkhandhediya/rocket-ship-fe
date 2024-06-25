@@ -65,7 +65,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
     const formData = new FormData();
     const filename = `${data?.order_data?.product_info?.[0]?.id}_${data?.order_data?.waybill_no}_${temp_name}`;
     formData.append('file', file,filename);
-    axios.post(`${BACKEND_URL}/weight_discrepancy/add_image?weight_discrepancy_id=${data?.weight_discrepancy?.id}&image_type=${data?.order_data?.product_info?.[0]?.id + "_" + temp_name}`, { file: file }, { headers: { 'Content-Type': 'multipart/form-data','Authorization':ACCESS_TOKEN } })
+    axios.post(`${BACKEND_URL}/weight_discrepancy/add_image?weight_discrepancy_id=${data?.weight_discrepancy?.id}&image_type=${temp_name}`, { file: file }, { headers: { 'Content-Type': 'multipart/form-data','Authorization':ACCESS_TOKEN } })
       .then((response) => {
         setWeightDiscrepancyData({ ...weightDiscrepancyData, [name]: response.data.filepath })
       }).catch((error) => {
