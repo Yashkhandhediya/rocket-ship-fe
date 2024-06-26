@@ -1,54 +1,37 @@
-import React, { useState, useRef } from 'react';
-import { truck } from '../../../common/icons';
-import { Ecom, Delivery, kerry } from '../../../common/icons';
+import React, { useState, useRef, useEffect } from 'react';
+import axios from 'axios';
+import { BACKEND_URL } from '../../../common/utils/env.config';
 
-const Card = () => {
-  const [cards, setCards] = useState([
-    {
-      id: '1',
-      name: 'Kerry Indev Express',
-      description: 'Kerry Indev Express Surface',
-      minWeight: '0.50 Kg',
-      callBeforeDelivery: 'Not Available',
-      pod: 'On Request',
-      deliveryBoyNumber: 'Not Available',
-      trackingServices: 'Real Time',
-      img_name:Ecom
-    },
-    {
-        id: '2',
-        name: 'Ecom Express',
-        description: 'Ecom Express Surface',
-        minWeight: '0.50 Kg',
-        callBeforeDelivery: 'Available',
-        pod: 'Instant',
-        deliveryBoyNumber: 'Not Available',
-        trackingServices: 'Real Time',
-        img_name:Delivery
-      },
-      {
-        id: '3',
-        name: 'Ecom Express',
-        description: 'Ecom Express Surface 5kg',
-        minWeight: '5.00 Kg',
-        callBeforeDelivery: 'Available',
-        pod: 'Instant',
-        deliveryBoyNumber: 'Not Available',
-        trackingServices: 'Real Time',
-        img_name:kerry
-      },
-      {
-        id: '4',
-        name: 'Ecom Express',
-        description: 'Ecom Express Surface 5kg',
-        minWeight: '5.00 Kg',
-        callBeforeDelivery: 'Available',
-        pod: 'Instant',
-        deliveryBoyNumber: 'Not Available',
-        trackingServices: 'Real Time',
-        img_name:Ecom
-      },
-  ]);
+const Card = ({cards,setCards,initialCards,onCardsUpdate}) => {
+
+  const [data,setData] = useState([])
+
+  const handleData = () => {
+    axios.get(BACKEND_URL + `/userpartner/custom_courier_priority?user_id=${localStorage.getItem('user_id')}`)
+    .then((res) => {
+      console.log("Data Courier",res.data)
+      const responseNames = res.data; 
+
+      const updatedCards = cards.map((card, index) => {
+       
+        if (responseNames && responseNames[index]) {
+          console.log("IUJUUUUUUUU")
+          return { ...card, name: responseNames[index] };
+        }
+        console.log("OPPPPPPP")
+        return { ...card, name: initialCards[index].name };
+      });
+
+      setCards(updatedCards);
+      console.log("CARDSSSSSS",cards)
+    }).catch((err) => {
+      console.log("Error In Fetching Data",err)
+    })
+  }
+
+  useEffect(() => {
+    handleData()
+  },[])
 
   const dragItem = useRef();
   const dragOverItem = useRef();
@@ -69,6 +52,8 @@ const Card = () => {
     dragItem.current = null;
     dragOverItem.current = null;
     setCards(cardsCopy);
+    console.log("Cardssss",cards)
+    onCardsUpdate(cardsCopy);
   };
 
   return (
@@ -93,7 +78,7 @@ const Card = () => {
               />
             </div>
             <div className="flex flex-col items-center justify-center">
-                <h3 className="text-sm mb-1">{card.description}</h3>
+                <h3 className="text-sm mb-1">{card.name}</h3>
                 <p className="text-gray-500 text-sm mb-2">Min. Weight: {card.minWeight}</p>
             </div>
             <div className="border-t border-gray-300 mt-2 mb-2"></div>

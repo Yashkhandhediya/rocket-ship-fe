@@ -7,16 +7,90 @@ import Card from './Card/Card';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
+import { Ecom, Delivery, kerry } from '../../common/icons';
 
 
 function Courier() {
-    // const [activeTab, setActiveTab] = useState('Activated');
-
-    // const tabs = [
-    //     'Activated',
-    //     'Deactivated',
-    //     'All',
-    // ];
+    const [card, setCard] = useState([
+        {
+          id: '1',
+          name: 'Kerry Indev Express',
+          description: 'Kerry Indev Express Surface',
+          minWeight: '0.50 Kg',
+          callBeforeDelivery: 'Not Available',
+          pod: 'On Request',
+          deliveryBoyNumber: 'Not Available',
+          trackingServices: 'Real Time',
+          img_name:Ecom
+        },
+        {
+            id: '2',
+            name: 'Ecom Express',
+            description: 'Ecom Express Surface',
+            minWeight: '0.50 Kg',
+            callBeforeDelivery: 'Available',
+            pod: 'Instant',
+            deliveryBoyNumber: 'Not Available',
+            trackingServices: 'Real Time',
+            img_name:Delivery
+          },
+          {
+            id: '3',
+            name: 'Ecom Express',
+            description: 'Ecom Express Surface 5kg',
+            minWeight: '5.00 Kg',
+            callBeforeDelivery: 'Available',
+            pod: 'Instant',
+            deliveryBoyNumber: 'Not Available',
+            trackingServices: 'Real Time',
+            img_name:kerry
+          },
+          {
+            id: '4',
+            name: 'Ecom Express',
+            description: 'Ecom Express Surface 5kg',
+            minWeight: '5.00 Kg',
+            callBeforeDelivery: 'Available',
+            pod: 'Instant',
+            deliveryBoyNumber: 'Not Available',
+            trackingServices: 'Real Time',
+            img_name:Ecom
+          },
+          {
+            id: '5',
+            name: 'Ecom Express',
+            description: 'Ecom Express Surface 5kg',
+            minWeight: '5.00 Kg',
+            callBeforeDelivery: 'Available',
+            pod: 'Instant',
+            deliveryBoyNumber: 'Not Available',
+            trackingServices: 'Real Time',
+            img_name:Ecom
+          },
+      ]);
+    
+      const initialCards = [
+        {
+          id:'1',
+          name:'Delhivery'
+        },
+        {
+          id:'2',
+          name:'Dtdc'
+        },
+        {
+          id:'3',
+          name:'Xpress'
+        },
+        {
+          id:'4',
+          name:'ecomexpress'
+        },
+        {
+          id:'5',
+          name:'maruti'
+        },
+      ]
 
     const [activeCard, setActiveCard] = useState(null);
 
@@ -28,8 +102,15 @@ function Courier() {
         { id: 5, img: rated, title: 'Best Rated',tag:'View the best couriers based on ratings and overall performance.' },
     ];
 
+    const handleCardsUpdate = (newCards) => {
+        setCard(newCards);
+      
+        const cardIds = newCards.map(card => card.id);
+        console.log("Reordered Card IDs:", cardIds);
+      };
+
     const hanldePriority = () => {
-        axios.put(BACKEND_URL + `/userpartner/update_courier_priority?user_id=${localStorage.getItem('user_id')}&courier_priority_id=${activeCard}`)
+        axios.put(BACKEND_URL + `/userpartner/update_courier_priority?user_id=${localStorage.getItem('user_id')}&courier_priority_id=${activeCard}`,card.map(c => c.id))
         .then((res) => {
             toast("Courier Priority Has Been SetUp",{type:'success'})
         })
@@ -163,9 +244,8 @@ function Courier() {
         {activeCard !== null && cards.find(card => card.id === activeCard)?.title === 'Custom' && (
                 <div className="w-full flex items-center justify-center mt-16">
                     {/* Draggable cards section */}
-                    {/* Add your draggable cards component here */}
                     {/* <h1 className="text-2xl font-bold mb-4">Drag to Set Your Priority</h1> */}
-                    <Card />
+                    <Card cards={card} setCards={setCard} initialCards={initialCards} onCardsUpdate={handleCardsUpdate} />
                 </div>
          )}
 
