@@ -10,6 +10,8 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import moment from 'moment';
 import { modifyFlag,modifyId } from './Allindent';
 import { id_user } from '../log-in/LogIn';
+import { ACCESS_TOKEN } from '../../common/utils/config';
+
 
 
 export let info = [];
@@ -25,12 +27,17 @@ const Indent = () => {
     const dropdownRef = useRef(null);
     const navigate = useNavigate()
     // const [id,setId] = useState(1)
-    const [selectedCity, setSelectedCity] = useState({
-        source: data?.source_id || '',
-        destination: data?.destination_id || '',
-        source_id:'',
-        destination_id:''
-    })
+    const [isValidPinCode, setIsValidPincode] = useState(true);
+    const [values, setValues] = useState({ pincode: '', destinationPincode: '' });
+    const [sourcePin,setSourcePin] = useState('')
+    const [destinationPin,setDestinationPin] = useState('')
+    // const [selectedCity, setSelectedCity] = useState({
+    //     source: data?.source_id || '',
+    //     destination: data?.destination_id || '',
+    //     source_id:'',
+    //     destination_id:''
+    // })
+    const [selectedCity, setSelectedCity] = useState({ source: '', destination: '' });
     const [isDropdownOpen, setIsDropdownOpen] = useState({
         source: false,
         destination: false
@@ -43,7 +50,8 @@ const Indent = () => {
     const [pkgs,setPkgs] = useState(data?.pkgs || null)
     const [isLoading, setIsLoading] = useState(false);
     const [pickUpDate,setPickUpDate] = useState({
-        date:data?.pickupDate || moment(new Date()).format('YYYY-MM-DD')
+        date:data?.pickupDate || moment(new Date()).format('YYYY-MM-DD'),
+        time: data?.pickupTime || moment(new Date()).format('HH:mm')
     })
     const [shipmentDetails,setShipmentDetails] = useState({
         type:'ftl'
@@ -53,6 +61,14 @@ const Indent = () => {
         length:0,
         width:0,
         height:0
+    })
+
+    const [remarks,setRemarks] = useState('')
+    const [totalKm,setTotalKm] = useState(0)
+
+    const [personInfo,setPersonInfo] = useState({
+        coordinate_name:'',
+        coordinate_number:''
     })
 
     const volumatricWeight =
@@ -170,11 +186,11 @@ const Indent = () => {
             return; // Exit the function early if validation fails
         }
         setIsLoading(true)
-        const headers={'Content-Type': 'application/json'};
+        const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
         console.log("Jayyyyyyy",selectedCity,materialType)
         axios.post(BACKEND_URL+'/indent/create_indent',
         {
-        source_id:parseInt(selectedCity.source_id),
+        // source_id:parseInt(selectedCity.source_id),
         end_customer_loading_point_id:null,
         loading_point_id:null,
         destination_id:parseInt(selectedCity.destination_id),
@@ -246,7 +262,7 @@ const Indent = () => {
         }
 
         setIsLoading(true)
-        const headers={'Content-Type': 'application/json'};
+        const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
         console.log("Jayyyyyyy",selectedCity,materialType)
         axios.put(BACKEND_URL+'/indent/modify_indent',
         {
@@ -297,10 +313,104 @@ const Indent = () => {
         });
     }
 
+    const fetchPincodeDetails = (pincode, type) => {
+        try {
+          axios
+            .get(`${BACKEND_URL}/pincode/${pincode}`)
+            .then((resp) => {
+              if (resp.status === 200) {
+                const { Area, State, Country } = resp.data;
+                if (type === 'source') {
+                  setSelectedCity((prev) => ({ ...prev, source: `${State}` }));
+                } else if (type === 'destination') {
+                  setSelectedCity((prev) => ({ ...prev, destination: `${State}` }));
+                }
+              } else {
+                toast(`City/State not found for this pincode: ${pincode}`, { type: 'error' });
+              }
+            })
+            .catch(() => {
+              toast(`Unable to get location from this pincode: ${pincode}`, { type: 'error' });
+            });
+        } catch (e) {
+          console.error(e);
+        }
+      };
+    
+      useEffect(() => {
+        if (sourcePin.length >= 6) {
+          fetchPincodeDetails(sourcePin, 'source');
+        }
+        if (destinationPin.length >= 6) {
+          fetchPincodeDetails(destinationPin, 'destination');
+        }
+      }, [sourcePin, destinationPin]);
+
+      const handleInputChange = (e, type) => {
+        const { value } = e.target;
+        if (type === 'source') {
+          setSourcePin(value);
+        } else if (type === 'destination') {
+          setDestinationPin(value);
+        }
+      }
+
+
+      const handlePersonInfoChange = (e) => {
+        const { id, value } = e.target;
+        setPersonInfo(prevState => ({
+            ...prevState,
+            [id]: value
+        }));
+    };
+
+    const handlePersonMobileNumberChange = (e) => {
+        const {id,value} = e.target;
+            setPersonInfo(prevState => ({
+                ...prevState,
+                [id]: value
+            }));
+        
+    };
+
     return (
         <PageWithSidebar>
         {isLoading && <Loader />}
             <div className="flex flex-col items-center gap-4 justify-center p-3">
+
+                  
+            <div className="flex flex-row shadow gap-8 p-4 justify-between rounded w-[80%]">
+                    <div className="flex w-1/2 flex-col">
+                    <Field
+                        type="number"
+                        id="sourcePincode"
+                        label="Source Pincode"
+                        inputClassNames="text-xs"
+                        labelClassNames="text-xs"
+                        placeHolder="Enter Source Pincode"
+                        required={true}
+                        value={sourcePin}
+                        onChange={(e) => handleInputChange(e, 'source')}
+                    />
+                     {/* {!isValidAddress && <p className="mt-1 text-xs text-red-500">Address is required.</p>} */}
+                    </div>
+                    <div className="flex w-1/2 flex-col">
+                    <Field
+                        type="number"
+                        id="destinationPincode"
+                        label="Destination Pincode"
+                        inputClassNames="text-xs"
+                        labelClassNames="text-xs"
+                        placeHolder="Enter Destination Pincode"
+                        required={true}
+                        value={destinationPin}
+                        onChange={(e) => handleInputChange(e, 'destination')}
+                    />
+                     {/* {!isValidAddress && <p className="mt-1 text-xs text-red-500">Address is required.</p>} */}
+                    </div>
+                </div>
+
+
                 <div className="flex flex-row shadow gap-8 p-4 justify-between rounded w-[80%]">
                     <div className="flex w-1/2 flex-col">
                         <p className='flex flex-row justify-between items-center'>
@@ -311,13 +421,13 @@ const Indent = () => {
                         </p>
                         <input
                             ref={inputRef}
-                            className="outline-none bg-gray-100 h-10 px-2 w-[100%] rounded border-0 focus:ring-0 ring-0 focus:outline-none"
-                            placeholder="Enter your source"
+                            className="outline-none bg-gray-100 h-10 px-2 w-[100%] rounded border-0 focus:ring-0 ring-0 focus:outline-none cursor-not-allowed"
+                            placeholder=""
                             type="text"
                             value={selectedCity.source}
-                            onFocus={() => setIsDropdownOpen({ ...isDropdownOpen, source: true })}
+                            disabled
                         />
-                        <Dropdown isOpen={isDropdownOpen.source} type='source' />
+                        {/* <Dropdown isOpen={isDropdownOpen.source} type='source' /> */}
                     </div>
                     <div className="flex w-1/2 flex-col">
                         <p className='flex flex-row justify-between items-center'>
@@ -328,13 +438,13 @@ const Indent = () => {
                         </p>
                         <input
                             ref={inputRef}
-                            className="outline-none bg-gray-100 h-10 px-2 w-[100%] rounded border-0 focus:ring-0 ring-0 focus:outline-none"
-                            placeholder="Enter your destination"
+                            className="outline-none bg-gray-100 h-10 px-2 w-[100%] rounded border-0 focus:ring-0 ring-0 focus:outline-none cursor-not-allowed"
+                            placeholder=""
                             type="text"
                             value={selectedCity.destination}
-                            onFocus={() => setIsDropdownOpen({ ...isDropdownOpen, destination: true })}
+                            disabled
                         />
-                        <Dropdown isOpen={isDropdownOpen.destination} type='destination' />
+                        {/* <Dropdown isOpen={isDropdownOpen.destination} type='destination' /> */}
                     </div>
                 </div>
 
@@ -375,11 +485,11 @@ const Indent = () => {
                 </div>
 
                 <div className="flex flex-wrap shadow gap-4 p-6 justify-between rounded w-[80%]">
-                <div className="w-[49%]">
+                <div className="w-[49%] flex flex-row justify-between">
                     <Field
                     type={'date'}
                     id={'date'}
-                    label={'PickUp Date'}
+                    label={'PickUp Date And Time'}
                     inputClassNames={'text-xs'}
                     labelClassNames={'text-xs'}
                     placeHolder={'Enter PickUp Date'}
@@ -387,6 +497,16 @@ const Indent = () => {
                     minDate={moment(new Date()).format('YYYY-MM-DD')}
                     // maxDate={moment(new Date()).format('YYYY-MM-DD')}
                     value={pickUpDate.date}
+                    onChange={handlePickUpDate}
+                    />
+                    <Field
+                    type={'time'}
+                    id={'time'}
+                    inputClassNames={'text-xs mt-6 ml-2'}
+                    labelClassNames={'text-xs'}
+                    placeHolder={''}
+                    required={true}
+                    value={pickUpDate.time}
                     onChange={handlePickUpDate}
                     />
                 </div>
@@ -398,6 +518,8 @@ const Indent = () => {
                         <Field
                             value={pkgs}
                             label="No. of Pkgs"
+                            inputClassNames={'text-xs'}
+                            labelClassNames={'text-xs'}
                             type='number'
                             onChange={(e) => setPkgs(e.target.value)}
                         />
@@ -534,8 +656,70 @@ const Indent = () => {
                             leftAddOn='₹'
                         />
                     </div>
+
+                    <div className="w-[49%]">
+                    <div className="flex w-full">
+                    <div className="flex-grow pr-2">
+                    <Field
+                        type="text"
+                        id="remark"
+                        label="Remarks"
+                        inputClassNames="text-xs"
+                        labelClassNames="text-xs"
+                        placeHolder="Enter Remark"
+                        required={true}
+                        value={remarks}
+                        onChange={(e) => setRemarks(e.target.value)}
+                    />
+                    </div>
+                    </div>
+                    </div>
+                    <div className="w-[49%]">
+                        <Field
+                            value={totalKm}
+                            label="Total Km"
+                            type='number'
+                            placeholder="Enter Total Kilometer"
+                            onChange={(e) => setTotalKm(e.target.value)}
+                            leftAddOn='Km.'
+                        />
+                    </div>
+
+
+                    <div className="w-[49%]">
+                    <div className="flex w-full">
+                    <div className="flex-grow pr-2">
+                    <Field
+                        type="text"
+                        id="coordinate_name"
+                        label="Co-Ordinate Name"
+                        inputClassNames="text-xs"
+                        labelClassNames="text-xs"
+                        placeHolder="Enter Name"
+                        required={true}
+                        value={personInfo?.coordinate_name}
+                        onChange={handlePersonInfoChange}
+                    />
+                    </div>
+                    </div>
+                    </div>
+                    <div className="w-[49%]">
+                        <Field
+                            id="coordinate_number"
+                            value={personInfo?.coordinate_number}
+                            label="Mobile No."
+                            inputClassNames="text-xs"
+                            labelClassNames="text-xs"
+                            type='number'
+                            placeholder="Enter Mobile Number"
+                            onChange={handlePersonMobileNumberChange}
+                            leftAddOn='+91'
+                        />
+                    </div>
+
+
                 </div>
-                <button className='md:w-1/2 ml-10 bottom-4 fixed text-white text-lg font-semibold bg-blue-600 rounded-full p-2 hover:bg-blue-800'
+                <button className='md:w-1/2 ml-10 bottom-4 text-white text-lg font-semibold bg-blue-600 rounded-full p-2 hover:bg-blue-800'
                 onClick={() => {
                     // let upDateId = id + 1;
                     // setId(upDateId);
