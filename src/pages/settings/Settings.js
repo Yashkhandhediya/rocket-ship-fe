@@ -141,15 +141,15 @@ const Settings = () => {
         items: [
           {
             title: 'Courier Priority',
-            link: '/',
+            link: '/user-couriers',
           },
           {
             title: 'Courier Selection',
-            link: '/',
+            link: '/courier-selection',
           },
           {
             title: 'Courier Rules',
-            link: '/',
+            link: '/courier-rule',
           },
         ],
         icon: (
