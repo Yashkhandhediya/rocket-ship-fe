@@ -1,7 +1,7 @@
 // src/App.js
 import React, {useState,useEffect} from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
-import { cheap, custom, rated, recommand, truck } from '../../common/icons';
+import { Dtdc, Express, cheap, custom, rated, recommand, truck } from '../../common/icons';
 import { toast } from 'react-toastify';
 import Card from './Card/Card';
 import { Link } from 'react-router-dom';
@@ -14,40 +14,40 @@ function Courier() {
     const [card, setCard] = useState([
         {
           id: '1',
-          name: 'Kerry Indev Express',
-          description: 'Kerry Indev Express Surface',
+          name: 'Delhivery',
+          description: 'Delhivery Surface',
           minWeight: '0.50 Kg',
           callBeforeDelivery: 'Not Available',
           pod: 'On Request',
           deliveryBoyNumber: 'Not Available',
           trackingServices: 'Real Time',
-          img_name:Ecom
+          img_name:Delivery
         },
         {
             id: '2',
-            name: 'Ecom Express',
-            description: 'Ecom Express Surface',
+            name: 'Dtdc',
+            description: 'Dtdc Surface',
             minWeight: '0.50 Kg',
             callBeforeDelivery: 'Available',
             pod: 'Instant',
             deliveryBoyNumber: 'Not Available',
             trackingServices: 'Real Time',
-            img_name:Delivery
+            img_name:Dtdc
           },
           {
             id: '3',
-            name: 'Ecom Express',
-            description: 'Ecom Express Surface 5kg',
+            name: 'Xpress',
+            description: 'xpress Surface 5kg',
             minWeight: '5.00 Kg',
             callBeforeDelivery: 'Available',
             pod: 'Instant',
             deliveryBoyNumber: 'Not Available',
             trackingServices: 'Real Time',
-            img_name:kerry
+            img_name:Express
           },
           {
             id: '4',
-            name: 'Ecom Express',
+            name: 'ecomexpress',
             description: 'Ecom Express Surface 5kg',
             minWeight: '5.00 Kg',
             callBeforeDelivery: 'Available',
@@ -58,14 +58,14 @@ function Courier() {
           },
           {
             id: '5',
-            name: 'Ecom Express',
-            description: 'Ecom Express Surface 5kg',
+            name: 'maruti',
+            description: 'Maruti Surface 5kg',
             minWeight: '5.00 Kg',
             callBeforeDelivery: 'Available',
             pod: 'Instant',
             deliveryBoyNumber: 'Not Available',
             trackingServices: 'Real Time',
-            img_name:Ecom
+            img_name:Dtdc
           },
       ]);
     
