@@ -29,15 +29,17 @@ const Indent = () => {
     // const [id,setId] = useState(1)
     const [isValidPinCode, setIsValidPincode] = useState(true);
     const [values, setValues] = useState({ pincode: '', destinationPincode: '' });
-    const [sourcePin,setSourcePin] = useState('')
-    const [destinationPin,setDestinationPin] = useState('')
+    const [sourcePin,setSourcePin] = useState(data?.from_pincode || '')
+    const [destinationPin,setDestinationPin] = useState(data?.to_pincode || '')
     // const [selectedCity, setSelectedCity] = useState({
     //     source: data?.source_id || '',
     //     destination: data?.destination_id || '',
     //     source_id:'',
     //     destination_id:''
     // })
-    const [selectedCity, setSelectedCity] = useState({ source: '', destination: '' });
+    const [selectedCity, setSelectedCity] = useState({ source: `${data?.from_city} ${data?.from_state} ${data?.from_country}` || '', destination: 
+        `${data?.to_city} ${data?.to_state} ${data?.to_country}` || ''
+     });
     const [isDropdownOpen, setIsDropdownOpen] = useState({
         source: false,
         destination: false
@@ -50,8 +52,8 @@ const Indent = () => {
     const [pkgs,setPkgs] = useState(data?.pkgs || null)
     const [isLoading, setIsLoading] = useState(false);
     const [pickUpDate,setPickUpDate] = useState({
-        date:data?.pickupDate || moment(new Date()).format('YYYY-MM-DD'),
-        time: data?.pickupTime || moment(new Date()).format('HH:mm')
+        date: data?.created_date ? moment(data.created_date).format('YYYY-MM-DD') : moment(new Date()).format('YYYY-MM-DD'),
+        time: data?.created_date ? moment(data.created_date).format('HH:mm'): moment(new Date()).format('HH:mm')
     })
     const [shipmentDetails,setShipmentDetails] = useState({
         type:'ftl'
@@ -63,12 +65,12 @@ const Indent = () => {
         height:0
     })
 
-    const [remarks,setRemarks] = useState('')
-    const [totalKm,setTotalKm] = useState(0)
+    const [remarks,setRemarks] = useState(data?.remarks || '')
+    const [totalKm,setTotalKm] = useState(data?.kilometer || 0)
 
     const [personInfo,setPersonInfo] = useState({
-        coordinate_name:'',
-        coordinate_number:''
+        coordinate_name:data?.coordinator_name || '',
+        coordinate_number:data?.coordinator_mobile || ''
     })
 
     const volumatricWeight =
@@ -180,11 +182,11 @@ const Indent = () => {
 
     const handleSubmit = () => {
         console.log("Handling Create Indent API Here")
-        if (!selectedCity.source_id || !selectedCity.destination_id) {
-            toast("Please Fill Required fields",{type:'error'})
-            console.error('Source and destination must be selected.');
-            return; // Exit the function early if validation fails
-        }
+        // if (!selectedCity.source_id || !selectedCity.destination_id) {
+        //     toast("Please Fill Required fields",{type:'error'})
+        //     console.error('Source and destination must be selected.');
+        //     return; // Exit the function early if validation fails
+        // }
         setIsLoading(true)
         const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
         console.log("Jayyyyyyy",selectedCity,materialType)
@@ -193,7 +195,7 @@ const Indent = () => {
         // source_id:parseInt(selectedCity.source_id),
         end_customer_loading_point_id:null,
         loading_point_id:null,
-        destination_id:parseInt(selectedCity.destination_id),
+        // destination_id:parseInt(selectedCity.destination_id),
         customer_id:1,
         end_customer_uploading_point_id:null,
         uploading_point_id:null,
@@ -210,7 +212,19 @@ const Indent = () => {
         weight:parseInt(targetWeight),
         pickupDate:pickUpDate.date,
         volumetric_weight:volumatricWeight,
-        trip_status:0
+        trip_status:0,
+        to_pincode:sourcePin,
+        from_pincode:destinationPin,
+        remarks:remarks,
+        kilometer:totalKm,
+        coordinator_name:personInfo?.coordinate_name,
+        coordinator_mobile:personInfo?.coordinate_number,
+        to_city:selectedCity?.destination.split(" ")[0],
+        to_state:selectedCity?.destination.split(" ")[1],
+        to_country:selectedCity?.destination.split(" ")[2],
+        from_city:selectedCity?.source.split(" ")[0],
+        from_state:selectedCity?.source.split(" ")[1],
+        from_country:selectedCity?.source.split(" ")[2],
     },
          {headers}).then(
             (response)=>{
@@ -255,11 +269,11 @@ const Indent = () => {
             temp_destination_id = match_destination.city_id
         }
 
-        if (!temp_source_id || !temp_destination_id) {
-            toast("Please Fill Required fields",{type:'error'})
-            console.error('Source and destination must be selected.');
-            return; // Exit the function early if validation fails
-        }
+        // if (!temp_source_id || !temp_destination_id) {
+        //     toast("Please Fill Required fields",{type:'error'})
+        //     console.error('Source and destination must be selected.');
+        //     return; // Exit the function early if validation fails
+        // }
 
         setIsLoading(true)
         const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
@@ -267,10 +281,10 @@ const Indent = () => {
         axios.put(BACKEND_URL+'/indent/modify_indent',
         {
         id:modifyId,
-        source_id:temp_source_id,
+        // source_id:temp_source_id,
         end_customer_loading_point_id:null,
         loading_point_id:null,
-        destination_id:temp_destination_id,
+        // destination_id:temp_destination_id,
         customer_id:1,
         end_customer_uploading_point_id:null,
         uploading_point_id:null,
@@ -286,7 +300,19 @@ const Indent = () => {
         pkgs:pkgs,
         weight:parseInt(targetWeight),
         pickupDate:pickUpDate.date,
-        volumetric_weight:volumatricWeight
+        volumetric_weight:volumatricWeight,
+        to_pincode:sourcePin,
+        from_pincode:destinationPin,
+        remarks:remarks,
+        kilometer:totalKm,
+        coordinator_name:personInfo?.coordinate_name,
+        coordinator_mobile:personInfo?.coordinate_number,
+        to_city:selectedCity?.destination.split(" ")[0],
+        to_state:selectedCity?.destination.split(" ")[1],
+        to_country:selectedCity?.destination.split(" ")[2],
+        from_city:selectedCity?.source.split(" ")[0],
+        from_state:selectedCity?.source.split(" ")[1],
+        from_country:selectedCity?.source.split(" ")[2],
     },
          {headers}).then(
             (response)=>{
@@ -300,7 +326,7 @@ const Indent = () => {
                         info.push(response.data[i]);
                     }
                 }
-                navigate('/all-indent')
+                navigate('/all-indent'+id_user)
               }
               ).catch((err) => {
                 console.log("ERRRRRRRR",err)
@@ -321,9 +347,9 @@ const Indent = () => {
               if (resp.status === 200) {
                 const { Area, State, Country } = resp.data;
                 if (type === 'source') {
-                  setSelectedCity((prev) => ({ ...prev, source: `${State}` }));
+                  setSelectedCity((prev) => ({ ...prev, source: `${Area} ${State} ${Country}` }));
                 } else if (type === 'destination') {
-                  setSelectedCity((prev) => ({ ...prev, destination: `${State}` }));
+                  setSelectedCity((prev) => ({ ...prev, destination: `${Area} ${State} ${Country}` }));
                 }
               } else {
                 toast(`City/State not found for this pincode: ${pincode}`, { type: 'error' });
@@ -370,7 +396,6 @@ const Indent = () => {
                 ...prevState,
                 [id]: value
             }));
-        
     };
 
     return (
@@ -384,7 +409,7 @@ const Indent = () => {
                     <Field
                         type="number"
                         id="sourcePincode"
-                        label="Source Pincode"
+                        label="From Pincode"
                         inputClassNames="text-xs"
                         labelClassNames="text-xs"
                         placeHolder="Enter Source Pincode"
@@ -398,7 +423,7 @@ const Indent = () => {
                     <Field
                         type="number"
                         id="destinationPincode"
-                        label="Destination Pincode"
+                        label="To Pincode"
                         inputClassNames="text-xs"
                         labelClassNames="text-xs"
                         placeHolder="Enter Destination Pincode"
@@ -414,7 +439,7 @@ const Indent = () => {
                 <div className="flex flex-row shadow gap-8 p-4 justify-between rounded w-[80%]">
                     <div className="flex w-1/2 flex-col">
                         <p className='flex flex-row justify-between items-center'>
-                            <span className='font-medium'><span className="text-red-800 text-lg">*</span> Source</span>
+                            <span className='font-medium'><span className="text-red-800 text-lg">*</span> From City, State, Country</span>
                             <div className=' flex text-white text-[18px] bg-red-700 h-5 w-5 rounded-full items-center justify-center cursor-pointer'>
                                 <span style={{ marginTop: '-2px' }}>+</span>
                             </div>
@@ -431,7 +456,7 @@ const Indent = () => {
                     </div>
                     <div className="flex w-1/2 flex-col">
                         <p className='flex flex-row justify-between items-center'>
-                            <span className='font-medium'><span className="text-red-800 text-lg">*</span> Destination</span>
+                            <span className='font-medium'><span className="text-red-800 text-lg">*</span> To City, State, Country</span>
                             <div className=' flex text-white text-[18px] bg-red-700 h-5 w-5 rounded-full items-center justify-center cursor-pointer'>
                                 <span style={{ marginTop: '-2px' }}>+</span>
                             </div>

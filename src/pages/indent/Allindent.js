@@ -9,6 +9,7 @@ import { Tabs } from '../../common/components/tabs';
 import { trip_status_filter } from '../orders/duck';
 import { toast } from 'react-toastify';
 import  Loader  from '../../common/loader/Loader';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 export let modifyFlag = 0;
 export let modifyId;
@@ -34,6 +35,26 @@ const Allindent = () => {
   const [price, setPrice] = useState({})
   const [loading, setLoading] = useState(false)
   console.log("IDFFFFFF",selectedTab)
+
+  function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; 
+
+    const formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
+
+    const day = date.getDate();
+    const month = date.getMonth() + 1; 
+    const year = date.getFullYear();
+    const formattedDate = `${day < 10 ? '0' : ''}${day}-${month < 10 ? '0' : ''}${month}-${year}`;
+
+    return `${formattedTime} | ${formattedDate}`;
+}
 
 
     const fetchData = async () => {
@@ -96,7 +117,7 @@ const Allindent = () => {
 
   const handlePrice = (id) => {
     setLoading(true)
-    const headers={'Content-Type': 'application/json'};
+    const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
     console.log("Price",price)
     axios.post(BACKEND_URL + '/indent/admin_price',
     {
@@ -115,7 +136,7 @@ const Allindent = () => {
 
   const handleConfirmation = (id,status) => {
     setLoading(true)
-    const headers={'Content-Type': 'application/json'};
+    const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
     axios.post(BACKEND_URL + '/indent/booking_confirmation',
     {
       id:id,
@@ -168,8 +189,8 @@ const Allindent = () => {
       <div className="lg:w-1/3 flex flex-row md:w-1/2 sm:w-full" key={index}>
       <div className="mt-5 mx-5 w-full p-4 bg-white rounded-lg shadow"> 
         <div className="mb-2 flex flex-row items-end justify-between border-b border-gray-200 pb-2">
-          <div className="text-red-500 font-semibold">{data.id}</div>
-          <div className='text-red-500 text-xs'>{data.pickupDate}  
+          <div className="text-red-500 font-semibold">{data.id} | {data?.coordinator_name || "Niket Dave"} | {data?.coordinator_mobile || "9265435422"}</div>
+          <div className='text-red-500 text-xs'>{formatTimestamp(data?.created_date)}
           {/* {Math.ceil((new Date(data.pickupDate) - new Date() )/(1000 * 60 * 60).toPrecision(1))}h */}
           </div>
         </div>
@@ -178,8 +199,8 @@ const Allindent = () => {
             <div className="flex flex-row">
             <input type="checkbox" className="form-checkbox mt-3 ml-3 text-green-500 mr-2" />
             <ul className="list-disc ml-3 pl-4">  
-            <li className="text-gray-600 font-bold text-sm">{data.source_id.toUpperCase()}</li>
-            <li className="text-gray-600 font-bold text-sm">{data.destination_id.toUpperCase()}</li>
+            <li className="text-gray-600 font-bold text-sm">{data?.from_city || 'Bhavnager'}</li>
+            <li className="text-gray-600 font-bold text-sm">{data?.to_city || 'Mumbai'}</li>
             </ul>
             </div>
             <span className="bg-purple-100 text-yellow-400 text-xs font-semibold me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">0 Stop(s)</span>
@@ -206,15 +227,20 @@ const Allindent = () => {
         </div>
     <div className="-ml-4 -mr-4 flex justify-between items-end border-t border-gray-200">
       <div className="text-sm text-gray-500 mr-auto mt-3">  
-      {/* <span className="ml-2 bg-purple-100 text-purple-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">
-      12 truck(s) matched
-      </span> */}
+      <span className="ml-2 bg-purple-100 text-purple-800 text-xs font-semibold me-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">
+      {"Weight"} : {data?.weight} {data?.weight_type}
+      </span>
       </div>
+      <div className="flex flex-col">
       <div className="mr-2 text-sm font-medium self-end">
         {user_name}
       </div>
+      <div className="mr-2 text-xs font-medium self-end">
+        {"Mobile No : 9087654321"}
+      </div>
+      </div>
     </div>
-    <div className='-ml-2 mt-6'>
+    <div className='-ml-2 mt-6 flex flex-row justify-between items-end'>
     {
       data.trip_status == 0 ? (
         <span className=" bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">Booking Price Pending</span>
@@ -226,13 +252,31 @@ const Allindent = () => {
         <span className="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Booking Rejected</span>
       )
     }
+    <div className="flex flex-row items-end w-[50%]">
+      <label className='text-sm font-bold w-[35%] px-0.5 py-0.5 ml-16 md:text-xs'>Total Km :</label>
+      <input
+        type="text"
+        value={data?.kilometer || "500"}
+        disabled
+        className="block w-[35%] text-sm text-center font-semibold rounded-sm px-0 py-0 bg-gray-100 border-gray-300 shadow-sm cursor-not-allowed"
+      />
+    </div>
+    </div>
+    <div className="mt-6 flex flex-row">
+      <label className='text-xs font-bold mt-0.5'>Remarks :</label>
+      <input
+        type="text"
+        value={data?.remarks || "Important Remarks About Indent"}
+        disabled
+        className="block w-[80%] text-xs ml-4 rounded-sm px-2 py-0.5 bg-gray-100 border-gray-300 shadow-sm cursor-not-allowed"
+      />
     </div>
     {parseInt(is_admin) ? ( // render based on is_admin value
                   <div className="flex flex-row justify-between items-end">
                     <div className='mt-4'>
                       <label className='text-xs text-purple-400 font-semibold'>ACTUAL PRICE</label>
-                      {(data.actual_price == null) ? (<input type="text" value={price[data.id] || ''} onChange={(e) => handlePriceChange(data.id,e.target.value)} className="border w-36 h-10 mt-2 ml-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-100" />) :
-                      (<input type="text" value={`₹${data.actual_price ?? 0}`} disabled onChange={(e) => handlePriceChange(data.id,e.target.value)} className="border w-36 h-10 mt-2 ml-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-100" />)}
+                      {(data.actual_price == null) ? (<input type="text" value={price[data.id] || ''} onChange={(e) => handlePriceChange(data.id,e.target.value)} className="border w-24 h-8 mt-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-100" />) :
+                      (<input type="text" value={`₹${data.actual_price ?? 0}`} disabled onChange={(e) => handlePriceChange(data.id,e.target.value)} className="border w-24 h-8 mt-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-100" />)}
                     </div>
                     <div className='mt-4'>
                     {(data.actual_price == null) && <button className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg"
@@ -243,11 +287,12 @@ const Allindent = () => {
                   <div className="flex flex-row justify-between items-end">
                     <div className='mt-4'>
                       <label className='text-xs text-purple-400 font-semibold'>{data.actual_price == null ? 'ACTUAL PRICE PENDING' : 'ACTUAL PRICE'}</label>
-                      {data.actual_price != null && <input type="text" className="border w-36 h-10 mt-2 ml-2 border-gray-300 rounded-md focus:outline-none bg-gray-100 focus:ring focus:border-blue-100 " disabled value={`₹${data.actual_price ?? 0}`} />}
+                      {data.actual_price != null && <input type="text" className="border w-36 h-8 mt-2 ml-2 border-gray-300 rounded-md focus:outline-none bg-gray-100 focus:ring focus:border-blue-100 " disabled value={`₹${data.actual_price ?? 0}`} />}
                     </div>
-                    <div className='mt-4'>
-                      {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status != 0) && <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg mr-2" onClick={() => {handleConfirmation(data.id,2)}}>Confirm</button>}
-                      {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status != 0) && <button className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg" onClick={() => {handleConfirmation(data.id,3)}}>Reject</button>}
+                    <div className='mt-4 flex flex-row'>
+                      {<button className="bg-green-500 hover:bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-lg mr-2" onClick={() => {}}>Counter Offer</button>}
+                      {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status != 0) && <button className="bg-blue-500 hover:bg-blue-600 text-white text-xs  font-semibold py-1 px-2 rounded-lg mr-2" onClick={() => {handleConfirmation(data.id,2)}}>Confirm</button>}
+                      {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status != 0) && <button className="bg-red-500 hover:bg-red-600 text-white  text-xs font-semibold py-1 px-2 rounded-lg" onClick={() => {handleConfirmation(data.id,3)}}>Reject</button>}
                     </div>
                   </div>
                 )}
