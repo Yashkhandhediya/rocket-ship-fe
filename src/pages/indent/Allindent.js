@@ -95,10 +95,10 @@ const Allindent = () => {
       navigate('/seller/home')
       return
     }
-    if (info.length === 0 && !dataFetch) {
+ 
       fetchData();
-    }
-  }, []);
+    
+  }, [url_user_id]);
   
 
   const handleModify = (id) => {
@@ -324,11 +324,11 @@ const Allindent = () => {
                   <div className="flex flex-row justify-between items-end">
                     <div className='mt-4'>
                       <label className='text-xs text-purple-400 font-semibold'>ACTUAL PRICE</label>
-                      {(data.actual_price == null) ? (<input type="text" value={price[data.id] || ''} onChange={(e) => handlePriceChange(data.id,e.target.value)} className="border w-24 h-8 mt-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-100" />) :
-                      (<input type="text" value={`₹${data.actual_price ?? 0}`} disabled onChange={(e) => handlePriceChange(data.id,e.target.value)} className="border w-24 h-8 mt-2 border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-100" />)}
+                      {(data.actual_price == null) ? (<input type="text" value={price[data.id] || ''} onChange={(e) => handlePriceChange(data.id,e.target.value)} className="border w-24 h-8 mt-2 ml-4 border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-100" />) :
+                      (<input type="text" value={`₹${data.actual_price ?? 0}`} disabled onChange={(e) => handlePriceChange(data.id,e.target.value)} className="border w-24 h-8 mt-2 ml-4 border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-100" />)}
                     </div>
                     <div className='mt-4'>
-                    {(data.actual_price == null) && <button className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg"
+                    {(data.actual_price == null) && <button className="bg-green-500 hover:bg-green-600 text-white font-semibold ml-3 py-1 px-3 rounded-lg"
                       onClick={() => {handlePrice(data.id)}}>Save</button>}
                     </div>
                   </div>
@@ -340,7 +340,7 @@ const Allindent = () => {
                     </div>
                   </div>
                 )}
-                <div className='mt-4 flex flex-row'>
+                <div className='mt-6 flex flex-row'>
                       {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status != 0) && <button className="bg-blue-500 hover:bg-blue-600 text-white text-xs  font-semibold py-2 px-3 rounded-lg mr-2" onClick={() => {handleConfirmation(data.id,2)}}>Confirm</button>}
                       {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status != 0) && <button className="bg-red-500 hover:bg-red-600 text-white  text-xs font-semibold py-2 px-3 rounded-lg" onClick={() => {handleConfirmation(data.id,3)}}>Reject</button>}
                 </div>
@@ -360,7 +360,7 @@ const Allindent = () => {
                       onClick={() => {handleRcslPrice(data.id)}}>Counter Offer</button>}
             </div>) : (
               <div className='mt-4 flex flex-row'>
-      {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status !== 0) && (
+      {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status !== 0 && data.counter_price > 0) && (
         <>
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold py-1 px-2 rounded-lg mr-2"
