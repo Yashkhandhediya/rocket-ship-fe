@@ -128,9 +128,10 @@ const Indent = () => {
       useEffect(() => {
         if(sourcePin.length == 6 && destinationPin.length == 6){
             handleKilometer()
-        }else{
-            setTotalKm(0)
-        }
+         }
+        // else{
+        //     setTotalKm(0)
+        // }
       },[sourcePin,destinationPin])
 
 
