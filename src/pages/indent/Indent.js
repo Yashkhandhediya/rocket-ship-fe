@@ -357,7 +357,7 @@ const Indent = () => {
                         info.push(response.data[i]);
                     }
                 }
-                navigate('/all-indent'+id_user)
+                navigate('/all-indent/'+id_user)
               }
               ).catch((err) => {
                 console.log("ERRRRRRRR",err)
