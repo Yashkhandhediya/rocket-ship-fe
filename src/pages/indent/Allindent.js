@@ -346,8 +346,8 @@ const Allindent = () => {
                   </div>
                 )}
                 {showBtn && <div className='mt-6 flex flex-row'>
-                      {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status != 0) && <button className="bg-blue-500 hover:bg-blue-600 text-white text-xs  font-semibold py-2 px-3 rounded-lg mr-2" onClick={() => {handleConfirmation(data.id,2)}}>Confirm</button>}
-                      {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status != 0) && <button className="bg-red-500 hover:bg-red-600 text-white  text-xs font-semibold py-2 px-3 rounded-lg" onClick={() => {handleConfirmation(data.id,3)}}>Reject</button>}
+                      {<button className="bg-blue-500 hover:bg-blue-600 text-white text-xs  font-semibold py-2 px-3 rounded-lg mr-2" onClick={() => {handleConfirmation(data.id,2)}}>Confirm</button>}
+                      {<button className="bg-red-500 hover:bg-red-600 text-white  text-xs font-semibold py-2 px-3 rounded-lg" onClick={() => {handleConfirmation(data.id,3)}}>Reject</button>}
                 </div>}
                 </div>
     {data?.actual_price != null && <div className="flex flex-row justify-between items-center mt-2 p-1 ">
@@ -360,8 +360,8 @@ const Allindent = () => {
 
             {
             localStorage.getItem('is_company') == 0 ? (
-            <div className='mt-2'>
-                    {(data.counter_price == null && localStorage.getItem('is_company') == 0 && showBtn) && <button className="bg-green-500 mt-2 hover:bg-green-600 text-white font-semibold py-1 px-2 rounded-lg"
+            showBtn && <div className='mt-2'>
+                    {(data.counter_price == null && localStorage.getItem('is_company') == 0 ) && <button className="bg-green-500 mt-2 hover:bg-green-600 text-white font-semibold py-1 px-2 rounded-lg"
                       onClick={() => {handleRcslPrice(data.id)}}>Counter Offer</button>}
             </div>) : (
               <div className='mt-4 flex flex-row'>
