@@ -345,7 +345,7 @@ const Allindent = () => {
                     </div>
                   </div>
                 )}
-                {(showBtn && localStorage.getItem('is_company') == 1) && <div className='mt-6 flex flex-row'>
+                {showBtn && <div className='mt-6 flex flex-row'>
                       {<button className="bg-blue-500 hover:bg-blue-600 text-white text-xs  font-semibold py-2 px-3 rounded-lg mr-2" onClick={() => {handleConfirmation(data.id,2)}}>Confirm</button>}
                       {<button className="bg-red-500 hover:bg-red-600 text-white  text-xs font-semibold py-2 px-3 rounded-lg" onClick={() => {handleConfirmation(data.id,3)}}>Reject</button>}
                 </div>}
