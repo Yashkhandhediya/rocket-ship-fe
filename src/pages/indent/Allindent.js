@@ -235,10 +235,17 @@ const Allindent = () => {
       {dataFetch && <div className="flex flex-wrap">
       {filteredInfo.map((data,index) => (
       <div className="lg:w-1/3 flex flex-row md:w-1/2 sm:w-full" key={index}>
-      <div className="mt-5 mx-5 w-full p-4 bg-white rounded-lg shadow"> 
-        <div className="mb-2 flex flex-row items-end justify-between border-b border-gray-200 pb-2">
-          <div className="text-red-500 font-semibold">{data.id} | {data?.coordinator_name || "Niket Dave"} | {data?.coordinator_mobile || "9265435422"}</div>
-          <div className='text-red-500 text-xs'>{formatTimestamp(data?.created_date)}
+      <div className="mt-5 mx-3 w-full p-4 bg-white rounded-lg shadow"> 
+        <div className="mb-2 w-full flex flex-row items-end justify-between border-b border-gray-200 pb-2">
+          <div className="flex flex-row w-full">
+          <div className="text-red-500 text-sm font-semibold w-[60%]">{data.id} | {data?.coordinator_name || "Niket Dave"} | {data?.coordinator_mobile || "9265435422"}</div>
+          <button className="" onClick={() => {handleModify(data.id)}}>
+            <svg className="h-5 w-5 text-blue-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+          </button>
+          </div>
+          <div className='text-red-500 w-[40%] text-xs'>{formatTimestamp(data?.created_date)}
           {/* {Math.ceil((new Date(data.pickupDate) - new Date() )/(1000 * 60 * 60).toPrecision(1))}h */}
           </div>
         </div>
@@ -266,11 +273,6 @@ const Allindent = () => {
           <div className="w-6/10">
               <p className=' text-xs mb-1 ml-1 w-full text-purple-400 font-semibold'>MATERIAL TYPE</p>
               <p className="text-sm ml-1 text-gray-500">{data.material_type_id}</p>
-          <button className="ml-28" onClick={() => {handleModify(data.id)}}>
-            <svg className="h-6 w-6 text-blue-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-            </svg>
-          </button>
           </div>
         </div>
     <div className="-ml-4 -mr-4 flex justify-between items-end border-t border-gray-200">
