@@ -33,6 +33,7 @@ const Allindent = () => {
   const [filteredInfo, setFilteredInfo] = useState([]);
   const [selectedTab, setSelectedTab] = useState(0);
   const [price, setPrice] = useState({})
+  const [rcslPrice, setRcslPrice] = useState({})
   const [loading, setLoading] = useState(false)
   console.log("IDFFFFFF",selectedTab)
 
@@ -114,6 +115,9 @@ const Allindent = () => {
     setPrice({ ...price, [id]: value }); // Update the price for the corresponding card
   };
 
+  const handleRcslPriceChange = (id,value) => {
+    setRcslPrice({ ...rcslPrice, [id]: value }); 
+  };
 
   const handlePrice = (id) => {
     setLoading(true)
@@ -128,6 +132,24 @@ const Allindent = () => {
       toast('Price Successfully Submitted',{type:'success'})
       setLoading(false)
       window.location.reload();
+    }).catch((err) => {
+      console.log("Errorororor",err);
+    })
+  }
+
+  const handleRcslPrice = (id) => {
+    setLoading(true)
+    const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
+    console.log("Price",rcslPrice)
+    axios.put(BACKEND_URL + '/indent/modify_indent',
+    {
+      id:id,
+      counter_price:parseInt(rcslPrice[id]),
+    },{headers}).then((res)=>{
+      console.log("RESPONSEEEEEE11",res);
+      toast('RCSL Price Successfully Submitted',{type:'success'})
+      setLoading(false)
+      // window.location.reload();
     }).catch((err) => {
       console.log("Errorororor",err);
     })
@@ -290,13 +312,25 @@ const Allindent = () => {
                       {data.actual_price != null && <input type="text" className="border w-36 h-8 mt-2 ml-2 border-gray-300 rounded-md focus:outline-none bg-gray-100 focus:ring focus:border-blue-100 " disabled value={`₹${data.actual_price ?? 0}`} />}
                     </div>
                     <div className='mt-4 flex flex-row'>
-                      {(data.actual_price != null) && <button className="bg-green-500 hover:bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-lg mr-2" onClick={() => {}}>Counter Offer</button>}
                       {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status != 0) && <button className="bg-blue-500 hover:bg-blue-600 text-white text-xs  font-semibold py-1 px-2 rounded-lg mr-2" onClick={() => {handleConfirmation(data.id,2)}}>Confirm</button>}
                       {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status != 0) && <button className="bg-red-500 hover:bg-red-600 text-white  text-xs font-semibold py-1 px-2 rounded-lg" onClick={() => {handleConfirmation(data.id,3)}}>Reject</button>}
                     </div>
                   </div>
                 )}
+    {data?.actual_price != null && <div className="flex flex-row justify-between items-center mt-2 p-1 ">
+   
+            <div className='mt-2'>
+                      <label className='text-xs text-purple-400 font-semibold'>RCSL PRICE</label>
+                      {(data.counter_price == null) ? (<input type="text" value={rcslPrice[data.id] || ''} onChange={(e) => handleRcslPriceChange(data.id,e.target.value)} className="border w-36 h-8 mt-2 ml-4 border-gray-300 rounded-md focus:outline-none focus:border-blue-100" />) :
+                      (<input type="text" value={`₹${data.counter_price ?? 0}`} disabled onChange={(e) => handleRcslPriceChange(data.id,e.target.value)} className="border w-36 h-8 mt-2 ml-4 bg-gray-100 cursor-not-allowed border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-100" />)}
+            </div>
+            <div className='mt-2'>
+                    {(data.counter_price == null) && <button className="bg-green-500 mt-2 hover:bg-green-600 text-white font-semibold py-1 px-2 rounded-lg"
+                      onClick={() => {handleRcslPrice(data.id)}}>Counter Offer</button>}
+            </div>
+    </div>}
     </div>
+
     </div>
     ))}
       </div>}
