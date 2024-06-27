@@ -68,6 +68,7 @@ const Indent = () => {
     const [remarks,setRemarks] = useState(data?.remarks || '')
     const [totalKm,setTotalKm] = useState(data?.kilometer || 0)
 
+
     const [personInfo,setPersonInfo] = useState({
         coordinate_name:data?.coordinator_name || '',
         coordinate_number:data?.coordinator_mobile || ''
@@ -112,6 +113,25 @@ const Indent = () => {
           [name]: value,
         });
       };
+
+      const handleKilometer = () => {
+        axios.get(BACKEND_URL + `/pincode/?pincode1=${sourcePin}&pincode2=${destinationPin}`)
+        .then((res) => {
+            const {distance} = res.data
+            console.log("Total Km",res.data)
+            setTotalKm(distance)
+        }).catch((err) => {
+            console.log("Error In fetching Distance",err)
+        })
+      }
+
+      useEffect(() => {
+        if(sourcePin.length == 6 && destinationPin.length == 6){
+            handleKilometer()
+        }else{
+            setTotalKm(0)
+        }
+      },[sourcePin,destinationPin])
 
 
     function Dropdown({ isOpen, type }) {

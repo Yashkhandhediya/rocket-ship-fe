@@ -321,11 +321,11 @@ const Allindent = () => {
    
             <div className='mt-2'>
                       <label className='text-xs text-purple-400 font-semibold'>RCSL PRICE</label>
-                      {(data.counter_price == null) ? (<input type="text" value={rcslPrice[data.id] || ''} onChange={(e) => handleRcslPriceChange(data.id,e.target.value)} className="border w-36 h-8 mt-2 ml-4 border-gray-300 rounded-md focus:outline-none focus:border-blue-100" />) :
+                      {(data.counter_price == null && localStorage.getItem('is_company') == 0) ? (<input type="text" value={rcslPrice[data.id] || ''} onChange={(e) => handleRcslPriceChange(data.id,e.target.value)} className="border w-36 h-8 mt-2 ml-4 border-gray-300 rounded-md focus:outline-none focus:border-blue-100" />) :
                       (<input type="text" value={`₹${data.counter_price ?? 0}`} disabled onChange={(e) => handleRcslPriceChange(data.id,e.target.value)} className="border w-36 h-8 mt-2 ml-4 bg-gray-100 cursor-not-allowed border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-100" />)}
             </div>
             <div className='mt-2'>
-                    {(data.counter_price == null) && <button className="bg-green-500 mt-2 hover:bg-green-600 text-white font-semibold py-1 px-2 rounded-lg"
+                    {(data.counter_price == null && localStorage.getItem('is_company') == 0) && <button className="bg-green-500 mt-2 hover:bg-green-600 text-white font-semibold py-1 px-2 rounded-lg"
                       onClick={() => {handleRcslPrice(data.id)}}>Counter Offer</button>}
             </div>
     </div>}
