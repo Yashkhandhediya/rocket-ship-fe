@@ -37,8 +37,8 @@ const Indent = () => {
     //     source_id:'',
     //     destination_id:''
     // })
-    const [selectedCity, setSelectedCity] = useState({ source: `${data?.from_city} ${data?.from_state} ${data?.from_country}` || '', destination: 
-        `${data?.to_city} ${data?.to_state} ${data?.to_country}` || ''
+    const [selectedCity, setSelectedCity] = useState({ source:  `${data?.from_city || ''} ${data?.from_state || ''} ${data?.from_country || ''}`, destination: 
+        `${data?.to_city || ''} ${data?.to_state || ''} ${data?.to_country || ''}` || ''
      });
     const [isDropdownOpen, setIsDropdownOpen] = useState({
         source: false,

@@ -290,7 +290,7 @@ const Allindent = () => {
                       {data.actual_price != null && <input type="text" className="border w-36 h-8 mt-2 ml-2 border-gray-300 rounded-md focus:outline-none bg-gray-100 focus:ring focus:border-blue-100 " disabled value={`₹${data.actual_price ?? 0}`} />}
                     </div>
                     <div className='mt-4 flex flex-row'>
-                      {<button className="bg-green-500 hover:bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-lg mr-2" onClick={() => {}}>Counter Offer</button>}
+                      {(data.actual_price != null) && <button className="bg-green-500 hover:bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-lg mr-2" onClick={() => {}}>Counter Offer</button>}
                       {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status != 0) && <button className="bg-blue-500 hover:bg-blue-600 text-white text-xs  font-semibold py-1 px-2 rounded-lg mr-2" onClick={() => {handleConfirmation(data.id,2)}}>Confirm</button>}
                       {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status != 0) && <button className="bg-red-500 hover:bg-red-600 text-white  text-xs font-semibold py-1 px-2 rounded-lg" onClick={() => {handleConfirmation(data.id,3)}}>Reject</button>}
                     </div>
