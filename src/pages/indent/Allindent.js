@@ -337,10 +337,10 @@ const Allindent = () => {
                       <label className='text-xs text-purple-400 font-semibold'>{data.actual_price == null ? 'ACTUAL PRICE PENDING' : 'ACTUAL PRICE'}</label>
                       {data.actual_price != null && <input type="text" className="border w-36 h-8 mt-2 ml-2 border-gray-300 rounded-md focus:outline-none bg-gray-100 focus:ring focus:border-blue-100 " disabled value={`₹${data.actual_price ?? 0}`} />}
                     </div>
-                    {/* <div className='mt-4 flex flex-row'>
+                    {localStorage.getItem('is_company') == 1 && <div className='mt-4 flex flex-row'>
                       {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status != 0) && <button className="bg-blue-500 hover:bg-blue-600 text-white text-xs  font-semibold py-2 px-3 rounded-lg mr-2" onClick={() => {handleConfirmation(data.id,2)}}>Confirm</button>}
                       {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status != 0) && <button className="bg-red-500 hover:bg-red-600 text-white  text-xs font-semibold py-2 px-3 rounded-lg" onClick={() => {handleConfirmation(data.id,3)}}>Reject</button>}
-                    </div> */}
+                    </div>}
                   </div>
                 )}
     {data?.actual_price != null && <div className="flex flex-row justify-between items-center mt-2 p-1 ">
