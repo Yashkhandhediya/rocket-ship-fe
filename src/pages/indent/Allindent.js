@@ -346,8 +346,8 @@ const Allindent = () => {
                   </div>
                 )}
                 {showBtn && <div className='mt-6 flex flex-row'>
-                      {<button className="bg-blue-500 hover:bg-blue-600 text-white text-xs  font-semibold py-2 px-3 rounded-lg mr-2" onClick={() => {handleConfirmation(data.id,2)}}>Confirm</button>}
-                      {<button className="bg-red-500 hover:bg-red-600 text-white  text-xs font-semibold py-2 px-3 rounded-lg" onClick={() => {handleConfirmation(data.id,3)}}>Reject</button>}
+                      {(data.trip_status !== 2 && data.trip_status !== 3) && <button className="bg-blue-500 hover:bg-blue-600 text-white text-xs  font-semibold py-2 px-3 rounded-lg mr-2" onClick={() => {handleConfirmation(data.id,2)}}>Confirm</button>}
+                      {(data.trip_status !== 2 && data.trip_status !== 3) && <button className="bg-red-500 hover:bg-red-600 text-white  text-xs font-semibold py-2 px-3 rounded-lg" onClick={() => {handleConfirmation(data.id,3)}}>Reject</button>}
                 </div>}
                 </div>
     {data?.actual_price != null && <div className="flex flex-row justify-between items-center mt-2 p-1 ">
