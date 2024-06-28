@@ -346,8 +346,8 @@ const Allindent = () => {
                   </div>
                 )}
                 {showBtn && <div className='mt-6 flex flex-row'>
-                      {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status !== 0) && <button className="bg-blue-500 hover:bg-blue-600 text-white text-xs  font-semibold py-2 px-3 rounded-lg mr-2" onClick={() => {handleConfirmation(data.id,2)}}>Confirm</button>}
-                      {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status !== 0) && <button className="bg-red-500 hover:bg-red-600 text-white  text-xs font-semibold py-2 px-3 rounded-lg" onClick={() => {handleConfirmation(data.id,3)}}>Reject</button>}
+                      {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status !== 0 && data?.counter_price == null) && <button className="bg-blue-500 hover:bg-blue-600 text-white text-xs  font-semibold py-2 px-3 rounded-lg mr-2" onClick={() => {handleConfirmation(data.id,2)}}>Confirm</button>}
+                      {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status !== 0 && data?.counter_price == null) && <button className="bg-red-500 hover:bg-red-600 text-white  text-xs font-semibold py-2 px-3 rounded-lg" onClick={() => {handleConfirmation(data.id,3)}}>Reject</button>}
                 </div>}
                 </div>
     {data?.actual_price != null && <div className="flex flex-row justify-between items-center mt-2 p-1 ">
@@ -368,13 +368,13 @@ const Allindent = () => {
       {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status !== 0 && data.counter_price > 0) && (
         <>
           {showBtn && <button
-            className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold py-1 px-2 rounded-lg mr-2"
+            className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold py-2 px-3 rounded-lg mr-2"
             onClick={() => { handleConfirmation(data.id, 2); }}
           >
             Confirm
           </button>}
           {showBtn && <button
-            className="bg-red-500 hover:bg-red-600 text-white text-xs font-semibold py-1 px-2 rounded-lg"
+            className="bg-red-500 hover:bg-red-600 text-white text-xs font-semibold py-2 px-3 rounded-lg"
             onClick={() => handleRejectClick(data.id)}
           >
             Reject
