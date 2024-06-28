@@ -6,7 +6,8 @@ const ProductDetailsCard = ({ productDetails = {} }) => {
     productDetails?.total_amount +
     productDetails?.shipping_charges +
     productDetails?.gift_wrap +
-    productDetails?.transaction_fees;
+    productDetails?.transaction_fees -
+    productDetails?.discount;
 
   return (
     <DetailsCard heading={'Product Details'} headingIcon={ProductDetailsIcon} headingClassNames="mb-[1px]">
@@ -74,8 +75,8 @@ const ProductDetailsCard = ({ productDetails = {} }) => {
               </div>
               <div className="flex justify-between text-xs">
                 <div className="mb-1.5 min-w-[9rem] text-[#7f7f7f]">{`Discount`}</div>
-                <span className="pr-2 font-medium text-[#4c4c4c]">{`₹${
-                  productDetails?.total_amount === null ? '0' : productDetails?.total_amount
+                <span className="pr-2 font-medium text-[#4c4c4c]">{`${
+                  productDetails?.discount === null ? '₹0' : `- ₹${productDetails?.discount}`
                 }`}</span>
               </div>
               <div className="mb-2 flex justify-between border-t border-t-[#e2e2e2] pt-2 text-xs">
