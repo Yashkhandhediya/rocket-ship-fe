@@ -361,7 +361,7 @@ const Allindent = () => {
             {
             localStorage.getItem('is_company') == 0 ? (
             showBtn && <div className='mt-2'>
-                    {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status !== 0 && data.counter_price > 0 && data.counter_price == null && localStorage.getItem('is_company') == 0 ) && <button className="bg-green-500 mt-2 hover:bg-green-600 text-white font-semibold py-1 px-2 rounded-lg"
+                    {(data.trip_status !== 2 && data.trip_status !== 3 && data.trip_status !== 0 && data.counter_price == null && localStorage.getItem('is_company') == 0 ) && <button className="bg-green-500 mt-2 hover:bg-green-600 text-white font-semibold py-1 px-2 rounded-lg"
                       onClick={() => {handleRcslPrice(data.id)}}>Counter Offer</button>}
             </div>) : (
               <div className='mt-4 flex flex-row'>
