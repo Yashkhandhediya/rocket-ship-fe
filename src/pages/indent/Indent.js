@@ -210,14 +210,14 @@ const Indent = () => {
         // }
 
         if(sourcePin.length != 6 || destinationPin.length != 6){toast('Enter Valid Pincode',{type:'error'});return;}
-        if(remarks == ''){toast('Enter Remarks',{type:'error'});return;}
-        if(totalKm == 0){toast('Enter Kilometers',{type:'error'});return;}
-        if(personInfo?.coordinate_name == ''){toast('Enter Coordinate Name',{type:'error'});return;}
-        if(personInfo?.coordinate_number == ''){toast('Enter Mobile No',{type:'error'});return;}
-        if(targetPrice == null){toast('Enter Target Price',{type:'error'});return;}
-        if(tons == 'Select Weight Type'){toast('Enter Weight Type',{type:'error'});return;}
-        if(materialType == 'Select Material Type'){toast('Enter Material Type',{type:'error'});return;}
-        if(truckType == 'Select Truck Type'){toast('Enter Truck Type',{type:'error'});return;}
+        else if(remarks == ''){toast('Enter Remarks',{type:'error'});return;}
+        else if(totalKm == 0){toast('Enter Kilometers',{type:'error'});return;}
+        else if(personInfo?.coordinate_name == ''){toast('Enter Coordinate Name',{type:'error'});return;}
+        else if(personInfo?.coordinate_number == '' || personInfo?.coordinate_number.length != 10){toast('Enter Valid Mobile No',{type:'error'});return;}
+        else if(targetPrice == null){toast('Enter Target Price',{type:'error'});return;}
+        else if(tons == 'Select Weight Type'){toast('Enter Weight Type',{type:'error'});return;}
+        else if(materialType == 'Select Material Type'){toast('Enter Material Type',{type:'error'});return;}
+        else if(truckType == 'Select Truck Type'){toast('Enter Truck Type',{type:'error'});return;}
 
         setIsLoading(true)
         const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
@@ -306,6 +306,17 @@ const Indent = () => {
         //     console.error('Source and destination must be selected.');
         //     return; // Exit the function early if validation fails
         // }
+        console.log("Pin checkkkkkkk",sourcePin,destinationPin)
+
+        if(sourcePin.toString().length != 6 || destinationPin.toString().length != 6){toast('Enter Valid Pincode',{type:'error'});return;}
+        else if(remarks == ''){toast('Enter Remarks',{type:'error'});return;}
+        else if(totalKm == 0){toast('Enter Kilometers',{type:'error'});return;}
+        else if(personInfo?.coordinate_name == ''){toast('Enter Coordinate Name',{type:'error'});return;}
+        else if(personInfo?.coordinate_number == '' || personInfo?.coordinate_number.length != 10){toast('Enter Valid Mobile No',{type:'error'});return;}
+        else if(targetPrice == null){toast('Enter Target Price',{type:'error'});return;}
+        else if(tons == 'Select Weight Type'){toast('Enter Weight Type',{type:'error'});return;}
+        else if(materialType == 'Select Material Type'){toast('Enter Material Type',{type:'error'});return;}
+        else if(truckType == 'Select Truck Type'){toast('Enter Truck Type',{type:'error'});return;}
 
         setIsLoading(true)
         const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
@@ -359,6 +370,7 @@ const Indent = () => {
                     }
                 }
                 navigate('/all-indent/'+id_user)
+                window.location.reload()
               }
               ).catch((err) => {
                 console.log("ERRRRRRRR",err)
@@ -737,7 +749,9 @@ const Indent = () => {
                             label="Total Km"
                             type='number'
                             placeholder="Enter Total Kilometer"
-                            onChange={(e) => setTotalKm(e.target.value)}
+                            // onChange={(e) => setTotalKm(e.target.value)}
+                            isDisabled={true}
+                            inputClassNames="cursor-not-allowed"
                             leftAddOn='Km.'
                         />
                     </div>
