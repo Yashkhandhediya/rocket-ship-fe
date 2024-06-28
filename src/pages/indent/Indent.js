@@ -252,16 +252,19 @@ const Indent = () => {
         trip_status:0,
         to_pincode:sourcePin,
         from_pincode:destinationPin,
-        remarks:remarks,
+        // remarks:remarks,
         kilometer:totalKm,
-        coordinator_name:personInfo?.coordinate_name,
-        coordinator_mobile:personInfo?.coordinate_number,
+        // coordinator_name:personInfo?.coordinate_name,
+        // coordinator_mobile:personInfo?.coordinate_number,
         to_city:selectedCity?.destination.split(" ")[0],
         to_state:selectedCity?.destination.split(" ")[1],
         to_country:selectedCity?.destination.split(" ")[2],
         from_city:selectedCity?.source.split(" ")[0],
         from_state:selectedCity?.source.split(" ")[1],
         from_country:selectedCity?.source.split(" ")[2],
+        ...(personInfo?.coordinate_name && { coordinator_name: personInfo.coordinate_name }),
+        ...(personInfo?.coordinate_number && { coordinator_mobile: personInfo.coordinate_number }),
+        ...(remarks && { remarks:remarks, }),
     },
          {headers}).then(
             (response)=>{
@@ -351,16 +354,19 @@ const Indent = () => {
         volumetric_weight:volumatricWeight,
         to_pincode:sourcePin,
         from_pincode:destinationPin,
-        remarks:remarks,
+        // remarks:remarks,
         kilometer:totalKm,
-        coordinator_name:personInfo?.coordinate_name,
-        coordinator_mobile:personInfo?.coordinate_number,
+        // coordinator_name:personInfo?.coordinate_name,
+        // coordinator_mobile:personInfo?.coordinate_number,
         to_city:selectedCity?.destination.split(" ")[0],
         to_state:selectedCity?.destination.split(" ")[1],
         to_country:selectedCity?.destination.split(" ")[2],
         from_city:selectedCity?.source.split(" ")[0],
         from_state:selectedCity?.source.split(" ")[1],
         from_country:selectedCity?.source.split(" ")[2],
+        ...(personInfo?.coordinate_name && { coordinator_name: personInfo.coordinate_name }),
+        ...(personInfo?.coordinate_number && { coordinator_mobile: personInfo.coordinate_number }),
+        ...(remarks && { remarks:remarks, }),
     },
          {headers}).then(
             (response)=>{
@@ -413,10 +419,10 @@ const Indent = () => {
       };
     
       useEffect(() => {
-        if (sourcePin.length >= 6) {
+        if (sourcePin.length == 6) {
           fetchPincodeDetails(sourcePin, 'source');
         }
-        if (destinationPin.length >= 6) {
+        if (destinationPin.length == 6) {
           fetchPincodeDetails(destinationPin, 'destination');
         }
       }, [sourcePin, destinationPin]);
@@ -811,7 +817,7 @@ const Indent = () => {
                             onChange={handlePersonMobileNumberChange}
                             leftAddOn='+91'
                             onBlur={() => {
-                                setIsValidPhone(/^\d{10}$/.test(values?.[`contact_no`]));
+                                setIsValidPhone(/^\d{10}$/.test(personInfo?.coordinate_number));
                             }}
                         />
                         {!isValidPhone && (
