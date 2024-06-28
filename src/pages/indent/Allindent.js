@@ -241,7 +241,7 @@ const Allindent = () => {
       <div className="mt-5 mx-3 w-full p-4 bg-white rounded-lg shadow"> 
         <div className="mb-2 w-full flex flex-row items-end justify-between border-b border-gray-200 pb-2">
           <div className="flex flex-row w-full">
-          <div className="text-red-500 text-sm font-semibold w-[60%]">{data.id} | {data?.coordinator_name || "Niket Dave"} | {data?.coordinator_mobile || "9265435422"}</div>
+          <div className="text-red-500 text-sm font-semibold w-[60%]">{data.id} | {data?.coordinator_name || ""} | {data?.coordinator_mobile || ""}</div>
           <button className="" onClick={() => {handleModify(data.id)}}>
             <svg className="h-5 w-5 text-blue-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
