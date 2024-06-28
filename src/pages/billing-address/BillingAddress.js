@@ -10,9 +10,10 @@ function BillingAddress() {
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
-
   const user_id = is_company == 1 ? id_company : id_user;
   const [addressLine2, setAddressLine2] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [addressInfo, setAddressInfo] = useState({
     type_id: 3,
     contact_no: '',
@@ -21,11 +22,27 @@ function BillingAddress() {
     city: '',
     state: '',
   });
-  const [loading, setLoading] = useState(false);
 
   console.log(addressInfo);
 
+  const requiredFieldErrors = () => {
+    const newErrors = {};
+
+    if (!addressInfo.complete_address) newErrors.complete_address = 'Address Line 1 is Required';
+    if (!addressInfo.city) newErrors.city = 'city is Required';
+    if (!addressInfo.state) newErrors.state = 'state is Required';
+    if (!addressInfo.contact_no) newErrors.contact_no = 'contact no. is Required';
+    if (!addressInfo.pincode) newErrors.pincode = 'pincode is Required';
+    if (!addressLine2) newErrors.addressLine2 = 'Address Line 2 is Required';
+    return newErrors;
+  };
+
   const handleSaveAddress = async () => {
+    const requiredError = requiredFieldErrors();
+    if (Object.keys(requiredError).length > 0) {
+      setError(requiredError);
+      return;
+    }
     setLoading(true);
     try {
       const response = await axios.post(`${BACKEND_URL}/address/?created_by=${user_id}`, {
@@ -76,6 +93,7 @@ function BillingAddress() {
                 value={addressInfo.complete_address}
                 onChange={(e) => setAddressInfo({ ...addressInfo, complete_address: e.target.value })}
               />
+              {error && <p className="w-1/2 text-xs text-red-500">{error?.complete_address}</p>}
             </div>
 
             <div className="mb-4 w-[50%] ">
@@ -89,6 +107,7 @@ function BillingAddress() {
                 value={addressLine2}
                 onChange={(e) => setAddressLine2(e.target.value)}
               />
+              {error && <p className="w-1/2 text-xs text-red-500">{error?.addressLine2}</p>}
             </div>
             <div className="mb-4 w-[50%] ">
               <label htmlFor="pincode" className="block text-[12px] font-medium ">
@@ -101,6 +120,7 @@ function BillingAddress() {
                 value={addressInfo.pincode}
                 onChange={(e) => setAddressInfo({ ...addressInfo, pincode: e.target.value })}
               />
+              {error && <p className="w-1/2 text-xs text-red-500">{error?.pincode}</p>}
             </div>
             <div className="mb-4 w-[50%] ">
               <label htmlFor="city" className="block text-[12px] font-medium ">
@@ -113,6 +133,7 @@ function BillingAddress() {
                 value={addressInfo.city}
                 onChange={(e) => setAddressInfo({ ...addressInfo, city: e.target.value })}
               />
+              {error && <p className="w-1/2 text-xs text-red-500">{error?.city}</p>}
             </div>
             <div className="mb-4 w-[50%] ">
               <label htmlFor="state" className="block text-[12px] font-medium ">
@@ -125,6 +146,7 @@ function BillingAddress() {
                 value={addressInfo.state}
                 onChange={(e) => setAddressInfo({ ...addressInfo, state: e.target.value })}
               />
+              {error && <p className="w-1/2 text-xs text-red-500">{error?.state}</p>}
             </div>
 
             <div className="mb-4 w-[50%]">
@@ -138,6 +160,7 @@ function BillingAddress() {
                 value={addressInfo.contact_no}
                 onChange={(e) => setAddressInfo({ ...addressInfo, contact_no: e.target.value })}
               />
+              {error && <p className="w-1/2 text-xs text-red-500">{error?.contact_no}</p>}
             </div>
             <button
               className="rounded-sm bg-red-800 px-3 py-1 text-sm text-white hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300"
