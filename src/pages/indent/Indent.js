@@ -20,6 +20,7 @@ export let info = [];
 const Indent = () => {
     const location = useLocation()
     const id_user = localStorage.getItem('user_id')
+    const [isValidPhone, setIsValidPhone] = useState(true);
     const data = location.state?.data || {}
     console.log("Dataaaaaa",data)
     // console.log("Dataaaaaaaa",props.location.state.targetPrice)
@@ -72,6 +73,10 @@ const Indent = () => {
     const [personInfo,setPersonInfo] = useState({
         coordinate_name:data?.coordinator_name || '',
         coordinate_number:data?.coordinator_mobile || ''
+    })
+
+    const [contactPersonInfo,setContactPersonInfo] = useState({
+        contact_name:''
     })
 
     const volumatricWeight =
@@ -210,10 +215,10 @@ const Indent = () => {
         // }
 
         if(sourcePin.length != 6 || destinationPin.length != 6){toast('Enter Valid Pincode',{type:'error'});return;}
-        else if(remarks == ''){toast('Enter Remarks',{type:'error'});return;}
+        // else if(remarks == ''){toast('Enter Remarks',{type:'error'});return;}
         else if(totalKm == 0){toast('Enter Kilometers',{type:'error'});return;}
-        else if(personInfo?.coordinate_name == ''){toast('Enter Coordinate Name',{type:'error'});return;}
-        else if(personInfo?.coordinate_number == '' || personInfo?.coordinate_number.length != 10){toast('Enter Valid Mobile No',{type:'error'});return;}
+        // else if(personInfo?.coordinate_name == ''){toast('Enter Coordinate Name',{type:'error'});return;}
+        // else if(personInfo?.coordinate_number == '' || personInfo?.coordinate_number.length != 10){toast('Enter Valid Mobile No',{type:'error'});return;}
         else if(targetPrice == null){toast('Enter Target Price',{type:'error'});return;}
         else if(tons == 'Select Weight Type'){toast('Enter Weight Type',{type:'error'});return;}
         else if(materialType == 'Select Material Type'){toast('Enter Material Type',{type:'error'});return;}
@@ -309,10 +314,10 @@ const Indent = () => {
         console.log("Pin checkkkkkkk",sourcePin,destinationPin)
 
         if(sourcePin.toString().length != 6 || destinationPin.toString().length != 6){toast('Enter Valid Pincode',{type:'error'});return;}
-        else if(remarks == ''){toast('Enter Remarks',{type:'error'});return;}
+        // else if(remarks == ''){toast('Enter Remarks',{type:'error'});return;}
         else if(totalKm == 0){toast('Enter Kilometers',{type:'error'});return;}
-        else if(personInfo?.coordinate_name == ''){toast('Enter Coordinate Name',{type:'error'});return;}
-        else if(personInfo?.coordinate_number == '' || personInfo?.coordinate_number.length != 10){toast('Enter Valid Mobile No',{type:'error'});return;}
+        // else if(personInfo?.coordinate_name == ''){toast('Enter Coordinate Name',{type:'error'});return;}
+        // else if(personInfo?.coordinate_number == '' || personInfo?.coordinate_number.length != 10){toast('Enter Valid Mobile No',{type:'error'});return;}
         else if(targetPrice == null){toast('Enter Target Price',{type:'error'});return;}
         else if(tons == 'Select Weight Type'){toast('Enter Weight Type',{type:'error'});return;}
         else if(materialType == 'Select Material Type'){toast('Enter Material Type',{type:'error'});return;}
@@ -429,6 +434,14 @@ const Indent = () => {
       const handlePersonInfoChange = (e) => {
         const { id, value } = e.target;
         setPersonInfo(prevState => ({
+            ...prevState,
+            [id]: value
+        }));
+    };
+
+    const handleContactPersonInfoChange = (e) => {
+        const { id, value } = e.target;
+        setContactPersonInfo(prevState => ({
             ...prevState,
             [id]: value
         }));
@@ -666,7 +679,7 @@ const Indent = () => {
                             }} />
                     </div>}
                     <div className="w-[49%]">
-                        <CustomMultiSelect
+                        {/* <CustomMultiSelect
                             isMulti={false}
                             placeholder={userOptions[0].label}
                             label={'Contact Person'}
@@ -675,7 +688,19 @@ const Indent = () => {
                             onChange={() => {
                                 console.log('User selected');
                             }}
-                        />
+                        /> */}
+
+                        <Field
+                        type="text"
+                        id="contact_name"
+                        label="Contact Person"
+                        inputClassNames="text-xs"
+                        labelClassNames="text-xs"
+                        placeHolder="Enter Contact Name"
+                        required={true}
+                        value={contactPersonInfo?.contact_name}
+                        onChange={handleContactPersonInfoChange}
+                    />
                     </div>
                     <div className="w-[49%]">
                         <CustomMultiSelect
@@ -785,7 +810,13 @@ const Indent = () => {
                             placeholder="Enter Mobile Number"
                             onChange={handlePersonMobileNumberChange}
                             leftAddOn='+91'
+                            onBlur={() => {
+                                setIsValidPhone(/^\d{10}$/.test(values?.[`contact_no`]));
+                            }}
                         />
+                        {!isValidPhone && (
+                            <p className="mt-1 text-xs text-red-500">Please enter a valid 10-digit number.</p>
+                        )}
                     </div>
 
 
