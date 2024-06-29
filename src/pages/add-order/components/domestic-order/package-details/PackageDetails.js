@@ -14,7 +14,9 @@ import Loader from '../../../../../common/loader/Loader';
 // import { isEdit, order_id } from '../../../../orders/components/new/New'
 import { package_info } from '../order-details/OrderDetails';
 
+
 export default function PackageDetails({ currentStep, handleChangeStep }) {
+  // console.log("DIMMMMMMMMM",package_info)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,6 +24,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
   console.log('EDDDITTT', isEdit);
   const id_user = localStorage.getItem('user_id');
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order);
+  console.log("DOm VALLLL",domesticOrderFormValues)
   const editDetails = useSelector((state) => state?.editOrder?.domestic_order);
   console.log('EDDDDDDDDDDD', editDetails);
   const [validationTriggered, setValidationTriggered] = useState(false);
@@ -29,22 +32,14 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
   const [courierType, setCourierType] = useState('surface');
   const [formDirectField, setFormDirectField] = useState({
     length: 0,
-    width: 0,
+    width:  0,
     height: 0,
     dead_weight: '',
     applicable_weight: '',
     volumatric_weight: '',
   });
 
-  if (package_info?.volumatric_weight) {
-    setFormDirectField({
-      ...formDirectField,
-      length: package_info.length,
-      width: package_info.width,
-      height: package_info.height,
-      volumatric_weight: package_info.volumatric_weight,
-    });
-  }
+  // console.log("CCCCCCCCC",formDirectField)
 
   const divisor = courierType === 'air' ? 5000 : 4750;
 
@@ -167,8 +162,11 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
       ...formDirectField,
       volumatric_weight: volumatricWeight,
       applicable_weight: applicableWeight,
+      length: package_info?.length || 0,
+      width: package_info?.width || 0,
+      height: package_info?.height || 0,
     });
-  }, [volumatricWeight, applicableWeight]);
+  }, [volumatricWeight, applicableWeight,package_info]);
 
   useEffect(() => {
     if (!isEmpty(domesticOrderFormValues)) {

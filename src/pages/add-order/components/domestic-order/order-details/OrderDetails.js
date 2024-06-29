@@ -222,6 +222,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
 
   // Handle product suggestion selection
   const handleProductSuggestionClick = (suggestion, index) => {
+    console.log("Suggestion Valueeeeee",suggestion)
     const allFields = [...productFields];
     allFields[index]['name'] = suggestion.name;
     allFields[index]['unit_price'] = suggestion.unit_price;
@@ -233,7 +234,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     package_info.length = suggestion.length;
     package_info.width = suggestion.width;
     package_info.height = suggestion.height;
-    package_info.volumatric_weight = suggestion.volumatric_weight;
+    package_info.volumatric_weight = suggestion.volumatric_weight
     // setCashCharge(suggestion.cod_charge)
     setShowProductSuggestions(false);
   };
@@ -374,6 +375,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
       const filteredSuggestions = response.data.filter(
         (user) => user.name && user.name.toLowerCase().includes(value.toLowerCase()),
       );
+      console.log("REEEEEEEE",filteredSuggestions)
       setSuggestions(filteredSuggestions);
     } catch (error) {
       console.error('Error fetching suggestions:', error);
@@ -550,17 +552,25 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                         },
                       }}
                       onSuggestionSelected={(event, { suggestion }) => {
+                        // console.log("GHDDDDDDDDDD",suggestion.volumetric_weight)
                         const newProductFields = [...productFields];
                         const responseSchema = {
                           name: suggestion.name,
                           hsn_code: suggestion.hsn_code,
                           sku: suggestion.sku,
+                          unit_price: suggestion.unit_price,
+                          category: suggestion.category,
+                          discount:suggestion.discount
                         };
                         newProductFields[index] = {
                           ...newProductFields[index],
                           ...responseSchema,
                         };
                         setProductFields(newProductFields);
+                        package_info.length = suggestion.length
+                        package_info.width = suggestion.width
+                        package_info.height = suggestion.height
+                        package_info.volumatric_weight = String(suggestion.volumetric_weight)
                       }}
                       theme={theme}
                     />
