@@ -109,7 +109,7 @@ const Settings = () => {
         items: [
           {
             title: 'GSTIN Invoice',
-            link: '/',
+            link: '/gstin-invoicing',
           },
           {
             title: 'Billing Address',
