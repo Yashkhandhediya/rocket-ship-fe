@@ -2,8 +2,11 @@ import { Navigate } from 'react-router-dom';
 
 export const PrivateRoute = ({ component }) => {
   const accessToken = localStorage.getItem('access_token');
-  if (!accessToken) {
+  const is_otpVerified = JSON.parse(localStorage.getItem('is_otpVerified'));
+  if (!accessToken || !is_otpVerified) {
     return <Navigate to="/login" />;
+  } else {
+    console.log('not satified');
   }
   return component;
 };

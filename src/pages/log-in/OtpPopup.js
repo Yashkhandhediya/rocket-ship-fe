@@ -127,6 +127,7 @@ const OtpPopup = ({
     axios
       .get(BACKEND_URL + otpURL, { otp: OTP, user_id: tempId }, { headers })
       .then((response) => {
+        localStorage.setItem('is_otpVerified', JSON.stringify(true));
         console.log(response);
         if (is_super == 3) {
           toast('Login Success', { type: 'success' });
@@ -143,7 +144,7 @@ const OtpPopup = ({
           toast('OTP Mismatched', { type: 'error' });
           console.log('OTP Mismatched');
         }
-        window.location.reload()
+        window.location.reload();
         // if(1){
         //   toast('Login Success',{type:'success'})
         //   navigate('/')

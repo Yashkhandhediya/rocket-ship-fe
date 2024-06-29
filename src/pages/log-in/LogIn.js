@@ -20,9 +20,8 @@ const LogIn = () => {
     password: '',
   });
   const [userType, setUserType] = useState('user');
-  type_user = userType; 
+  type_user = userType;
 
-  
   const handleChangeInput = (e) => {
     const { id, value } = e.target;
     setLoginInput({
@@ -36,7 +35,7 @@ const LogIn = () => {
     // console.log("DATAAAAAAAAA",data)
     navigate('/forgotpassword');
   };
-    //   var SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
+  //   var SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
 
   //   function start() {
   //     gapi.client.init({
@@ -65,7 +64,7 @@ const LogIn = () => {
           username: loginInput.username,
           password: loginInput.password,
         },
-        { headers }
+        { headers },
       )
       .then((response) => {
         localStorage.setItem('user_id', response.data.user_id);
@@ -75,6 +74,7 @@ const LogIn = () => {
         localStorage.setItem('balance', response.data.wallet_balance);
         localStorage.setItem('is_kyc', response.data.kyc_status_id);
         localStorage.setItem('is_super', response.data.user_type_id);
+        localStorage.setItem('is_otpVerified', JSON.stringify(false));
         const user_id =
           userType === 'user' ? localStorage.getItem('user_id') : localStorage.getItem('company_id');
         if (response.data.access_token) {
@@ -86,7 +86,7 @@ const LogIn = () => {
             .post(
               BACKEND_URL + `${otpURL}/generate_otp?email_id=${loginInput.username}&user_id=${user_id}`,
               { email_id: String(loginInput.username), user_id: String(response.data.user_id) },
-              { headers }
+              { headers },
             )
             .then((otpResponse) => {
               setHandlePopup(true);
@@ -96,7 +96,7 @@ const LogIn = () => {
               console.error('Error fetching OTP:', otpError);
               toast('Error generating OTP', { type: 'error' });
             });
-             // toast('Login Success',{type:'success'})
+          // toast('Login Success',{type:'success'})
           // navigate('/')
         } else if (response.data.msg) {
           toast(response.data.msg, { type: 'error' });
@@ -107,7 +107,7 @@ const LogIn = () => {
         toast('An error occurred during login', { type: 'error' });
       });
   };
-   // const onSuccess = (response) => {
+  // const onSuccess = (response) => {
   //   console.log('Login Success:', response);
   //   // Handle the response here, e.g., send it to your backend for authentication
   // };
@@ -132,7 +132,7 @@ const LogIn = () => {
               <div className="mb-2 text-center">
                 <h3 className="m-0 text-xl font-medium">Login to Cloud Cargo</h3>
               </div>
-                 {/* <GoogleLogin
+              {/* <GoogleLogin
                 clientId="285163063974-00ubuj8sg12diejh6j2hn3mq845d5ngn.apps.googleusercontent.com"
                 buttonText="Login"
                 onSuccess={onSuccess}
@@ -176,7 +176,7 @@ const LogIn = () => {
                   <input
                     type="email"
                     id="username"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                     placeholder="Enter your email ID"
                     value={loginInput.username}
                     onChange={handleChangeInput}
@@ -189,7 +189,7 @@ const LogIn = () => {
                   <input
                     type="password"
                     id="password"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                     placeholder="Enter password"
                     value={loginInput.password}
                     onChange={handleChangeInput}
@@ -203,20 +203,18 @@ const LogIn = () => {
                 <button
                   type="button"
                   className="dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 mb-2 w-full rounded-lg bg-red-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300"
-                  onClick={handleSubmit}
-                >
+                  onClick={handleSubmit}>
                   Login
                 </button>
                 <div className="text-center">
                   <p className="text-sm">
                     New to Cloud Cargo?{' '}
-                       {/* <Link to={'/signup'} className="text-decoration-none text-red-700">
+                    {/* <Link to={'/signup'} className="text-decoration-none text-red-700">
                 Sign Up Now
               </Link> */}
                     <Link
                       to={userType === 'user' ? '/signup-user' : '/signup'}
-                      className="text-decoration-none text-red-700"
-                    >
+                      className="text-decoration-none text-red-700">
                       Sign Up Now
                     </Link>
                   </p>
@@ -225,7 +223,12 @@ const LogIn = () => {
             </div>
           )}
           {handlePopup && (
-            <OtpPopup userType={userType} username={loginInput.username} userId={userId} companyId={companyId} />
+            <OtpPopup
+              userType={userType}
+              username={loginInput.username}
+              userId={userId}
+              companyId={companyId}
+            />
           )}
           <div className="ml-auto mt-4 flex flex-row items-end justify-between">
             <h1 className="ml-auto mr-4 text-xl font-bold text-red-700">Powered By</h1>
