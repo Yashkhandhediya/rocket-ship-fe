@@ -19,12 +19,12 @@ import {
   wooLogo,
 } from '../../../../common/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllOrders, setClonedOrder } from '../../../../redux';
+import { setAllOrders, setClonedOrder, setEditOrder } from '../../../../redux';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Fragment, useState, useEffect } from 'react';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
-import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
+import { getClonedOrderFields, getEditOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
@@ -352,6 +352,7 @@ const Delivered = ({ data, isLoading }) => {
                   downloadInvoice: () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row?.original),
                   cancelOrder: () => cancelOrder(row?.original),
+                  editOrder: () => editOrder(row?.original),
                 })}
               />
             </div>
@@ -360,6 +361,28 @@ const Delivered = ({ data, isLoading }) => {
       }),
     ];
   };
+
+  function editOrder(orderDetails) {
+    // let isEdit = true
+    // order_id = orderDetails?.id
+    let data = {
+      isEdit: true,
+      order_id: orderDetails?.id,
+    };
+    axios
+      .get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails?.id}`)
+      .then((res) => {
+        console.log('Response Of Get Order While Edit ', res);
+        const editedOrder = getEditOrderFields(res.data);
+        console.log('GHHHH', editedOrder);
+        dispatch(setEditOrder(editedOrder));
+        dispatch(setDomesticOrder(editedOrder));
+      })
+      .catch((err) => {
+        console.log('Error While Edit Order ', err);
+      });
+    navigate('/add-order', { state: data });
+  }
 
   function cancelOrder(orderDetails) {
     axios

@@ -27,7 +27,9 @@ const Orders = () => {
   const [filteredOrderId, setFilteredOrderId] = useState([]);
   const [searchBy, setSearchBy] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  const [activeTab, setActiveTab] = useState(JSON.parse(localStorage.getItem('activeOrderTab')) || 0);
+  const [activeOrderTab, setOrderActiveTab] = useState(
+    JSON.parse(localStorage.getItem('activeOrderTab')) || 0,
+  );
 
   console.log(filteredOrderId, searchBy, errorMsg);
 
@@ -94,7 +96,7 @@ const Orders = () => {
     try {
       const response = await axios.post(`${BACKEND_URL}/order/filter_orders`, filteredOrderId);
       dispatch(setFilteredOrders(response?.data || []));
-      setActiveTab(6);
+      setOrderActiveTab(6);
       clearSearch();
     } catch (err) {
       toast('There is Error while fetching', { type: 'error' });
@@ -104,7 +106,7 @@ const Orders = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem('activeTab', activeTab);
+    localStorage.setItem('activeOrderTab', activeOrderTab);
     fetchFilteredOrders();
   }, [query]);
 
@@ -204,12 +206,14 @@ const Orders = () => {
             )}
           </div>
           <div>
-            {is_company == 1 && <button
-              className="mr-2 rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-sm font-medium text-orange-600"
-              onClick={() => navigate('/all-user')}>
-              Back
-              {/* Back Button */}
-            </button>}
+            {is_company == 1 && (
+              <button
+                className="mr-2 rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-sm font-medium text-orange-600"
+                onClick={() => navigate('/all-user')}>
+                Back
+                {/* Back Button */}
+              </button>
+            )}
             {is_company == 0 && (
               <button
                 className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-sm font-medium text-orange-600'}
@@ -222,8 +226,8 @@ const Orders = () => {
         <div>
           <Tabs
             tabs={ordersTabs}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
+            activeOrderTab={activeOrderTab}
+            setOrderActiveTab={setOrderActiveTab}
             tabClassNames={'mr-6 px-3 py-3.5 text-[#7f7f7f] font-medium'}
           />
         </div>

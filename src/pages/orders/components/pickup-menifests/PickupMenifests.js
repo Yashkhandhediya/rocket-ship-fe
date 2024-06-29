@@ -25,8 +25,8 @@ import {
   MoreDropdown,
 } from '../../../../common/components';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
-import { setAllOrders, setClonedOrder } from '../../../../redux';
-import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
+import { setAllOrders, setClonedOrder, setEditOrder } from '../../../../redux';
+import { getClonedOrderFields, getEditOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { resData } from '../../Orders';
 import { Button } from 'flowbite-react';
@@ -378,6 +378,7 @@ const PickupMenifests = ({ data, isLoading }) => {
                   downloadInvoice: () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row?.original),
                   cancelOrder: () => cancelOrder(row?.row?.original),
+                  editOrder: () => editOrder(row?.original),
                 })}
               />
             </div>
@@ -412,6 +413,28 @@ const PickupMenifests = ({ data, isLoading }) => {
           toast('Unable to cancel Order', { type: 'error' });
         });
     }
+  }
+
+  function editOrder(orderDetails) {
+    // let isEdit = true
+    // order_id = orderDetails?.id
+    let data = {
+      isEdit: true,
+      order_id: orderDetails?.id,
+    };
+    axios
+      .get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails?.id}`)
+      .then((res) => {
+        console.log('Response Of Get Order While Edit ', res);
+        const editedOrder = getEditOrderFields(res.data);
+        console.log('GHHHH', editedOrder);
+        dispatch(setEditOrder(editedOrder));
+        dispatch(setDomesticOrder(editedOrder));
+      })
+      .catch((err) => {
+        console.log('Error While Edit Order ', err);
+      });
+    navigate('/add-order', { state: data });
   }
 
   // function cancelOrder(orderDetails) {

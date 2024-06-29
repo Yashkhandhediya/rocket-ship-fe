@@ -17,8 +17,8 @@ import ShipmentDrawerSelectCourier from '../orders/components/shipment-drawer-se
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { MENIFEST_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
-import { getClonedOrderFields } from '../../common/utils/ordersUtils';
-import { setClonedOrder } from '../../redux';
+import { getClonedOrderFields, getEditOrderFields } from '../../common/utils/ordersUtils';
+import { setClonedOrder, setEditOrder } from '../../redux';
 import { setDomesticOrder } from '../../redux/actions/addOrderActions';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -137,6 +137,28 @@ const OrderTrackDetails = () => {
       });
   };
 
+  function editOrder(orderDetails) {
+    // let isEdit = true
+    // order_id = orderDetails?.id
+    let data = {
+      isEdit: true,
+      order_id: orderDetails?.id,
+    };
+    axios
+      .get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails}`)
+      .then((res) => {
+        console.log('Response Of Get Order While Edit ', res);
+        const editedOrder = getEditOrderFields(res.data);
+        console.log('GHHHH', editedOrder);
+        dispatch(setEditOrder(editedOrder));
+        dispatch(setDomesticOrder(editedOrder));
+      })
+      .catch((err) => {
+        console.log('Error While Edit Order ', err);
+      });
+    navigate('/add-order', { state: data });
+  }
+
   function cancelOrder(orderDetails) {
     axios
       .put(`${BACKEND_URL}/order/?id=${orderDetails}`, {
@@ -212,6 +234,7 @@ const OrderTrackDetails = () => {
                     },
                     cloneOrder: () => cloneOrder(orderDetails),
                     cancelOrder: () => cancelOrder(orderDetails?.id),
+                    editOrder: () => editOrder(orderDetails?.id),
                   })}
                 />
               </div>
@@ -225,7 +248,7 @@ const OrderTrackDetails = () => {
                 <AppChangesCard />
               </div>
               <div className="px-2 md:w-4/12">
-                <OrderTrackRightContainer flag={flag} />
+                <OrderTrackRightContainer />
               </div>
             </div>
           </div>

@@ -25,10 +25,10 @@ import DrawerWithSidebar from '../../../../common/components/drawer-with-sidebar
 import { ShipmentDrawerOrderDetails } from '../shipment-drawer-order-details';
 import ShipmentDrawerSelectCourier from '../shipment-drawer-select-courier/ShipmentDrawerSelectCourier';
 import { useDispatch, useSelector } from 'react-redux';
-import { setClonedOrder } from '../../../../redux';
+import { setClonedOrder, setEditOrder } from '../../../../redux';
 import { SchedulePickupModal } from '../schedule-pickup-modal';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
-import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
+import { getClonedOrderFields, getEditOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
 import { resData } from '../../Orders';
@@ -376,6 +376,7 @@ export const ReadyToShip = ({ data, isLoading }) => {
                   downloadInvoice: () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row.original),
                   cancelOrder: () => cancelOrder(row?.original),
+                  editOrder: () => editOrder(row?.original),
                 })}
               />
             </div>
@@ -410,6 +411,28 @@ export const ReadyToShip = ({ data, isLoading }) => {
           toast('Unable to cancel Order', { type: 'error' });
         });
     }
+  }
+
+  function editOrder(orderDetails) {
+    // let isEdit = true
+    // order_id = orderDetails?.id
+    let data = {
+      isEdit: true,
+      order_id: orderDetails?.id,
+    };
+    axios
+      .get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails?.id}`)
+      .then((res) => {
+        console.log('Response Of Get Order While Edit ', res);
+        const editedOrder = getEditOrderFields(res.data);
+        console.log('GHHHH', editedOrder);
+        dispatch(setEditOrder(editedOrder));
+        dispatch(setDomesticOrder(editedOrder));
+      })
+      .catch((err) => {
+        console.log('Error While Edit Order ', err);
+      });
+    navigate('/add-order', { state: data });
   }
 
   function cloneOrder(orderDetails) {

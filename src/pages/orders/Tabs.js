@@ -12,8 +12,8 @@ import { toast } from 'react-toastify';
 import { temp_user_id } from './User';
 import { useSelector } from 'react-redux';
 
-const Tabs = ({ tabs, tabClassNames, activeTab, setActiveTab, onTabChange = () => {} }) => {
-  console.log('Activeeeeeeee', activeTab);
+const Tabs = ({ tabs, tabClassNames, activeOrderTab, setOrderActiveTab, onTabChange = () => {} }) => {
+  console.log('Activeeeeeeee', activeOrderTab);
   const filteredOrders = useSelector((state) => state.filteredOrdersList);
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
@@ -24,7 +24,7 @@ const Tabs = ({ tabs, tabClassNames, activeTab, setActiveTab, onTabChange = () =
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  const tabID = tabs.find((_, i) => i === activeTab);
+  const tabID = tabs.find((_, i) => i === activeOrderTab);
   console.log('lllllllllllkl', tabID);
 
   // Handler function to update the state when the selected value changes
@@ -59,14 +59,14 @@ const Tabs = ({ tabs, tabClassNames, activeTab, setActiveTab, onTabChange = () =
   };
 
   const handleClick = (index) => {
-    setActiveTab(index);
+    setOrderActiveTab(index);
     onTabChange(index);
     localStorage.setItem('activeOrderTab', JSON.stringify(index));
   };
 
   useEffect(() => {
     fetchOrdersData(tabID);
-  }, [itemsPerPage, page, activeTab]);
+  }, [itemsPerPage, page, activeOrderTab]);
 
   return (
     <div className="mb-4">
@@ -79,7 +79,7 @@ const Tabs = ({ tabs, tabClassNames, activeTab, setActiveTab, onTabChange = () =
               <button
                 key={tab.id}
                 className={`me-2 inline-flex items-center rounded-t-lg border-b-4 p-2 ${
-                  i === activeTab ? 'border-red-600 text-rose-500' : 'border-transparent text-[#9CA3AF]'
+                  i === activeOrderTab ? 'border-red-600 text-rose-500' : 'border-transparent text-[#9CA3AF]'
                 } ${tabClassNames}`}
                 id={`${tab.id}-tab`}
                 type="button"
@@ -97,13 +97,13 @@ const Tabs = ({ tabs, tabClassNames, activeTab, setActiveTab, onTabChange = () =
       </div>
       <div id="default-tab-content">
         <div className={`rounded-lg`}>
-          {activeTab === 0 && <New data={data} isLoading={loading} />}
-          {activeTab === 1 && <ReadyToShip data={data} isLoading={loading} />}
-          {activeTab === 2 && <PickupMenifests data={data} isLoading={loading} />}
-          {activeTab === 3 && <InTransit data={data} isLoading={loading} />}
-          {activeTab === 4 && <Delivered data={data} isLoading={loading} />}
-          {activeTab === 5 && <Rto data={data} isLoading={loading} />}
-          {activeTab === 6 && <All data={!filteredOrders ? data : filteredOrders} isLoading={loading} />}
+          {activeOrderTab === 0 && <New data={data} isLoading={loading} />}
+          {activeOrderTab === 1 && <ReadyToShip data={data} isLoading={loading} />}
+          {activeOrderTab === 2 && <PickupMenifests data={data} isLoading={loading} />}
+          {activeOrderTab === 3 && <InTransit data={data} isLoading={loading} />}
+          {activeOrderTab === 4 && <Delivered data={data} isLoading={loading} />}
+          {activeOrderTab === 5 && <Rto data={data} isLoading={loading} />}
+          {activeOrderTab === 6 && <All data={!filteredOrders ? data : filteredOrders} isLoading={loading} />}
 
           <div className="flex w-full flex-wrap-reverse justify-between gap-2 rounded-lg bg-white px-4 py-2">
             <div className="mr-2 flex items-center">
