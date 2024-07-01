@@ -37,6 +37,9 @@ const Allindent = () => {
   const [selectedReason, setSelectedReason] = useState('');
   const [popupCardId, setPopupCardId] = useState(null);
   const [showBtn, setShowBtn] = useState(true);
+  const [showOfflineBtn, setShowOfflineBtn] = useState(false);
+  const [offlinePrice,setOfflinePrice] = useState(0)
+
   console.log('IDFFFFFF', selectedTab);
 
   function formatTimestamp(timestamp) {
@@ -192,6 +195,7 @@ const Allindent = () => {
           : toast('Price Successfully Rejected', { type: 'error' });
         setLoading(false);
         setShowBtn(false);
+        setPopupCardId(null)
         window.location.reload();
       })
       .catch((err) => {
@@ -218,9 +222,16 @@ const Allindent = () => {
   }, [selectedTab]);
 
   const handleRejectClick = (id) => {
+    setShowBtn(false)
     setShowPopup(true);
     setPopupCardId(id);
   };
+
+  const handleConfirmClick = (id) => {
+    setShowBtn(false)
+    setShowOfflineBtn(true)
+    setPopupCardId(id);
+  }
 
   const handleReasonChange = (e) => {
     setSelectedReason(e.target.value);
@@ -476,7 +487,7 @@ const Allindent = () => {
                       )}
                     </div>
 
-                    {localStorage.getItem('is_company') == 0 ? (
+                    {localStorage.getItem('is_company') != 0 ? (
                       showBtn && (
                         <div className="mt-2">
                           {data.trip_status !== 2 &&
@@ -505,12 +516,66 @@ const Allindent = () => {
                                 <button
                                   className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
                                   onClick={() => {
-                                    handleConfirmation(data.id, 2);
+                                    // handleConfirmation(data.id, 2);
+                                    handleConfirmClick(data.id)
                                   }}>
                                   Confirm
                                 </button>
                               )}
                               {showBtn && (
+                                <button
+                                  className="rounded-lg bg-red-500 px-3 py-2 text-xs font-semibold text-white hover:bg-red-600"
+                                  onClick={() => handleRejectClick(data.id)}>
+                                  Reject
+                                </button>
+                              )}
+                            </>
+                          )}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+
+                {showOfflineBtn && popupCardId == data.id && (
+                  <div className="mt-2 flex flex-row items-center justify-between p-1 ">
+                    <div className="mt-2">
+                      <label className="text-xs font-semibold text-purple-400">OFFLINE PRICE</label>
+                      {data.counter_price != null && localStorage.getItem('is_company') == 0 ? (
+                        <input
+                          type="text"
+                          value={offlinePrice || ''}
+                          onChange={(e) => setOfflinePrice(e.target.value)}
+                          className="ml-4 mt-2 h-8 w-36 rounded-md border border-gray-300 focus:border-blue-100 focus:outline-none"
+                        />
+                      ) : (
+                        <input
+                          type="text"
+                          value={`₹${data.offline_price ?? 0}`}
+                          disabled
+                          // onChange={(e) => handleRcslPriceChange(data.id, e.target.value)}
+                          className="ml-4 mt-2 h-8 w-36 cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 focus:border-blue-100 focus:outline-none focus:ring"
+                        />
+                      )}
+                    </div>
+
+                    {localStorage.getItem('is_company') == 0 && (
+                      <div className="mt-4 flex flex-row">
+                        {data.trip_status !== 2 &&
+                          data.trip_status !== 3 &&
+                          data.trip_status !== 0 &&
+                          data.counter_price > 0 && (
+                            <>
+                              {(
+                                <button
+                                  className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
+                                  onClick={() => {
+                                    handleConfirmation(data.id, 2);
+                                  }}>
+                                  Confirm
+                                </button>
+                              )}
+                              {(
                                 <button
                                   className="rounded-lg bg-red-500 px-3 py-2 text-xs font-semibold text-white hover:bg-red-600"
                                   onClick={() => handleRejectClick(data.id)}>
