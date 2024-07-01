@@ -3,10 +3,13 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { BACKEND_URL } from "../../../../common/utils/env.config";
+import { ACCESS_TOKEN } from "../../../../common/utils/config";
+import { useNavigate } from "react-router-dom";
 
 const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
-
+    const headers = { 'Content-Type': 'multipart/form-data', 'Authorization': ACCESS_TOKEN};
     const videoRef = useRef(null);
+    const navigate = useNavigate()
     const canvasRef = useRef(null);
     const [videoInitialized, setVideoInitialized] = useState(false);
     const [canvasInitialized, setCanvasInitialized] = useState(false);
@@ -83,11 +86,10 @@ const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
                     setCapturedImage(imageDataURL);
                     const formData = new FormData();
                     formData.append('file', blob, 'selfie.png');
-                    const headers = { 'Content-Type': 'multipart/form-data' };
                     axios.post(
-                        BACKEND_URL + `/kyc/upload_selfie?image_id=${id_user}&type=selfie&user_name=${user_name}`,
+                        BACKEND_URL + `/kyc/upload_selfie?type=selfie&user_name=${user_name}`,
                         formData,
-                        { headers }
+                        { headers:headers }
                     )
                     .then((res) => {
                         console.log("Image KYC Response", res);
@@ -109,7 +111,13 @@ const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
             setType('retake');
             // toast('Your selfie has been successfully verified', { type: 'success' });
         } catch (error) {
-            toast('Error while capturing image', { type: 'error' });
+            if (error.response && error.response.status === 401) {
+                // Redirect to login page on 401 Unauthorized
+                localStorage.clear()
+                navigate('/login');
+              } else {
+                toast('Error while capturing image', { type: 'error' });
+              }
         }
     };
 

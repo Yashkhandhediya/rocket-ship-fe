@@ -23,6 +23,7 @@ import { setDomesticOrder } from '../../redux/actions/addOrderActions';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setAllOrders } from '../../redux';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 // import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const OrderTrackDetails = () => {
@@ -32,10 +33,13 @@ const OrderTrackDetails = () => {
   const [searchParam] = useSearchParams();
   const flag = searchParam.get('flag');
   console.log('FLAAAAA', flag);
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [copyTooltip, setCopyTooltip] = useState('Click to Copy');
   const [orderDetails, setOrderDetails] = useState(null);
   const [shipmentDrawerOpen, setShipmentDrawerOpen] = useState(false);
-
+  
   let resData = {};
   const flattened = {};
 
@@ -54,12 +58,18 @@ const OrderTrackDetails = () => {
         params: {
           id: orderId,
         },
-      })
+      },{headers:headers})
       .then((resp) => {
         if (resp.status === 200) {
           console.log('Ogggggggggggg', resp.data);
           setOrderDetails(resp?.data || {});
           resData = resp?.data;
+        }
+      }).catch((e) =>  {
+        if (e.response && e.response.status === 401) {
+          // Unauthorized - redirect to login page
+          localStorage.clear()
+          navigate('/login');
         }
       });
   };
@@ -105,7 +115,7 @@ const OrderTrackDetails = () => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(orderDetails, id);
     console.log('kkkkkkkkkk', temp_payload);
-    const headers = { 'Content-Type': 'application/json' };
+    // const headers = { 'Content-Type': 'application/json' };
 
     let temp_str = splitString(temp_payload['complete_address'], 35);
     let temp1 = splitString(temp_payload['complete_address'], 35);
@@ -123,7 +133,7 @@ const OrderTrackDetails = () => {
     temp_payload['file_name'] = 'invoice';
 
     axios
-      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
+      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers:headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
@@ -132,8 +142,14 @@ const OrderTrackDetails = () => {
         toast('Invoice Download Successfully', { type: 'success' });
       })
       .catch((error) => {
-        console.error('Error:', error);
-        toast('Error in Invoice Download', { type: 'error' });
+        if (error.response && error.response.status === 401) {
+          // Unauthorized - redirect to login page
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          console.error('Error:', error);
+          toast('Error in Invoice Download', { type: 'error' });
+        }
       });
   };
 
@@ -143,7 +159,7 @@ const OrderTrackDetails = () => {
         ...orderDetails,
         status: 'cancelled',
         status_name: 'cancelled',
-      })
+      },{headers:headers})
       .then((resp) => {
         if (resp?.status === 200) {
           dispatch(setAllOrders(null));

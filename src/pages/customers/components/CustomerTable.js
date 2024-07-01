@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { BACKEND_URL } from '../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../common/utils/config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../../common/components';
 import { Link, useNavigate } from 'react-router-dom';
@@ -44,7 +45,14 @@ function CustomerTable() {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        `${BACKEND_URL}/users/get_customer_details?user_id=${user_id}&page=${page}&page_size=${itemsPerPage}`,
+        `${BACKEND_URL}/users/get_customer_details?page=${page}&page_size=${itemsPerPage}`,
+        null,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': ACCESS_TOKEN,
+          },
+        }
       );
       if (response.status === 200 && Array.isArray(response.data)) {
         setCustomersData(response.data);
@@ -57,16 +65,21 @@ function CustomerTable() {
     } catch (err) {
       setIsLoading(false);
       setIncrementDisable(false);
-      toast(`There is some error while fetching orders`, { type: 'error' });
+      if (err.response && err.response.status === 401) {
+        localStorage.clear()
+        toast('Session expired. Please log in again.', { type: 'error' });
+        navigate('/login');
+      } else {
+        toast('There is some error while fetching customers', { type: 'error' });
+      }
     }
   };
 
   useEffect(() => {
     fetchCustomersData();
-  }, []);
+  }, [page, itemsPerPage]);
 
   const handleGoBackToAddOrder = (customer) => {
-    // Navigate to the order page with customer details as URL parameters
     navigate(
       `/add-order?buyerName=${customer.buyer_name}&buyerPhone=${customer.buyer_phone}&buyerEmail=${customer.buyer_email}&buyerAddress=${customer.address.address}&buyerCity=${customer.address.city}&buyerState=${customer.address.state}&buyerPincode=${customer.address.pincode}`,
     );
@@ -188,3 +201,4 @@ function CustomerTable() {
 }
 
 export default CustomerTable;
+

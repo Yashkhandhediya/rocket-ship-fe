@@ -9,6 +9,7 @@ import { Tabs } from '../../common/components/tabs';
 import { trip_status_filter } from '../orders/duck';
 import { toast } from 'react-toastify';
 import  Loader  from '../../common/loader/Loader';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 export let modifyFlag = 0;
 export let modifyId;
@@ -17,6 +18,9 @@ export let modifyId;
 const is_admin = localStorage.getItem('is_admin')
 
 const Allindent = () => {
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const temp = localStorage.getItem('user_id');
   const { url_user_id } = useParams();
   console.log("url_user", url_user_id)
@@ -38,7 +42,7 @@ const Allindent = () => {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get(BACKEND_URL + `/indent/get_indents?created_by=${url_user_id}`);
+        const response = await axios.get(BACKEND_URL + `/indent/get_indents?created_by=${url_user_id}`,{headers:headers});
         console.log("RESPONSE", response, response.data.length);
         if (response.data.length > 0 && info.length == 0) {
           for (let i = 0; i < response.data.length; i++) {
@@ -48,6 +52,11 @@ const Allindent = () => {
         setFilteredInfo(info)
         setDataFetch(true)
       } catch (err) {
+        if (err.response && err.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        }
         console.log("ERRRRRRRR", err);
       }
     };
@@ -80,12 +89,18 @@ const Allindent = () => {
     console.log("Idddddddddddd",id)
       modifyId = id;
       modifyFlag = 1;
-      axios.get(BACKEND_URL + `/indent/get_indents_by_id?id=${id}`).then((res)=> {
+      axios.get(BACKEND_URL + `/indent/get_indents_by_id?id=${id}`,{headers:headers}).then((res)=> {
         console.log("TTTTTTTTT",res)
         let data = res.data
         navigate('/indent',{state:{data:data}});
       }).catch((err) => {
-        console.log("ERRRRRRRRRRRRR",err)
+        if (err.response && err.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          console.log("ERRRRRRRRRRRRR",err)
+        }
       })
   }
 
@@ -96,32 +111,37 @@ const Allindent = () => {
 
   const handlePrice = (id) => {
     setLoading(true)
-    const headers={'Content-Type': 'application/json'};
+    // const headers={'Content-Type': 'application/json'};
     console.log("Price",price)
     axios.post(BACKEND_URL + '/indent/admin_price',
     {
       id:id,
       price:parseInt(price[id]),
-    },{headers}).then((res)=>{
+    },{headers:headers}).then((res)=>{
       console.log("RESPONSEEEEEE11",res);
       toast('Price Successfully Submitted',{type:'success'})
       setLoading(false)
       window.location.reload();
     }).catch((err) => {
-      console.log("Errorororor",err);
+      if (err.response && err.response.status === 401) {
+        // Redirect to login page on 401 Unauthorized
+        localStorage.clear()
+        navigate('/login');
+      } else {
+        console.log("Errorororor",err);
+      }
     })
-  }
-
+}
 
   const handleConfirmation = (id,status) => {
     setLoading(true)
-    const headers={'Content-Type': 'application/json'};
+    // const headers={'Content-Type': 'application/json'};
     axios.post(BACKEND_URL + '/indent/booking_confirmation',
     {
       id:id,
       status_code:status
     },
-    {headers}).then((res)=>{
+    {headers:headers}).then((res)=>{
       console.log("111111111",res);
       if(res?.data?.status_code == 401){
         toast("insufficient balance",{type:"error"})
@@ -132,10 +152,16 @@ const Allindent = () => {
       setLoading(false)
       // window.location.reload();
     }).catch((err) => {
-      console.log("222222222",err);
-      setLoading(false)
+      if (err.response && err.response.status === 401) {
+        // Redirect to login page on 401 Unauthorized
+        localStorage.clear()
+        navigate('/login');
+      } else {
+        console.log("222222222",err);
+        setLoading(false)
+      }
     })
-  }
+}
 
   const handleTabChange = (tabId) => {
     console.log("TAB SELECT",selectedTab)

@@ -5,7 +5,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
-
+import { ACCESS_TOKEN } from '../../common/utils/config';
 // Import images statically
 import shopifyImage from '../../common/icons/shopify.png';
 import woocommerceImage from '../../common/icons/woocommerce.png';
@@ -22,6 +22,9 @@ const channelImages = {
 
 const Channels = () => {
   const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [activeChannels, setActiveChannels] = useState([]);
   const [loading, setLoading] = useState(false);
   const [apiChannels, setApiChannels] = useState([]);
@@ -34,7 +37,9 @@ const Channels = () => {
   const fetchActiveChannels = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/shopchannel/get_active_channel`);
+      const response = await axios.get(`${BACKEND_URL}/shopchannel/get_active_channel`,
+        {headers:headers}
+      );
       // Ensure the response data is an array
       if (Array.isArray(response.data)) {
         setActiveChannels(response.data);
@@ -43,6 +48,11 @@ const Channels = () => {
         toast.error('Unexpected response format. Please try again later.');
       }
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        // Redirect to login page on 401 Unauthorized
+        localStorage.clear()
+        navigate('/login');
+      }
       console.error('Error fetching active channels:', error);
       toast.error('Failed to fetch active channels. Please try again later.');
     } finally {
@@ -53,7 +63,9 @@ const Channels = () => {
   const id_user = localStorage.getItem('user_id')
   const fetchApiChannels = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/shopchannel/get_store_by_user_id?user_id=${id_user}`);
+      const response = await axios.get(`${BACKEND_URL}/shopchannel/get_store_by_user_id`,
+        {headers:headers}
+      );
       if (Array.isArray(response.data)) {
         setApiChannels(response.data);
       } else {
@@ -61,6 +73,11 @@ const Channels = () => {
         toast.error('Unexpected response format from API. Please try again later.');
       }
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        // Redirect to login page on 401 Unauthorized
+        localStorage.clear()
+        navigate('/login');
+      }
       console.error('Error fetching API channels:', error);
       toast.error('Failed to fetch channels from API. Please try again later.');
     }

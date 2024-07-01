@@ -33,13 +33,15 @@ import { Button } from 'flowbite-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-// import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 const PickupMenifests = ({ data, isLoading }) => {
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   // const user_id = is_company == 1 ? id_company : id_user;
 
   // const [itemsPerPage, setItemsPerPage] = useState(15);
@@ -148,13 +150,13 @@ const PickupMenifests = ({ data, isLoading }) => {
 
   const handleMenifest = (id) => {
     let temp_payload = flattenObject(resData, id);
-    const headers = { 'Content-Type': 'application/json' };
+    // const headers = { 'Content-Type': 'application/json' };
 
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'manifest';
 
     axios
-      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
+      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers:headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
@@ -163,15 +165,21 @@ const PickupMenifests = ({ data, isLoading }) => {
         window.location.reload();
       })
       .catch((error) => {
-        console.error('Error:', error);
-        toast('Error in Menifest Download', { type: 'error' });
+        if (error.response && error.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          console.error('Error:', error);
+          toast('Error in Menifest Download', { type: 'error' });
+        }
       });
-  };
+  }; 
 
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData, id);
     console.log('kkkkkkkkkk', temp_payload);
-    const headers = { 'Content-Type': 'application/json' };
+    // const headers = { 'Content-Type': 'application/json' };
     // console.log("jtttttttttt",temp_payload['complete_address1'],temp_payload['complete_address1'].length)
     let temp_str = splitString(temp_payload['complete_address1'], 35);
     let temp1 = splitString(temp_payload['complete_address'], 35);
@@ -187,7 +195,7 @@ const PickupMenifests = ({ data, isLoading }) => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'invoice';
     axios
-      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
+      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers:headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
@@ -195,11 +203,17 @@ const PickupMenifests = ({ data, isLoading }) => {
         console.log('General', response);
         toast('Invoice Download Successfully', { type: 'success' });
       })
-      .catch((error) => {
-        console.error('Error:', error);
-        toast('Error in Invoice Download', { type: 'error' });
+      .catch((error) =>  {
+        if (error.response && error.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          console.error('Error:', error);
+          toast('Error in Invoice Download', { type: 'error' });
+        }
       });
-  };
+  }; 
 
   const getColumns = () => {
     const columnHelper = createColumnHelper();
@@ -388,7 +402,7 @@ const PickupMenifests = ({ data, isLoading }) => {
   };
 
   function cancelOrder(orderDetails) {
-    const headers = { 'Content-Type': 'application/json' };
+    // const headers = { 'Content-Type': 'application/json' };
     console.log('ORDER DETAILSSSSSSSS', orderDetails);
     if (orderDetails.partner_id == 1 || orderDetails.partner_id == 2) {
       toast('Cancel Functionality Is Not Providing By This Partner', { type: 'error' });
@@ -399,7 +413,7 @@ const PickupMenifests = ({ data, isLoading }) => {
           {
             partner_id: orderDetails?.partner_id,
           },
-          { headers },
+          { headers:headers },
         )
         .then((resp) => {
           if (resp?.status === 200) {
@@ -408,7 +422,7 @@ const PickupMenifests = ({ data, isLoading }) => {
             window.location.reload();
           }
         })
-        .catch(() => {
+        .catch((error) => {
           toast('Unable to cancel Order', { type: 'error' });
         });
     }

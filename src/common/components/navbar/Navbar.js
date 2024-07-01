@@ -6,6 +6,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../utils/env.config';
 import { toast } from 'react-toastify';
 import RechargeModal from '../../../pages/home/components/rechareModal/RechargeModal';
+import { ACCESS_TOKEN } from '../../utils/config';
 
 const Navbar = () => {
   const is_company = localStorage.getItem('is_company');
@@ -14,6 +15,9 @@ const Navbar = () => {
   console.log('USEEEEEEEEEEEE', user);
   const balance = localStorage.getItem('balance') <= 0 ? '0.00' : localStorage.getItem('balance');
   const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [userData, setUserData] = useState({});
   const [showRechargeModal, setShowRechargeModal] = useState(false);
   const id_user = localStorage.getItem('user_id');
@@ -25,11 +29,11 @@ const Navbar = () => {
   };
 
   const handleRecharge = () => {
-    const headers = { 'Content-Type': 'application/json' };
     axios
       .post(
         BACKEND_URL +
-          `/company/request_balance/?user_id=${parseInt(id_user)}&amount=${parseInt(rechargeAmount)}`,
+          `/company/request_balance/?amount=${parseInt(rechargeAmount)}`,
+          { headers:headers }
       )
       .then((res) => {
         console.log('Recharge Responsee', res);
@@ -40,6 +44,11 @@ const Navbar = () => {
       })
       .catch((err) => {
         console.log('Error In Rechargeee');
+        if (err.response && err.response.status === 401) {
+          localStorage.clear()
+          toast.error('Session expired. Please login again.');
+          navigate('/login');
+        }
       });
     setShowPopup(false);
     // window.location.reload()
@@ -187,7 +196,7 @@ const Navbar = () => {
     const apiURL =
       is_company == 0 ? `${BACKEND_URL}/users/${id_user}` : `${BACKEND_URL}/company/${id_company}`;
     try {
-      const response = await axios.get(apiURL);
+      const response = await axios.get(apiURL, {headers:headers});
       setUserData(response.data);
       console.log('Hallllllllllllll', userData, response.data);
       if (response.data.wallet_balance == null || response.data.wallet_balance <= 0) {
@@ -207,6 +216,10 @@ const Navbar = () => {
       }
     } catch (error) {
       console.log(error); //eslint-disable-line
+      if (error.response && error.response.status === 401) {
+        toast.error('Session expired. Please login again.');
+        navigate('/login');
+      }
     }
   };
 

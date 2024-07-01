@@ -4,9 +4,13 @@ import { Field } from '../../common/components';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [signupInput, setSignupInput] = useState({
     company_name: "",
     company_address: "",
@@ -39,7 +43,7 @@ const SignUp = () => {
       setGstError("");
     }
 
-    const headers = { 'Content-Type': 'application/json' };
+    // const headers = { 'Content-Type': 'application/json' };
     axios.post(BACKEND_URL + '/company/signup', {
       name: signupInput.company_name,
       gst: signupInput.company_gst_no,
@@ -47,7 +51,7 @@ const SignUp = () => {
       contact: parseInt(signupInput.contact_no),
       email: signupInput.email_address,
       address: signupInput.company_address
-    }, { headers }).then((res) => {
+    }, { headers:headers }).then((res) => {
       console.log("Response of Sign up", res)
       if (res.data.msg === "User already exits") {
         toast("User Already Exists", { type: 'error' });
@@ -56,8 +60,13 @@ const SignUp = () => {
         navigate('/login');
       }
     }).catch((err) => {
+      if (err.response && err.response.status === 401) {
+        localStorage.clear()
+        navigate('/login');
+    } else {
       console.log("Error in signup", err);
       toast("Some Error in Sign Up", { type: 'error' });
+    }
     });
   };
 

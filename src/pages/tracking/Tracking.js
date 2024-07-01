@@ -5,12 +5,15 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import moment from 'moment';
 import { BACKEND_URL } from '../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 export default function Tracking() {
   const [shipmentData, setShipmentData] = useState();
   const { orderId } = useParams();
   const navigate = useNavigate();
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const fetchTrackShipmentOrder = () => {
     // Parse query parameters from the URL
     // const queryParams = new URLSearchParams(window.location.search);
@@ -20,7 +23,7 @@ export default function Tracking() {
 
     // Set the received string value in the component state
     axios
-      .get(BACKEND_URL + `/order/${orderId}/track`)
+      .get(BACKEND_URL + `/order/${orderId}/track`,{headers:headers})
       .then(async (resp) => {
         if (resp.status === 200) {
           const data = resp?.data;
@@ -30,8 +33,14 @@ export default function Tracking() {
           toast('There is some error while fetching orders.', { type: 'error' });
         }
       })
-      .catch(() => {
-        toast('There is some error while fetching orders.', { type: 'error' });
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          toast('There is some error while fetching orders.', { type: 'error' });
+        }
       });
   };
 

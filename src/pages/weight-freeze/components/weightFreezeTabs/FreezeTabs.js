@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { CustomTooltip } from '../../../../common/components';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTotalData }) => { // eslint-disable-line
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,22 +15,33 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
   const [enableDate, setEnableDate] = useState(true);
   const [showToggleButton, setShowToggleButton] = useState(false);
   const [SRSuggested, setSRSuggested] = useState(true);
-
+  const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const freezeStatus = searchParams.get('freeze_status');
   const fromDateURL = searchParams.get('from');
   const toDateURL = searchParams.get('to') || null;
   const search = searchParams.get('search');
+  const handleApiError = (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.clear();
+      navigate('/login');
+    } else {
+      console.log(error); //eslint-disable-line
+    }
+  };
 
   const dataGet = () => { //eslint-disable-line
     setData([]);
     //API to get data
     setLoading(true);
     const url = fromDateURL && toDateURL && freezeStatus != 5 && freezeStatus != 0
-      ? `${BACKEND_URL}/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&from=${fromDateURL}&to=${toDateURL}&status_name=${freezeStatus}&user_id=${localStorage.getItem('user_id')}`
+      ? `${BACKEND_URL}/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&from=${fromDateURL}&to=${toDateURL}&status_name=${freezeStatus}`
 
-      : `${BACKEND_URL}/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&status_name=${freezeStatus}&user_id=${localStorage.getItem('user_id')}`;
+      : `${BACKEND_URL}/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&status_name=${freezeStatus}`;
 
-    axios.get(url, {})
+    axios.get(url,  {headers:headers})
       .then((response) => {
         console.log("asdkjfhsdkjfgbdasfjhyg", response.data); //eslint-disable-line
         setData(response.data.data);
@@ -37,12 +49,14 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
         setLoading(false);
       })
       .catch((error) => {
-        console.log(error); //eslint-disable-line
+        handleApiError(error);
         setLoading(false);
       })
 
     //get status count
-    axios.get(`${BACKEND_URL}/weight_freeze/get_status_counts`, {})
+    axios.get(`${BACKEND_URL}/weight_freeze/get_status_counts`,null,
+      {headers:headers}
+    )
       .then((res) => {
         console.log(res.data); //eslint-disable-line
         const newTabs = [...tabs];
@@ -55,7 +69,7 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
         setTabs(newTabs);
       })
       .catch((err) => {
-        console.log(err); //eslint-disable-line
+        handleApiError(err);
       })
   };
 

@@ -6,11 +6,14 @@ import { BuyerAddressFields } from '../buyer-address-fields';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress }) => {
   const id_user = localStorage.getItem('user_id')
   const [isAddSupplier, setIsAddSupplier] = useState(false);
   const [isAddRTOAddress, setIsAddRTOAddress] = useState(false);
+  const navigate = useNavigate();
   const [addressInfo, setAddressInfo] = useState({
     country: 'india',
     tag: 'Home',
@@ -24,6 +27,9 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
   const [isValidAlternateNumber, setIsValidAlternateNumber] = useState(true);
   const [isValidEmailAddress, setIsValidEmailAddress] = useState(true);
   const [triggerValidations, setTriggerValidations] = useState(false);
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
 
   const handleCloseDrawer = () => {
     setIsAddSupplier(false);
@@ -85,7 +91,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
     }
     
     axios
-      .post(BACKEND_URL+`/address?created_by=${id_user}`, addressInfo)
+      .post(BACKEND_URL+`/address?created_by=${id_user}`, addressInfo, {headers:headers})
       .then((resp) => {
         if (resp.status == 200) {
           toast('Pickup details saved successfully', { type: 'success' });
@@ -93,12 +99,18 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
           handleCloseDrawer();
         }
       })
-      .catch((e) => {
-        toast('Unable to save address please retry', { type: 'error' });
-        // eslint-disable-next-line no-console
-        console.error(e);
+      .catch((e) =>  {
+        if (e.response && e.response.status === 401) {
+          // Unauthorized - redirect to login page
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          toast('Unable to save address, please retry', { type: 'error' });
+          console.error(e);
+        }
       });
   };
+
 
   const onaddressPincodeVerify = (pincodeDetails) => {
     setAddressInfo({

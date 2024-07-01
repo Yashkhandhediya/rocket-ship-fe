@@ -7,7 +7,8 @@ import Card from './Card/Card';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
-
+import { ACCESS_TOKEN } from '../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 function Courier() {
     // const [activeTab, setActiveTab] = useState('Activated');
@@ -17,7 +18,7 @@ function Courier() {
     //     'Deactivated',
     //     'All',
     // ];
-
+    const navigate = useNavigate()
     const [activeCard, setActiveCard] = useState(null);
 
     const cards = [
@@ -29,17 +30,35 @@ function Courier() {
     ];
 
     const hanldePriority = () => {
-        axios.put(BACKEND_URL + `/userpartner/update_courier_priority?user_id=${localStorage.getItem('user_id')}&courier_priority_id=${activeCard}`)
+        axios.put(BACKEND_URL + `/userpartner/update_courier_priority?courier_priority_id=${activeCard}`,
+        {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': ACCESS_TOKEN 
+            },
+          })
         .then((res) => {
             toast("Courier Priority Has Been SetUp",{type:'success'})
         })
         .catch((err) => {
-            toast("Error Occured in Priority Setup",{type:'error'})
+            if (err.response && err.response.status === 401) {
+                // Redirect to login page on 401 Unauthorized
+                localStorage.clear()
+                navigate('/login');
+              } else {
+                toast("Error Occured in Priority Setup",{type:'error'})
+              }
         })
     }
 
     const handleCourierPriority = () => {
-        axios.get(BACKEND_URL + `/userpartner/courier_priority?user_id=${localStorage.getItem('user_id')}`)
+        axios.get(BACKEND_URL + `/userpartner/courier_priority`,
+        {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': ACCESS_TOKEN 
+            },
+          })
         .then((res) => {
             console.log("RESPONSEEEEEEE",res.data)
            if(res.data.courier_priority_type  == "recommended by cargo"){
@@ -54,7 +73,13 @@ function Courier() {
             setActiveCard(5);
            }
         }).catch((err) => {
-            console.log("Error In Resposne ",err)
+            if (err.response && err.response.status === 401) {
+                // Redirect to login page on 401 Unauthorized
+                localStorage.clear()
+                navigate('/login');
+              } else {
+                console.log("Error In Resposne ",err)
+              }
         })
     }
 

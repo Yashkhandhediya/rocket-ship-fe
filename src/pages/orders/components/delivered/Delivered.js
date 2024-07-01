@@ -33,13 +33,15 @@ import { Button } from 'flowbite-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-// import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 const Delivered = ({ data, isLoading }) => {
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const user_id = is_company == 1 ? id_company : id_user;
 
   // const [itemsPerPage, setItemsPerPage] = useState(15);
@@ -136,7 +138,7 @@ const Delivered = ({ data, isLoading }) => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData, id);
     console.log('kkkkkkkkkk', temp_payload);
-    const headers = { 'Content-Type': 'application/json' };
+    // const headers = { 'Content-Type': 'application/json' };
 
     let temp_str = splitString(temp_payload['complete_address1'], 35);
     let temp1 = splitString(temp_payload['complete_address'], 35);
@@ -153,7 +155,7 @@ const Delivered = ({ data, isLoading }) => {
     temp_payload['file_name'] = 'invoice';
 
     axios
-      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
+      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers:headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
@@ -162,24 +164,36 @@ const Delivered = ({ data, isLoading }) => {
         toast('Invoice Download Successfully', { type: 'success' });
       })
       .catch((error) => {
-        console.error('Error:', error);
-        toast('Error in Invoice Download', { type: 'error' });
+        if (error.response && error.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          console.error('Error:', error);
+          toast('Error in Invoice Download', { type: 'error' });
+        }
       });
-  };
+  };  
 
   const handleReturn = (id) => {
     console.log('IDDDDDDDDd', id);
     axios
-      .post(BACKEND_URL + `/return/initiate_return?order_id=${id}&user_id=${localStorage.getItem('user_id')}`)
+      .post(BACKEND_URL + `/return/initiate_return?order_id=${id}`,{headers:headers})
       .then((res) => {
         console.log('Repsonse Of Initiate Return', res.data);
         toast('Return Initiate', { type: 'success' });
       })
       .catch((err) => {
-        console.log('Error In Initiate Return', err);
-        toast('Error In Initiate Return', { type: 'error' });
+        if (err.response && err.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          console.log('Error In Initiate Return', err);
+          toast('Error In Initiate Return', { type: 'error' });
+        }
       });
-  };
+  };  
 
   const getColumns = () => {
     const columnHelper = createColumnHelper();
@@ -366,17 +380,23 @@ const Delivered = ({ data, isLoading }) => {
       .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}`, {
         ...orderDetails,
         status: 'cancelled',
-      })
+      },{headers:headers})
       .then((resp) => {
         if (resp?.status === 200) {
           dispatch(setAllOrders(null));
           toast('Order cancelled successfully', { type: 'success' });
         }
       })
-      .catch(() => {
-        toast('Unable to cancel Order', { type: 'error' });
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          toast('Unable to cancel Order', { type: 'error' });
+        }
       });
-  }
+  } 
 
   function cloneOrder(orderDetails) {
     const clonedOrder = getClonedOrderFields(orderDetails);

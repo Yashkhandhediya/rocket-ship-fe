@@ -13,6 +13,7 @@ import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import Loader from '../../../../../common/loader/Loader';
 // import { isEdit, order_id } from '../../../../orders/components/new/New'
 import { package_info } from '../order-details/OrderDetails';
+import { ACCESS_TOKEN } from '../../../../../common/utils/config';
 
 export default function PackageDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
@@ -93,11 +94,17 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
   const placeOrder = async () => {
     setIsLoading(true);
     const date = getFullDateForPayload(domesticOrderFormValues?.date);
-    let resp = await axios.post(BACKEND_URL + `/order?user_id=${id_user}`, {
+    let resp = await axios.post(BACKEND_URL + `/order`, {
       ...domesticOrderFormValues,
       ...formDirectField,
       order_type: 'domestic',
       date: date,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': ACCESS_TOKEN,
+      },
     });
     if (resp.status == 200) {
       toast('Order Placed Successfully', { type: 'success' });
@@ -116,11 +123,16 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     const date = getFullDateForPayload(editDetails?.date);
     console.log('lkkkkkkkkkk', editDetails);
     console.log('lkkkkkkkkkk', domesticOrderFormValues);
-    let resp = await axios.put(`${BACKEND_URL}/order?user_id=${id_user}`, {
+    let resp = await axios.put(`${BACKEND_URL}/order`, {
       ...editDetails,
       ...formDirectField,
       order_type: 'domestic',
       date: date,
+    },{
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': ACCESS_TOKEN,
+      },
     });
     if (resp.status == 200) {
       toast('Order Updated Successfully', { type: 'success' });

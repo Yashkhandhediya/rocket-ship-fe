@@ -3,18 +3,34 @@ import { CustomTooltip } from "../../../../common/components";
 import { remitance } from "../../../../common/images";
 import { BACKEND_URL } from "../../../../common/utils/env.config";
 import { toast } from "react-toastify";
+import { ACCESS_TOKEN } from "../../../../common/utils/config";
+import { useNavigate } from "react-router-dom";
 
 const COD_Reconciliation = ({ charges, data }) => {
+    const navigate = useNavigate();
     console.log("COncil",data)
     const updateStatus = (id,status_name) => {
-        axios.put(BACKEND_URL + `/order/cod_remittance_update_status/${id}?status_name=${status_name}`)
+        axios.put(BACKEND_URL + `/order/cod_remittance_update_status/${id}?status_name=${status_name}`,
+            {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': ACCESS_TOKEN,
+                },
+              }
+        )
         .then((res) => {
             console.log("Response Of Update Status",res.data)
             toast(`status updated to ${status_name}`,{type:'success'})
             window.location.reload()
         }).catch((err) => {
-            console.log("Error in updating status",err)
-            toast(`Error in updating status`,{type:'error'})
+            if (err.response && err.response.status === 401) {
+                // Redirect to login page on 401 Unauthorized
+                localStorage.clear()
+                navigate('/login');
+              } else {
+                console.log("Error in updating status",err)
+                toast(`Error in updating status`,{type:'error'})
+              }
         })
     }
     return (

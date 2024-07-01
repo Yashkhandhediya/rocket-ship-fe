@@ -7,10 +7,13 @@ import { CustomDataTable } from '../../common/components'
 import { toast } from 'react-toastify'
 import { noData } from '../../common/images'
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar'
-// import { ACCESS_TOKEN } from '../../common/utils/config'
+import { ACCESS_TOKEN } from '../../common/utils/config'
 
 const CompanyList = () => {
     const navigate = useNavigate()
+    const headers = {             
+      'Content-Type': 'application/json',
+      'Authorization': ACCESS_TOKEN};
     const [companyData,setCompanyData] = useState([])
     const [showPopup,setShowPopup] = useState(false)
     const [idUser,setIdUser] = useState(null)
@@ -63,54 +66,83 @@ const CompanyList = () => {
     const handleCompanyKYC = (row) => {
       setShowPopup(true)
       setIdUser(row?.id)
-      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_pan`,{ responseType: 'blob' }).
+      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_pan`,{ responseType: 'blob', headers:headers }).
       then((res) => {
           console.log("Recharge Responsee",res)
           const imgUrl = URL.createObjectURL(res.data)
           setCompanyPan(imgUrl)
       }).catch((err) => {
+        if (err.response && err.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
           console.log("Error In Rechargeee",err)
+        }
       })
 
-      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_logo`,{ responseType: 'blob' }).
+      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_logo`,{ responseType: 'blob', headers:headers }).
       then((res) => {
           console.log("Recharge Responsee",res)
           const imgUrl = URL.createObjectURL(res.data)
           setCompanyLogo(imgUrl)
       }).catch((err) => {
+        if (err.response && err.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
           console.log("Error In Rechargeee",err)
+        }
       })
 
-      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_gst`,{ responseType: 'blob' }).
+      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_gst`,{ responseType: 'blob', headers:headers }).
       then((res) => {
           console.log("Recharge Responsee",res)
           const imgUrl = URL.createObjectURL(res.data)
           setCompanyGst(imgUrl)
       }).catch((err) => {
+        if (err.response && err.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
           console.log("Error In Rechargeee",err)
+        }
       })
 
-      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_stamp`,{ responseType: 'blob' }).
+      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_stamp`,{ responseType: 'blob', headers:headers }).
       then((res) => {
           console.log("Recharge Responsee",res)
           const imgUrl = URL.createObjectURL(res.data)
           setCompanyStamp(imgUrl)
       }).catch((err) => {
+        if (err.response && err.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
           console.log("Error In Rechargeee",err)
+        }
       })
-
     }
 
     const handleAcceptKYC = () => {
-      const headers={'Content-Type': 'application/json'};
-      axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=company&status=${3}&id=${idUser}`,{headers})
+      // const headers={'Content-Type': 'application/json'};
+      axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=company&status=${3}&id=${idUser}`,{headers:headers})
       .then((res) => {
         console.log("Response ",res)
         toast("KYC Verification Successfully",{type:'success'})
         setShowPopup(false);
       }).catch((err) => {
-        console.log("ERRRRRR",err)
-        toast("Error in KYC verification",{type:'error'})
+        if (err.response && err.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          console.log("ERRRRRR",err)
+          toast("Error in KYC verification",{type:'error'})
+        }
       })
     }
 

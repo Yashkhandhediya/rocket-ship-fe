@@ -30,7 +30,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Orders';
 
-// import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 // export let isEditRTO = false;
 // export let order_id;
@@ -41,7 +41,9 @@ const Rto = ({ data, isLoading }) => {
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const user_id = is_company == 1 ? id_company : id_user;
 
   // const [itemsPerPage, setItemsPerPage] = useState(15);
@@ -103,13 +105,13 @@ const Rto = ({ data, isLoading }) => {
   const handleMenifest = (id) => {
     let temp_payload = flattenObject(resData, id);
     console.log('kkkkkkkkkk', temp_payload);
-    const headers = { 'Content-Type': 'application/json' };
+    // const headers = { 'Content-Type': 'application/json' };
 
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'manifest';
 
     axios
-      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
+      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers:headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
@@ -118,10 +120,16 @@ const Rto = ({ data, isLoading }) => {
         toast('Menifest Download Successfully', { type: 'success' });
       })
       .catch((error) => {
-        console.error('Error:', error);
-        toast('Error in Menifest Download', { type: 'error' });
+        if (error.response && error.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          console.error('Error:', error);
+          toast('Error in Menifest Download', { type: 'error' });
+        }
       });
-  };
+  }; 
 
   function flattenObject(obj, id) {
     const keyCounts = {};
@@ -156,7 +164,7 @@ const Rto = ({ data, isLoading }) => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData, id);
     console.log('kkkkkkkkkk', temp_payload);
-    const headers = { 'Content-Type': 'application/json' };
+    // const headers = { 'Content-Type': 'application/json' };
 
     let temp_str = splitString(temp_payload['complete_address1'], 35);
     let temp1 = splitString(temp_payload['complete_address'], 35);
@@ -173,7 +181,7 @@ const Rto = ({ data, isLoading }) => {
     temp_payload['file_name'] = 'invoice';
 
     axios
-      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
+      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers:headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
@@ -182,10 +190,16 @@ const Rto = ({ data, isLoading }) => {
         toast('Invoice Download Successfully', { type: 'success' });
       })
       .catch((error) => {
-        console.error('Error:', error);
-        toast('Error in Invoice Download', { type: 'error' });
+        if (error.response && error.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          console.error('Error:', error);
+          toast('Error in Invoice Download', { type: 'error' });
+        }
       });
-  };
+  }; 
 
   function editOrder(orderDetails) {
     // let isEdit = true
@@ -195,7 +209,7 @@ const Rto = ({ data, isLoading }) => {
       order_id: orderDetails?.id,
     };
     axios
-      .get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails?.id}`)
+      .get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails?.id}`,{headers:headers})
       .then((res) => {
         console.log('Response Of Get Order While Edit ', res);
         const editedOrder = getEditOrderFields(res.data);
@@ -204,10 +218,16 @@ const Rto = ({ data, isLoading }) => {
         dispatch(setDomesticOrder(editedOrder));
       })
       .catch((err) => {
-        console.log('Error While Edit Order ', err);
+        if (err.response && err.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          console.log('Error While Edit Order ', err);
+        }
       });
-    navigate('/add-order', { state: data });
-  }
+    navigate('/add-order', { state: data });  
+  } 
 
   const getColumns = () => {
     const columnHelper = createColumnHelper();
@@ -394,17 +414,23 @@ const Rto = ({ data, isLoading }) => {
       .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}`, {
         ...orderDetails,
         status: 'cancelled',
-      })
+      },{headers:headers})
       .then((resp) => {
         if (resp?.status === 200) {
           dispatch(setAllOrders(null));
           toast('Order cancelled successfully', { type: 'success' });
         }
       })
-      .catch(() => {
-        toast('Unable to cancel Order', { type: 'error' });
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          toast('Unable to cancel Order', { type: 'error' });
+        }
       });
-  }
+  } 
 
   function cloneOrder(orderDetails) {
     const clonedOrder = getClonedOrderFields(orderDetails);

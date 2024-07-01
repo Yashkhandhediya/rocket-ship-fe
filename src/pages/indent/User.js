@@ -7,22 +7,30 @@ import { CustomDataTable } from '../../common/components';
 import { Badge } from 'flowbite-react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { useNavigate } from 'react-router-dom';
-
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const User = () => {
   const [userData, setUserData] = useState([])
   const [fetchData, setFetchData] = useState(false)
   const navigate = useNavigate()
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
 
 
     useEffect(() => {
 
-      axios.get(BACKEND_URL + '/indent/get_users').then((res)=> {
+      axios.get(BACKEND_URL + '/indent/get_users',{headers:headers}).then((res)=> {
         console.log("RESSSSSSSSSSSSS",res)
         setUserData(res.data)
         setFetchData(true)
     }).catch((err) => {
-        console.log("ERRRRRRRRRR",err)
+      if (err.response && err.response.status === 401) {
+        localStorage.clear()
+        navigate('/login');
+    } else {
+      console.log("ERRRRRRRRRR",err)
+    }
     })
 
     }, [])

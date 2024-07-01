@@ -1,11 +1,16 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const Change_password = () => {
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
+  const navigate = useNavigate();
   // This is a dummy data, you can replace it with your own data
   const [password, setPassword] = useState({
     currentPassword: '',
@@ -26,10 +31,10 @@ const Change_password = () => {
       toast.error("New password cannot be the same as current password");
       return;
     }
-    const temp_url = is_company == 0 ? `${BACKEND_URL}/login/password_change?old_password=${password.currentPassword}&user_id=${user_id}&new_password=${password.newPassword}`
+    const temp_url = is_company == 0 ? `${BACKEND_URL}/login/password_change?old_password=${password.currentPassword}&new_password=${password.newPassword}`
     : `${BACKEND_URL}/login/password_change?old_password=${password.currentPassword}&company_id=${user_id}&new_password=${password.newPassword}`
     try {
-      const response = await axios.get(`${temp_url}`,
+      const response = await axios.get(`${temp_url}`,{headers:headers}
       );
       if (response.data.massage === 'entered password is incorrect') {
         toast(response.data.massage, { type: 'error' });
@@ -42,7 +47,12 @@ const Change_password = () => {
         confirmPassword: '',
       });
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        localStorage.clear()
+        navigate('/login');
+    } else {
       console.log(err);
+    }
     }
     console.log(password); //eslint-disable-line
   };

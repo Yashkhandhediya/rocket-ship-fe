@@ -10,6 +10,7 @@ import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import { setSingleReturn } from '../../../../../redux/actions/addReturnAction';
+import { ACCESS_TOKEN } from '../../../../../common/utils/config';
 
 export default function PackageDetails({ currentStep, handleChangeStep }) {
     const dispatch = useDispatch();
@@ -66,11 +67,16 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
 
     const placeOrder = async () => {
         const date = getFullDateForPayload(domesticReturnFormValues?.date);
-        let resp = await axios.post(BACKEND_URL + `/return/?user_id=${localStorage.getItem('user_id')}`, {
+        let resp = await axios.post(BACKEND_URL + `/return/`, {
             ...domesticReturnFormValues,
             ...formDirectField,
             date: date,
-        });
+        },{
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': ACCESS_TOKEN,
+            },
+          });
         if (resp.status == 200) {
             toast('Return Placed Successfully', { type: 'success' });
             dispatch(resetDomesticOrder());

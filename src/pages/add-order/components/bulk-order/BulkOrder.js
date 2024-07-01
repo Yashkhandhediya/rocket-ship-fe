@@ -5,9 +5,14 @@ import { useState } from 'react';
 import axios from 'axios';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
 import { toast } from 'react-toastify';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const BulkOrder = () => {
-
+    const navigate = useNavigate()
+    const headers = {             
+        'Content-Type': 'application/json',
+        'Authorization': ACCESS_TOKEN};
     const [selectedFile, setSelectedFile] = useState(null)
 
     const handleFileSelect = async (e) => {
@@ -15,7 +20,7 @@ const BulkOrder = () => {
         formData.append('file', e.target.files[0]);
         setSelectedFile(formData);
         try {
-            const response = await axios.post(`${BACKEND_URL}/order/bulk_orders`, formData)
+            const response = await axios.post(`${BACKEND_URL}/order/bulk_orders`, formData, {headers:headers})
             if (!response?.data[0]?.success) {
                 setSelectedFile(null)
                 return toast.error(response?.data[0]?.error)
@@ -23,8 +28,14 @@ const BulkOrder = () => {
             toast.success('File uploaded successfully')
             setSelectedFile(null)
         } catch (error) {
-            toast.error('Something went wrong while uploading the file. Please try again.')
-            setSelectedFile(null)
+            if (error.response && error.response.status === 401) {
+                // Redirect to login page on 401 Unauthorized
+                localStorage.clear()
+                navigate('/login');
+              } else {
+                toast.error('Something went wrong while uploading the file. Please try again.')
+                setSelectedFile(null)
+              }
         }
     }
 

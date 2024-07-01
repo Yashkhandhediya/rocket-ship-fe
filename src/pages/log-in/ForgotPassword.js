@@ -1,10 +1,11 @@
 import { Field } from '../../common/components';
-import { Link,useLocation } from 'react-router-dom';
+import { Link,Navigate,useLocation ,useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import OtpPopup from './OtpPopup';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { type_user } from './LogIn';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 
 const ForgotPassword = () => {
@@ -12,10 +13,14 @@ const ForgotPassword = () => {
     const [upDatePassWord, setUpDatePassWord] = useState(true)
     const [userId,setUserId] = useState(null)
     const [compId,setCompId] = useState(null)
+    const navigate = useNavigate();
     const [userInput, setUserInput] = useState({
         username:''
     })
     const [showOtp,setShowOtp] = useState(false)
+    const headers = {             
+      'Content-Type': 'application/json',
+      'Authorization': ACCESS_TOKEN};
 
     // const userType = location?.state
     // console.log("USSSSSSSSSSSS",userType)
@@ -35,9 +40,9 @@ const ForgotPassword = () => {
 
       const handleOtp = () => {
         setShowOtp(true)
-        const headers={'Content-Type': 'application/x-www-form-urlencoded'};  
+        // const headers={'Content-Type': 'application/x-www-form-urlencoded'};  
         const otpURL = type_user === 'user' ? `/users/generate_otp?email_id=${userInput.username}` : `/company/forget_password_otp?email=${userInput.username}`;
-            axios.post(BACKEND_URL + otpURL,{ headers })
+            axios.post(BACKEND_URL + otpURL,{ headers:headers })
             .then((otpResponse) => {
               console.log(otpResponse);
               setUserId(otpResponse.data.user_id)
@@ -45,6 +50,11 @@ const ForgotPassword = () => {
             })
             .catch((otpError) => {
               console.error('Error fetching OTP:', otpError);
+              if (otpError.response && otpError.response.status === 401) {
+                // Redirect to login page on 401 Unauthorized
+                localStorage.clear()
+                navigate('/login');
+              }
             });
         }
 

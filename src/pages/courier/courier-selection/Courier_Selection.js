@@ -10,30 +10,41 @@ import { modes, regions, sorts } from '../constants';
 import { FiPhoneCall, FiUser, FiMapPin } from 'react-icons/fi';
 import { FaUserTie } from 'react-icons/fa';
 import { Bike } from '../../../common/icons';
+import { ACCESS_TOKEN } from '../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 function Courier_Selection() {
   const [activeTab, setActiveTab] = useState('All');
   const [mode, setMode] = useState('');
   const [region, setRegion] = useState('');
   const [sort, setSort] = useState('');
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const tabs = ['Activated', 'Deactivated', 'All'];
 
   const handleData = () => {
     axios
-      .get(BACKEND_URL + `/userpartner/get_user_partner?user_id=${localStorage.getItem('user_id')}`)
+      .get(BACKEND_URL + `/userpartner/get_user_partner`,{headers:headers})
       .then((res) => {
         console.log('Courier Data', res.data);
         setData(res.data);
         filterData(res.data, activeTab);
       })
       .catch((err) => {
-        console.log('Error in Data', err);
-        toast('Error In Fetching Data', { type: 'error' });
+        if (err.response && err.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          console.log('Error in Data', err);
+          toast('Error In Fetching Data', { type: 'error' });
+        }
       });
-  };
+  }; 
 
   const filterData = (data, tab) => {
     let filtered = data;
@@ -60,17 +71,23 @@ function Courier_Selection() {
   const handleActive = (id, status) => {
     const newStatus = status === 1 ? 0 : 1;
     axios
-      .put(BACKEND_URL + `/userpartner/update_status?id=${id}&status=${newStatus}`)
+      .put(BACKEND_URL + `/userpartner/update_status?id=${id}&status=${newStatus}`,{headers:headers})
       .then((res) => {
         console.log('Response Data', res.data);
         toast('Status Updated Successfully', { type: 'success' });
         handleData();
       })
       .catch((err) => {
-        console.log('Error in Response', err);
-        toast('Error In Updating Status', { type: 'error' });
+        if (err.response && err.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          console.log('Error in Response', err);
+          toast('Error In Updating Status', { type: 'error' });
+        }
       });
-  };
+  }; 
 
   return (
     <PageWithSidebar>

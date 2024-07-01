@@ -8,10 +8,16 @@ import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const EditDrawer = ({ isOpen, onClose, fieldNames = [], data }) => {
   const [validationTriggered, setValidationTriggered] = useState(false);
   const [addressList, setAddressList] = useState([]);
+  const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
@@ -27,16 +33,21 @@ const EditDrawer = ({ isOpen, onClose, fieldNames = [], data }) => {
   const fetchUserAddressList = () => {
     const custom_id = is_company == 1 ? id_company : id_user;
     axios
-      .get(BACKEND_URL + `/address/?user_id=${custom_id}`, )
+      .get(BACKEND_URL + `/address/`, {headers:headers})
       .then((resp) => {
         if (resp.status == 200) {
           setAddressList(resp?.data || []);
         }
       })
       .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        toast('Unable to fetch address', { type: 'error' });
+        if (e.response && e.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          console.error(e);
+          toast('Unable to fetch address', { type: 'error' });
+        }
       });
   };
 
@@ -343,12 +354,18 @@ const EditDrawer = ({ isOpen, onClose, fieldNames = [], data }) => {
           width: formDirectField.width,
           height: formDirectField.height,
           drop_address_id: domesticReturnFormValues?.pickup_address?.id,
-        },
+        },{headers:headers}
       );
       toast('Edited', { type: 'success' });
       console.log(response);
     } catch (err) {
-      console.log(err);
+      if (err.response && err.response.status === 401) {
+        // Redirect to login page on 401 Unauthorized
+        localStorage.clear()
+        navigate('/login');
+      } else {
+        console.log(err);
+      }
     }
   };
 

@@ -4,11 +4,15 @@ import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const ResetPassword = () => {
     const location = useLocation()
     const { username } = location.state || {}
     const navigate = useNavigate()
+    const headers = {             
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': ACCESS_TOKEN};
     const [password, setPassword] = useState({
         newPassword:'',
         confirmPassword:''
@@ -37,7 +41,7 @@ const ResetPassword = () => {
             axios.post(BACKEND_URL + `${passwordURL}/update_password`,{
                 email:username,
                 password:password.newPassword
-            },{headers}).then((res) => {
+            },{headers:headers}).then((res) => {
                 console.log("Update Password",res)
                 toast("Password reset successfully",{type:'success'});
                 navigate('/login')
@@ -46,8 +50,14 @@ const ResetPassword = () => {
                 toast("Error resetting password.",{type:'error'});
             })
         } catch (error) {
+          if (error.response && error.response.status === 401) {
+            // Redirect to login page on 401 Unauthorized
+            localStorage.clear()
+            navigate('/login');
+          } else {
             console.error("Error reset password:", error);
             toast("Error resetting password. Please try again later.",{type:'error'});
+          }
         }
     };
 

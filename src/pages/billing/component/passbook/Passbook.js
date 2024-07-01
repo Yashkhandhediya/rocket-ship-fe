@@ -1,15 +1,17 @@
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import PageWithSidebar from '../../../../common/components/page-with-sidebar/PageWithSidebar';
 import { BillingTabs } from '../billing-tabs';
 import { noData } from '../../../../common/images';
 import { CustomTooltip, Loader } from '../../../../common/components';
 import axios from 'axios';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 const Passbook = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [data, setData] = useState([]); //eslint-disable-line
   const oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 3)).toISOString().slice(0, 10);
   const todayDate = new Date().toISOString().slice(0, 10);
@@ -26,6 +28,9 @@ const Passbook = () => {
   const is_company = localStorage.getItem('is_company');
   const [pageNo, setPageNo] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
 
   console.log('Infooooooooooooooo', currentItems, itemsPerPage - 10, itemsPerPage);
   const paginate = (page_item) => {
@@ -79,7 +84,7 @@ const Passbook = () => {
     try {
       const response = await axios.post(
         `${BACKEND_URL}/account_transaction/account_report?page_number=1&page_size=${itemsPerPage}`,
-        { date_from: fromDate, date_to: toDate, user_id: temp_id },
+        { date_from: fromDate, date_to: toDate, user_id: temp_id },{headers:headers}
       );
       setData(response.data.report);
       setHoldAmount(response.data.report[0].balance);
@@ -89,9 +94,14 @@ const Passbook = () => {
       getUsableAmount();
       setIsLoading(false);
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        localStorage.clear()
+        navigate('/login');
+    } else {
       toast.error('Something went wrong while fetching passbook data');
       console.error('Error while fetching passbook data', error); //eslint-disable-line
       setIsLoading(false);
+    }
     }
   };
 

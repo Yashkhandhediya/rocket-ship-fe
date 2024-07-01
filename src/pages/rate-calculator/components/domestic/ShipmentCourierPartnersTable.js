@@ -10,11 +10,26 @@ import { SchedulePickupModal } from '../../../orders/components/schedule-pickup-
 import { createColumnHelper } from '@tanstack/react-table';
 import { Button } from 'flowbite-react';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentDrawer }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [isLoading, setIsLoading] = useState(false);
   const [scheduleModal, setScheduleModal] = useState({ isOpen: false, pickupDetails: {} });
+  const handleApiError = (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.clear();
+      navigate('/login');
+    } else {
+      console.log(error); //eslint-disable-line
+    }
+  };
+
 
   const handleShipOrder = (data) => {
     let requestData;
@@ -52,7 +67,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
     if (orderId) {
       console.log("JTTTTTTTTTT",requestData)
       axios
-        .post(`${BACKEND_URL}/order/${orderId}/shipment`, requestData)
+        .post(`${BACKEND_URL}/order/${orderId}/shipment`, requestData,{headers:headers})
         .then((resp) => {
           if (resp?.status === 200) {
             setIsLoading(false);
@@ -81,6 +96,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         })
         .catch((e) => {
           // eslint-disable-next-line no-console
+          handleApiError(e);
           console.error(e);
           setIsLoading(false);
           toast('Unable to ship order', { type: 'error' });

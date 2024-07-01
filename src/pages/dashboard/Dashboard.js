@@ -9,6 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Card, DonutChart } from './components';
 import ShipmentDetailCard from './components/shipment-card/ShipmentDetailCard';
 import { ShipmentOverview } from './components/shipment-overview';
+import { ACCESS_TOKEN } from "../../common/utils/config";
 
 
 
@@ -115,7 +116,14 @@ const Dashboard = () => {
     axios
       .post(
         BACKEND_URL +
-          `/dashboard/user_order_analysis/?user_id=${id_user}&start_date=${fromDate}&end_date=${toDate}`,
+          `/dashboard/user_order_analysis/?start_date=${fromDate}&end_date=${toDate}`,
+          null,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': ACCESS_TOKEN
+            },
+          }
       )
       .then((res) => {
         setTodayOrder(res.data.todays_order_count);
@@ -144,6 +152,11 @@ const Dashboard = () => {
       })
       .catch((err) => {
         console.log('ERRRRRR', err);
+        if (err.response && err.response.status === 401) {
+          localStorage.clear()
+          toast.error('Session expired. Please login again.');
+          navigate('/login');
+        }
       });
   };
 

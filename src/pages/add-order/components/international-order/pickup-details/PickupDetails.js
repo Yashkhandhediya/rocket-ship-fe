@@ -9,9 +9,12 @@ import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 export default function PickupDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const id_user = localStorage.getItem('user_id')
   const domesticOrderPickupAddress =
     useSelector((state) => state?.addOrder?.domestic_order?.pickup_address) || {};
@@ -25,8 +28,9 @@ export default function PickupDetails({ currentStep, handleChangeStep }) {
   const fetchUserAddressList = () => {
     axios
       .get(BACKEND_URL+'/address', {
-        params: {
-          user_id: id_user,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': ACCESS_TOKEN,
         },
       })
       .then((resp) => {
@@ -35,9 +39,14 @@ export default function PickupDetails({ currentStep, handleChangeStep }) {
         }
       })
       .catch((e) => {
+        if (e.response && e.response.status === 401) {
+          localStorage.clear()
+          navigate('/login');
+      } else {
         // eslint-disable-next-line no-console
         console.error(e);
         toast('Unable to fetch address', { type: 'error' });
+      }
       });
   };
 

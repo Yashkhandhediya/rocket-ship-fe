@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -12,14 +12,19 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
 import Customer from './Customer';
+import { ACCESS_TOKEN } from "../../common/utils/config";
 
 function CustomerOverview() {
   const [viewData, setViewData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { buyerId } = useParams();
+  const navigate = useNavigate();
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
 
   const user_id = is_company == 1 ? id_company : id_user;
   const queryParams = new URLSearchParams(location.search);
@@ -30,14 +35,22 @@ function CustomerOverview() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/users/get_customer_view_details/${buyerId}/detail?user_id=${user_id}`,
+        `${BACKEND_URL}/users/get_customer_view_details/${buyerId}/detail`,
+         {headers:headers}
       );
       console.log(response);
       setViewData(response.data);
       console.log(response.data);
       setLoading(false);
-    } catch (err) {
-      toast('There is Error while fetching', { type: 'error' });
+    } catch (err)  {
+      if (err.response && err.response.status === 401) {
+        localStorage.clear()
+        toast.error('Session expired. Please login again.');
+        navigate('/login');
+      } else {
+        // Other errors, show toast message
+        toast.error('There is Error while fetching', { type: 'error' });
+      }
       setLoading(false);
     }
   };

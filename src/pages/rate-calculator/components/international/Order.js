@@ -4,13 +4,18 @@ import { purpose } from '../../common/data'
 import { CustomMultiSelect } from '../../../../common/components'
 import axios from 'axios'
 import { BACKEND_URL } from '../../../../common/utils/env.config'
-// import { ACCESS_TOKEN } from '../../../../common/utils/config'
+import { ACCESS_TOKEN } from '../../../../common/utils/config'
+import { useNavigate } from 'react-router-dom'
 
 
 const Order = () => {
     const [purposeType, setPurposeType] = useState('Select Shipment Purpose');
     const [isPickPinCode, setIsPickPincode] = useState(null);
+    const navigate = useNavigate();
     const [country,setCountry] = useState(null)
+    const headers = {             
+      'Content-Type': 'application/json',
+      'Authorization': ACCESS_TOKEN};
     const [dimention,setDimention] = useState({
         length:0,
         width:0,
@@ -27,7 +32,7 @@ const Order = () => {
     };
 
     const handleCalculate = () => {
-        const headers = {'Content-Type': 'application/json'}
+        // const headers = {'Content-Type': 'application/json'}
         axios.post(BACKEND_URL + '/order/rate_calculation',{
             pickup_pincode:isPickPinCode,
             delivery_pincode:country,
@@ -37,13 +42,18 @@ const Order = () => {
             length:dimention.length,
             // payment_type_id:,
             // shipment_value:
-        },{headers}).then((res) => {
+        },{headers:headers}).then((res) => {
             console.log("Response ",res)
         }).catch((e) => {
+          if (e.response && e.response.status === 401) {
+            // Redirect to login page on 401 Unauthorized
+            localStorage.clear()
+            navigate('/login');
+          } else {
             console.log("Error in rate calculate ",e)
-        })
-    }
-
+          }
+        });
+    } 
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md mt-4 ml-4 w-[65%]">

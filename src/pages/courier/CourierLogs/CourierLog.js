@@ -6,6 +6,8 @@ import { noData } from '../../../common/images';
 import axios from 'axios';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import { toast } from 'react-toastify';
+import { ACCESS_TOKEN } from '../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 function CourierLog() {
     const tempdata = [
@@ -21,6 +23,10 @@ function CourierLog() {
     const [totalData, setTotalData] = useState([]);
     const [per_page, setPerPage] = useState(15);
     const [page, setPage] = useState(1);
+    const navigate = useNavigate();
+    const headers = {             
+      'Content-Type': 'application/json',
+      'Authorization': ACCESS_TOKEN};
     const handlePageChange = (page) => {
         setPage(page);
       }
@@ -32,16 +38,22 @@ function CourierLog() {
       const currentPageData = data.slice((page - 1) * per_page, page * per_page);
 
       const handleLogData = () => {
-        axios.get(BACKEND_URL + `/userpartner/update_status_history?user_id=${localStorage.getItem('user_id')}&page=${page}&page_size=${per_page}`)
+        axios.get(BACKEND_URL + `/userpartner/update_status_history?page=${page}&page_size=${per_page}`,{headers:headers})
         .then((res) => {
           console.log("Log Data",res.data)
           setData(res.data);
         })
-        .catch((err) => {
-          console.log(err);
-          toast("Error In Fetching Log Data",{type:'error'})
+        .catch((err) =>  {
+          if (err.response && err.response.status === 401) {
+            // Redirect to login page on 401 Unauthorized
+            localStorage.clear()
+            navigate('/login');
+          } else {
+            console.log(err);
+            toast("Error In Fetching Log Data",{type:'error'})
+          }
         })
-      }
+    }
 
       useEffect(() => {
         handleLogData()

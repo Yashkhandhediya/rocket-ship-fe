@@ -11,6 +11,8 @@ import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import { setEditOrder } from '../../../../../redux';
 import { useLocation } from 'react-router-dom';
 import Autosuggest from 'react-autosuggest';
+import { ACCESS_TOKEN } from '../../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 export let package_info = {
   length: 0,
@@ -21,6 +23,7 @@ export let package_info = {
 
 export default function OrderDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   let { isEdit } = location?.state || {};
   const id_user = localStorage.getItem('user_id');
@@ -31,6 +34,9 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   const [showProductSuggestions, setShowProductSuggestions] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [focusedProductIndex, setFocusedProductIndex] = useState(-1);
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   // const [cashCharge,setCashCharge] = useState(0)
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order) || {};
 
@@ -139,14 +145,19 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
 
     if (id == 'name') {
       axios
-        .get(BACKEND_URL + '/product/get_product_details/')
+        .get(BACKEND_URL + '/product/get_product_details/',{headers:headers})
         .then((res) => {
           console.log('Suggestion Products', res.data);
           setSuggestionProductData(res.data);
           setShowProductSuggestions(true);
         })
         .catch((err) => {
+          if (err.response && err.response.status === 401) {
+            localStorage.clear()
+            navigate('/login');
+        } else {
           console.log('Error in Products', err);
+        }
         });
     }
     const allFields = [...productFields];
@@ -250,7 +261,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
 
   const fetchOrderId = () => {
     axios
-      .get(BACKEND_URL + `/order/get_order_id/?id=${id_user}`)
+      .get(BACKEND_URL + `/order/get_order_id/`,{headers:headers})
       .then((resp) => {
         if (resp?.status == 200 && resp?.data?.order_id) {
           setFormDirectField({
@@ -260,9 +271,14 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
         }
       })
       .catch((e) => {
+        if (e.response && e.response.status === 401) {
+          localStorage.clear()
+          navigate('/login');
+      } else {
         // eslint-disable-next-line no-console
         console.error(e);
         toast('Unable to generate order id', { type: 'error' });
+      }
       });
   };
 
@@ -370,13 +386,18 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     try {
       const response = await axios.get(`${BACKEND_URL}/product/get_product_suggestion/`, {
         params: { string: value },
-      });
+      },{headers:headers});
       const filteredSuggestions = response.data.filter(
         (user) => user.name && user.name.toLowerCase().includes(value.toLowerCase()),
       );
       setSuggestions(filteredSuggestions);
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        localStorage.clear()
+        navigate('/login');
+    } else {
       console.error('Error fetching suggestions:', error);
+    }
     }
   };
 

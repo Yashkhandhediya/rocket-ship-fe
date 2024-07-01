@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import OtpPopup from './OtpPopup';
 import { homelogo, LogoRCSL } from '../../common/images';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 // import { GoogleLogin } from 'react-google-login';
 // import {gapi} from 'gapi-script'
 
@@ -52,11 +53,16 @@ const LogIn = () => {
       return;
     }
     localStorage.setItem('user_email', loginInput.username);
-    const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+    // const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     console.log('username pass', loginInput.username, loginInput.password);
     console.log('backend url', BACKEND_URL);
     const apiURL = userType === 'user' ? '/login/access-token' : '/company/access-token';
     const otpURL = userType === 'user' ? '/login' : '/company';
+
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': ACCESS_TOKEN
+    };
 
     axios
       .post(
@@ -75,10 +81,11 @@ const LogIn = () => {
         localStorage.setItem('balance', response.data.wallet_balance);
         localStorage.setItem('is_kyc', response.data.kyc_status_id);
         localStorage.setItem('is_super', response.data.user_type_id);
+        
         const user_id =
           userType === 'user' ? localStorage.getItem('user_id') : localStorage.getItem('company_id');
         if (response.data.access_token) {
-          setUserId(response.data.user_id);
+          setUserId(response.data.user_id); 
           setCompanyId(response.data.company_id);
           localStorage.setItem('access_token', response.data.access_token);
           localStorage.setItem('user_name', response.data?.user_name?.split(' ')[0]);

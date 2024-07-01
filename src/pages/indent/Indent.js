@@ -10,6 +10,7 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import moment from 'moment';
 import { modifyFlag,modifyId } from './Allindent';
 import { id_user } from '../log-in/LogIn';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 
 export let info = [];
@@ -19,6 +20,9 @@ const Indent = () => {
     const location = useLocation()
     const id_user = localStorage.getItem('user_id')
     const data = location.state?.data || {}
+    const headers = {             
+        'Content-Type': 'application/json',
+        'Authorization': ACCESS_TOKEN};
     console.log("Dataaaaaa",data)
     // console.log("Dataaaaaaaa",props.location.state.targetPrice)
     const inputRef = useRef(null);
@@ -170,7 +174,7 @@ const Indent = () => {
             return; // Exit the function early if validation fails
         }
         setIsLoading(true)
-        const headers={'Content-Type': 'application/json'};
+        // const headers={'Content-Type': 'application/json'};
         console.log("Jayyyyyyy",selectedCity,materialType)
         axios.post(BACKEND_URL+'/indent/create_indent',
         {
@@ -196,7 +200,7 @@ const Indent = () => {
         volumetric_weight:volumatricWeight,
         trip_status:0
     },
-         {headers}).then(
+         {headers:headers}).then(
             (response)=>{
               setIsLoading(false)
               console.log("General",response);
@@ -217,11 +221,16 @@ const Indent = () => {
             
             }
           ) .catch((error) => {
-            console.error("Error:", error);
-            toast('Error in Create Indent',{type:'error'})
-        });
-    }
-
+            if (error.response && error.response.status === 401) {
+              // Redirect to login page on 401 Unauthorized
+              localStorage.clear()
+              navigate('/login');
+            } else {
+                console.error("Error:", error);
+                toast('Error in Create Indent',{type:'error'})
+            }
+          });
+      }
 
     const handleModify = () => {
         console.log("Handling Modify Indent API Here",selectedCity.source)
@@ -246,7 +255,7 @@ const Indent = () => {
         }
 
         setIsLoading(true)
-        const headers={'Content-Type': 'application/json'};
+        // const headers={'Content-Type': 'application/json'};
         console.log("Jayyyyyyy",selectedCity,materialType)
         axios.put(BACKEND_URL+'/indent/modify_indent',
         {
@@ -272,12 +281,12 @@ const Indent = () => {
         pickupDate:pickUpDate.date,
         volumetric_weight:volumatricWeight
     },
-         {headers}).then(
+         {headers:headers}).then(
             (response)=>{
               setIsLoading(false)
               console.log("General",response);
               toast('Indent Updated Successfully',{type:'success'})
-              axios.get(BACKEND_URL + `/indent/get_indents?created_by=${id_user}`).then((response)=>{
+              axios.get(BACKEND_URL + `/indent/get_indents?created_by=${id_user}`,{headers:headers}).then((response)=>{
                 console.log("RESPONSE",response);
                 if(response.data.length > 0){
                     for(let i=0;i<response.data.length;i++){
@@ -292,10 +301,16 @@ const Indent = () => {
             
             }
           ) .catch((error) => {
-            console.error("Error:", error);
-            toast('Error in Update Indent',{type:'error'})
-        });
-    }
+            if (error.response && error.response.status === 401) {
+              // Redirect to login page on 401 Unauthorized
+              localStorage.clear()
+              navigate('/login');
+            } else {
+                console.error("Error:", error);
+                toast('Error in Update Indent',{type:'error'})
+            }
+          });
+      }
 
     return (
         <PageWithSidebar>

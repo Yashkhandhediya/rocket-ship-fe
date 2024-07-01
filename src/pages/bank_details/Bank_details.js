@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate  } from "react-router-dom";
 import PageWithSidebar from "../../common/components/page-with-sidebar/PageWithSidebar"
 import { useEffect, useState } from "react";
 import { faSave } from '@fortawesome/free-solid-svg-icons';
@@ -8,13 +8,17 @@ import axios from "axios";
 import { BACKEND_URL } from "../../common/utils/env.config";
 import { toast } from "react-toastify";
 import Save_Detail from "./components/Save_Detail";
+import { ACCESS_TOKEN } from "../../common/utils/config";
 
 
 const Bank_details = () => {
-
+  const navigate = useNavigate();
   const [showOptional, setShowOptional] = useState(false);
   const [show,setShow] = useState(false)
   const [info,setInfo] = useState([])
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   // This is a dummy data, you can replace it with your own data
   const [bankDetails, setBankDetails] = useState({
     accountHolderName: '',
@@ -26,18 +30,26 @@ const Bank_details = () => {
 
 
   const handleData = () => {
-    axios.get(BACKEND_URL + `/bankdetails/bank_details_get?user_id=${localStorage.getItem('user_id')}`)
+    axios.get(BACKEND_URL + `/bankdetails/bank_details_get`,
+    {headers:headers}
+  )
     .then((res) => {
       console.log("Response Bank Detail",res)
       if(res.data.length > 0){
         setShow(true)
       }
       setInfo(res.data)
-    }).catch((err) => {
-      console.log("Error In Bank Details",err)
-      toast("Error In Fetching Bank Details",{type:'error'})
-    })
-  }
+    }).catch((err) =>  {
+      if (err.response && err.response.status === 401) {
+        localStorage.clear()
+        toast.error('Session expired. Please login again.');
+        navigate('/login');
+      } else {
+        console.log("Error In Bank Details", err);
+        toast("Error In Fetching Bank Details", { type: 'error' });
+      }
+    });
+  };
 
   useEffect(() => {
     handleData()
@@ -47,13 +59,13 @@ const Bank_details = () => {
   const handleSumbit = () => {
     // You can use this data to send to the server
     axios.post(BACKEND_URL + `/bankdetails/bank_details_post`,{
-      user_id: localStorage.getItem('user_id'),
+      
       account_holder_name: bankDetails.accountHolderName,
       account_number: bankDetails.accountNo,
       account_type_id: parseInt(bankDetails.accountType == 'savings' ? 0 : 1),
       ifsc_code: bankDetails.ifscCode,
       re_enter_account_number: bankDetails.reEnterAccountNo
-    })
+    }, {headers:headers})
     .then((res) => {
       console.log("Response Bank Detail",res)
       toast("Back Details Saved Successfully.",{type:'success'})
@@ -61,9 +73,15 @@ const Bank_details = () => {
     }).catch((err) => {
       console.log("Error In Bank Details",err)
       toast("Error In Saving Bank Details",{type:'error'})
-    })
-    console.log(bankDetails); //eslint-disable-line
-  }
+      if (err.response && err.response.status === 401) {
+        localStorage.clear()
+        toast.error('Session expired. Please login again.');
+        navigate('/login'); // Navigate to '/login' on 401 Unauthorized
+      }
+    });
+    
+  console.log(bankDetails); // Logging bankDetails without change
+}
 
 
   return (

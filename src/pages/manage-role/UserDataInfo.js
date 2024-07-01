@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
-
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const UserDataInfo = ({
   key,
@@ -21,7 +21,9 @@ const UserDataInfo = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEdit,setIsEdit] = useState(true)
   const navigate = useNavigate();
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const handleToggle = () => {
     setEnabled(!enabled);
     toast(` ${enabled ? 'User DeActivate Successfully' : 'User Activated Successfully.'}`, { type: 'info' });
@@ -36,13 +38,18 @@ const UserDataInfo = ({
   };
 
   const handleEdit = () => {
-    axios.get(BACKEND_URL + `/roleuser/user_role/${info?.user?.id}`)
+    axios.get(BACKEND_URL + `/roleuser/user_role/${info?.user?.id}`,{headers:headers})
     .then((res) => {
       console.log("Single User Info",res.data)
       navigate('/user-management',{state:{userData:res.data,isEdit}})
     }).catch((err) => {
+      if (err.response && err.response.status === 401) {
+        localStorage.clear()
+        navigate('/login');
+    } else {
       console.log(err);
       toast('Error in fetching Data',{type:'error'})
+    }
     })
   }
 

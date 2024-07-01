@@ -5,10 +5,16 @@ import { BACKEND_URL } from '../../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../../common/components';
 import moment from 'moment';
+import { ACCESS_TOKEN } from '../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 function TrackingInfo() {
   const [trackOrderData, setTrackOrderData] = useState([]);
   const [searchParam] = useSearchParams();
+  const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const { orderId } = useParams();
   const [loading, setLoading] = useState(false);
   const flag = searchParam.get('flag');
@@ -18,7 +24,7 @@ function TrackingInfo() {
     setLoading(true);
     const apiURL = flag == 1 ? `/return/${orderId}/track` : `/order/${orderId}/track`;
     try {
-      const response = await axios.get(`${BACKEND_URL}${apiURL}`);
+      const response = await axios.get(`${BACKEND_URL}${apiURL}`,{headers:headers});
       if (response.status === 200) {
         //   const data = resp?.data?.ShipmentData?.[0]?.Shipment;
         setTrackOrderData(response.data);

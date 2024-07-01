@@ -8,10 +8,14 @@ import { BillingTabs } from '../billing-tabs';
 import { Field } from '../../../../common/components';
 import axios from 'axios';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 const COD_Remittance = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
+    const headers = {             
+        'Content-Type': 'application/json',
+        'Authorization': ACCESS_TOKEN};
     const [activeTab, setActiveTab] = useState(0);
     const [data, setData] = useState([]); //eslint-disable-line
     const oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 3)).toISOString().slice(0, 10);
@@ -59,7 +63,7 @@ const COD_Remittance = () => {
     }
 
     const handleCOD = () => {
-        axios.post(BACKEND_URL + `/order/create_cod_remittance?user_id=${localStorage.getItem('user_id')}`, {
+        axios.post(BACKEND_URL + `/order/create_cod_remittance`, {
             "order_id": parseInt(remittanceInfo?.order_id),
             "cod_to_be_remitted": parseInt(remittanceInfo?.cod_to_be_remitted),
             "last_cod_remitted": parseInt(remittanceInfo?.last_cod_remitted),
@@ -67,7 +71,7 @@ const COD_Remittance = () => {
             "total_deduction_from_cod": parseInt(remittanceInfo?.total_deduction_from_cod),
             "remittance_initiated": parseInt(remittanceInfo?.remittance_initiated),
             // "status_id": parseInt(remittanceInfo?.status_id)
-        })
+        },{headers:headers})
         .then((res) => {
             console.log("Response Cod",res.data);
             toast.success('COD remittance created successfully');
@@ -76,6 +80,11 @@ const COD_Remittance = () => {
         }).catch((err) => {
             console.log("Error Cod",err);
             toast("Error In Creation Of COD remittance",{type:'error'})
+            if (err.response && err.response.status === 401) {
+                localStorage.clear()
+                toast.error('Session expired. Please login again.');
+                navigate('/login');
+            }
         })
 
         setRemittanceInfo({
@@ -90,12 +99,18 @@ const COD_Remittance = () => {
     }
 
     const handleCODData = () => {
-        axios.get(BACKEND_URL + `/order/get_cod_remittance?user_id=${localStorage.getItem('user_id')}&from_date=${fromDate}&to_date=${toDate}`)
+        axios.get(BACKEND_URL + `/order/get_cod_remittance?from_date=${fromDate}&to_date=${toDate}`,
+       {headers:headers})
         .then((res) => {
             console.log("COD DATA",res.data)
             setData(res.data)
         }).catch((err) => {
             console.log("Error COD DATA",err)
+            if (err.response && err.response.status === 401) {
+                localStorage.clear()
+                toast.error('Session expired. Please login again.');
+                navigate('/login');
+            }
         })
     }
 

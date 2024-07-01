@@ -2,8 +2,13 @@ import axios from 'axios';
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
-
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 const OTP_Input = ({ handleSendOTP, timer, setIsKYCCompleted,id=null }) => {
+    const headers = {             
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': ACCESS_TOKEN};
+    const navigate = useNavigate();
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
     const [seconds, setSeconds] = useState(timer);
     const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null), useRef(null), useRef(null)];
@@ -37,19 +42,26 @@ const OTP_Input = ({ handleSendOTP, timer, setIsKYCCompleted,id=null }) => {
         if (isOtpEntered) {
             // API call to verify OTP
             let temp_otp = otp.join('')
-            axios.post(BACKEND_URL + `/kyc/adhaar_submit_otp?reference_id=${id}&otp=${temp_otp}`)
+            axios.post(BACKEND_URL + `/kyc/adhaar_submit_otp?reference_id=${id}&otp=${temp_otp}`,
+            {headers:headers}
+            )
             .then((res) => {
                 toast.success('KYC completed successfully', { type: 'success' })
                 setIsKYCCompleted(true)
-            }).catch((err) => {
-                toast("Mismatch OTP",{type:'error'})
-            })
-        }
-        else {
+            }).catch((err) =>  {
+                if (err.response && err.response.status === 401) {
+                    localStorage.clear()
+                    toast.error('Session expired. Please login again.');
+                    navigate('/login');
+                } else {
+                    toast("Mismatch OTP",{type:'error'});
+                }
+            });
+        } else {
             // Show error message
-            toast.error('Please enter a valid OTP', { type: 'error' })
+            toast.error('Please enter a valid OTP', { type: 'error' });
         }
-    }
+    };
 
     useEffect(() => {
         const intervalId = setInterval(() => {

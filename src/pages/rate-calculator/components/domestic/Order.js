@@ -5,13 +5,18 @@ import { BACKEND_URL } from '../../../../common/utils/env.config';
 import Loader from '../../../../common/loader/Loader';
 import { toast } from 'react-toastify';
 import { infoIcon } from '../../../../common/icons';
-// import { ACCESS_TOKEN } from '../../../../common/utils/config'
+import { ACCESS_TOKEN } from '../../../../common/utils/config'
+import { useNavigate } from 'react-router-dom';
 
 const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
   const [isValidPincode, setIsValidPincode] = useState(true);
   const [isValidDestPinCode, setIsValidDestPincode] = useState(true);
   const [isPickPinCode, setIsPickPincode] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [isDeliveryPinCode, setIsDeliveryPincode] = useState(null);
   const [shipmentDetails, setShipmentDetails] = useState({
     type: 'ftl',
@@ -104,7 +109,7 @@ const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
   const fetchPincodeDetails = () => {
     try {
       axios
-        .get(`${BACKEND_URL}/pincode/${isPickPinCode}`)
+        .get(`${BACKEND_URL}/pincode/${isPickPinCode}`,{headers:headers})
         .then((resp) => {
           if (resp.status == 200) {
             const cityInfo = {
@@ -129,7 +134,7 @@ const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
   const fetchDestinationPincodeDetails = () => {
     try {
       axios
-        .get(`${BACKEND_URL}/pincode/${isDeliveryPinCode}`)
+        .get(`${BACKEND_URL}/pincode/${isDeliveryPinCode}`,{headers:headers})
         .then((resp) => {
           if (resp.status == 200) {
             const cityInfo = {
@@ -218,7 +223,7 @@ const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
           payment_type_id: paymentDetails.payment_type == 'cod' ? 1 : 2,
           shipment_value: parseInt(shipmentPrice),
         },
-        { headers },
+        { headers:headers },
       )
       .then((res) => {
         console.log('Rate Response ', res);
@@ -237,12 +242,18 @@ const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
         setLoading(false);
       })
       .catch((e) => {
-        console.log('Error in rate calculate ', e);
-        toast('Error in Rate Calculation', { type: 'error' });
-        setLoading(false);
+        if (e.response && e.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          console.log('Error in rate calculate ', e);
+          toast('Error in Rate Calculation', { type: 'error' });
+          setLoading(false);
+        }
       });
-  };
-
+  }; 
+        
   return (
     <>
       {loading && <Loader />}

@@ -4,10 +4,16 @@ import { OTP_Input } from '../otp_Input';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 const Adhaar_Document = ({ triggerValidation,setTriggerValidations,setIsKYCCompleted}) => {
     const [isValidAdhaar, setIsValidAdhaar] = useState(true);
     const [adhaarNumber, setAdhaarNumber] = useState('')
+    const navigate = useNavigate();
+    const headers = {             
+        'Content-Type': 'application/json',
+        'Authorization': ACCESS_TOKEN};
     const [showOTPBox, setShowOTPBox] = useState(false)
     const [id,setId] = useState(null)
     const [disableInput, setDisableInput] = useState(false)
@@ -34,15 +40,20 @@ const Adhaar_Document = ({ triggerValidation,setTriggerValidations,setIsKYCCompl
             setDisableInput(true)
             // API call to send OTP
             let temp_number = adhaarNumber.replace(/-/g,'')
-            axios.post(BACKEND_URL + `/kyc/adhaar_generate_otp?id_number=${temp_number}`)
+            axios.post(BACKEND_URL + `/kyc/adhaar_generate_otp?id_number=${temp_number}`,{headers:headers})
             .then((res) => {
                 console.log("Response OTP",res.data)
                 setId(res.data.reference_id)
                 toast.success('otp send successfully')
             })
         } catch (error) {
+            if (error.response && error.response.status === 401) {
+                localStorage.clear()
+                navigate('/login');
+            } else {
             // Show error message
             toast.error('Please enter a valid Adhaar number', { type: 'error' })
+            }
         }
     }
 

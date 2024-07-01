@@ -4,12 +4,15 @@ import { Adhaar_Document } from "../adhaar_document";
 import { Document_Upload } from "../document_upload";
 import { KYC_type } from "../bussiness-type/BussinessType";
 import { BACKEND_URL } from "../../../../common/utils/env.config";
+import { ACCESS_TOKEN } from "../../../../common/utils/config";
+import { useNavigate } from "react-router-dom";
 
 const DocumentVerification = ({ currentStep, handleChangeStep, setIsKYCCompleted }) => {
     const [openAccordion, setOpenAccordion] = useState(0);
     const [triggerBuyerValidations, setTriggerBuyerValidations] = useState(false);
     const [isOTPPopupVisible, setIsOTPPopupVisible] = useState(false);
     const [username, setUsername] = useState("");
+    const navigate = useNavigate()
     const [gst, setGst] = useState("");
     const [otp, setOtp] = useState(Array(6).fill(''));
     const inputRefs = Array(6).fill(0).map(() => useRef(null));
@@ -28,6 +31,7 @@ const DocumentVerification = ({ currentStep, handleChangeStep, setIsKYCCompleted
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': ACCESS_TOKEN
                 },
                 body: JSON.stringify({ username, gstin: gst }),
             });
@@ -38,7 +42,13 @@ const DocumentVerification = ({ currentStep, handleChangeStep, setIsKYCCompleted
                 alert(data.message || 'Failed to generate OTP');
             }
         } catch (error) {
-            alert('An error occurred while generating OTP');
+            if (error.response && error.response.status === 401) {
+                // Redirect to login page on 401 Unauthorized
+                localStorage.clear()
+                navigate('/login');
+              } else {
+                alert('An error occurred while generating OTP');
+              }
         }
     };
 
@@ -76,6 +86,7 @@ const DocumentVerification = ({ currentStep, handleChangeStep, setIsKYCCompleted
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': ACCESS_TOKEN
                 },
                 body: JSON.stringify({ username, gstin: gst, otp: otp.join('') }),
             });
@@ -88,7 +99,13 @@ const DocumentVerification = ({ currentStep, handleChangeStep, setIsKYCCompleted
                 alert(errorData.message || 'Failed to submit OTP');
             }
         } catch (error) {
-            alert('An error occurred while submitting OTP');
+            if (error.response && error.response.status === 401) {
+                // Redirect to login page on 401 Unauthorized
+                localStorage.clear()
+                navigate('/login');
+              } else {
+                alert('An error occurred while generating OTP');
+              }
         } finally {
             setIsOTPPopupVisible(false);
         }

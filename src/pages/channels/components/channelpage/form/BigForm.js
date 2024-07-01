@@ -3,17 +3,22 @@ import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { bigcommerce } from '../../../../../common/icons';
+import { ACCESS_TOKEN } from '../../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const BigForm = () => {
     let response = ""
     const [checked, setChecked] = useState(false);
     const [storeName,setStoreName] = useState('')
-
+    const headers = {             
+        'Content-Type': 'application/json',
+        'Authorization': ACCESS_TOKEN};
     const handleToggle = () => {
         setChecked(!checked);
     };
 
     const [hashCode, setHashCode] = useState('');
+    const navigate = useNavigate();
     const [authToken, setAuthToken] = useState('');
 
     const handleChange = (event) => {
@@ -22,7 +27,7 @@ const BigForm = () => {
 
     const redirectToBigAuth = async () => {
         axios
-            .post(BACKEND_URL+`/bigcommerce/create-webhook?HASH_CODE=${hashCode}&AUTH_TOKEN=${authToken}&user_id=${localStorage.getItem('user_id')}&shop_name=${storeName}`)
+            .post(BACKEND_URL+`/bigcommerce/create-webhook?HASH_CODE=${hashCode}&AUTH_TOKEN=${authToken}&shop_name=${storeName}`,{headers:headers})
 
             .then(async (resp) => {
                 if (resp.status === 200) {
@@ -32,12 +37,16 @@ const BigForm = () => {
                     toast('Enter valid url', { type: 'error' });
                 }
             })
-            .catch(() => {
-                toast('There is some error', { type: 'error' });
-            });
-    };
-
-
+            .catch((error) => {
+                if (error.response && error.response.status === 401) {
+                  // Redirect to login page on 401 Unauthorized
+                  localStorage.clear()
+                  navigate('/login');
+                } else {
+                    toast('There is some error', { type: 'error' });
+                }
+              });
+          }; 
 
     return (
         <div className="flex w-[68%]  bg-white-100 justify-start flex-col rounded-lg relative  bg-white">

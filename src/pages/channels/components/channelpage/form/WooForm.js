@@ -3,12 +3,17 @@ import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { woocommerce } from '../../../../../common/icons';
+import { ACCESS_TOKEN } from '../../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const WooForm = () => {
     let response = ""
     const [checked, setChecked] = useState(false);
     const [storeName,setStoreName] = useState('')
-
+    const navigate = useNavigate()
+    const headers = {             
+        'Content-Type': 'application/json',
+        'Authorization': ACCESS_TOKEN};
     const handleToggle = () => {
         setChecked(!checked);
     };
@@ -21,7 +26,7 @@ const WooForm = () => {
 
     const redirectToWooAuth = async () => {
         axios
-            .get(BACKEND_URL+`/woocommerce/generate_auth_url?store_url=${url}&user_id=${localStorage.getItem('user_id')}&shop_name=${storeName}`)
+            .get(BACKEND_URL+`/woocommerce/generate_auth_url?store_url=${url}&shop_name=${storeName}`,{headers:headers})
             .then(async (resp) => {
                 if (resp.status === 200) {
                     response = resp.data.auth_url;
@@ -31,8 +36,14 @@ const WooForm = () => {
                     toast('Enter valid url', { type: 'error' });
                 }
             })
-            .catch(() => {
-                toast('There is some error', { type: 'error' });
+            .catch((error) => {
+                if (error.response && error.response.status === 401) {
+                    // Redirect to login page on 401 Unauthorized
+                    localStorage.clear()
+                    navigate('/login');
+                  } else {
+                    toast('There is some error', { type: 'error' });
+                  }
             });
     };
 

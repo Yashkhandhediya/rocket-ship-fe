@@ -6,10 +6,15 @@ import { createColumnHelper } from '@tanstack/react-table'
 import { toast } from 'react-toastify'
 import { CustomDataTable } from '../../common/components'
 import { noData } from '../../common/images'
-// import { ACCESS_TOKEN } from '../../common/utils/config'
+import { ACCESS_TOKEN } from '../../common/utils/config'
+import { useNavigate } from 'react-router-dom'
 
 const UserList = () => {
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [userData,setUserData] = useState([])
+  const navigate = useNavigate()
   const [showkyc,setShowKyc] = useState(false)
   const [aadharImg,setAadharImg] = useState(null)
   const [userImg,setUserImg] = useState(null)
@@ -58,8 +63,8 @@ const UserList = () => {
   const handleKYC = (row) => {
     setIdUser(row?.id)
     setShowKyc(true)
-    const headers={'Content-Type': 'application/json'};
-    axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=user_aadhar`,{ responseType: 'blob' }).
+    // const headers={'Content-Type': 'application/json'};
+    axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=user_aadhar`,{ responseType: 'blob', headers:headers }).
     then((res) => {
         console.log("Recharge Responsee",res)
         const imgUrl = URL.createObjectURL(res.data)
@@ -69,10 +74,16 @@ const UserList = () => {
         // localStorage.setItem('balance',newVal)
         // window.location.reload()
     }).catch((err) => {
+      if (err.response && err.response.status === 401) {
+        // Redirect to login page on 401 Unauthorized
+        localStorage.clear()
+        navigate('/login');
+      } else {
         console.log("Error In Rechargeee",err)
+      }
     })
 
-    axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=selfie`,{ responseType: 'blob' }).
+    axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=selfie`,{ responseType: 'blob', headers:headers }).
     then((res) => {
         console.log("Recharge Responsee",res)
         const imgUrl = URL.createObjectURL(res.data)
@@ -82,22 +93,34 @@ const UserList = () => {
         // localStorage.setItem('balance',newVal)
         // window.location.reload()
     }).catch((err) => {
+      if (err.response && err.response.status === 401) {
+        // Redirect to login page on 401 Unauthorized
+        localStorage.clear()
+        navigate('/login');
+      } else {
         console.log("Error In Rechargeee",err)
+      }
     })
   }
 
   const handleAcceptKYC = () => {
     setKyc_status(1)
-    const headers={'Content-Type': 'application/json'};
-    axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=user&status=${3}&id=${idUser}`,{headers})
+    // const headers={'Content-Type': 'application/json'};
+    axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=user&status=${3}&id=${idUser}`,{headers:headers})
     .then((res) => {
       console.log("Response ",res)
       toast("KYC Verification Successfully",{type:'success'})
       setShowKyc(false);
       window.location.reload()
     }).catch((err) => {
-      console.log("ERRRRRR",err)
-      toast("Error in KYC verification",{type:'error'})
+      if (err.response && err.response.status === 401) {
+        // Redirect to login page on 401 Unauthorized
+        localStorage.clear()
+        navigate('/login');
+      } else {
+        console.log("ERRRRRR",err)
+        toast("Error in KYC verification",{type:'error'})
+      }
     })
  }
 

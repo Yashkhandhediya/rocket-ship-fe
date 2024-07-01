@@ -5,16 +5,21 @@ import { addAdressIcon, editIcon } from '../../../../../common/icons';
 import AddAddressDrawer from '../../../../add-order/components/add-address-drawer/AddAddressDrawer';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import { setSingleReturn } from '../../../../../redux/actions/addReturnAction';
+import { ACCESS_TOKEN } from '../../../../../common/utils/config';
 
 
 const WarehouseDetails = ({ currentStep, handleChangeStep }) => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    const headers = {             
+        'Content-Type': 'application/json',
+        'Authorization': ACCESS_TOKEN};
     const domesticOrderPickupAddress =
         useSelector((state) => {console.log(state); return state?.addReturn?.single_return?.pickup_address}) || {};
 
@@ -27,20 +32,21 @@ const WarehouseDetails = ({ currentStep, handleChangeStep }) => {
     
     const fetchUserAddressList = () => {
         axios
-            .get(BACKEND_URL+'/address', {
-                params: {
-                    user_id: id_user,
-                },
-            })
+            .get(BACKEND_URL+'/address',{headers:headers})
             .then((resp) => {
                 if (resp.status == 200) {
                     setAddressList(resp?.data || []);
                 }
             })
             .catch((e) => {
+                if (e.response && e.response.status === 401) {
+                    localStorage.clear()
+                    navigate('/login');
+                } else {
                 // eslint-disable-next-line no-console
                 console.error(e);
                 toast('Unable to fetch address', { type: 'error' });
+                }
             });
     };
 

@@ -5,10 +5,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 function CustomerEdit() {
   const [loading, setLoading] = useState(false);
   const { buyerId } = useParams();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
@@ -43,7 +47,8 @@ function CustomerEdit() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/users/get_customer_view_details/${buyerId}/detail?user_id=${user_id}`,
+        `${BACKEND_URL}/users/get_customer_view_details/${buyerId}/detail`,
+        {headers:headers}
       );
       console.log(response);
       setCustomerInfo({
@@ -54,7 +59,14 @@ function CustomerEdit() {
       });
       setLoading(false);
     } catch (err) {
-      toast('There is Error while fetching', { type: 'error' });
+      if (err.response && err.response.status === 401) {
+        localStorage.clear()
+        toast.error('Session expired. Please login again.');
+        navigate('/login');
+      } else {
+        // Other errors, show toast message
+        toast.error('There is Error while fetching', { type: 'error'});
+      }
       setLoading(false);
     }
   };
@@ -100,7 +112,9 @@ function CustomerEdit() {
           last_name: customerInfo.lastName,
           email: customerInfo.email,
           phone: customerInfo.phone,
-        });
+        },
+        {headers:headers}
+      );
   
         console.log(response);
 
@@ -113,9 +127,15 @@ function CustomerEdit() {
         
         setLoading(false);
       } catch (err) {
+        if (err.response && err.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
         // Handle any errors from the API request
         toast('There is Error while fetching', { type: 'error' });
         setLoading(false);
+        }
       }
     } else {
       // If any required field is missing, display an error message

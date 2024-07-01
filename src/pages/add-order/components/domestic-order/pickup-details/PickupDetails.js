@@ -11,9 +11,12 @@ import { isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import { useLocation } from 'react-router-dom';
 import { setEditOrder } from '../../../../../redux';
+import { ACCESS_TOKEN } from '../../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 export default function PickupDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   let {isEdit} = location?.state || {}
   const id_user = localStorage.getItem('user_id')
@@ -28,9 +31,10 @@ export default function PickupDetails({ currentStep, handleChangeStep }) {
 
   const fetchUserAddressList = () => {
     axios
-      .get(BACKEND_URL+'/address', {
-        params: {
-          user_id: id_user,
+      .get(BACKEND_URL+'/address',{
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': ACCESS_TOKEN,
         },
       })
       .then((resp) => {
@@ -39,9 +43,14 @@ export default function PickupDetails({ currentStep, handleChangeStep }) {
         }
       })
       .catch((e) => {
+        if (e.response && e.response.status === 401) {
+          localStorage.clear()
+          navigate('/login');
+      } else {
         // eslint-disable-next-line no-console
         console.error(e);
         toast('Unable to fetch address', { type: 'error' });
+      }
       });
   };
 

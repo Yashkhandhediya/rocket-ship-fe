@@ -20,11 +20,15 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { BACKEND_URL,MENIFEST_URL } from "../../../../common/utils/env.config";
 import {resData} from '../../Returns'
+import { ACCESS_TOKEN } from "../../../../common/utils/config";
 
 const Delivered = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const flattened = {};
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const allOrdersList = useSelector((state) => state?.returnsList);
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
 
@@ -256,7 +260,7 @@ const Delivered = () => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)
-    const headers={'Content-Type': 'application/json'};
+    // const headers={'Content-Type': 'application/json'};
 
     let temp_str = splitString(temp_payload['complete_address1'],35)
     let temp1 = splitString(temp_payload['complete_address'],35)
@@ -274,7 +278,7 @@ const Delivered = () => {
 
     axios.post(MENIFEST_URL +'/bilty/print/',
     temp_payload,
-     {headers}).then(
+     {headers:headers}).then(
         (response)=>{
         const blob = new Blob([response.data], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
@@ -283,10 +287,16 @@ const Delivered = () => {
           toast('Invoice Download Successfully',{type:'success'})
         }
       ) .catch((error) => {
-        console.error("Error:", error);
-        toast('Error in Invoice Download',{type:'error'})
-    });
-  }
+        if (error.response && error.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          console.error("Error:", error);
+          toast('Error in Invoice Download',{type:'error'})
+        }
+      });
+  }  
 
   function cloneOrder(orderDetails) {
     const clonedOrder = getClonedOrderFields(orderDetails);
@@ -300,17 +310,23 @@ const Delivered = () => {
       .put(`${BACKEND_URL}/return/?id=${orderDetails?.id}`, {
         ...orderDetails,
         status: 'cancelled',
-      })
+      },{headers:headers})
       .then((resp) => {
         if (resp?.status === 200) {
           dispatch(setAllReturns(null));
           toast('Order cancelled successfully', { type: 'success' });
         }
       })
-      .catch(() => {
-        toast('Unable to cancel Order', { type: 'error' });
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          toast('Unable to cancel Order', { type: 'error' });
+        }
       });
-  }
+  }  
 
   const closeShipmentDrawer = () => {
     setSelectShipmentDrawer({

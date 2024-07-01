@@ -6,8 +6,12 @@ import { BACKEND_URL } from '../../../common/utils/env.config';
 import OTP_Modal from '../otp_modal/OTP_Modal';
 import DifferentRTOAddress from '../different_rto_address/Different_RTO_Address';
 import { useNavigate } from 'react-router-dom';
+import { ACCESS_TOKEN } from '../../../common/utils/config';
 
 const Address_Modal = ({ setShow, addressId, addressData, fetchUserAddressList }) => {
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [showOTP, setShowOTP] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [rtoPhoneVerified, setRTOPhoneVerified] = useState(false);
@@ -110,7 +114,7 @@ const Address_Modal = ({ setShow, addressId, addressData, fetchUserAddressList }
         pincode: address.pincode,
         city: address.city,
         state: address.state,
-      });
+      },{headers:headers});
       if (response.status === 200) {
         setShow(false);
         toast('Address Added Successfully', { type: 'success' });
@@ -119,7 +123,12 @@ const Address_Modal = ({ setShow, addressId, addressData, fetchUserAddressList }
         toast('There is some error while fetching orders.', { type: 'error' });
       }
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        localStorage.clear()
+        navigate('/login');
+    } else {
       toast('There is some error while fetching orders.', { type: 'error' });
+    }
     } finally {
       setLoading(false);
     }
@@ -140,7 +149,12 @@ const Address_Modal = ({ setShow, addressId, addressData, fetchUserAddressList }
         isRTO ? setIsRTOPincodeValid(true) : setIsPincodeValid(true);
       }
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        localStorage.clear()
+        navigate('/login');
+    } else {
       toast.error('Error in fetching pincode details');
+    }
     }
   };
 

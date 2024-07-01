@@ -6,9 +6,15 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import Loader from '../../../../common/loader/Loader';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
   const [shipmentsDetails, setShipmentDetails] = useState(null);
+  const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [isLoading, setIsLoading] = useState(true)
   const tabsData = [
     {
@@ -64,21 +70,27 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
   const fetchShipmentDetails = () => {
     setIsLoading(true);
     axios
-      .get(`${BACKEND_URL}/order/${orderDetails?.id}/estimate?user_id=${localStorage.getItem('user_id')}`)
+      .get(`${BACKEND_URL}/order/${orderDetails?.id}/estimate`,{headers:headers})
       .then((resp) => {
         if (resp.status === 200) {
           setShipmentDetails(resp?.data);
           setIsLoading(false);
         }
       })
-      .catch((e) => {
+      .catch((e) =>  {
+        if (e.response && e.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
         // eslint-disable-next-line no-console
         console.error(e);
         toast('Unable to fetch shipment details', { type: 'error' });
         setShipmentDetails([]);
         setIsLoading(false);
+        }
       });
-  };
+  };  
 
   useEffect(() => {
     if (orderDetails?.id && isOpen) {

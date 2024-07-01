@@ -19,11 +19,15 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Returns';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 export const ReadyToShip = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const flattened = {};
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const allOrdersList = useSelector((state) => state?.returnsList);
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   // const readyShipOrdersList = allOrdersList?.filter(
@@ -256,7 +260,7 @@ export const ReadyToShip = () => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)
-    const headers={'Content-Type': 'application/json'};
+    // const headers={'Content-Type': 'application/json'};
 
     let temp_str = splitString(temp_payload['complete_address1'],35)
     let temp1 = splitString(temp_payload['complete_address'],35)
@@ -274,7 +278,7 @@ export const ReadyToShip = () => {
 
     axios.post(MENIFEST_URL +'/bilty/print/',
     temp_payload,
-     {headers}).then(
+     {headers:headers}).then(
         (response)=>{
         const blob = new Blob([response.data], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
@@ -283,13 +287,19 @@ export const ReadyToShip = () => {
           toast('Invoice Download Successfully',{type:'success'})
         }
       ) .catch((error) => {
-        console.error("Error:", error);
-        toast('Error in Invoice Download',{type:'error'})
-    });
+        if (error.response && error.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          console.error("Error:", error);
+          toast('Error in Invoice Download',{type:'error'})
+        }
+      });
   }
 
   function cancelOrder(orderDetails) {
-    const headers={'Content-Type': 'application/json'};
+    // const headers={'Content-Type': 'application/json'};
     console.log("ORDER DETAILSSSSSSSS",orderDetails)
     if(orderDetails.partner_id == 1 || orderDetails.partner_id == 2){
       toast("Cancel Functionality Is Not Providing By This Partner",{type:"error"})
@@ -297,7 +307,7 @@ export const ReadyToShip = () => {
       axios
       .post(`${BACKEND_URL}/return/${orderDetails?.id}/cancel_shipment`, {
         partner_id:orderDetails?.partner_id
-      },{headers})
+      },{headers:headers})
       .then((resp) => {
         if (resp?.status === 200) {
           // dispatch(setAllOrders(null));
@@ -305,7 +315,7 @@ export const ReadyToShip = () => {
           window.location.reload()
         }
       })
-      .catch(() => {
+      .catch((error) => {
         toast('Unable to cancel Order', { type: 'error' });
       });
     }

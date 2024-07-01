@@ -4,9 +4,13 @@ import { Field } from "../../../../common/components";
 import { upload } from "../../../../common/icons";
 import axios from "axios";
 import { BACKEND_URL } from "../../../../common/utils/env.config";
+import { ACCESS_TOKEN } from "../../../../common/utils/config";
+import { useNavigate } from "react-router-dom";
 
 const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
+    const headers = { 'Content-Type': 'multipart/form-data','Authorization': ACCESS_TOKEN };
     const user_name = localStorage.getItem('user_name')
+    const navigate = useNavigate()
     const id_user = localStorage.getItem("user_id")
     const id_company = localStorage.getItem("company_id")
     const [documentType1, setDocumentType1] = useState('');
@@ -154,28 +158,40 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
         try {
             // API call to submit document
             if(KYCType == "company"){
-                const headers = { 'Content-Type': 'multipart/form-data' };
+                // const headers = { 'Content-Type': 'multipart/form-data' };
                 axios.post(BACKEND_URL + `/kyc/upload_selfie/?image_id=${id_company}&user_name=${user_name}&type=company_pan`,
                 formData,
-                {headers}
+                {headers:headers}
                 ).then((res) => {
                     console.log("RESSSSSSSS",res)
                     toast('Document 1 submitted successfully', { type: 'success' })
                 }).catch((err) => {
-                    toast('Error in submitting Document 1', { type: 'error' })
-                })
+                    if (err.response && err.response.status === 401) {
+                      // Redirect to login page on 401 Unauthorized
+                      localStorage.clear()
+                      navigate('/login');
+                    } else {
+                        toast('Error in submitting Document 1', { type: 'error' })
+                    }
+                  })
             }
             else{
-                const headers = { 'Content-Type': 'multipart/form-data' };
-                axios.post(BACKEND_URL + `/kyc/upload_selfie/?image_id=${id_user}&user_name=${user_name}&type=user_aadhar`,
+                // const headers = { 'Content-Type': 'multipart/form-data' };
+                axios.post(BACKEND_URL + `/kyc/upload_selfie/?user_name=${user_name}&type=user_aadhar`,
                 formData,
-                {headers}
+                {headers:headers}
                 ).then((res) => {
                     console.log("RESSSSSSSS",res)
                     toast('Document 1 submitted successfully', { type: 'success' })
                 }).catch((err) => {
-                    toast('Error in submitting Document 1', { type: 'error' })
-                })
+                    if (err.response && err.response.status === 401) {
+                      // Redirect to login page on 401 Unauthorized
+                      localStorage.clear()
+                      navigate('/login');
+                    } else {
+                        toast('Error in submitting Document 1', { type: 'error' })
+                    }
+                  })
             }
             setDisableDocument1(true);
             setDisableDocument2(false);
@@ -205,15 +221,21 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
         formData.append('file',type2FrontBlob ,'selfie.jpg');
         try {
             // API call to submit document
-            const headers = { 'Content-Type': 'multipart/form-data' };
+            // const headers = { 'Content-Type': 'multipart/form-data' };
             axios.post(BACKEND_URL + `/kyc/upload_selfie/?image_id=${id_company}&user_name=${user_name}&type=company_logo`,
             formData,
-            {headers}
+            {headers:headers}
             ).then((res) => {
                 console.log("RESSSSSSSS",res)
                 toast('Document 2 submitted successfully', { type: 'success' })
             }).catch((err) => {
-                toast('Error in submitting Document 2', { type: 'error' })
+                if (err.response && err.response.status === 401) {
+                    // Redirect to login page on 401 Unauthorized
+                    localStorage.clear()
+                    navigate('/login');
+                  } else {
+                    toast('Error in submitting Document 2', { type: 'error' })
+                  }
             })
             setDisableDocument2(true);
             setDisableDocument3(false)
@@ -236,15 +258,21 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
         formData.append('file',type3FrontBlob ,'selfie.jpg');
         try {
             // API call to submit document
-            const headers = { 'Content-Type': 'multipart/form-data' };
+            // const headers = { 'Content-Type': 'multipart/form-data' };
             axios.post(BACKEND_URL + `/kyc/upload_selfie/?image_id=${id_company}&user_name=${user_name}&type=company_gst`,
             formData,
-            {headers}
+            {headers:headers}
             ).then((res) => {
                 console.log("RESSSSSSSS",res)
                 toast('Document 3 submitted successfully', { type: 'success' })
             }).catch((err) => {
-                toast('Error in submitting Document 3', { type: 'error' })
+                if (err.response && err.response.status === 401) {
+                    // Redirect to login page on 401 Unauthorized
+                    localStorage.clear()
+                    navigate('/login');
+                  } else {
+                    toast('Error in submitting Document 3', { type: 'error' })
+                  }
             })
             setDisableDocument3(true);
             setShowDocument3Info(true);
@@ -265,15 +293,21 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
         formData.append('file',type4FrontBlob ,'selfie.jpg');
         try {
             // API call to submit document
-            const headers = { 'Content-Type': 'multipart/form-data' };
+            // const headers = { 'Content-Type': 'multipart/form-data' };
             axios.post(BACKEND_URL + `/kyc/upload_selfie/?image_id=${id_company}&user_name=${user_name}&type=company_stamp`,
             formData,
-            {headers}
+            {headers:headers}
             ).then((res) => {
                 console.log("RESSSSSSSS",res)
                 toast('Document 4 submitted successfully', { type: 'success' })
             }).catch((err) => {
-                toast('Error in submitting Document 4', { type: 'error' })
+                if (err.response && err.response.status === 401) {
+                    // Redirect to login page on 401 Unauthorized
+                    localStorage.clear()
+                    navigate('/login');
+                  } else {
+                    toast('Error in submitting Document 4', { type: 'error' })
+                  }
             })
             setDisableDocument4(true);
             setShowDocument4Info(true);
@@ -344,14 +378,20 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
             const headers={'Content-Type': 'application/json'};
             const id = localStorage.getItem('is_company') == 1 ? id_company : id_user
             const type_client = localStorage.getItem('is_company') == 1 ? 'company' : 'user'
-            axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=${type_client}&status=${2}&id=${id}`,{headers})
+            axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=${type_client}&status=${2}&id=${id}`,{headers:headers})
             .then((res) => {
                 console.log("Response ",res)
                 toast("KYC Verification Successfully",{type:'success'})
             }).catch((err) => {
-                console.log("ERRRRRR",err)
-                toast("Error in KYC verification",{type:'error'})
-            })
+                if (err.response && err.response.status === 401) {
+                  // Redirect to login page on 401 Unauthorized
+                  localStorage.clear()
+                  navigate('/login');
+                } else {
+                    console.log("ERRRRRR",err)
+                    toast("Error in KYC verification",{type:'error'})
+                }
+              })
             setIsKYCCompleted(true)
         }
         else {

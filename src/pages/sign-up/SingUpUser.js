@@ -10,6 +10,9 @@ import { ACCESS_TOKEN } from '../../common/utils/config';
 const SignUpUser = () => {
   const navigate = useNavigate();
   const [flag, setFlag] = useState(0);
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [signupInput, setSignupInput] = useState({
     company_id: localStorage.getItem('company_id'),
     first_name: '',
@@ -48,7 +51,7 @@ const SignUpUser = () => {
       return;
     }
     setFlag(1);
-    const headers = { 'Content-Type': 'application/json' };
+    // const headers = { 'Content-Type': 'application/json' };
     if(localStorage.getItem('access_token') != null){
       axios
       .post(
@@ -61,8 +64,9 @@ const SignUpUser = () => {
           email_address: signupInput.email_address,
           company_id: signupInput.company_id,
           users_type_id:signupInput.users_type_id
+          
         },
-        { headers },
+        {  headers:headers  },
       )
       .then((res) => {
         console.log('Reponse of Sign up', res);
@@ -74,8 +78,13 @@ const SignUpUser = () => {
         }
       })
       .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          localStorage.clear()
+          navigate('/login');
+      } else {
         console.log('Error in signup', err);
         toast('Some Error in Sign Up', { type: 'error' });
+      }
       });
     }else{
     axios
@@ -86,11 +95,10 @@ const SignUpUser = () => {
           last_name: signupInput.last_name,
           password: signupInput.password,
           contact_no: signupInput.contact_no,
-          email_address: signupInput.email_address,
+          email_address: signupInput.email_address, 
           // company_id: signupInput.company_id,
           // users_type_id:signupInput.users_type_id
-        },
-        { headers },
+        },{ headers:headers }
       )
       .then((res) => {
         console.log('Reponse of Sign up', res);
@@ -102,8 +110,13 @@ const SignUpUser = () => {
         }
       })
       .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          localStorage.clear()
+          navigate('/login');
+      } else {
         console.log('Error in signup', err);
         toast('Some Error in Sign Up', { type: 'error' });
+      }
       });
     }
   };

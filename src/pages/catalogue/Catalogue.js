@@ -11,15 +11,21 @@ import { noData } from '../../common/images';
 import { Button } from 'flowbite-react';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { ACCESS_TOKEN } from '../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const Catalogue = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState('');
+  const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState('');
   const [downloadPopup, setDownloadPopup] = useState(false);
   const [loading, setLoading] = useState(false);
   const user_email = localStorage.getItem('user_email');
   const [itemsPerPage, setItemsPerPage] = useState(15);
+  const headers = {             
+    'Content-Type': 'multipart/form-data',
+    'Authorization': ACCESS_TOKEN};
   // const [currentItems, setCurrentItems] = useState([]);
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
@@ -98,7 +104,7 @@ const Catalogue = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${BACKEND_URL}/product/get_product_details/?page=${page}&page_size=${itemsPerPage}`,
+        `${BACKEND_URL}/product/get_product_details/?page=${page}&page_size=${itemsPerPage}`,{headers:headers}
       );
       if (response.status === 200) {
         setData(response.data);
@@ -109,9 +115,14 @@ const Catalogue = () => {
       }
       setLoading(false);
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        localStorage.clear()
+        navigate('/login');
+    } else {
       setLoading(false);
       setIncrementDisable(false);
       toast(`There is some error while fetching orders`, { type: 'error' });
+    }
     }
   };
 
@@ -167,12 +178,15 @@ const Catalogue = () => {
 
     try {
       // Make the POST request to the server using axios
-      const response = await axios.post(BACKEND_URL + '/product/add_product_catalogue', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          // "Authorization":ACCESS_TOKEN
-        },
-      });
+      const response = await axios.post(BACKEND_URL + '/product/add_product_catalogue', formData,
+        //  {
+        // headers: {
+        //   'Content-Type': 'multipart/form-data',
+        //   // "Authorization":ACCESS_TOKEN
+        // },
+      // }
+      {headers:headers}
+    );
 
       // Handle the response
       if (response.status === 200) {
@@ -184,20 +198,25 @@ const Catalogue = () => {
         toast('Failed to upload file:', { type: 'error' });
       }
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        localStorage.clear()
+        navigate('/login');
+    } else {
       console.error('Error uploading file:', error);
       toast('Error uploading file:', { type: 'error' });
+    }
     }
   };
 
   const handleSampleFile = () => {
-    const headers = { 'Content-Type': 'application/json' };
+    // const headers = { 'Content-Type': 'application/json' };
     axios
       .get(
         BACKEND_URL + '/product/get_sample_file/',
         {
           responseType: 'blob',
         },
-        { headers },
+        { headers:headers },
       )
       .then((res) => {
         const url = URL.createObjectURL(res.data);
@@ -214,7 +233,12 @@ const Catalogue = () => {
         document.body.removeChild(link);
       })
       .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          localStorage.clear()
+          navigate('/login');
+      } else {
         console.log('Error in File', err);
+      }
       });
   };
 
@@ -225,14 +249,19 @@ const Catalogue = () => {
       // "Authorization":ACCESS_TOKEN
     };
     axios
-      .get(BACKEND_URL + '/product/send_product_mail/', { headers })
+      .get(BACKEND_URL + '/product/send_product_mail/', { headers:headers })
       .then((res) => {
         setLoading(false);
         setDownloadPopup(true);
       })
       .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          localStorage.clear()
+          navigate('/login');
+      } else {
         console.log('Error in File', err);
         setLoading(false);
+      }
       });
   };
 

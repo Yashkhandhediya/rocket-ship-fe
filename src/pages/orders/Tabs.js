@@ -11,10 +11,14 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { temp_user_id } from './User';
 import { useSelector } from 'react-redux';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const Tabs = ({ tabs, tabClassNames, activeTab, setActiveTab, onTabChange = () => {} }) => {
   console.log('Activeeeeeeee', activeTab);
   const filteredOrders = useSelector((state) => state.filteredOrdersList);
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
@@ -48,7 +52,7 @@ const Tabs = ({ tabs, tabClassNames, activeTab, setActiveTab, onTabChange = () =
       const response = await axios.get(
         `${BACKEND_URL}/order/get_filtered_orders?created_by=${show_user_id}&${
           tid.id !== 'all' && `status=${tid.id}`
-        }&page=${page}&page_size=${itemsPerPage}`,
+        }&page=${page}&page_size=${itemsPerPage}`,{headers:headers}
       );
       setData(response.data);
       setLoading(false);

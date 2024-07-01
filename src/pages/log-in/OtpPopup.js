@@ -5,6 +5,7 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import ResetPassword from './ResetPassword';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const OtpPopup = ({
   userType = 'user',
@@ -13,6 +14,10 @@ const OtpPopup = ({
   upDatePassWord = false,
   companyId = null,
 }) => {
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
+
   console.log('DATAAAAAAAAA', userType);
   const is_super = localStorage.getItem('is_super');
   const [seconds, setSeconds] = useState(45);
@@ -52,28 +57,42 @@ const OtpPopup = ({
   };
 
   const handleSendOTP = () => {
-    const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+    
     if (upDatePassWord) {
       axios
-        .post(BACKEND_URL + `/users/generate_otp?email_id=${username}`, { headers })
+        .post(BACKEND_URL + `/users/generate_otp?email_id=${username}`, { headers:headers })
         .then((otpResponse) => {
           console.log(otpResponse);
         })
         .catch((otpError) => {
+          if (otpError.response && otpError.response.status === 401) {
+            sessionStorage.clear()
+            localStorage.clear()
+            toast.error('Session expired. Please login again.');
+            navigate('/login');
+        } else {
           console.error('Error fetching OTP:', otpError);
+        }
         });
     } else {
       axios
         .post(
-          BACKEND_URL + `/login/generate_otp?email_id=${username}&user_id=${userId}`,
-          { email_id: String(username), user_id: String(userId) },
-          { headers },
+          BACKEND_URL + `/login/generate_otp?email_id=${username}`,
+          { email_id: String(username) },
+          { headers: headers },
         )
         .then((otpResponse) => {
           console.log(otpResponse);
         })
         .catch((otpError) => {
+          if (otpError.response && otpError.response.status === 401) {
+            sessionStorage.clear()
+            localStorage.clear()
+            toast.error('Session expired. Please login again.');
+            navigate('/login');
+        } else {
           console.error('Error fetching OTP:', otpError);
+        }
         });
     }
   };
@@ -118,14 +137,14 @@ const OtpPopup = ({
     e.preventDefault();
     const joinOTP = OTP.join('');
     console.log('OTP checkingg', OTP, userId);
-    const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+    console.log(ACCESS_TOKEN)
     const tempId = userType === 'user' ? userId : companyId;
     const otpURL =
       userType === 'user'
-        ? `/login/verify_otp/?otp=${joinOTP}&user_id=${tempId}`
+        ? `/login/verify_otp/?otp=${joinOTP}`
         : `/company/verify_otp/?otp=${joinOTP}&id=${tempId}`;
     axios
-      .get(BACKEND_URL + otpURL, { otp: OTP, user_id: tempId }, { headers })
+      .get(BACKEND_URL + otpURL, { otp: OTP , headers:headers })
       .then((response) => {
         console.log(response);
         if (is_super == 3) {
@@ -151,6 +170,12 @@ const OtpPopup = ({
       })
       .catch((error) => {
         console.log(error);
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          localStorage.clear()
+          toast.error('Session expired. Please login again.');
+          navigate('/login');
+      } 
       });
     // navigate('/login')
   };
@@ -160,10 +185,12 @@ const OtpPopup = ({
     const joinOTP = OTP.join('');
     console.log('OTP checkingg', OTP, userId);
     const tempId = userType === 'user' ? userId : companyId;
-    const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+    const headers = {        
+      'Content-Type': 'application/json',
+      'Authorization': ACCESS_TOKEN};
     const verifyURL =
       userType === 'user'
-        ? `/users/verify_forgot_pass_otp/?otp=${joinOTP}&user_id=${tempId}`
+        ? `/users/verify_forgot_pass_otp/?otp=${joinOTP}`
         : `/company/verify_otp/?otp=${joinOTP}&id=${tempId}`;
     axios
       .get(BACKEND_URL + verifyURL, { headers })
@@ -183,6 +210,11 @@ const OtpPopup = ({
       })
       .catch((error) => {
         console.log(error);
+        if (error.response && error.response.status === 401) {
+          localStorage.clear()
+          toast.error('Session expired. Please login again.');
+          navigate('/login');
+      } 
       });
     // navigate('/login')
   };

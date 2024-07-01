@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import moment from 'moment';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { Loader } from '../../common/components';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 export default function ReturnTracking() {
   const [shipmentData, setShipmentData] = useState();
@@ -23,7 +24,14 @@ export default function ReturnTracking() {
 
     // Set the received string value in the component state
     axios
-      .get(`${BACKEND_URL}/return/${orderId}/track`)
+      .get(`${BACKEND_URL}/return/${orderId}/track`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': ACCESS_TOKEN
+          },
+        },
+      )
       .then(async (resp) => {
         if (resp.status === 200) {
           console.log(resp.data);
@@ -35,9 +43,15 @@ export default function ReturnTracking() {
           setLoading(false);
         }
       })
-      .catch(() => {
-        toast('There is some error while fetching orders.', { type: 'error' });
-        setLoading(false);
+      .catch((error) =>  {
+        if (error.response && error.response.status === 401) {
+          // Redirect to login page on 401 Unauthorized
+          localStorage.clear()
+          navigate('/login');
+        } else {
+          toast('There is some error while fetching orders.', { type: 'error' });
+          setLoading(false);
+        }
       });
   };
 
