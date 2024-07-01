@@ -51,7 +51,11 @@ const SignUp = () => {
       console.log("Response of Sign up", res)
       if (res.data.msg === "User already exits") {
         toast("User Already Exists", { type: 'error' });
-      } else {
+      } 
+      else if (res.data.msg === "Company already exits") {
+        toast("Company Already Exists", { type: 'error' });
+        } 
+        else {
         toast("Sign Up Successfully", { type: 'success' });
         navigate('/login');
       }
