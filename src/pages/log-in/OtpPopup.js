@@ -15,6 +15,7 @@ const OtpPopup = ({
 }) => {
   console.log('DATAAAAAAAAA', userType);
   const is_super = localStorage.getItem('is_super');
+  const id_user = localStorage.getItem('user_id');
   const [seconds, setSeconds] = useState(45);
   const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
   const navigate = useNavigate();
@@ -136,14 +137,15 @@ const OtpPopup = ({
         }
         if (response.data.flag == 1 && is_super != 3) {
           toast('Login Success', { type: 'success' });
-          navigate('/seller/home');
+          // navigate('/seller/home');
+          navigate(`/all-indent/${id_user}`);
           window.location.reload();
         } else {
           setMessage(true);
           toast('OTP Mismatched', { type: 'error' });
           console.log('OTP Mismatched');
         }
-        window.location.reload()
+        window.location.reload();
         // if(1){
         //   toast('Login Success',{type:'success'})
         //   navigate('/')
