@@ -128,6 +128,7 @@ const OtpPopup = ({
     axios
       .get(BACKEND_URL + otpURL, { otp: OTP, user_id: tempId }, { headers })
       .then((response) => {
+        localStorage.setItem('is_otpVerified', JSON.stringify(true));
         console.log(response);
         if (is_super == 3) {
           toast('Login Success', { type: 'success' });
