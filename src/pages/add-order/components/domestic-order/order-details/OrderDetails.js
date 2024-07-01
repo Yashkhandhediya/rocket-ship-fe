@@ -10,7 +10,7 @@ import { cloneDeep, isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import { setEditOrder } from '../../../../../redux';
 import { useLocation } from 'react-router-dom';
-import Autosuggest from 'react-autosuggest';
+// import Autosuggest from 'react-autosuggest';
 
 export let package_info = {
   length: 0,

@@ -32,8 +32,8 @@ const Sidebar = () => {
           return nav.path ? (
             <Link to={nav?.path} key={i} className="translate-y-0">
               <div className="group/sidebarItem mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#c38d8d]">
-                <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" />
-                <img src={nav.hoverIcon} className="hidden h-6 w-6 group-hover/sidebarItem:block" />
+                {/* <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" /> */}
+                {/* <img src={nav.hoverIcon} className="hidden h-6 w-6 group-hover/sidebarItem:block" /> */}
                 <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#912517] ">
                   {nav.title}
                 </span>

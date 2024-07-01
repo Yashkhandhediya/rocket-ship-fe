@@ -23,43 +23,42 @@ const user_id = localStorage.getItem('user_id');
 const is_company = localStorage.getItem('is_company');
 const is_super = localStorage.getItem('is_super');
 const access_modules = localStorage.getItem('modules');
-console.log("Modules Length",access_modules)
-
-export let sidebarLinks = [];
+console.log('Modules Length', access_modules);
 
 const mapModuleToLink = (module) => ({
   title: module.label,
   path: module.url,
-  icon: module.icon,
-  hoverIcon: module.icon,
+  // icon: module.icon,
+  // hoverIcon: module.icon,
 });
 
-sidebarLinks = [
-  {
-          title: 'Truck Booking',
-          // path: '/book',
-          icon: book,
-          hoverIcon: book,
-          subMenuOptions: [
-            !parseInt(is_admin) && {
-              title: 'Book',
-              path: '/book',
-            },
-            !parseInt(is_admin) && {
-              title: 'Create Indent',
-              path: '/indent',
-            },
-            !parseInt(is_admin) && {
-              title: 'All Indent',
-              path: '/all-indent/' + user_id,
-            },
-            parseInt(is_admin) && {
-              title: 'User Booking',
-              path: '/User',
-            },
-          ].filter((option) => option),
-        },
-]
+export const sidebarLinks = [
+  !parseInt(is_admin) && {
+    title: 'Book',
+    path: '/book',
+    // icon: book,
+    // hoverIcon: book,
+  },
+  !parseInt(is_admin) && {
+    title: 'Create Indent',
+    path: '/indent',
+    // icon: book,
+    // hoverIcon: book,
+  },
+  !parseInt(is_admin) && {
+    title: 'All Indent',
+    path: '/all-indent/' + user_id,
+    // icon: book,
+    // hoverIcon: book,
+  },
+  parseInt(is_admin) && {
+    title: 'User Booking',
+    path: '/User',
+    // icon: book,
+    // hoverIcon: book,
+  },
+].filter((option) => option);
+
 
 // if(access_modules == null || access_modules?.length == 0){
 // if (localStorage.getItem('is_super') != 3) {

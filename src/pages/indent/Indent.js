@@ -36,8 +36,8 @@ const Indent = () => {
   //     destination_id:''
   // })
   const [selectedCity, setSelectedCity] = useState({
-    source: `${data?.from_city || ''} ${data?.from_state || ''} ${data?.from_country || ''}`,
-    destination: `${data?.to_city || ''} ${data?.to_state || ''} ${data?.to_country || ''}` || '',
+    source: `${data?.from_area || ''} ${data?.from_city || ''} ${data?.from_state || ''} ${data?.from_country || ''}`,
+    destination: `${data?.to_area || ''} ${data?.to_city || ''} ${data?.to_state || ''} ${data?.to_country || ''}` || '',
   });
   const [isDropdownOpen, setIsDropdownOpen] = useState({
     source: false,
@@ -281,12 +281,14 @@ const Indent = () => {
           kilometer: totalKm,
           // coordinator_name:personInfo?.coordinate_name,
           // coordinator_mobile:personInfo?.coordinate_number,
-          to_city: selectedCity?.destination.split(' ')[0],
-          to_state: selectedCity?.destination.split(' ')[1],
-          to_country: selectedCity?.destination.split(' ')[2],
-          from_city: selectedCity?.source.split(' ')[0],
-          from_state: selectedCity?.source.split(' ')[1],
-          from_country: selectedCity?.source.split(' ')[2],
+          to_area: selectedArea?.destination.split(' ')[0],
+          to_city: selectedCity?.destination.split(' ')[1],
+          to_state: selectedCity?.destination.split(' ')[2],
+          to_country: selectedCity?.destination.split(' ')[3],
+          from_area: selectedArea?.source.split(' ')[0],
+          from_city: selectedCity?.source.split(' ')[1],
+          from_state: selectedCity?.source.split(' ')[2],
+          from_country: selectedCity?.source.split(' ')[3],
           ...(personInfo?.coordinate_name && { coordinator_name: personInfo.coordinate_name }),
           ...(personInfo?.coordinate_number && { coordinator_mobile: personInfo.coordinate_number }),
           ...(remarks && { remarks: remarks }),
@@ -399,12 +401,14 @@ const Indent = () => {
           kilometer: totalKm,
           // coordinator_name:personInfo?.coordinate_name,
           // coordinator_mobile:personInfo?.coordinate_number,
-          to_city: selectedCity?.destination.split(' ')[0],
-          to_state: selectedCity?.destination.split(' ')[1],
-          to_country: selectedCity?.destination.split(' ')[2],
-          from_city: selectedCity?.source.split(' ')[0],
-          from_state: selectedCity?.source.split(' ')[1],
-          from_country: selectedCity?.source.split(' ')[2],
+          to_area: selectedArea?.destination.split(' ')[0],
+          to_city: selectedCity?.destination.split(' ')[1],
+          to_state: selectedCity?.destination.split(' ')[2],
+          to_country: selectedCity?.destination.split(' ')[3],
+          from_area: selectedArea?.source.split(' ')[0],
+          from_city: selectedCity?.source.split(' ')[1],
+          from_state: selectedCity?.source.split(' ')[2],
+          from_country: selectedCity?.source.split(' ')[3],
           ...(personInfo?.coordinate_name && { coordinator_name: personInfo.coordinate_name }),
           ...(personInfo?.coordinate_number && { coordinator_mobile: personInfo.coordinate_number }),
           ...(remarks && { remarks: remarks }),
@@ -542,7 +546,7 @@ const Indent = () => {
           <div className="flex w-1/2 flex-col">
             <p className="flex flex-row items-center justify-between">
               <span className="font-medium">
-                <span className="text-lg text-red-800">*</span> From City, State, Country
+                <span className="text-lg text-red-800">*</span> From Area, City, State, Country
               </span>
               <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-700 text-[18px] text-white">
                 <span style={{ marginTop: '-2px' }}>+</span>
@@ -561,7 +565,7 @@ const Indent = () => {
           <div className="flex w-1/2 flex-col">
             <p className="flex flex-row items-center justify-between">
               <span className="font-medium">
-                <span className="text-lg text-red-800">*</span> To City, State, Country
+                <span className="text-lg text-red-800">*</span> To Area, City, State, Country
               </span>
               <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-700 text-[18px] text-white">
                 <span style={{ marginTop: '-2px' }}>+</span>
@@ -609,14 +613,14 @@ const Indent = () => {
               </label>
             </div>
           </div>
-          <div className="flex w-1/2 justify-end gap-4 text-[12px]">
+          {/* <div className="flex w-1/2 justify-end gap-4 text-[12px]">
             <p>
               <strong>Coordinater Name</strong>: Mann thakkar
             </p>
             <p>
               <strong>Mobile no</strong>: 8401747809
             </p>
-          </div>
+          </div> */}
         </div>
 
         <div className="flex w-[80%] flex-wrap justify-between gap-4 rounded p-6 shadow">
@@ -822,6 +826,7 @@ const Indent = () => {
               </div>
             </div>
           </div>
+          
           <div className="w-[49%]">
             <Field
               value={totalKm}
@@ -835,46 +840,46 @@ const Indent = () => {
             />
           </div>
 
-          {/* <div className="w-[49%]">
+          <div className="w-[49%]">
             <div className="flex w-full">
               <div className="flex-grow pr-2">
                 <Field
                   type="text"
                   id="coordinate_name"
-                  label="Co-Ordinate Name"
+                  label="Coordinate Name"
                   inputClassNames="text-xs"
                   labelClassNames="text-xs"
                   placeHolder="Enter Name"
-                  required={true}
-                  // value={personInfo?.coordinate_name}
-                  value={`Mann thakkar`}
-                  isDisabled={true}
-                  // onChange={handlePersonInfoChange}
+                  required={false}
+                  value={personInfo?.coordinate_name}
+                  // value={`Mann thakkar`}
+                  isDisabled={false}
+                  onChange={handlePersonInfoChange}
                 />
               </div>
             </div>
-          </div> */}
-          {/* <div className="w-[49%]">
+          </div>
+          <div className="w-[49%]">
             <Field
               id="coordinate_number"
-              value={`8401747809`}
-              // value={personInfo?.coordinate_number}
+              // value={`8401747809`}
+              value={personInfo?.coordinate_number}
               label="Mobile No."
               inputClassNames="text-xs"
               labelClassNames="text-xs"
               type="number"
               placeholder="Enter Mobile Number"
-              isDisabled={true}
-              // onChange={handlePersonMobileNumberChange}
-              //   leftAddOn="+91"
-              // onBlur={() => {
-              //     setIsValidPhone(/^\d{10}$/.test(personInfo?.coordinate_number));
-              // }}
+              isDisabled={false}
+              onChange={handlePersonMobileNumberChange}
+                leftAddOn="+91"
+              onBlur={() => {
+                  setIsValidPhone(/^\d{10}$/.test(personInfo?.coordinate_number));
+              }}
             />
             {!isValidPhone && (
               <p className="mt-1 text-xs text-red-500">Please enter a valid 10-digit number.</p>
             )}
-          </div> */}
+          </div>
         </div>
         <button
           className="bottom-4 ml-10 rounded-full bg-blue-600 p-2 text-lg font-semibold text-white hover:bg-blue-800 md:w-1/2"

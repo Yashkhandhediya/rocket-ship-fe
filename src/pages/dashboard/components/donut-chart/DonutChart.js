@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import Chart from 'chart.js/auto';
+import { Chart } from 'chart.js/auto';
 import { noShipment } from '../../../../common/images';
 
 const DonutChart = ({ data, title }) => {
@@ -7,6 +7,7 @@ const DonutChart = ({ data, title }) => {
   const chartInstance = useRef(null);
 
   useEffect(() => {
+    console.log('Chart:', Chart); // Add this line to debug
     if (chartInstance.current) {
       chartInstance.current.destroy();
     }
