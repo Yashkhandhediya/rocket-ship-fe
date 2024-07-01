@@ -25,12 +25,12 @@ const Address_Modal = ({ setShow, addressId, addressData, fetchUserAddressList }
 
   const [address, setAddress] = useState({
     nickName: addressId ? dataAddress?.tag : '',
-    contactName: addressId ? `${dataAddress?.first_name} ${dataAddress?.last_name}` : '',
+    contactName: addressId ? `${dataAddress?.first_name || ''} ${dataAddress?.last_name || ''}` : '',
     phone: addressId ? dataAddress?.contact_no : '',
     alternatePhone: '',
     email: addressId ? dataAddress?.email_address : '',
     addressLine1: addressId ? dataAddress?.complete_address : '',
-    addressLine2: '',
+    addressLine2: addressId ? dataAddress?.line2 :'',
     pincode: addressId ? dataAddress?.pincode : '',
     city: addressId ? dataAddress?.city : '',
     state: addressId ? dataAddress?.state : '',

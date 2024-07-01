@@ -197,7 +197,9 @@ const Manage_pickup_add = () => {
               </div>
             </div>
             {pickupAddress &&
-              pickupAddress.map((address, i) => {
+              pickupAddress
+              .sort((a, b) => b.id - a.id) 
+              .map((address, i) => {
                 return (
                   <div key={address.id} className="flex flex-col pr-4">
                     <div
@@ -209,7 +211,7 @@ const Manage_pickup_add = () => {
                           openAddress == 1 ? 'rounded rounded-b-none border-[#99999928]' : 'rounded-lg shadow'
                         } w-full border-[#99999928] border-b-[#eee] px-3 py-2 text-[14px] text-[#444] `}>
                         {/* Address tag */}
-                        <div>Primary</div>
+                        <div className='w-[10%]'>{address?.tag || 'Primary'}</div>
                         {/* middle column */}
                         <div className="flex flex-row items-center gap-4">
                           <div>
