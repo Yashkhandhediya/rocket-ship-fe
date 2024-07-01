@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar'
 import { cityList } from './cities'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Modal } from 'flowbite-react';
 
 const Book = () => {
@@ -123,6 +123,12 @@ const Book = () => {
     return (
         <PageWithSidebar>
             <div className="flex flex-col items-center w-full justify-center h-full">
+            {localStorage.getItem('is_kyc') == 1 && <div className="w-[99%] p-2 ml-2 mr-4 mb-12 -mt-16 bg-red-600 border shadow-md rounded-lg hover:underline" style={{ textAlign: 'center' }}>
+                <marquee className='text-white font-semibold'><Link to={'/seller/kyc'} >Click here to complete your KYC and get non-disrupted shipping and COD remittances</Link></marquee>
+            </div>}
+            {localStorage.getItem('is_kyc') == 2 && <div className="w-[99%] font-semibold text-md p-2 ml-2 mr-4 mb-12 -mt-16 bg-yellow-400 border shadow-md rounded-lg hover:underline" style={{ textAlign: 'center' }}>
+                <marquee className='text-white'>KYC Verification Is Pending</marquee>
+            </div>}
                 <p className='text-6xl font-bold'>Best Transport Service In India</p>
                 <p className='border-[3px] border-red-500 w-[5%] rounded mt-6 mb-3'></p>
                 <p className='w-[85%] text-center text-lg text-[#707070]'>
