@@ -583,8 +583,8 @@ const Indent = () => {
           </div>
         </div>
 
-        <div className="mb-3 w-[80%] items-center md:flex">
-          <div className="flex w-1/2 justify-end gap-5">
+        <div className="mb-3 w-[80%] justify-center items-center md:flex">
+          <div className="flex w-1/2 justify-center gap-5">
             <div className="text-lg font-medium">{'Type Of Shipment :'}</div>
             <div className="flex items-center gap-2">
               <input
@@ -613,14 +613,6 @@ const Indent = () => {
               </label>
             </div>
           </div>
-          {/* <div className="flex w-1/2 justify-end gap-4 text-[12px]">
-            <p>
-              <strong>Coordinater Name</strong>: Mann thakkar
-            </p>
-            <p>
-              <strong>Mobile no</strong>: 8401747809
-            </p>
-          </div> */}
         </div>
 
         <div className="flex w-[80%] flex-wrap justify-between gap-4 rounded p-6 shadow">
