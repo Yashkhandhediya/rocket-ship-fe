@@ -42,6 +42,10 @@ const Allindent = () => {
 
   console.log('IDFFFFFF', selectedTab);
 
+  if(url_user_id == 'undefined' && localStorage.getItem('is_company') == 1){
+    navigate('/User')
+  }
+
   function formatTimestamp(timestamp) {
     const date = new Date(timestamp);
 

@@ -3,7 +3,7 @@ import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithS
 import { cityList } from '../book-truck/cities';
 import { CustomMultiSelect, Field, Loader } from '../../common/components';
 import { materialTypes, truckTypes, weights, weightTypes } from './data';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../common/utils/env.config';
@@ -11,13 +11,16 @@ import moment from 'moment';
 import { modifyFlag, modifyId } from './Allindent';
 import { id_user } from '../log-in/LogIn';
 import { ACCESS_TOKEN } from '../../common/utils/config';
+import Address from './Address';
 
 export let info = [];
 
 const Indent = () => {
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const id_user = localStorage.getItem('user_id');
   const [isValidPhone, setIsValidPhone] = useState(true);
+  const [isPopupVisible, setPopupVisible] = useState(false);
   const data = location.state?.data || {};
   console.log('Dataaaaaa', data);
   // console.log("Dataaaaaaaa",props.location.state.targetPrice)
@@ -141,6 +144,14 @@ const Indent = () => {
     //     setTotalKm(0)
     // }
   }, [sourcePin, destinationPin]);
+
+  useEffect(() => {
+    if (searchParams.get('open') === 'true') {
+      setPopupVisible(true);
+    } else {
+      setPopupVisible(false);
+    }
+  }, [searchParams]);
 
   function Dropdown({ isOpen, type }) {
     if (!isOpen) return null;
@@ -507,10 +518,18 @@ const Indent = () => {
     }));
   };
 
+
+  const togglePopup = () => {
+    searchParams.set('open', 'false');
+    setSearchParams(searchParams);
+    setPopupVisible(!isPopupVisible);
+  };
+
   return (
     <PageWithSidebar>
       {isLoading && <Loader />}
       <div className="flex flex-col items-center justify-center gap-4 p-3">
+      <Address isVisible={isPopupVisible} onClose={togglePopup} />
         <div className="flex w-[80%] flex-row justify-between gap-8 rounded p-4 shadow">
           <div className="flex w-1/2 flex-col">
             <Field
@@ -872,7 +891,8 @@ const Indent = () => {
               <p className="mt-1 text-xs text-red-500">Please enter a valid 10-digit number.</p>
             )}
           </div>
-          <div className="w-[100%]">
+          <div className="w-[100%] flex flex-row">
+          <div className="w-[80%]">
             <Field
               id="address"
               // value={personInfo?.coordinate_number}
@@ -884,6 +904,8 @@ const Indent = () => {
               isDisabled={false}
               onChange={handlePersonMobileNumberChange}
             />
+            </div>
+            <button onClick={togglePopup} className="ml-2 mt-6 p-2 text-sm font-semibold bg-blue-500 text-white rounded">Add Address</button>
           </div>
         </div>
         <button

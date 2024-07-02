@@ -324,7 +324,7 @@ const routes = createBrowserRouter([
   },
   {
     path: '/add-address',
-    element: <PrivateRoute component={<Address />} />,
+    element: <PrivateRoute component={<Indent />} />,
   },
 ]);
 
