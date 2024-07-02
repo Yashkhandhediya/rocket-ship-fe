@@ -14,7 +14,9 @@ import {
   return1,
   boost,
   newHome,
+  
 } from '../../icons/sidebar-icons';
+import truckSize from '../../icons/sidebar-icons/truckSize.svg' 
 import { logout } from './utils';
 import { modules } from '../../../pages/manage-role/user-management/constants';
 
@@ -23,41 +25,55 @@ const user_id = localStorage.getItem('user_id');
 const is_company = localStorage.getItem('is_company');
 const is_super = localStorage.getItem('is_super');
 const access_modules = localStorage.getItem('modules');
-console.log('Modules Length', access_modules);
 
 const mapModuleToLink = (module) => ({
   title: module.label,
   path: module.url,
-  // icon: module.icon,
-  // hoverIcon: module.icon,
+  icon: module.icon,
+  hoverIcon: module.icon,
 });
 
 export const sidebarLinks = [
   !parseInt(is_admin) && {
     title: 'Book',
     path: '/book',
-    // icon: book,
-    // hoverIcon: book,
+    icon: book,
+    hoverIcon: book,
   },
   !parseInt(is_admin) && {
     title: 'Create Indent',
     path: '/indent',
-    // icon: book,
-    // hoverIcon: book,
+    icon: book,
+    hoverIcon: book,
   },
   !parseInt(is_admin) && {
     title: 'All Indent',
     path: '/all-indent/' + user_id,
-    // icon: book,
-    // hoverIcon: book,
+    icon: book,
+    hoverIcon: book,
+  },
+  !parseInt(is_admin) && {
+    title: 'Truck Size',
+    path: '#',
+    onClick: 'openTruckSizeModal',
+    icon: truckSize,
+    hoverIcon: truckSize,
+  },
+  !parseInt(is_admin) && {
+    title: 'Material Type',
+    path: '#',
+    onClick: 'openMaterialTypeModal',
+    icon: book,
+    hoverIcon: book,
   },
   parseInt(is_admin) && {
     title: 'User Booking',
     path: '/User',
-    // icon: book,
-    // hoverIcon: book,
+    icon: book,
+    hoverIcon: book,
   },
 ].filter((option) => option);
+
 
 
 // if(access_modules == null || access_modules?.length == 0){

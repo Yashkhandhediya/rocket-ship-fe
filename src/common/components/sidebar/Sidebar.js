@@ -2,15 +2,35 @@ import { Link } from 'react-router-dom';
 import { sidebarLinks } from './contants';
 import { useState } from 'react';
 import { logo, logo_main } from '../../images';
+import Modal from './Modal'; // Ensure the Modal component is correctly imported
 
 const Sidebar = () => {
-
   const [openAccordion, setOpenAccordion] = useState(0);
+  const [isTruckSizeModalOpen, setTruckSizeModalOpen] = useState(false);
+  const [isMaterialTypeModalOpen, setMaterialTypeModalOpen] = useState(false);
+
   const handleAccordionToggle = (index) => {
     setOpenAccordion((prev) => (prev === index ? 0 : index));
   };
+
   const handleMouseLeave = () => {
     setOpenAccordion(0);
+  };
+
+  const openTruckSizeModal = () => setTruckSizeModalOpen(true);
+  const closeTruckSizeModal = () => setTruckSizeModalOpen(false);
+
+  const openMaterialTypeModal = () => setMaterialTypeModalOpen(true);
+  const closeMaterialTypeModal = () => setMaterialTypeModalOpen(false);
+
+  const handleTruckSizeSubmit = (value) => {
+    console.log("Truck Size submitted:", value);
+    // Handle submission logic here
+  };
+
+  const handleMaterialTypeSubmit = (value) => {
+    console.log("Material Type submitted:", value);
+    // Handle submission logic here
   };
 
   return (
@@ -19,31 +39,46 @@ const Sidebar = () => {
       className="group/sidebar hover:z-100 fixed left-0 top-0 z-50 h-full w-[70px] overflow-x-hidden overflow-y-hidden bg-[#912517] text-white transition-all duration-500 hover:w-[218px] hover:overflow-y-auto [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar]:w-1"
       onMouseLeave={handleMouseLeave}
     >
-      <div className="z-100 sticky top-0 h-[62px] w-full translate-y-0 bg-[#912517] pb-4 pl-5 pr-3.5 pt-2.5">
-        <img src={logo_main} className="h-[34px] object-contain group-hover/sidebar:hidden" />
+      <div className="z-100 flex justify-center align-center sticky object-fit top-0 h-[10%] w-[50%] translate-y-0 bg-[#912517] pt-2.5">
+      <div className="mb-2">
+
+        {/* <img src={logo_main} className="h-[34px] object-contain group-hover/sidebar:hidden" /> */}
         <img
           src={logo}
-          className="hidden h-[34px] min-w-[155px] object-contain group-hover/sidebar:block "
+          className="hidden group-hover/sidebar:block"
         />
       </div>
+      </div>
       <hr className="mb-4 border-[#c] text-[#0000001a] md:hidden" />
-      <div>
+      <div className="mt-6">
         {sidebarLinks.map((nav, i) => {
-          return nav.path ? (
-            <Link to={nav?.path} key={i} className="translate-y-0">
-              <div className="group/sidebarItem mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#c38d8d]">
-                {/* <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" /> */}
-                {/* <img src={nav.hoverIcon} className="hidden h-6 w-6 group-hover/sidebarItem:block" /> */}
-                <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#912517] ">
-                  {nav.title}
-                </span>
-              </div>
-            </Link>
-          ) : (
-            nav.subMenuOptions ? (
-              <>
+          if (nav.path) {
+            return (
+              <Link
+                to={nav?.path}
+                key={i}
+                className="translate-y-0"
+                onClick={(e) => {
+                  if (nav.onClick) {
+                    e.preventDefault();
+                    if (nav.onClick === 'openTruckSizeModal') openTruckSizeModal();
+                    if (nav.onClick === 'openMaterialTypeModal') openMaterialTypeModal();
+                  }
+                }}
+              >
+                <div className="group/sidebarItem mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#c38d8d]">
+                <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" />
+                <img src={nav.hoverIcon} className="hidden h-6 w-6 group-hover/sidebarItem:block" />
+                  <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#912517] ">
+                    {nav.title}
+                  </span>
+                </div>
+              </Link>
+            );
+          } else if (nav.subMenuOptions) {
+            return (
+              <div key={i}>
                 <div
-                  key={i}
                   className="group/sidebarItem mx-3.5 mb-3 flex cursor-pointer items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#980909]"
                   onClick={() => handleAccordionToggle(i)}
                   aria-expanded={openAccordion === i}
@@ -67,38 +102,54 @@ const Sidebar = () => {
                       </svg>
                     </span>
                   </div>
-
                 </div>
                 <div id={'accordion-collapse-body-1'} className={`${openAccordion === i ? 'block' : 'hidden'}`} aria-labelledby={'accordion-collapse-heading-1'}>
                   <div className="ml-6 font-normal">
-                    {nav.subMenuOptions && nav.subMenuOptions.map((subNav, i) => {
-                      return (
-                        <Link to={subNav.path} key={i} className="translate-y-0">
-                          <div className="group/sidebarItem mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#980909]">
-                            <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#980909] ">
-                              {subNav.title}
-                            </span>
-                          </div>
-                        </Link>
-                      );
-                    })}
+                    {nav.subMenuOptions && nav.subMenuOptions.map((subNav, i) => (
+                      <Link to={subNav.path} key={i} className="translate-y-0">
+                        <div className="group/sidebarItem mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#980909]">
+                          <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#980909] ">
+                            {subNav.title}
+                          </span>
+                        </div>
+                      </Link>
+                    ))}
                   </div>
                 </div>
-              </>
-            ) : (
-              <div key={i} className="translate-y-0" onClick={nav?.onClick}>
+              </div>
+            );
+          } else {
+            return (
+              <div key={i} className="translate-y-0" onClick={() => {
+                if (nav.onClick === 'openTruckSizeModal') openTruckSizeModal();
+                if (nav.onClick === 'openMaterialTypeModal') openMaterialTypeModal();
+              }}>
                 <div className="group/sidebarItem mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#980909]">
-                  <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" />
-                  <img src={nav.hoverIcon} className="hidden h-6 w-6 group-hover/sidebarItem:block" />
                   <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#980909] ">
                     {nav.title}
                   </span>
                 </div>
               </div>
-            )
-          );
+            );
+          }
         })}
       </div>
+      <Modal
+        isOpen={isTruckSizeModalOpen}
+        onClose={closeTruckSizeModal}
+        title="Truck Size"
+        label="Truck Size"
+        placeholder="Enter Truck Size"
+        onSubmit={handleTruckSizeSubmit}
+      />
+      <Modal
+        isOpen={isMaterialTypeModalOpen}
+        onClose={closeMaterialTypeModal}
+        title="Material Type"
+        label="Material Type"
+        placeholder="Enter Material Type"
+        onSubmit={handleMaterialTypeSubmit}
+      />
     </div>
   );
 };

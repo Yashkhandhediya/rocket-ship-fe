@@ -4,11 +4,11 @@ import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '../../../common/utils/env.config';
-// import { FaSearch } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
 import { CustomMultiSelect } from '../../../common/components';
 import { modes, regions, sorts } from '../constants';
-// import { FiPhoneCall, FiUser, FiMapPin } from 'react-icons/fi';
-// import { FaUserTie } from 'react-icons/fa';
+import { FiPhoneCall, FiUser, FiMapPin } from 'react-icons/fi';
+import { FaUserTie } from 'react-icons/fa';
 import { Bike } from '../../../common/icons';
 
 function Courier_Selection() {
