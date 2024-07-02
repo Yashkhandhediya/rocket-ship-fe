@@ -18,7 +18,7 @@ const Modal = ({ isOpen, onClose, title, label, placeholder, onSubmit }) => {
             name="inputField"
             type="text"
             placeholder={placeholder}
-            className="w-full p-2 border border-gray-300 rounded-md mb-4"
+            className="w-full p-2 border border-gray-300 rounded-md mb-4 text-black"
           />
           <div className="flex justify-end space-x-2">
             <button

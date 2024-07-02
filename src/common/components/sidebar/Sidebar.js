@@ -42,7 +42,7 @@ const Sidebar = () => {
       <div className="z-100 flex justify-center align-center sticky object-fit top-0 h-[10%] w-[50%] translate-y-0 bg-[#912517] pt-2.5">
       <div className="mb-2">
 
-        {/* <img src={logo_main} className="h-[34px] object-contain group-hover/sidebar:hidden" /> */}
+        <img src={logo} className="h-[80px] w-[180px] group-hover/sidebar:hidden" />
         <img
           src={logo}
           className="hidden group-hover/sidebar:block"
@@ -69,7 +69,7 @@ const Sidebar = () => {
                 <div className="group/sidebarItem mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#c38d8d]">
                 <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" />
                 <img src={nav.hoverIcon} className="hidden h-6 w-6 group-hover/sidebarItem:block" />
-                  <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#912517] ">
+                  <span className="ml-3 truncate text-base group-hover/sidebarItem:text-[#912517] ">
                     {nav.title}
                   </span>
                 </div>
