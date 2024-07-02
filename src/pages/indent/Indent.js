@@ -281,11 +281,11 @@ const Indent = () => {
           kilometer: totalKm,
           // coordinator_name:personInfo?.coordinate_name,
           // coordinator_mobile:personInfo?.coordinate_number,
-          to_area: selectedArea?.destination.split(' ')[0],
+          to_area: selectedCity?.destination.split(' ')[0],
           to_city: selectedCity?.destination.split(' ')[1],
           to_state: selectedCity?.destination.split(' ')[2],
           to_country: selectedCity?.destination.split(' ')[3],
-          from_area: selectedArea?.source.split(' ')[0],
+          from_area: selectedCity?.source.split(' ')[0],
           from_city: selectedCity?.source.split(' ')[1],
           from_state: selectedCity?.source.split(' ')[2],
           from_country: selectedCity?.source.split(' ')[3],
@@ -401,11 +401,11 @@ const Indent = () => {
           kilometer: totalKm,
           // coordinator_name:personInfo?.coordinate_name,
           // coordinator_mobile:personInfo?.coordinate_number,
-          to_area: selectedArea?.destination.split(' ')[0],
+          to_area: selectedCity?.destination.split(' ')[0],
           to_city: selectedCity?.destination.split(' ')[1],
           to_state: selectedCity?.destination.split(' ')[2],
           to_country: selectedCity?.destination.split(' ')[3],
-          from_area: selectedArea?.source.split(' ')[0],
+          from_area: selectedCity?.source.split(' ')[0],
           from_city: selectedCity?.source.split(' ')[1],
           from_state: selectedCity?.source.split(' ')[2],
           from_country: selectedCity?.source.split(' ')[3],
@@ -871,6 +871,19 @@ const Indent = () => {
             {!isValidPhone && (
               <p className="mt-1 text-xs text-red-500">Please enter a valid 10-digit number.</p>
             )}
+          </div>
+          <div className="w-[100%]">
+            <Field
+              id="address"
+              // value={personInfo?.coordinate_number}
+              label="Address"
+              inputClassNames="text-xs"
+              labelClassNames="text-xs"
+              type="text"
+              placeholder="Enter Address"
+              isDisabled={false}
+              onChange={handlePersonMobileNumberChange}
+            />
           </div>
         </div>
         <button
