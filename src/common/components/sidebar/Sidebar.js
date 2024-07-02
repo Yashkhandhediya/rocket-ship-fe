@@ -3,11 +3,16 @@ import { sidebarLinks } from './contants';
 import { useState } from 'react';
 import { logo, logo_main } from '../../images';
 import Modal from './Modal'; // Ensure the Modal component is correctly imported
+import axios from 'axios';
+import { BACKEND_URL } from '../../utils/env.config';
+import { toast } from 'react-toastify';
 
 const Sidebar = () => {
   const [openAccordion, setOpenAccordion] = useState(0);
   const [isTruckSizeModalOpen, setTruckSizeModalOpen] = useState(false);
   const [isMaterialTypeModalOpen, setMaterialTypeModalOpen] = useState(false);
+  const [truckSize,setTruckSize] = useState(null)
+  const [materialType,setMaterialType] = useState(null)
 
   const handleAccordionToggle = (index) => {
     setOpenAccordion((prev) => (prev === index ? 0 : index));
@@ -23,14 +28,34 @@ const Sidebar = () => {
   const openMaterialTypeModal = () => setMaterialTypeModalOpen(true);
   const closeMaterialTypeModal = () => setMaterialTypeModalOpen(false);
 
-  const handleTruckSizeSubmit = (value) => {
-    console.log("Truck Size submitted:", value);
-    // Handle submission logic here
+  const handleTruck = (value) => {
+    setTruckSize(value)
+  }
+
+  const handleMaterial = (value) => {
+    setMaterialType(value)
+  }
+
+  const handleTruckSizeSubmit = () => {
+    axios.post(BACKEND_URL + `/trucktype/create_truck_type/?created_by=${localStorage.getItem('company_id')}&truck_type=${truckSize}`)
+    .then((response) => { 
+      console.log("Truck Size created:", response.data);
+      toast('Truck Size Created',{type:'success'})
+    }).catch((err) => {
+      console.log("Error while creating Truck Size:", err);
+      toast('Error while creating Truck Size',{type:'error'})
+    })
   };
 
-  const handleMaterialTypeSubmit = (value) => {
-    console.log("Material Type submitted:", value);
-    // Handle submission logic here
+  const handleMaterialTypeSubmit = () => {
+    axios.post(BACKEND_URL + `/materialtype/create_material_type/?created_by=${localStorage.getItem('company_id')}&material_type=${materialType}`)
+    .then((response) => { 
+      console.log("Material Type created:", response.data);
+      toast('Material Type Created',{type:'success'})
+    }).catch((err) => {
+      console.log("Error while creating Material Type:", err);
+      toast('Error while creating Material Type',{type:'error'})
+    })
   };
 
   return (
@@ -141,6 +166,8 @@ const Sidebar = () => {
         label="Truck Size"
         placeholder="Enter Truck Size"
         onSubmit={handleTruckSizeSubmit}
+        info={truckSize}
+        setInfo={handleTruck}
       />
       <Modal
         isOpen={isMaterialTypeModalOpen}
@@ -149,6 +176,8 @@ const Sidebar = () => {
         label="Material Type"
         placeholder="Enter Material Type"
         onSubmit={handleMaterialTypeSubmit}
+        info={materialType}
+        setInfo={handleMaterial}
       />
     </div>
   );
