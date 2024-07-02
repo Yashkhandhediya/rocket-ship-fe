@@ -872,6 +872,19 @@ const Indent = () => {
               <p className="mt-1 text-xs text-red-500">Please enter a valid 10-digit number.</p>
             )}
           </div>
+          <div className="w-[100%]">
+            <Field
+              id="address"
+              // value={personInfo?.coordinate_number}
+              label="Address"
+              inputClassNames="text-xs"
+              labelClassNames="text-xs"
+              type="text"
+              placeholder="Enter Address"
+              isDisabled={false}
+              onChange={handlePersonMobileNumberChange}
+            />
+          </div>
         </div>
         <button
           className="bottom-4 ml-10 rounded-full bg-blue-600 p-2 text-lg font-semibold text-white hover:bg-blue-800 md:w-1/2"

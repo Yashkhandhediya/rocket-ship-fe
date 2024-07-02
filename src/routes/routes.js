@@ -18,6 +18,7 @@ import {
   Book,
   Indent,
   Allindent,
+  Address,
   User,
   ForgotPassword,
   ResetPassword,
@@ -320,6 +321,10 @@ const routes = createBrowserRouter([
   {
     path: '/refund-settings',
     element: <PrivateRoute component={<RefundSetting />} />,
+  },
+  {
+    path: '/add-address',
+    element: <PrivateRoute component={<Address />} />,
   },
 ]);
 
