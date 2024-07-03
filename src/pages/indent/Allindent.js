@@ -82,7 +82,13 @@ const Allindent = () => {
       console.log("yash")
       setAllData(info);
       let tab_dummy = JSON.parse(localStorage.getItem('activeTab')) || 0
-      filteredData = info.filter((data) => data.trip_status == tab_dummy - 1);
+      if (tab_dummy == 0){
+        filteredData = info
+      }
+      else {
+        filteredData = info.filter((data) => data.trip_status == tab_dummy - 1);
+      }
+      
       setFilteredInfo(filteredData);
       setDataFetch(true);
     } catch (err) {
