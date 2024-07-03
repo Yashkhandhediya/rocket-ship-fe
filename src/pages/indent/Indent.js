@@ -20,12 +20,16 @@ const Indent = () => {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const id_user = localStorage.getItem('user_id');
+  const company_id = localStorage.getItem('company_id');
   const [isValidPhone, setIsValidPhone] = useState(true);
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
-  const [truckTypes, setTruckTypes] = useState([]);
+  const [truckTypes, setTruckTypes] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [materialTypes, setMaterialTypes] = useState([]);
+  const [materialTypes, setMaterialTypes] = useState(null);
+  const is_company = localStorage.getItem('is_company');
+
+  const id = is_company == 1 ? company_id : id_user;
   const data = location.state?.data || {};
   console.log('Dataaaaaa', data);
   // console.log("Dataaaaaaaa",props.location.state.targetPrice)
@@ -81,7 +85,7 @@ const Indent = () => {
   const getTruckType = async () => {
     setLoading(true);
     try {
-      const resposne = await axios.get(`${BACKEND_URL}/trucktype/get_truck_types/?created_by=${id_user}`);
+      const resposne = await axios.get(`${BACKEND_URL}/trucktype/get_truck_types/?created_by=${id}`);
       setTruckTypes(resposne.data);
       console.log(resposne.data);
     } catch (err) {
@@ -94,11 +98,8 @@ const Indent = () => {
   const getMaterialType = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `${BACKEND_URL}/materialtype/get_material_type/?created_by=${id_user}`,
-      );
+      const response = await axios.get(`${BACKEND_URL}/materialtype/get_material_type/?created_by=${id}`);
       setMaterialTypes(response.data);
-      console.log(response.data);
     } catch (err) {
       toast(`There is error while fetching data`, { type: 'error' });
     } finally {
