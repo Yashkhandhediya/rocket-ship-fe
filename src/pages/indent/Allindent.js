@@ -491,7 +491,7 @@ const Allindent = () => {
                       )}
                     </div>
 
-                    {localStorage.getItem('is_company') != 0 ? (
+                    {localStorage.getItem('is_company') == 0 ? (
                       showBtn && (
                         <div className="mt-2">
                           {data.trip_status !== 2 &&
