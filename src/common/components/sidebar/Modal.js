@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Modal = ({ isOpen, onClose, title, label, placeholder, onSubmit }) => {
+const Modal = ({ isOpen, onClose, title, label, placeholder, onSubmit,info,setInfo }) => {
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(e.target.elements.inputField.value);
+    // onSubmit(e.target.elements.inputField.value);
     onClose();
   };
 
@@ -20,6 +20,8 @@ const Modal = ({ isOpen, onClose, title, label, placeholder, onSubmit }) => {
             placeholder={placeholder}
             className="w-full p-2 border border-gray-300 rounded-md mb-4"
             style={{ color: 'black' }}
+            value={info || ''}
+            onChange={(e) => setInfo(e.target.value)}
           />
           <div className="flex justify-end space-x-2">
             <button
@@ -32,6 +34,7 @@ const Modal = ({ isOpen, onClose, title, label, placeholder, onSubmit }) => {
             <button
               type="submit"
               className="py-2 px-4 bg-blue-500 text-white rounded-md"
+              onClick={onSubmit}
             >
               Submit
             </button>
