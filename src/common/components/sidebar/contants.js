@@ -78,6 +78,14 @@ export const sidebarLinks = [
     icon: book,
     hoverIcon: book,
   },
+  parseInt(is_company)
+      ? {
+          title: 'Add User',
+          path: '/signup-user',
+          icon: user,
+          hoverIcon: user,
+        }
+      : null,
 ].filter((option) => option);
 
 
