@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useMemo } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { cityList } from '../book-truck/cities';
 import { CustomMultiSelect, Field, Loader } from '../../common/components';
-import { weights, weightTypes } from './data';
+import { materialTypes, truckTypes, weights, weightTypes } from './data';
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -20,16 +20,9 @@ const Indent = () => {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const id_user = localStorage.getItem('user_id');
-  const company_id = localStorage.getItem('company_id');
   const [isValidPhone, setIsValidPhone] = useState(true);
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
-  const [truckTypes, setTruckTypes] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [materialTypes, setMaterialTypes] = useState(null);
-  const is_company = localStorage.getItem('is_company');
-
-  const id = is_company == 1 ? company_id : id_user;
   const data = location.state?.data || {};
   console.log('Dataaaaaa', data);
   // console.log("Dataaaaaaaa",props.location.state.targetPrice)
@@ -47,13 +40,9 @@ const Indent = () => {
   //     source_id:'',
   //     destination_id:''
   // })
-
   const [selectedCity, setSelectedCity] = useState({
-    source: `${data?.from_area || ''} ${data?.from_city || ''} ${data?.from_state || ''} ${
-      data?.from_country || ''
-    }`,
-    destination:
-      `${data?.to_area || ''} ${data?.to_city || ''} ${data?.to_state || ''} ${data?.to_country || ''}` || '',
+    source: `${data?.from_area || ''} ${data?.from_city || ''} ${data?.from_state || ''} ${data?.from_country || ''}`,
+    destination: `${data?.to_area || ''} ${data?.to_city || ''} ${data?.to_state || ''} ${data?.to_country || ''}` || '',
   });
   const [isDropdownOpen, setIsDropdownOpen] = useState({
     source: false,
@@ -82,46 +71,10 @@ const Indent = () => {
     height: 0,
   });
 
-  const getTruckType = async () => {
-    setLoading(true);
-    try {
-      const resposne = await axios.get(`${BACKEND_URL}/trucktype/get_truck_types/?created_by=${id}`);
-      setTruckTypes(resposne.data);
-      console.log(resposne.data);
-    } catch (err) {
-      toast(`There is error while fetching data`, { type: 'error' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getMaterialType = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${BACKEND_URL}/materialtype/get_material_type/?created_by=${id}`);
-      setMaterialTypes(response.data);
-    } catch (err) {
-      toast(`There is error while fetching data`, { type: 'error' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getTruckType();
-    getMaterialType();
-  }, []);
-
-  const truckTypesData = truckTypes?.map((type) => {
-    return { label: type.truck_type, value: type.truck_type, truck_id: type.id };
-  });
-
-  const materialTypesData = materialTypes?.map((type) => {
-    return { label: type.material_type, value: type.material_type, truck_id: type.id };
-  });
-
   const [remarks, setRemarks] = useState(data?.remarks || '');
   const [totalKm, setTotalKm] = useState(data?.kilometer || 0);
+  const [fromId,setFromId] = useState('')
+  const [toId,setToId] = useState('')
 
   const [personInfo, setPersonInfo] = useState({
     coordinate_name: data?.coordinator_name || '',
@@ -339,6 +292,8 @@ const Indent = () => {
           trip_status: 0,
           to_pincode: sourcePin,
           from_pincode: destinationPin,
+          from_address_id:fromId,
+          to_address_id:toId,
           // remarks:remarks,
           kilometer: totalKm,
           // coordinator_name:personInfo?.coordinate_name,
@@ -459,18 +414,20 @@ const Indent = () => {
           volumetric_weight: volumatricWeight,
           to_pincode: sourcePin,
           from_pincode: destinationPin,
+          from_address_id:fromId,
+          to_address_id:toId,
           // remarks:remarks,
           kilometer: totalKm,
           // coordinator_name:personInfo?.coordinate_name,
           // coordinator_mobile:personInfo?.coordinate_number,
-          to_area: selectedCity?.destination.split(' ')[0],
-          to_city: selectedCity?.destination.split(' ')[1],
-          to_state: selectedCity?.destination.split(' ')[2],
-          to_country: selectedCity?.destination.split(' ')[3],
-          from_area: selectedCity?.source.split(' ')[0],
-          from_city: selectedCity?.source.split(' ')[1],
-          from_state: selectedCity?.source.split(' ')[2],
-          from_country: selectedCity?.source.split(' ')[3],
+          to_area: selectedCity?.destination.split(',')[0],
+          to_city: selectedCity?.destination.split(',')[1],
+          to_state: selectedCity?.destination.split(',')[2],
+          to_country: selectedCity?.destination.split(',')[3],
+          from_area: selectedCity?.source.split(',')[0],
+          from_city: selectedCity?.source.split(',')[1],
+          from_state: selectedCity?.source.split(',')[2],
+          from_country: selectedCity?.source.split(',')[3],
           ...(personInfo?.coordinate_name && { coordinator_name: personInfo.coordinate_name }),
           ...(personInfo?.coordinate_number && { coordinator_mobile: personInfo.coordinate_number }),
           ...(remarks && { remarks: remarks }),
@@ -526,6 +483,7 @@ const Indent = () => {
     //   console.error(e);
     // }
     // let temp_url = `/address/address_suggestion/`
+
     // try {
     //     axios
     //       .get(BACKEND_URL + `${temp_url}?string=${String(pincode)}&created_by=${localStorage.getItem('user_id')}`)
@@ -586,6 +544,7 @@ const Indent = () => {
     }));
   };
 
+
   const togglePopup = () => {
     searchParams.set('open', 'false');
     setSearchParams(searchParams);
@@ -593,43 +552,43 @@ const Indent = () => {
   };
 
   const fetchSuggestions = async (value) => {
-    // let temp_url = `/address/address_suggestion/`
-    // try {
-    //     axios
-    //       .get(BACKEND_URL + `${temp_url}?string=${String(value)}&created_by=${localStorage.getItem('company_id')}`)
-    //       .then((resp) => {
-    //         if (resp.status === 200) {
-    //           setSuggestions(resp.data)
-    //           if(resp.data.length == 0){
-    //             fetchPincodeDetails(value,'source')
-    //           }
-    //         } else {
-    //           toast(`City/State not found for this pincode: ${value}`, { type: 'error' });
-    //         }
-    //       })
-    //       .catch(() => {
-    //         toast(`Unable to get location from this pincode: ${value}`, { type: 'error' });
-    //       });
-    //   } catch (e) {
-    //     console.error(e);
-    //   }
-
+    let temp_url = `/address/address_suggestion/`
     try {
-      axios
-        .get(`${BACKEND_URL}/pincode/${value}`)
-        .then((resp) => {
-          if (resp.status === 200) {
-            setSuggestions(resp.data);
-          } else {
-            toast(`City/State not found for this pincode: ${value}`, { type: 'error' });
-          }
-        })
-        .catch(() => {
-          toast(`Unable to get location from this pincode: ${value}`, { type: 'error' });
-        });
-    } catch (e) {
-      console.error(e);
-    }
+        axios
+          .get(BACKEND_URL + `${temp_url}?string=${String(value)}&created_by=${localStorage.getItem('company_id')}`)
+          .then((resp) => {
+            if (resp.status === 200) {
+              setSuggestions(resp.data)
+              // if(resp.data.length == 0){
+              //   fetchPincodeDetails(value,'source')
+              // }
+            } else {
+              toast(`City/State not found for this pincode: ${value}`, { type: 'error' });
+            }
+          })
+          .catch(() => {
+            toast(`Unable to get location from this pincode: ${value}`, { type: 'error' });
+          });
+      } catch (e) {
+        console.error(e);
+      }
+
+    // try {
+    //   axios
+    //     .get(`${BACKEND_URL}/pincode/${value}`)
+    //     .then((resp) => {
+    //       if (resp.status === 200) {
+    //         setSuggestions(resp.data)
+    //       } else {
+    //         toast(`City/State not found for this pincode: ${value}`, { type: 'error' });
+    //       }
+    //     })
+    //     .catch(() => {
+    //       toast(`Unable to get location from this pincode: ${value}`, { type: 'error' });
+    //     });
+    // } catch (e) {
+    //   console.error(e);
+    // }
   };
 
   const onSuggestionsFetchRequested = ({ value }) => {
@@ -649,7 +608,7 @@ const Indent = () => {
 
   const renderSuggestion = (suggestion) => (
     <div>
-      {suggestion.Area}, {suggestion.City}, {suggestion.State}, {suggestion.Country}
+      {suggestion.area}, {suggestion.city}, {suggestion.state}, {suggestion.country}
     </div>
   );
 
@@ -684,243 +643,240 @@ const Indent = () => {
     <PageWithSidebar>
       {isLoading && <Loader />}
       <Address isVisible={isPopupVisible} onClose={togglePopup} />
-      {localStorage.getItem('is_company') == 0 && (
-        <div className="flex flex-col items-center justify-center gap-4 p-3">
-          <div className="flex w-[80%] flex-row justify-between gap-8 rounded p-4 shadow">
-            <div className="flex w-1/2 flex-col">
-              <label
-                htmlFor="sourcePincode"
-                className={`mb-2 flex items-center  text-sm font-medium text-gray-600`}>
-                From Pincode
-              </label>
-              <Autosuggest
-                suggestions={suggestions}
-                onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                onSuggestionsClearRequested={onSuggestionsClearRequested}
-                getSuggestionValue={getSuggestionValue}
-                renderSuggestion={renderSuggestion}
-                inputProps={inputProps}
-                onSuggestionSelected={(event, { suggestion }) => {
-                  const { Area, City, State, Country } = suggestion;
-                  setSelectedCity((prev) => ({ ...prev, source: `${Area} ${City} ${State} ${Country}` }));
-                }}
-                theme={theme}
+      {localStorage.getItem('is_company') == 0 && <div className="flex flex-col items-center justify-center gap-4 p-3">
+        <div className="flex w-[80%] flex-row justify-between gap-8 rounded p-4 shadow">
+          <div className="flex w-1/2 flex-col">
+          <label
+          htmlFor="sourcePincode"
+          className={`mb-2 flex items-center  text-sm font-medium text-gray-600`}>
+          From Pincode
+        </label>
+             <Autosuggest
+                  suggestions={suggestions}
+                  onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                  onSuggestionsClearRequested={onSuggestionsClearRequested}
+                  getSuggestionValue={getSuggestionValue}
+                  renderSuggestion={renderSuggestion}
+                  inputProps={inputProps}
+                  onSuggestionSelected={(event, { suggestion }) => {
+                    const { area, city, state, country,id } = suggestion;
+                          setSelectedCity((prev) => ({ ...prev, source: `${area + ","}${city + ","}${state + ","}${country}` }));
+                          setFromId(id)
+                      }}
+                  theme={theme}
               />
-              {/* {!isValidAddress && <p className="mt-1 text-xs text-red-500">Address is required.</p>} */}
-            </div>
-            <div className="flex w-1/2 flex-col">
-              <label
-                htmlFor="destinationPincode"
-                className={`mb-2 flex items-center  text-sm font-medium text-gray-600`}>
-                To Pincode
-              </label>
-              <Autosuggest
-                suggestions={suggestions}
-                onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                onSuggestionsClearRequested={onSuggestionsClearRequested}
-                getSuggestionValue={getDestSuggestionValue}
-                renderSuggestion={renderSuggestion}
-                inputProps={inputDestProps}
-                onSuggestionSelected={(event, { suggestion }) => {
-                  const { Area, City, State, Country } = suggestion;
-                  setSelectedCity((prev) => ({
-                    ...prev,
-                    destination: `${Area} ${City} ${State} ${Country}`,
-                  }));
-                }}
-                theme={theme}
-              />
-              {/* {!isValidAddress && <p className="mt-1 text-xs text-red-500">Address is required.</p>} */}
-            </div>
+            {/* {!isValidAddress && <p className="mt-1 text-xs text-red-500">Address is required.</p>} */}
           </div>
-
-          <div className="flex w-[80%] flex-row justify-between gap-8 rounded p-4 shadow">
-            <div className="flex w-1/2 flex-col">
-              <p className="flex flex-row items-center justify-between">
-                <span className="font-medium">
-                  <span className="text-lg text-red-800">*</span> From Area, City, State, Country
-                </span>
-                <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-700 text-[18px] text-white">
-                  <span style={{ marginTop: '-2px' }}>+</span>
-                </div>
-              </p>
-              <input
-                ref={inputRef}
-                className="h-10 w-[100%] cursor-not-allowed rounded border-0 bg-gray-100 px-2 outline-none ring-0 focus:outline-none focus:ring-0"
-                placeholder=""
-                type="text"
-                value={selectedCity.source}
-                disabled
+          <div className="flex w-1/2 flex-col">
+          <label
+          htmlFor="destinationPincode"
+          className={`mb-2 flex items-center  text-sm font-medium text-gray-600`}>
+          To Pincode
+        </label>
+        <Autosuggest
+                  suggestions={suggestions}
+                  onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                  onSuggestionsClearRequested={onSuggestionsClearRequested}
+                  getSuggestionValue={getDestSuggestionValue}
+                  renderSuggestion={renderSuggestion}
+                  inputProps={inputDestProps}
+                  onSuggestionSelected={(event, { suggestion }) => {
+                    const { area, city, state, country, id } = suggestion;
+                        setSelectedCity((prev) => ({ ...prev, destination: `${area + ","}${city + ","}${state + ","}${country}` }));
+                        setToId(id)
+                      }}
+                  theme={theme}
               />
-              {/* <Dropdown isOpen={isDropdownOpen.source} type='source' /> */}
-            </div>
-            <div className="flex w-1/2 flex-col">
-              <p className="flex flex-row items-center justify-between">
-                <span className="font-medium">
-                  <span className="text-lg text-red-800">*</span> To Area, City, State, Country
-                </span>
-                <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-700 text-[18px] text-white">
-                  <span style={{ marginTop: '-2px' }}>+</span>
-                </div>
-              </p>
-              <input
-                ref={inputRef}
-                className="h-10 w-[100%] cursor-not-allowed rounded border-0 bg-gray-100 px-2 outline-none ring-0 focus:outline-none focus:ring-0"
-                placeholder=""
-                type="text"
-                value={selectedCity.destination}
-                disabled
-              />
-              {/* <Dropdown isOpen={isDropdownOpen.destination} type='destination' /> */}
-            </div>
+            {/* {!isValidAddress && <p className="mt-1 text-xs text-red-500">Address is required.</p>} */}
           </div>
+        </div>
 
-          <div className="mb-3 w-[80%] items-center justify-center md:flex">
-            <div className="flex w-1/2 justify-center gap-5">
-              <div className="text-lg font-medium">{'Type Of Shipment :'}</div>
-              <div className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  id="ftl"
-                  value="ftl"
-                  name="type"
-                  checked={shipmentDetails?.type === 'ftl'}
-                  onChange={handleShipment}
-                />
-                <label htmlFor="ftl" className="text-xs font-medium text-gray-900">
-                  FTL
-                </label>
+        <div className="flex w-[80%] flex-row justify-between gap-8 rounded p-4 shadow">
+          <div className="flex w-1/2 flex-col">
+            <p className="flex flex-row items-center justify-between">
+              <span className="font-medium">
+                <span className="text-lg text-red-800">*</span> From Area, City, State, Country
+              </span>
+              <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-700 text-[18px] text-white">
+                <span style={{ marginTop: '-2px' }}>+</span>
               </div>
-              <div className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  id="ptl"
-                  value="ptl"
-                  name="type"
-                  checked={shipmentDetails?.type === 'ptl'}
-                  onChange={handleShipment}
-                />
-                <label htmlFor="ptl" className="items-center text-xs font-medium text-gray-900">
-                  PTL
-                </label>
+            </p>
+            <input
+              ref={inputRef}
+              className="h-10 w-[100%] cursor-not-allowed rounded border-0 bg-gray-100 px-2 outline-none ring-0 focus:outline-none focus:ring-0"
+              placeholder=""
+              type="text"
+              value={selectedCity.source}
+              disabled
+            />
+            {/* <Dropdown isOpen={isDropdownOpen.source} type='source' /> */}
+          </div>
+          <div className="flex w-1/2 flex-col">
+            <p className="flex flex-row items-center justify-between">
+              <span className="font-medium">
+                <span className="text-lg text-red-800">*</span> To Area, City, State, Country
+              </span>
+              <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-700 text-[18px] text-white">
+                <span style={{ marginTop: '-2px' }}>+</span>
               </div>
+            </p>
+            <input
+              ref={inputRef}
+              className="h-10 w-[100%] cursor-not-allowed rounded border-0 bg-gray-100 px-2 outline-none ring-0 focus:outline-none focus:ring-0"
+              placeholder=""
+              type="text"
+              value={selectedCity.destination}
+              disabled
+            />
+            {/* <Dropdown isOpen={isDropdownOpen.destination} type='destination' /> */}
+          </div>
+        </div>
+
+        <div className="mb-3 w-[80%] justify-center items-center md:flex">
+          <div className="flex w-1/2 justify-center gap-5">
+            <div className="text-lg font-medium">{'Type Of Shipment :'}</div>
+            <div className="flex items-center gap-2">
+              <input
+                type="radio"
+                id="ftl"
+                value="ftl"
+                name="type"
+                checked={shipmentDetails?.type === 'ftl'}
+                onChange={handleShipment}
+              />
+              <label htmlFor="ftl" className="text-xs font-medium text-gray-900">
+                FTL
+              </label>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="radio"
+                id="ptl"
+                value="ptl"
+                name="type"
+                checked={shipmentDetails?.type === 'ptl'}
+                onChange={handleShipment}
+              />
+              <label htmlFor="ptl" className="items-center text-xs font-medium text-gray-900">
+                PTL
+              </label>
             </div>
           </div>
+        </div>
 
-          <div className="flex w-[80%] flex-wrap justify-between gap-4 rounded p-6 shadow">
-            <div className="flex w-[49%] flex-row justify-between">
+        <div className="flex w-[80%] flex-wrap justify-between gap-4 rounded p-6 shadow">
+          <div className="flex w-[49%] flex-row justify-between">
+            <Field
+              type={'date'}
+              id={'date'}
+              label={'PickUp Date And Time'}
+              inputClassNames={'text-xs'}
+              labelClassNames={'text-xs'}
+              placeHolder={'Enter PickUp Date'}
+              required={true}
+              minDate={moment(new Date()).format('YYYY-MM-DD')}
+              // maxDate={moment(new Date()).format('YYYY-MM-DD')}
+              value={pickUpDate.date}
+              onChange={handlePickUpDate}
+            />
+            <Field
+              type={'time'}
+              id={'time'}
+              inputClassNames={'text-xs mt-6 ml-2'}
+              labelClassNames={'text-xs'}
+              placeHolder={''}
+              required={true}
+              value={pickUpDate.time}
+              onChange={handlePickUpDate}
+            />
+          </div>
+
+          {shipmentDetails.type == 'ptl' && (
+            <div className="w-[49%]">
               <Field
-                type={'date'}
-                id={'date'}
-                label={'PickUp Date And Time'}
+                value={pkgs}
+                label="No. of Pkgs"
                 inputClassNames={'text-xs'}
                 labelClassNames={'text-xs'}
-                placeHolder={'Enter PickUp Date'}
-                required={true}
-                minDate={moment(new Date()).format('YYYY-MM-DD')}
-                // maxDate={moment(new Date()).format('YYYY-MM-DD')}
-                value={pickUpDate.date}
-                onChange={handlePickUpDate}
-              />
-              <Field
-                type={'time'}
-                id={'time'}
-                inputClassNames={'text-xs mt-6 ml-2'}
-                labelClassNames={'text-xs'}
-                placeHolder={''}
-                required={true}
-                value={pickUpDate.time}
-                onChange={handlePickUpDate}
+                type="number"
+                onChange={(e) => setPkgs(e.target.value)}
               />
             </div>
+          )}
 
-            {shipmentDetails.type == 'ptl' && (
-              <div className="w-[49%]">
-                <Field
-                  value={pkgs}
-                  label="No. of Pkgs"
-                  inputClassNames={'text-xs'}
-                  labelClassNames={'text-xs'}
-                  type="number"
-                  onChange={(e) => setPkgs(e.target.value)}
-                />
-              </div>
-            )}
-
-            {shipmentDetails.type == 'ptl' && (
-              <div className="w-full md:flex">
-                <div className="w-full gap-4 md:flex">
-                  <label className="dark:text-white mb-3 mt-1 block text-base font-medium text-gray-600">
-                    {'Enter Packages dimensions to calculate Volumetric Weight'}
-                  </label>
-                  <div className="sm:w-/12 pb-2 md:pb-0">
-                    <Field
-                      type={'number'}
-                      id={'length'}
-                      inputClassNames={'text-xs'}
-                      placeHolder={'0.00'}
-                      required={true}
-                      rightAddOn="CM"
-                      value={truckDimention?.length || ''}
-                      onChange={handleTruckDimention}
-                    />
-                  </div>
-                  <div className="sm:w-/12 pb-2 md:pb-0">
-                    <Field
-                      type={'number'}
-                      id={'width'}
-                      inputClassNames={'text-xs'}
-                      placeHolder={'0.00'}
-                      required={true}
-                      rightAddOn="CM"
-                      value={truckDimention?.width || ''}
-                      onChange={handleTruckDimention}
-                    />
-                  </div>
-                  <div className="sm:w-/12 pb-2 md:pb-0">
-                    <Field
-                      type={'number'}
-                      id={'height'}
-                      inputClassNames={'text-xs'}
-                      placeHolder={'0.00'}
-                      required={true}
-                      rightAddOn="CM"
-                      value={truckDimention?.height || ''}
-                      onChange={handleTruckDimention}
-                    />
-                  </div>
+          {shipmentDetails.type == 'ptl' && (
+            <div className="w-full md:flex">
+              <div className="w-full gap-4 md:flex">
+                <label className="dark:text-white mb-3 mt-1 block text-base font-medium text-gray-600">
+                  {'Enter Packages dimensions to calculate Volumetric Weight'}
+                </label>
+                <div className="sm:w-/12 pb-2 md:pb-0">
+                  <Field
+                    type={'number'}
+                    id={'length'}
+                    inputClassNames={'text-xs'}
+                    placeHolder={'0.00'}
+                    required={true}
+                    rightAddOn="CM"
+                    value={truckDimention?.length || ''}
+                    onChange={handleTruckDimention}
+                  />
+                </div>
+                <div className="sm:w-/12 pb-2 md:pb-0">
+                  <Field
+                    type={'number'}
+                    id={'width'}
+                    inputClassNames={'text-xs'}
+                    placeHolder={'0.00'}
+                    required={true}
+                    rightAddOn="CM"
+                    value={truckDimention?.width || ''}
+                    onChange={handleTruckDimention}
+                  />
+                </div>
+                <div className="sm:w-/12 pb-2 md:pb-0">
+                  <Field
+                    type={'number'}
+                    id={'height'}
+                    inputClassNames={'text-xs'}
+                    placeHolder={'0.00'}
+                    required={true}
+                    rightAddOn="CM"
+                    value={truckDimention?.height || ''}
+                    onChange={handleTruckDimention}
+                  />
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
-            {shipmentDetails.type == 'ptl' && (
-              <div className=" my-5 w-[49%] rounded-md bg-[#ecf2fe99] p-5 text-sm font-medium text-gray-900">
-                <div className="mb-1 flex">
-                  <p>{'Volumetric Weight'}</p>
-                  <p className="ml-9">{volumatricWeight + 'kg.'}</p>
-                </div>
+          {shipmentDetails.type == 'ptl' && (
+            <div className=" my-5 w-[49%] rounded-md bg-[#ecf2fe99] p-5 text-sm font-medium text-gray-900">
+              <div className="mb-1 flex">
+                <p>{'Volumetric Weight'}</p>
+                <p className="ml-9">{volumatricWeight + 'kg.'}</p>
               </div>
-            )}
+            </div>
+          )}
 
-            {shipmentDetails.type == 'ftl' && (
-              <div className="w-[49%]">
-                <CustomMultiSelect
-                  isMulti={false}
-                  label={'Truck Type'}
-                  options={truckTypesData}
-                  selected={truckType}
-                  closeMenuOnSelect={true}
-                  placeholder={truckType}
-                  hideSelectedOptions={false}
-                  onChange={(value) => {
-                    console.log(value);
-                    setTruckType(value);
-                  }}
-                />
-              </div>
-            )}
+          {shipmentDetails.type == 'ftl' && (
             <div className="w-[49%]">
-              {/* <CustomMultiSelect
+              <CustomMultiSelect
+                isMulti={false}
+                label={'Truck Type'}
+                options={truckTypes}
+                selected={truckType}
+                closeMenuOnSelect={true}
+                placeholder={truckType}
+                hideSelectedOptions={false}
+                onChange={(value) => {
+                  setTruckType(value);
+                }}
+              />
+            </div>
+          )}
+          <div className="w-[49%]">
+            {/* <CustomMultiSelect
                             isMulti={false}
                             placeholder={userOptions[0].label}
                             label={'Contact Person'}
@@ -931,141 +887,141 @@ const Indent = () => {
                             }}
                         /> */}
 
-              <Field
-                type="text"
-                id="contact_name"
-                label="Contact Person"
-                inputClassNames="text-xs"
-                labelClassNames="text-xs"
-                placeHolder="Enter Contact Name"
-                required={true}
-                value={contactPersonInfo?.contact_name}
-                onChange={handleContactPersonInfoChange}
-              />
-            </div>
-            <div className="w-[49%]">
-              <CustomMultiSelect
-                isMulti={false}
-                label={'Material Type'}
-                options={materialTypesData}
-                selected={materialType}
-                closeMenuOnSelect={true}
-                placeholder={materialType}
-                hideSelectedOptions={false}
-                onChange={(value) => {
-                  setMaterialType(value);
-                }}
-              />
-            </div>
-            <div className="w-[49%]">
-              <div className="flex w-full">
-                <div className="flex-grow pr-2">
-                  <CustomMultiSelect
-                    isMulti={false}
-                    label={'Weight'}
-                    options={weightTypes}
-                    selected={tons}
-                    closeMenuOnSelect={true}
-                    placeholder={tons}
-                    hideSelectedOptions={false}
-                    onChange={(value) => {
-                      setTons(value);
-                    }}
-                  />
-                </div>
-                <div className="mt-6 flex-grow pr-4">
-                  <Field
-                    value={targetWeight}
-                    type="number"
-                    placeholder="Enter Weight"
-                    onChange={(e) => setTargetWeight(e.target.value)}
-                  />
-                </div>
+            <Field
+              type="text"
+              id="contact_name"
+              label="Contact Person"
+              inputClassNames="text-xs"
+              labelClassNames="text-xs"
+              placeHolder="Enter Contact Name"
+              required={true}
+              value={contactPersonInfo?.contact_name}
+              onChange={handleContactPersonInfoChange}
+            />
+          </div>
+          <div className="w-[49%]">
+            <CustomMultiSelect
+              isMulti={false}
+              label={'Material Type'}
+              options={materialTypes}
+              selected={materialType}
+              closeMenuOnSelect={true}
+              placeholder={materialType}
+              hideSelectedOptions={false}
+              onChange={(value) => {
+                setMaterialType(value);
+              }}
+            />
+          </div>
+          <div className="w-[49%]">
+            <div className="flex w-full">
+              <div className="flex-grow pr-2">
+                <CustomMultiSelect
+                  isMulti={false}
+                  label={'Weight'}
+                  options={weightTypes}
+                  selected={tons}
+                  closeMenuOnSelect={true}
+                  placeholder={tons}
+                  hideSelectedOptions={false}
+                  onChange={(value) => {
+                    setTons(value);
+                  }}
+                />
+              </div>
+              <div className="mt-6 flex-grow pr-4">
+                <Field
+                  value={targetWeight}
+                  type="number"
+                  placeholder="Enter Weight"
+                  onChange={(e) => setTargetWeight(e.target.value)}
+                />
               </div>
             </div>
-            <div className="w-[49%]">
-              <Field
-                value={targetPrice}
-                label="Target Price"
-                type="number"
-                placeholder="Enter Target Price"
-                onChange={(e) => setTargetPrice(e.target.value)}
-                leftAddOn="₹"
-              />
-            </div>
+          </div>
+          <div className="w-[49%]">
+            <Field
+              value={targetPrice}
+              label="Target Price"
+              type="number"
+              placeholder="Enter Target Price"
+              onChange={(e) => setTargetPrice(e.target.value)}
+              leftAddOn="₹"
+            />
+          </div>
 
-            <div className="w-[49%]">
-              <div className="flex w-full">
-                <div className="flex-grow pr-2">
-                  <Field
-                    type="text"
-                    id="remark"
-                    label="Remarks"
-                    inputClassNames="text-xs"
-                    labelClassNames="text-xs"
-                    placeHolder="Enter Remark"
-                    required={true}
-                    value={remarks}
-                    onChange={(e) => setRemarks(e.target.value)}
-                  />
-                </div>
+          <div className="w-[49%]">
+            <div className="flex w-full">
+              <div className="flex-grow pr-2">
+                <Field
+                  type="text"
+                  id="remark"
+                  label="Remarks"
+                  inputClassNames="text-xs"
+                  labelClassNames="text-xs"
+                  placeHolder="Enter Remark"
+                  required={true}
+                  value={remarks}
+                  onChange={(e) => setRemarks(e.target.value)}
+                />
               </div>
             </div>
+          </div>
+          
+          <div className="w-[49%]">
+            <Field
+              value={totalKm}
+              label="Total Km"
+              type="number"
+              placeholder="Enter Total Kilometer"
+              // onChange={(e) => setTotalKm(e.target.value)}
+              isDisabled={true}
+              inputClassNames="cursor-not-allowed"
+              leftAddOn="Km."
+            />
+          </div>
 
-            <div className="w-[49%]">
-              <Field
-                value={totalKm}
-                label="Total Km"
-                type="number"
-                placeholder="Enter Total Kilometer"
-                // onChange={(e) => setTotalKm(e.target.value)}
-                isDisabled={true}
-                inputClassNames="cursor-not-allowed"
-                leftAddOn="Km."
-              />
-            </div>
-
-            <div className="w-[49%]">
-              <div className="flex w-full">
-                <div className="flex-grow pr-2">
-                  <Field
-                    type="text"
-                    id="coordinate_name"
-                    label="Coordinate Name"
-                    inputClassNames="text-xs"
-                    labelClassNames="text-xs"
-                    placeHolder="Enter Name"
-                    required={false}
-                    value={personInfo?.coordinate_name}
-                    // value={`Mann thakkar`}
-                    isDisabled={false}
-                    onChange={handlePersonInfoChange}
-                  />
-                </div>
+          <div className="w-[49%]">
+            <div className="flex w-full">
+              <div className="flex-grow pr-2">
+                <Field
+                  type="text"
+                  id="coordinate_name"
+                  label="Coordinate Name"
+                  inputClassNames="text-xs"
+                  labelClassNames="text-xs"
+                  placeHolder="Enter Name"
+                  required={false}
+                  value={personInfo?.coordinate_name}
+                  // value={`Mann thakkar`}
+                  isDisabled={false}
+                  onChange={handlePersonInfoChange}
+                />
               </div>
             </div>
-            <div className="w-[49%]">
-              <Field
-                id="coordinate_number"
-                // value={`8401747809`}
-                value={personInfo?.coordinate_number}
-                label="Mobile No."
-                inputClassNames="text-xs"
-                labelClassNames="text-xs"
-                type="number"
-                placeholder="Enter Mobile Number"
-                isDisabled={false}
-                onChange={handlePersonMobileNumberChange}
+          </div>
+          <div className="w-[49%]">
+            <Field
+              id="coordinate_number"
+              // value={`8401747809`}
+              value={personInfo?.coordinate_number}
+              label="Mobile No."
+              inputClassNames="text-xs"
+              labelClassNames="text-xs"
+              type="number"
+              placeholder="Enter Mobile Number"
+              isDisabled={false}
+              onChange={handlePersonMobileNumberChange}
                 leftAddOn="+91"
-                onBlur={() => {
+              onBlur={() => {
                   setIsValidPhone(/^\d{10}$/.test(personInfo?.coordinate_number));
-                }}
-              />
-              {!isValidPhone && (
-                <p className="mt-1 text-xs text-red-500">Please enter a valid 10-digit number.</p>
-              )}
-            </div>
-            {/* <div className="w-[100%]">
+              }}
+            />
+            {!isValidPhone && (
+              <p className="mt-1 text-xs text-red-500">Please enter a valid 10-digit number.</p>
+            )}
+          </div>
+          {/* <div className="w-[100%]">
             <Field
               id="address"
               // value={personInfo?.coordinate_number}
@@ -1078,22 +1034,21 @@ const Indent = () => {
               onChange={handlePersonMobileNumberChange}
             />
           </div> */}
-          </div>
-          <button
-            className="bottom-4 ml-10 rounded-full bg-blue-600 p-2 text-lg font-semibold text-white hover:bg-blue-800 md:w-1/2"
-            onClick={() => {
-              // let upDateId = id + 1;
-              // setId(upDateId);
-              if (!modifyFlag) {
-                handleSubmit();
-              } else {
-                handleModify();
-              }
-            }}>
-            {modifyFlag == 0 ? '+ Create Indent' : '+ Modify Indent'}
-          </button>
         </div>
-      )}
+        <button
+          className="bottom-4 ml-10 rounded-full bg-blue-600 p-2 text-lg font-semibold text-white hover:bg-blue-800 md:w-1/2"
+          onClick={() => {
+            // let upDateId = id + 1;
+            // setId(upDateId);
+            if (!modifyFlag) {
+              handleSubmit();
+            } else {
+              handleModify();
+            }
+          }}>
+          {modifyFlag == 0 ? '+ Create Indent' : '+ Modify Indent'}
+        </button>
+      </div>}
     </PageWithSidebar>
   );
 };
