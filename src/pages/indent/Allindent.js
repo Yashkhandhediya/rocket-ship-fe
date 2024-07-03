@@ -30,6 +30,7 @@ const Allindent = () => {
   const navigate = useNavigate();
   const [dataFetch, setDataFetch] = useState(false);
   const [filteredInfo, setFilteredInfo] = useState([]);
+  const [allData, setAllData] = useState([]);
   const [selectedTab, setSelectedTab] = useState(0);
   const [price, setPrice] = useState({});
   const [rcslPrice, setRcslPrice] = useState({});
@@ -69,6 +70,7 @@ const Allindent = () => {
   }
 
   const fetchData = async () => {
+    let filteredData = [];
     try {
       const response = await axios.get(BACKEND_URL + `/indent/get_indents?created_by=${url_user_id}`);
       console.log('RESPONSE', response, response.data.length);
@@ -77,7 +79,11 @@ const Allindent = () => {
           info.push(response.data[i]);
         }
       }
-      setFilteredInfo(info);
+      console.log("yash")
+      setAllData(info);
+      let tab_dummy = JSON.parse(localStorage.getItem('activeTab')) || 0
+      filteredData = info.filter((data) => data.trip_status == tab_dummy - 1);
+      setFilteredInfo(filteredData);
       setDataFetch(true);
     } catch (err) {
       console.log('ERRRRRRRR', err);
@@ -232,7 +238,7 @@ const Allindent = () => {
   };
 
   useEffect(() => {
-    let filteredData = info;
+    let filteredData = allData;
     if (selectedTab == 0) {
       setFilteredInfo(filteredData);
     } else {
