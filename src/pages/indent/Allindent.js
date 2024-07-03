@@ -191,13 +191,17 @@ const Allindent = () => {
   const handleConfirmation = (id, status) => {
     setLoading(true);
     const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
+    let newObj = {
+      id: id,
+      status_code: status,
+    };
+    if (offlinePrice != null){
+      newObj.offline_price = offlinePrice
+    }
     axios
       .post(
         BACKEND_URL + '/indent/booking_confirmation',
-        {
-          id: id,
-          status_code: status,
-        },
+        newObj,
         { headers },
       )
       .then((res) => {
