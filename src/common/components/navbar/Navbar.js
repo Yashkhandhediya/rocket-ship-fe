@@ -192,7 +192,8 @@ const Navbar = () => {
       console.log('Hallllllllllllll', userData, response.data);
       if (response.data.wallet_balance == null || response.data.wallet_balance <= 0) {
         localStorage.setItem('balance', 0.0);
-        localStorage.setItem('company_id', response.data.id);
+        localStorage.setItem('user_id', response.data?.id);
+        localStorage.setItem('company_id', response.data?.company_id);
         localStorage.setItem(
           'modules',
           response.data.modules.module.map((mod) => mod.id),
