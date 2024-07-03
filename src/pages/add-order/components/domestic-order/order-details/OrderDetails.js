@@ -10,6 +10,7 @@ import { cloneDeep, isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import { setEditOrder } from '../../../../../redux';
 import { useLocation } from 'react-router-dom';
+import Autosuggest from 'react-autosuggest';
 // import Autosuggest from 'react-autosuggest';
 
 export let package_info = {
@@ -532,7 +533,9 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               <div className="mb-4 border-b border-gray-200" key={index}>
                 <div className="mb-3 w-full md:flex">
                   <div className="relative w-full px-2 pb-2 xl:w-4/12">
-                    <label className={`mb-2 flex items-center text-xs font-medium text-gray-600`}>{`Product ${index + 1} Name`}</label>
+                    <label className={`mb-2 flex items-center text-xs font-medium text-gray-600`}>{`Product ${
+                      index + 1
+                    } Name`}</label>
                     <Autosuggest
                       suggestions={suggestions}
                       onSuggestionsFetchRequested={onSuggestionsFetchRequested}
@@ -640,7 +643,9 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                           inputClassNames={'text-xs'}
                           labelClassNames={'text-xs'}
                           placeHolder={'Enter your product HSN code'}
-                          tooltip={'HSN code is a 6-digit uniform code that classifies 5000+ products and is accepted worldwide.'}
+                          tooltip={
+                            'HSN code is a 6-digit uniform code that classifies 5000+ products and is accepted worldwide.'
+                          }
                           value={field?.hsn_code || ''}
                           onChange={(e) => handleSetProductFields(e, index)}
                         />
