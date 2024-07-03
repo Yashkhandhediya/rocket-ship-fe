@@ -19,7 +19,13 @@ export let info = [];
 const Indent = () => {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [loading,setLoading] = useState(false);
+  const [truckTypes, setTruckTypes] = useState(null);
+  const [materialTypes, setMaterialTypes] = useState(null);
+  const is_company = localStorage.getItem('is_company');
   const id_user = localStorage.getItem('user_id');
+  const id = is_company == 1 ? company_id : id_user;
+  const company_id = localStorage.getItem('company_id');
   const [isValidPhone, setIsValidPhone] = useState(true);
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
@@ -902,7 +908,7 @@ const Indent = () => {
               <CustomMultiSelect
                 isMulti={false}
                 label={'Truck Type'}
-                options={truckTypes}
+                options={ truckTypesData}
                 selected={truckType}
                 closeMenuOnSelect={true}
                 placeholder={truckType}
@@ -941,7 +947,7 @@ const Indent = () => {
             <CustomMultiSelect
               isMulti={false}
               label={'Material Type'}
-              options={materialTypes}
+              options={materialTypesData}
               selected={materialType}
               closeMenuOnSelect={true}
               placeholder={materialType}
