@@ -498,7 +498,7 @@ const Allindent = () => {
                             data.trip_status !== 3 &&
                             data.trip_status !== 0 &&
                             data.counter_price == null &&
-                            localStorage.getItem('is_company') == 0 && (
+                             (
                               <button
                                 className="mt-2 rounded-lg bg-green-500 px-2 py-1 font-semibold text-white hover:bg-green-600"
                                 onClick={() => {
