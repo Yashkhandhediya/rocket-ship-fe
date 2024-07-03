@@ -40,6 +40,7 @@ const Allindent = () => {
   const [showBtn, setShowBtn] = useState(true);
   const [showOfflineBtn, setShowOfflineBtn] = useState(false);
   const [offlinePrice,setOfflinePrice] = useState(0)
+  const [showOfflinePricePrompt, setShowOfflinePricePrompt] = useState(false);
 
   console.log('IDFFFFFF', selectedTab);
 
@@ -245,7 +246,7 @@ const Allindent = () => {
 
   const handleConfirmClick = (id) => {
     setShowBtn(false)
-    setShowOfflineBtn(true)
+    setShowOfflinePricePrompt(true)
     setPopupCardId(id);
   }
 
@@ -475,6 +476,37 @@ const Allindent = () => {
                     </div>
                   )}
                 </div>
+
+
+                {showOfflinePricePrompt && (
+                      <div className="fixed inset-0 bg-gray-200 bg-opacity-5 flex justify-center items-start">
+                          <div className="bg-white p-4 rounded-lg w-96 mt-16">
+                          <p className="text-lg font-semibold mb-4"> Can You Add offline price?</p>
+                          <div className="flex justify-end">
+                            <button
+                              className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
+                              onClick={() => {
+                                setShowOfflineBtn(true)
+                                setShowOfflinePricePrompt(false);
+                              }}
+                            >
+                              Yes
+                            </button>
+                            <button
+                              className="rounded-lg bg-gray-300 px-3 py-2 text-xs font-semibold text-gray-800 hover:bg-gray-400"
+                              onClick={() => {
+                                setShowOfflinePricePrompt(false);
+                              }}
+                            >
+                              No
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+
+                    
                 {data?.actual_price != null && (
                   <div className="mt-2 flex flex-row items-center justify-between p-1 ">
                     <div className="mt-2">
@@ -569,7 +601,7 @@ const Allindent = () => {
                       )}
                     </div>
 
-                    {localStorage.getItem('is_company') == 0 && (
+                    {localStorage.getItem('is_company') == 1 && (
                       <div className="mt-4 flex flex-row">
                         {data.trip_status !== 2 &&
                           data.trip_status !== 3 &&
@@ -585,13 +617,13 @@ const Allindent = () => {
                                   Confirm
                                 </button>
                               )}
-                              {(
+                              {/* {(
                                 <button
                                   className="rounded-lg bg-red-500 px-3 py-2 text-xs font-semibold text-white hover:bg-red-600"
                                   onClick={() => handleConfirmation(data.id, 2)}>
                                   Reject
                                 </button>
-                              )}
+                              )} */}
                             </>
                           )}
                       </div>
