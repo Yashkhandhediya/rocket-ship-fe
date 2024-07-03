@@ -278,6 +278,7 @@ const Navbar = () => {
           </button>
         )}
       </div> */}
+      <h1 className='text-base mr-4'>{localStorage.getItem('user_name')}</h1>
       <div className="flex flex-row items-center gap-2">
         {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-5 w-5">
           <path
