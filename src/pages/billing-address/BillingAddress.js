@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -23,6 +23,13 @@ function BillingAddress() {
     state: '',
   });
 
+  let complete_address = 'd-303 SIDDHARTH FLAT NEAR META SWEET ,VASNA';
+  function getAddress1and2(address) {
+    const [address1, address2] = address.split(',');
+    return { address1, address2 };
+  }
+
+  getAddress1and2(complete_address);
   console.log(addressInfo);
 
   const requiredFieldErrors = () => {
@@ -35,6 +42,29 @@ function BillingAddress() {
     if (!addressInfo.pincode) newErrors.pincode = 'pincode is Required';
     if (!addressLine2) newErrors.addressLine2 = 'Address Line 2 is Required';
     return newErrors;
+  };
+
+  const getAddress = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${BACKEND_URL}/address/?user_id=${user_id}`);
+      const data = response.data.filter((data) => data.type_id === 3)[1];
+      setAddressInfo({
+        type_id: 3,
+        contact_no: data.contact_no,
+        complete_address: getAddress1and2(data.complete_address).address1,
+        pincode: data.pincode,
+        city: data.city,
+        state: data.state,
+      });
+
+      setAddressLine2(getAddress1and2(data.complete_address).address2);
+    } catch (err) {
+      console.log(err);
+      toast('There is Error while saving address ', { type: 'error' });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSaveAddress = async () => {
@@ -66,6 +96,10 @@ function BillingAddress() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    getAddress();
+  }, []);
 
   return (
     <PageWithSidebar>
