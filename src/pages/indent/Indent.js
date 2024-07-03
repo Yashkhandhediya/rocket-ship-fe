@@ -12,6 +12,7 @@ import { modifyFlag, modifyId } from './Allindent';
 import { id_user } from '../log-in/LogIn';
 import { ACCESS_TOKEN } from '../../common/utils/config';
 import Address from './Address';
+import Autosuggest from 'react-autosuggest';
 
 export let info = [];
 
@@ -21,6 +22,7 @@ const Indent = () => {
   const id_user = localStorage.getItem('user_id');
   const [isValidPhone, setIsValidPhone] = useState(true);
   const [isPopupVisible, setPopupVisible] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
   const data = location.state?.data || {};
   console.log('Dataaaaaa', data);
   // console.log("Dataaaaaaaa",props.location.state.targetPrice)
@@ -453,37 +455,55 @@ const Indent = () => {
   };
 
   const fetchPincodeDetails = (pincode, type) => {
-    try {
-      axios
-        .get(`${BACKEND_URL}/pincode/${pincode}`)
-        .then((resp) => {
-          if (resp.status === 200) {
-            const { Area, State, Country } = resp.data;
-            if (type === 'source') {
-              setSelectedCity((prev) => ({ ...prev, source: `${Area} ${State} ${Country}` }));
-            } else if (type === 'destination') {
-              setSelectedCity((prev) => ({ ...prev, destination: `${Area} ${State} ${Country}` }));
-            }
-          } else {
-            toast(`City/State not found for this pincode: ${pincode}`, { type: 'error' });
-          }
-        })
-        .catch(() => {
-          toast(`Unable to get location from this pincode: ${pincode}`, { type: 'error' });
-        });
-    } catch (e) {
-      console.error(e);
-    }
+    // try {
+    //   axios
+    //     .get(`${BACKEND_URL}/pincode/${pincode}`)
+    //     .then((resp) => {
+    //       if (resp.status === 200) {
+    //         const { Area, State, Country } = resp.data;
+    //         if (type === 'source') {
+    //           setSelectedCity((prev) => ({ ...prev, source: `${Area} ${State} ${Country}` }));
+    //         } else if (type === 'destination') {
+    //           setSelectedCity((prev) => ({ ...prev, destination: `${Area} ${State} ${Country}` }));
+    //         }
+    //       } else {
+    //         toast(`City/State not found for this pincode: ${pincode}`, { type: 'error' });
+    //       }
+    //     })
+    //     .catch(() => {
+    //       toast(`Unable to get location from this pincode: ${pincode}`, { type: 'error' });
+    //     });
+    // } catch (e) {
+    //   console.error(e);
+    // }
+    // let temp_url = `/address/address_suggestion/`
+
+    // try {
+    //     axios
+    //       .get(BACKEND_URL + `${temp_url}?string=${String(pincode)}&created_by=${localStorage.getItem('user_id')}`)
+    //       .then((resp) => {
+    //         if (resp.status === 200) {
+    //           setSuggestions(resp.data)
+    //         } else {
+    //           toast(`City/State not found for this pincode: ${pincode}`, { type: 'error' });
+    //         }
+    //       })
+    //       .catch(() => {
+    //         toast(`Unable to get location from this pincode: ${pincode}`, { type: 'error' });
+    //       });
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
   };
 
-  useEffect(() => {
-    if (sourcePin.length == 6) {
-      fetchPincodeDetails(sourcePin, 'source');
-    }
-    if (destinationPin.length == 6) {
-      fetchPincodeDetails(destinationPin, 'destination');
-    }
-  }, [sourcePin, destinationPin]);
+  // useEffect(() => {
+  //   if (sourcePin.length == 6) {
+  //     fetchPincodeDetails(sourcePin, 'source');
+  //   }
+  //   if (destinationPin.length == 6) {
+  //     fetchPincodeDetails(destinationPin, 'destination');
+  //   }
+  // }, [sourcePin, destinationPin]);
 
   const handleInputChange = (e, type) => {
     const { value } = e.target;
@@ -525,38 +545,140 @@ const Indent = () => {
     setPopupVisible(!isPopupVisible);
   };
 
+  const fetchSuggestions = async (value) => {
+    // let temp_url = `/address/address_suggestion/`
+    // try {
+    //     axios
+    //       .get(BACKEND_URL + `${temp_url}?string=${String(value)}&created_by=${localStorage.getItem('company_id')}`)
+    //       .then((resp) => {
+    //         if (resp.status === 200) {
+    //           setSuggestions(resp.data)
+    //           if(resp.data.length == 0){
+    //             fetchPincodeDetails(value,'source')
+    //           }
+    //         } else {
+    //           toast(`City/State not found for this pincode: ${value}`, { type: 'error' });
+    //         }
+    //       })
+    //       .catch(() => {
+    //         toast(`Unable to get location from this pincode: ${value}`, { type: 'error' });
+    //       });
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+
+    try {
+      axios
+        .get(`${BACKEND_URL}/pincode/${value}`)
+        .then((resp) => {
+          if (resp.status === 200) {
+            setSuggestions(resp.data)
+          } else {
+            toast(`City/State not found for this pincode: ${value}`, { type: 'error' });
+          }
+        })
+        .catch(() => {
+          toast(`Unable to get location from this pincode: ${value}`, { type: 'error' });
+        });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const onSuggestionsFetchRequested = ({ value }) => {
+    if (value.length == 6) {
+      fetchSuggestions(value);
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([]);
+  };
+
+  const getSuggestionValue = (suggestion) => sourcePin;
+  const getDestSuggestionValue = (suggestion) => destinationPin;
+
+  const renderSuggestion = (suggestion) => (
+    <div>
+      {suggestion.Area}, {suggestion.City}, {suggestion.State}, {suggestion.Country}
+    </div>
+  );
+
+  const inputProps = {
+    placeholder: 'Enter Source Pincode',
+    value: sourcePin,
+    onChange: (e, { newValue }) => setSourcePin(newValue),
+    id: 'sourcePincode',
+    className:
+      'block min-h-[36px] w-full rounded-md border border-gray-300 px-2.5 text-sm text-gray-900 focus:border-[#3181e8] focus:ring-[#3181e8] disabled:bg-neutral-300',
+  };
+
+  const inputDestProps = {
+    placeholder: 'Enter Destination Pincode',
+    value: destinationPin,
+    onChange: (e, { newValue }) => setDestinationPin(newValue),
+    id: 'destinationPincode',
+    className:
+      'block min-h-[36px] w-full rounded-md border border-gray-300 px-2.5 text-sm text-gray-900 focus:border-[#3181e8] focus:ring-[#3181e8] disabled:bg-neutral-300',
+  };
+
+  const theme = {
+    container: 'relative w-full',
+    input: 'w-full p-2 text-lg',
+    suggestionsContainer: 'absolute z-20 bg-white max-h-52 overflow-y-auto w-full shadow-md',
+    suggestionsList: 'list-none  m-0 p-0',
+    suggestion: 'p-2 cursor-pointer',
+    suggestionHighlighted: 'bg-gray-300',
+  };
+
   return (
     <PageWithSidebar>
       {isLoading && <Loader />}
-      <div className="flex flex-col items-center justify-center gap-4 p-3">
       <Address isVisible={isPopupVisible} onClose={togglePopup} />
+      {localStorage.getItem('is_company') == 0 && <div className="flex flex-col items-center justify-center gap-4 p-3">
         <div className="flex w-[80%] flex-row justify-between gap-8 rounded p-4 shadow">
           <div className="flex w-1/2 flex-col">
-            <Field
-              type="number"
-              id="sourcePincode"
-              label="From Pincode"
-              inputClassNames="text-xs"
-              labelClassNames="text-xs"
-              placeHolder="Enter Source Pincode"
-              required={true}
-              value={sourcePin}
-              onChange={(e) => handleInputChange(e, 'source')}
-            />
+          <label
+          htmlFor="sourcePincode"
+          className={`mb-2 flex items-center  text-sm font-medium text-gray-600`}>
+          From Pincode
+        </label>
+             <Autosuggest
+                  suggestions={suggestions}
+                  onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                  onSuggestionsClearRequested={onSuggestionsClearRequested}
+                  getSuggestionValue={getSuggestionValue}
+                  renderSuggestion={renderSuggestion}
+                  inputProps={inputProps}
+                  onSuggestionSelected={(event, { suggestion }) => {
+                    const { Area, State, Country } = suggestion;
+                          setSelectedCity((prev) => ({ ...prev, source: `${Area} ${State} ${Country}` }));
+                      }}
+                  theme={theme}
+              />
             {/* {!isValidAddress && <p className="mt-1 text-xs text-red-500">Address is required.</p>} */}
           </div>
           <div className="flex w-1/2 flex-col">
-            <Field
-              type="number"
-              id="destinationPincode"
-              label="To Pincode"
-              inputClassNames="text-xs"
-              labelClassNames="text-xs"
-              placeHolder="Enter Destination Pincode"
-              required={true}
-              value={destinationPin}
-              onChange={(e) => handleInputChange(e, 'destination')}
-            />
+          <label
+          htmlFor="destinationPincode"
+          className={`mb-2 flex items-center  text-sm font-medium text-gray-600`}>
+          To Pincode
+        </label>
+        <Autosuggest
+                  suggestions={suggestions}
+                  onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                  onSuggestionsClearRequested={onSuggestionsClearRequested}
+                  getSuggestionValue={getDestSuggestionValue}
+                  renderSuggestion={renderSuggestion}
+                  inputProps={inputDestProps}
+                  onSuggestionSelected={(event, { suggestion }) => {
+                    const { Area, State, Country } = suggestion;
+                        setSelectedCity((prev) => ({ ...prev, destination: `${Area} ${State} ${Country}` }));
+                      }}
+                  theme={theme}
+              />
             {/* {!isValidAddress && <p className="mt-1 text-xs text-red-500">Address is required.</p>} */}
           </div>
         </div>
@@ -891,8 +1013,7 @@ const Indent = () => {
               <p className="mt-1 text-xs text-red-500">Please enter a valid 10-digit number.</p>
             )}
           </div>
-          <div className="w-[100%] flex flex-row">
-          <div className="w-[80%]">
+          <div className="w-[100%]">
             <Field
               id="address"
               // value={personInfo?.coordinate_number}
@@ -904,8 +1025,6 @@ const Indent = () => {
               isDisabled={false}
               onChange={handlePersonMobileNumberChange}
             />
-            </div>
-            <button onClick={togglePopup} className="ml-2 mt-6 p-2 text-sm font-semibold bg-blue-500 text-white rounded">Add Address</button>
           </div>
         </div>
         <button
@@ -921,7 +1040,7 @@ const Indent = () => {
           }}>
           {modifyFlag == 0 ? '+ Create Indent' : '+ Modify Indent'}
         </button>
-      </div>
+      </div>}
     </PageWithSidebar>
   );
 };
