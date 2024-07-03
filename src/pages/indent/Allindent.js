@@ -583,7 +583,7 @@ const Allindent = () => {
                 )}
 
 
-                {showOfflineBtn && popupCardId == data.id && (
+                {((showOfflineBtn && popupCardId == data.id) || data.offline_price && data.offline_price > 0) && (
                   <div className="mt-2 flex flex-row items-center justify-between p-1 ">
                     <div className="mt-2">
                       <label className="text-xs font-semibold text-purple-400">OFFLINE PRICE</label>
