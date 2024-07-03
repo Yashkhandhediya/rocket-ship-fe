@@ -18,6 +18,7 @@ const is_admin = localStorage.getItem('is_admin');
 
 const Allindent = () => {
   const temp = localStorage.getItem('user_id');
+  const is_company = localStorage.getItem('is_company');
   const { url_user_id } = useParams();
   console.log('url_user', url_user_id);
   let user_name = null;
@@ -118,6 +119,17 @@ const Allindent = () => {
         console.log('ERRRRRRRRRRRRR', err);
       });
   };
+
+  const checkConfirmRejectButtonShowCondition = (data) => {
+    console.log("yasah")
+    if (is_company == 1){
+      return false
+    }else
+      return (data.trip_status !== 2 &&
+      data.trip_status !== 3 &&
+      data.trip_status !== 0 &&
+      data?.counter_price == null)
+  }
 
   const handlePriceChange = (id, value) => {
     setPrice({ ...price, [id]: value }); // Update the price for the corresponding card
@@ -442,10 +454,7 @@ const Allindent = () => {
                   )}
                   {showBtn && (
                     <div className="mt-6 flex flex-row">
-                      {data.trip_status !== 2 &&
-                        data.trip_status !== 3 &&
-                        data.trip_status !== 0 &&
-                        data?.counter_price == null && (
+                      { checkConfirmRejectButtonShowCondition(data) && (
                           <button
                             className="mr-2 rounded-lg bg-blue-500 px-3  py-2 text-xs font-semibold text-white hover:bg-blue-600"
                             onClick={() => {
@@ -454,10 +463,7 @@ const Allindent = () => {
                             Confirm
                           </button>
                         )}
-                      {data.trip_status !== 2 &&
-                        data.trip_status !== 3 &&
-                        data.trip_status !== 0 &&
-                        data?.counter_price == null && (
+                      {checkConfirmRejectButtonShowCondition(data) && (
                           <button
                             className="rounded-lg bg-red-500 px-3  py-2 text-xs font-semibold text-white hover:bg-red-600"
                             onClick={() => {
@@ -545,7 +551,7 @@ const Allindent = () => {
                   <div className="mt-2 flex flex-row items-center justify-between p-1 ">
                     <div className="mt-2">
                       <label className="text-xs font-semibold text-purple-400">OFFLINE PRICE</label>
-                      {data.counter_price != null && localStorage.getItem('is_company') == 0 ? (
+                      {data.counter_price != null && localStorage.getItem('is_company') == 1 ? (
                         <input
                           type="text"
                           value={offlinePrice || ''}
