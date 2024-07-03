@@ -58,14 +58,14 @@ export const sidebarLinks = [
     icon: book,
     hoverIcon: book,
   },
-  !parseInt(is_admin) && {
+  parseInt(is_company) && {
     title: 'Truck Size',
     path: '#',
     onClick: 'openTruckSizeModal',
     icon: truckSize,
     hoverIcon: truckSize,
   },
-  !parseInt(is_admin) && {
+  parseInt(is_company) && {
     title: 'Material Type',
     path: '#',
     onClick: 'openMaterialTypeModal',
