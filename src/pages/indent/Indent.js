@@ -71,6 +71,44 @@ const Indent = () => {
     height: 0,
   });
 
+  const getTruckType = async () => {
+    setLoading(true);
+    try {
+      const resposne = await axios.get(`${BACKEND_URL}/trucktype/get_truck_types/?created_by=${company_id}`);
+      setTruckTypes(resposne.data);
+      console.log(resposne.data);
+    } catch (err) {
+      toast(`There is error while fetching data`, { type: 'error' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getMaterialType = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${BACKEND_URL}/materialtype/get_material_type/?created_by=${company_id}`);
+      setMaterialTypes(response.data);
+    } catch (err) {
+      toast(`There is error while fetching data`, { type: 'error' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getTruckType();
+    getMaterialType();
+  }, []);
+
+  const truckTypesData = truckTypes?.map((type) => {
+    return { label: type.truck_type, value: type.truck_type, truck_id: type.id };
+  });
+
+  const materialTypesData = materialTypes?.map((type) => {
+    return { label: type.material_type, value: type.material_type, truck_id: type.id };
+  });
+
   const [remarks, setRemarks] = useState(data?.remarks || '');
   const [totalKm, setTotalKm] = useState(data?.kilometer || 0);
   const [fromId,setFromId] = useState('')
