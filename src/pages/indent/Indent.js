@@ -526,6 +526,26 @@ const Indent = () => {
     // } catch (e) {
     //   console.error(e);
     // }
+
+     try {
+      axios
+        .get(`${BACKEND_URL}/pincode/${pincode}`)
+        .then((resp) => {
+          if (resp.status === 200) {
+            setSuggestions(resp.data)
+          } else {
+            toast(`City/State not found for this pincode: ${pincode}`, { type: 'error' });
+          }
+        })
+        .catch(() => {
+          toast(`Unable to get location from this pincode: ${pincode}`, { type: 'error' });
+        });
+    } catch (e) {
+      console.error(e);
+    }
+
+
+
     // let temp_url = `/address/address_suggestion/`
 
     // try {
@@ -603,9 +623,9 @@ const Indent = () => {
           .then((resp) => {
             if (resp.status === 200) {
               setSuggestions(resp.data)
-              // if(resp.data.length == 0){
-              //   fetchPincodeDetails(value,'source')
-              // }
+              if(resp.data.length == 0){
+                fetchPincodeDetails(value,'')
+              }
             } else {
               toast(`City/State not found for this pincode: ${value}`, { type: 'error' });
             }

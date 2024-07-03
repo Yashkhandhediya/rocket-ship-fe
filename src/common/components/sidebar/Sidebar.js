@@ -80,12 +80,12 @@ const Sidebar = () => {
     >
       <div className="z-100 flex justify-center items-center sticky top-0 h-[10%] w-full bg-[#912517] pt-2.5">
         <div className="mb-2">
-          <img src={logo} className="h-[80px] w-[180px] group-hover/sidebar:hidden" />
+          <img src={logo} className=" group-hover/sidebar:hidden" />
           <img src={logo} className="hidden group-hover/sidebar:block" />
         </div>
       </div>
-      <hr className="mb-4 border-[#c] text-[#0000001a] md:hidden" />
-      <div className="mt-6">
+      <hr className="mt-4 mb-4 border-[#c] text-[#0000001a] md:hidden" />
+      <div className="mt-14">
         {sidebarLinks.map((nav, i) => {
           if (nav.path) {
             return (
