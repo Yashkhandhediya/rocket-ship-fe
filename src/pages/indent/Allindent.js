@@ -624,7 +624,7 @@ const Allindent = () => {
                   <div className="mt-2 flex flex-row items-center justify-between p-1 ">
                     <div className="mt-2">
                       <label className="text-xs font-semibold text-purple-400">OFFLINE PRICE</label>
-                      {data.counter_price != null && localStorage.getItem('is_company') == 1? (
+                      {data.counter_price != null && localStorage.getItem('is_company') == 1 && localStorage.getItem('activeTab') == 2? (
                         <input
                           type="text"
                           value={offlinePrice || ''}
