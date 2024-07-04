@@ -217,7 +217,7 @@ const Allindent = () => {
         console.log('RESPONSEEEEEE11', res);
         toast('RCSL Price Successfully Submitted', { type: 'success' });
         setLoading(false);
-        // window.location.reload();
+        window.location.reload();
       })
       .catch((err) => {
         console.log('Errorororor', err);
@@ -521,7 +521,7 @@ const Allindent = () => {
                 {showOfflinePricePrompt && (
                       <div className="fixed inset-0 bg-gray-200 bg-opacity-5 flex justify-center items-start">
                           <div className="bg-white p-4 rounded-lg w-96 mt-16">
-                          <p className="text-lg font-semibold mb-4"> Can You Add offline price?</p>
+                          <p className="text-lg font-semibold mb-4"> Do you want to Add offline price?</p>
                           <div className="flex justify-end">
                             <button
                               className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
@@ -695,7 +695,11 @@ const Allindent = () => {
                       </button>
                       <button
                         className="ml-2 mr-2 rounded-md border bg-red-500 p-2 text-sm text-white"
-                        onClick={() => setShowPopup(false)}>
+                        onClick={() => {
+                          setShowPopup(false)
+                          window.location.reload()
+                        }
+                        }>
                         Cancel
                       </button>
                     </div>
