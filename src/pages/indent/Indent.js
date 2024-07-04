@@ -29,6 +29,7 @@ const Indent = () => {
   const [isValidPhone, setIsValidPhone] = useState(true);
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+  const [bgColor,setBgColor] = useState(false)
   const data = location.state?.data || {};
   console.log('Dataaaaaa', data);
   // console.log("Dataaaaaaaa",props.location.state.targetPrice)
@@ -622,8 +623,10 @@ const Indent = () => {
           .get(BACKEND_URL + `${temp_url}?string=${String(value)}&created_by=${localStorage.getItem('company_id')}`)
           .then((resp) => {
             if (resp.status === 200) {
+              setBgColor(true)
               setSuggestions(resp.data)
               if(resp.data.length == 0){
+                setBgColor(false)
                 fetchPincodeDetails(value,'')
               }
             } else {
@@ -697,7 +700,7 @@ const Indent = () => {
   const theme = {
     container: 'relative w-full',
     input: 'w-full p-2 text-lg',
-    suggestionsContainer: 'absolute z-20 bg-white max-h-52 overflow-y-auto w-full shadow-md',
+    suggestionsContainer: `absolute z-20 ${bgColor ? 'bg-yellow-200' : 'bg-white'} max-h-52 overflow-y-auto w-full shadow-md`,
     suggestionsList: 'list-none  m-0 p-0',
     suggestion: 'p-2 cursor-pointer',
     suggestionHighlighted: 'bg-gray-300',

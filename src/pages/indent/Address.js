@@ -20,9 +20,16 @@ const Address = ({ isVisible, onClose }) => {
     }));
   };
 
+  const checkField = () => {
+    if (address.area === '' || address.pincode === '' || address.city === '' || address.state === '' || address.country === ''){
+      toast.error('Please fill all the fields');
+    }
+  }
+
 
   const handleSubmit = () => {
     console.log("Submit Address API")
+    checkField()
     axios.post(BACKEND_URL + `/address/truck_booking_address/?created_by=${localStorage.getItem('company_id')}`,
       address
     ).then((res) => {

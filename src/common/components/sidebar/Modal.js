@@ -15,7 +15,7 @@ const Modal = ({ isOpen, onClose, title, label, placeholder, onSubmit,info,setIn
         <form onSubmit={handleSubmit}>
           <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
           <input
-            name="inputField"
+            // name="inputField"
             type="text"
             placeholder={placeholder}
             className="w-full p-2 border border-gray-300 rounded-md mb-4"

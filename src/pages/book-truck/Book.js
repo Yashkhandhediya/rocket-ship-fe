@@ -144,13 +144,14 @@ const Book = () => {
                                     <div className="rounded bg-red-500  h-2 w-2 m-2"></div>
                                     <input
                                         ref={inputRef}
-                                        className="outline-none bg-gray-100 h-10 px-2 w-[100%] rounded border-0 focus:ring-0 ring-0 focus:outline-none"
+                                        className="outline-none bg-gray-100 h-10 px-2 w-[100%] rounded border-0 focus:ring-0 ring-0 focus:outline-none cursor-not-allowed"
                                         placeholder="Enter your unloading city"
                                         type="text"
+                                        disabled
                                         value={selectedCity[index].city}
-                                        onFocus={() => setIsDropdownOpen({ ...isDropdownOpen, [index]: { isOpen: true } })}
+                                        // onFocus={() => setIsDropdownOpen({ ...isDropdownOpen, [index]: { isOpen: true } })}
                                     />
-                                    <Dropdown isOpen={isDropdownOpen[index]?.isOpen} index={index} />
+                                    {/* <Dropdown isOpen={isDropdownOpen[index]?.isOpen} index={index} /> */}
                                 </div>
                             </div>
                             <div className="flex flex-col">

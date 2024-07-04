@@ -37,6 +37,9 @@ const Sidebar = () => {
   };
 
   const handleTruckSizeSubmit = () => {
+    if(truckSize == null){
+      toast.error('Please Enter truck size')
+    }
     axios
       .post(
         BACKEND_URL +
@@ -55,6 +58,9 @@ const Sidebar = () => {
   };
 
   const handleMaterialTypeSubmit = () => {
+    if(materialType == null){
+      toast.error('Please Enter material type')
+    }
     axios
       .post(
         BACKEND_URL +
