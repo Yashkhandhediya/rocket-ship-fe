@@ -133,12 +133,12 @@ const LogIn = () => {
         </div>
         <div className="mt-8 flex h-full w-[49%] flex-col items-center justify-center">
           <div className="mb-8 text-center text-4xl font-bold">
-            <h1>Cloud Cargo</h1>
+            <h1>Truck Booking</h1>
           </div>
           {!handlePopup && (
             <div className="bg-body mb-3 w-[95%] rounded-2xl bg-white px-12 py-6 shadow md:w-9/12">
               <div className="mb-2 text-center">
-                <h3 className="m-0 text-xl font-medium">Login to Cloud Cargo</h3>
+                <h3 className="m-0 text-xl font-medium">Login to Truck Booking</h3>
               </div>
               {/* <GoogleLogin
                 clientId="285163063974-00ubuj8sg12diejh6j2hn3mq845d5ngn.apps.googleusercontent.com"
@@ -217,7 +217,7 @@ const LogIn = () => {
                 {userType === 'company' && (
                   <div className="text-center">
                     <p className="text-sm">
-                      New to Cloud Cargo?{' '}
+                      New to Truck Booking?{' '}
                       {/* <Link to={'/signup'} className="text-decoration-none text-red-700">
                 Sign Up Now
               </Link> */}
