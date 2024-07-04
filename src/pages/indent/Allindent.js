@@ -144,6 +144,30 @@ const Allindent = () => {
       data?.counter_price == null)
   }
 
+
+  const checkCounterPriceShowCondition = (data) => {
+    console.log("yasah")
+    if (is_company == 1){
+      return false
+    }else
+      return (data.trip_status !== 2 &&
+      data.trip_status !== 3 &&
+      data.trip_status !== 0 &&
+      data?.counter_price == null)
+  }
+
+
+  const checkCounterPriceDisabledCondition = (data) => {
+    console.log("yasah")
+    if (is_company == 1){
+      return false
+    }else
+      return (data.trip_status !== 2 &&
+      data.trip_status !== 3 &&
+      data.trip_status !== 0 &&
+      data?.counter_price == null)
+  }
+
   const handlePriceChange = (id, value) => {
     setPrice({ ...price, [id]: value }); // Update the price for the corresponding card
   };
@@ -528,7 +552,7 @@ const Allindent = () => {
                   <div className="mt-2 flex flex-row items-center justify-between p-1 ">
                     <div className="mt-2">
                       <label className="text-xs font-semibold text-purple-400">COUNTER PRICE</label>
-                      {data.counter_price == null && localStorage.getItem('is_company') == 0 ? (
+                      {data.counter_price == null && localStorage.getItem('is_company') == 0 && localStorage.getItem('activeTab') == 2 ? (
                         <input
                           type="text"
                           value={rcslPrice[data.id] || ''}
