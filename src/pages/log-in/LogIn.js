@@ -206,7 +206,7 @@ const LogIn = () => {
                   onClick={handleSubmit}>
                   Login
                 </button>
-                {localStorage.getItem('is_company') == 1 && <div className="text-center">
+                {userType === 'company' && <div className="text-center">
                   <p className="text-sm">
                     New to Cloud Cargo?{' '}
                     {/* <Link to={'/signup'} className="text-decoration-none text-red-700">
