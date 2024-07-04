@@ -17,7 +17,7 @@ const SignUpUser = () => {
     email_address: '',
     contact_no: '',
     password: '',
-    users_type_id:1
+    users_type_id: 1,
   });
 
   const [error, setError] = useState({});
@@ -49,66 +49,65 @@ const SignUpUser = () => {
     }
     setFlag(1);
     const headers = { 'Content-Type': 'application/json' };
-    if(localStorage.getItem('access_token') != null){
+    if (localStorage.getItem('access_token') != null) {
       axios
-      .post(
-        BACKEND_URL + '/users/signup',
-        {
-          first_name: signupInput.first_name,
-          last_name: signupInput.last_name,
-          password: signupInput.password,
-          contact_no: signupInput.contact_no,
-          email_address: signupInput.email_address,
-          company_id: signupInput.company_id,
-          users_type_id:signupInput.users_type_id
-        },
-        { headers },
-      )
-      .then((res) => {
-        console.log('Reponse of Sign up', res);
-        if (res.data.msg == 'User already exits') {
-          toast('User Already Exists', { type: 'error' });
-        }
-        else if (res.data.msg === "Company already exits") {
-          toast("Company Already Exists", { type: 'error' });
-          } 
-        else {
-          toast('User Added SuccessFully', { type: 'success' });
-          navigate('/seller/home');
-        }
-      })
-      .catch((err) => {
-        console.log('Error in signup', err);
-        toast('Some Error in Sign Up', { type: 'error' });
-      });
-    }else{
-    axios
-      .post(
-        BACKEND_URL + '/users/create_user_and_company',
-        {
-          first_name: signupInput.first_name,
-          last_name: signupInput.last_name,
-          password: signupInput.password,
-          contact_no: signupInput.contact_no,
-          email_address: signupInput.email_address,
-          // company_id: signupInput.company_id,
-          // users_type_id:signupInput.users_type_id
-        },
-        { headers },
-      )
-      .then((res) => {
-        console.log('Reponse of Sign up', res);
-        if (res.data.msg == 'User already exits') {
-          toast('User Already Exists', { type: 'error' });
-        } else {
-          toast('User Added SuccessFully', { type: 'success' });
-          navigate('/seller/home');
-        }
-      })
-      .catch((err) => {
-        console.log('Error in signup', err);
-        toast('Some Error in Sign Up', { type: 'error' });
-      });
+        .post(
+          BACKEND_URL + '/users/signup',
+          {
+            first_name: signupInput.first_name,
+            last_name: signupInput.last_name,
+            password: signupInput.password,
+            contact_no: signupInput.contact_no,
+            email_address: signupInput.email_address,
+            company_id: signupInput.company_id,
+            users_type_id: signupInput.users_type_id,
+          },
+          { headers },
+        )
+        .then((res) => {
+          console.log('Reponse of Sign up', res);
+          if (res.data.msg == 'User already exits') {
+            toast('User Already Exists', { type: 'error' });
+          } else if (res.data.msg === 'Company already exits') {
+            toast('Company Already Exists', { type: 'error' });
+          } else {
+            toast('User Added SuccessFully', { type: 'success' });
+            navigate('/seller/home');
+          }
+        })
+        .catch((err) => {
+          console.log('Error in signup', err);
+          toast('Some Error in Sign Up', { type: 'error' });
+        });
+    } else {
+      axios
+        .post(
+          BACKEND_URL + '/users/create_user_and_company',
+          {
+            first_name: signupInput.first_name,
+            last_name: signupInput.last_name,
+            password: signupInput.password,
+            contact_no: signupInput.contact_no,
+            email_address: signupInput.email_address,
+            // company_id: signupInput.company_id,
+            // users_type_id:signupInput.users_type_id
+          },
+          { headers },
+        )
+        .then((res) => {
+          console.log('Reponse of Sign up', res);
+          if (res.data.msg == 'User already exist') {
+            toast('User Already Exists', { type: 'error' });
+            setFlag(0);
+          } else {
+            toast('User Added SuccessFully', { type: 'success' });
+            navigate('/seller/home');
+          }
+        })
+        .catch((err) => {
+          console.log('Error in signup', err);
+          toast('Some Error in Sign Up', { type: 'error' });
+        });
     }
   };
 
