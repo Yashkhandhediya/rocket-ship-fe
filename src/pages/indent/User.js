@@ -13,11 +13,11 @@ const User = () => {
   const [userData, setUserData] = useState([])
   const [fetchData, setFetchData] = useState(false)
   const navigate = useNavigate()
-
+  const company_id = localStorage.getItem('company_id');
 
     useEffect(() => {
 
-      axios.get(BACKEND_URL + '/indent/get_users').then((res)=> {
+      axios.get(BACKEND_URL + `/indent/get_users?company_id=${company_id}`).then((res)=> {
         console.log("RESSSSSSSSSSSSS",res)
         setUserData(res.data)
         setFetchData(true)
