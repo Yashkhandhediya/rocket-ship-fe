@@ -17,9 +17,9 @@ function CustomerTable() {
   const [page, setPage] = useState(1);
   const [incrementDisabled, setIncrementDisable] = useState(false);
 
-  const id_user = localStorage.getItem('user_id');
-  const id_company = localStorage.getItem('company_id');
-  const is_company = localStorage.getItem('is_company');
+  const id_user = sessionStorage.getItem('user_id');
+  const id_company = sessionStorage.getItem('company_id');
+  const is_company = sessionStorage.getItem('is_company');
   const navigate = useNavigate();
 
   const user_id = is_company == 1 ? id_company : id_user;

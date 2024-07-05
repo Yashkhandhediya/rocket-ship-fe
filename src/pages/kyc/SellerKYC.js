@@ -7,7 +7,7 @@ import Stepper from "./component/stepper/Stepper";
 import { Completed_KYC } from "./component/completed_KYC";
 
 const SellerKYC = () => {
-    const is_company = localStorage.getItem('is_company')
+    const is_company = sessionStorage.getItem('is_company')
     const [state, setState] = useState(0);
     const [isKYCCompleted, setIsKYCCompleted] = useState(false);
     let steps = {}

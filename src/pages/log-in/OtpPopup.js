@@ -14,8 +14,8 @@ const OtpPopup = ({
   companyId = null,
 }) => {
   console.log('DATAAAAAAAAA', userType);
-  const is_super = localStorage.getItem('is_super');
-  const id_user = localStorage.getItem('user_id');
+  const is_super = sessionStorage.getItem('is_super');
+  const id_user = sessionStorage.getItem('user_id');
   const [seconds, setSeconds] = useState(45);
   const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
   const navigate = useNavigate();
@@ -128,7 +128,7 @@ const OtpPopup = ({
     axios
       .get(BACKEND_URL + otpURL, { otp: OTP, user_id: tempId }, { headers })
       .then((response) => {
-        localStorage.setItem('is_otpVerified', JSON.stringify(true));
+        sessionStorage.setItem('is_otpVerified', JSON.stringify(true));
         console.log(response);
         if (is_super == 3) {
           toast('Login Success', { type: 'success' });

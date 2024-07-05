@@ -12,7 +12,7 @@ import { BACKEND_URL } from '../../../../../common/utils/env.config';
 
 export default function PickupDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
-  const id_user = localStorage.getItem('user_id')
+  const id_user = sessionStorage.getItem('user_id')
   const domesticOrderPickupAddress =
     useSelector((state) => state?.addOrder?.domestic_order?.pickup_address) || {};
 

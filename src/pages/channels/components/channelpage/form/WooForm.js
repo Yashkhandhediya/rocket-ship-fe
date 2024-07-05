@@ -21,7 +21,7 @@ const WooForm = () => {
 
     const redirectToWooAuth = async () => {
         axios
-            .get(BACKEND_URL+`/woocommerce/generate_auth_url?store_url=${url}&user_id=${localStorage.getItem('user_id')}&shop_name=${storeName}`)
+            .get(BACKEND_URL+`/woocommerce/generate_auth_url?store_url=${url}&user_id=${sessionStorage.getItem('user_id')}&shop_name=${storeName}`)
             .then(async (resp) => {
                 if (resp.status === 200) {
                     response = resp.data.auth_url;

@@ -52,7 +52,7 @@ const LogIn = () => {
       toast('Email and Password both are required', { type: 'error' });
       return;
     }
-    localStorage.setItem('user_email', loginInput.username);
+    sessionStorage.setItem('user_email', loginInput.username);
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     console.log('username pass', loginInput.username, loginInput.password);
     console.log('backend url', BACKEND_URL);
@@ -70,21 +70,21 @@ const LogIn = () => {
       )
       .then((response) => {
         setLoading(false);
-        localStorage.setItem('user_id', response.data.user_id);
-        localStorage.setItem('company_id', response.data.company_id);
-        localStorage.setItem('is_company', response.data.is_company);
-        localStorage.setItem('is_admin', response.data.is_admin);
-        localStorage.setItem('balance', response.data.wallet_balance);
-        localStorage.setItem('is_kyc', response.data.kyc_status_id);
-        localStorage.setItem('is_super', response.data.user_type_id);
-        localStorage.setItem('is_otpVerified', JSON.stringify(false));
+        sessionStorage.setItem('user_id', response.data.user_id);
+        sessionStorage.setItem('company_id', response.data.company_id);
+        sessionStorage.setItem('is_company', response.data.is_company);
+        sessionStorage.setItem('is_admin', response.data.is_admin);
+        sessionStorage.setItem('balance', response.data.wallet_balance);
+        sessionStorage.setItem('is_kyc', response.data.kyc_status_id);
+        sessionStorage.setItem('is_super', response.data.user_type_id);
+        sessionStorage.setItem('is_otpVerified', JSON.stringify(false));
         const user_id =
-          userType === 'user' ? localStorage.getItem('user_id') : localStorage.getItem('company_id');
+          userType === 'user' ? sessionStorage.getItem('user_id') : sessionStorage.getItem('company_id');
         if (response.data.access_token) {
           setUserId(response.data.user_id);
           setCompanyId(response.data.company_id);
-          localStorage.setItem('access_token', response.data.access_token);
-          localStorage.setItem('user_name', response.data?.user_name?.split(' ')[0]);
+          sessionStorage.setItem('access_token', response.data.access_token);
+          sessionStorage.setItem('user_name', response.data?.user_name?.split(' ')[0]);
           setLoading(true);
           axios
             .post(

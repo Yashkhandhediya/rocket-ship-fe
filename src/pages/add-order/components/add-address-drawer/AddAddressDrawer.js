@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
 
 const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress }) => {
-  const id_user = localStorage.getItem('user_id')
+  const id_user = sessionStorage.getItem('user_id')
   const [isAddSupplier, setIsAddSupplier] = useState(false);
   const [isAddRTOAddress, setIsAddRTOAddress] = useState(false);
   const [addressInfo, setAddressInfo] = useState({

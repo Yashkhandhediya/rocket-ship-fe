@@ -6,8 +6,8 @@ import { toast } from 'react-toastify';
 
 const QuickActions = () => {
   const navigate = useNavigate();
-  const is_company = localStorage.getItem('is_company');
-  const access_modules = localStorage.getItem('modules');
+  const is_company = sessionStorage.getItem('is_company');
+  const access_modules = sessionStorage.getItem('modules');
   console.log('Modules Length', access_modules);
   const accessModules = modules.filter((module) => access_modules?.includes(module.id));
   console.log(accessModules.length);
@@ -68,7 +68,7 @@ const QuickActions = () => {
         </svg>
       ),
       onClick: () => {
-        localStorage.setItem('activeTab', 3);
+        sessionStorage.setItem('activeTab', 3);
         hasAccessModule('Create Quick Shipment', '/add-order');
       },
       tooltip:

@@ -24,7 +24,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
   const location = useLocation();
   let { isEdit } = location?.state || {};
-  const id_user = localStorage.getItem('user_id');
+  const id_user = sessionStorage.getItem('user_id');
   const [suggestions, setSuggestions] = useState([]);
   const [suggestionData, setSuggestionData] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);

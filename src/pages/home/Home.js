@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 
 const Home = () => {
   const navigate = useNavigate();
-  const id_user = localStorage.getItem('user_id')
+  const id_user = sessionStorage.getItem('user_id')
     const [showPopup, setShowPopup] = useState(false);
     const [rechargeAmount,setRechargeAmount] = useState('')
     const [showRechargeModal, setShowRechargeModal] = useState(false);
@@ -19,8 +19,8 @@ const Home = () => {
       axios.post(BACKEND_URL + `/company/request_balance/?user_id=${parseInt(id_user)}&amount=${parseInt(rechargeAmount)}`).
       then((res) => {
           console.log("Recharge Responsee",res)
-          // let newVal = localStorage.getItem('balance') - rechargeAmount
-          // localStorage.setItem('balance',newVal)
+          // let newVal = sessionStorage.getItem('balance') - rechargeAmount
+          // sessionStorage.setItem('balance',newVal)
           toast.success('Request Recharge successful!');
           setRechargeAmount('')
       }).catch((err) => {
@@ -33,10 +33,10 @@ const Home = () => {
   return (
     <PageWithSidebar>
       <div className="flex flex-col w-full h-screen bg-[#f8f8f8] pl-6 mt-4 py-2 px-2">
-      {localStorage.getItem('is_kyc') == 1 && <div className="w-[99%] p-2 mt-2 ml-2 mr-4 mb-4 bg-red-600 border shadow-md rounded-lg hover:underline" style={{ textAlign: 'center' }}>
+      {sessionStorage.getItem('is_kyc') == 1 && <div className="w-[99%] p-2 mt-2 ml-2 mr-4 mb-4 bg-red-600 border shadow-md rounded-lg hover:underline" style={{ textAlign: 'center' }}>
           <marquee className='text-white font-semibold'><Link to={'/seller/kyc'} >Click here to complete your KYC and get non-disrupted shipping and COD remittances</Link></marquee>
       </div>}
-      {localStorage.getItem('is_kyc') == 2 && <div className="w-[99%] font-semibold text-md p-2 mt-2 ml-2 mr-4 mb-4 bg-yellow-400 border shadow-md rounded-lg hover:underline" style={{ textAlign: 'center' }}>
+      {sessionStorage.getItem('is_kyc') == 2 && <div className="w-[99%] font-semibold text-md p-2 mt-2 ml-2 mr-4 mb-4 bg-yellow-400 border shadow-md rounded-lg hover:underline" style={{ textAlign: 'center' }}>
           <marquee className='text-white'>KYC Verification Is Pending</marquee>
       </div>}
         <div className="flex flex-col bg-white h-auto rounded w-full py-6 px-5 shadow">
@@ -56,17 +56,17 @@ const Home = () => {
                 </div>
               </div>
               <div className="flex justify-center text-[#E02424] text-[14px] font-normal items-center h-1/3">
-                <button className={`py-1.5 w-48 border border-[#E02424] rounded-md bg-white ${(localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2) ? 'cursor-not-allowed' : ''}`}
+                <button className={`py-1.5 w-48 border border-[#E02424] rounded-md bg-white ${(sessionStorage.getItem('is_kyc') == 1 || sessionStorage.getItem('is_kyc') == 2) ? 'cursor-not-allowed' : ''}`}
                   onClick={() => {
                     navigate('/orders')
                   }}
-                  disabled={(localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2)}
+                  disabled={(sessionStorage.getItem('is_kyc') == 1 || sessionStorage.getItem('is_kyc') == 2)}
                 >
                   View Order
                 </button>
               </div>
             </div>
-            {localStorage.getItem('is_company') == 1 && <div className="flex w-[32%] bg-red-100 justify-start items-center h-96 flex-col rounded-lg">
+            {sessionStorage.getItem('is_company') == 1 && <div className="flex w-[32%] bg-red-100 justify-start items-center h-96 flex-col rounded-lg">
               <div className="flex flex-col items-center justify-center mt-12 h-2/3">
                 <div className="bg-white w-11 p-0.5 flex justify-center items-center rounded-full">
                   <svg className="w-10 h-10 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="#0E8500" viewBox="0 0 24 24">
@@ -82,16 +82,16 @@ const Home = () => {
                 </div>
               </div>
               <div className="flex justify-center text-white text-[14px] font-medium items-center h-1/3">
-                <button className={`py-1.5 w-48 bg-[#E02424] rounded-md ${(localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2) ? 'cursor-not-allowed' : ''}`}
+                <button className={`py-1.5 w-48 bg-[#E02424] rounded-md ${(sessionStorage.getItem('is_kyc') == 1 || sessionStorage.getItem('is_kyc') == 2) ? 'cursor-not-allowed' : ''}`}
                   onClick={() => setShowRechargeModal(true)}
-                  disabled={(localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2)}
+                  disabled={(sessionStorage.getItem('is_kyc') == 1 || sessionStorage.getItem('is_kyc') == 2)}
                 >
                   Recharge
                 </button>
                 {showRechargeModal && <RechargeModal showRechargeModal={showRechargeModal} setShowRechargeModal={setShowRechargeModal} />}
               </div>
             </div>}
-            {localStorage.getItem('is_company') == 0 &&  <div className="flex w-[32%] bg-red-100 justify-start items-center h-96 flex-col rounded-lg">
+            {sessionStorage.getItem('is_company') == 0 &&  <div className="flex w-[32%] bg-red-100 justify-start items-center h-96 flex-col rounded-lg">
               <div className="flex flex-col items-center justify-center mt-12 h-2/3">
                 <div className="bg-white w-11 p-0.5 flex justify-center items-center rounded-full">
                   <svg className="w-10 h-10 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="#0E8500" viewBox="0 0 24 24">
@@ -107,9 +107,9 @@ const Home = () => {
                 </div>
               </div>
               <div className="flex justify-center text-white text-[14px] font-medium items-center h-1/3">
-                <button className={`py-1.5 w-48 bg-[#E02424] rounded-md ${(localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2) ? 'cursor-not-allowed' : ''}`}
+                <button className={`py-1.5 w-48 bg-[#E02424] rounded-md ${(sessionStorage.getItem('is_kyc') == 1 || sessionStorage.getItem('is_kyc') == 2) ? 'cursor-not-allowed' : ''}`}
                   onClick={() => setShowPopup(true)}
-                  disabled={(localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2)}
+                  disabled={(sessionStorage.getItem('is_kyc') == 1 || sessionStorage.getItem('is_kyc') == 2)}
                 >
                   Request
                 </button>
@@ -131,11 +131,11 @@ const Home = () => {
                 </div>
               </div>
               <div className="flex justify-center text-white text-[14px] font-medium items-center h-1/3">
-                <button className={`py-1.5 w-48 bg-[#E02424] rounded-md ${(localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2) ? 'cursor-not-allowed' : ''}`}
+                <button className={`py-1.5 w-48 bg-[#E02424] rounded-md ${(sessionStorage.getItem('is_kyc') == 1 || sessionStorage.getItem('is_kyc') == 2) ? 'cursor-not-allowed' : ''}`}
                   onClick={() => {
                     navigate('/orders')
                   }}
-                  disabled={(localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2)}
+                  disabled={(sessionStorage.getItem('is_kyc') == 1 || sessionStorage.getItem('is_kyc') == 2)}
                 >
                   Ship Now
                 </button>

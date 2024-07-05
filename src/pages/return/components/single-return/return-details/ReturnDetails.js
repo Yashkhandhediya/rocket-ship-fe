@@ -168,7 +168,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
   };
 
   const fetchReturnId = () => {
-    const id = localStorage.getItem('is_company') == 1 ? localStorage.getItem('company_id') : localStorage.getItem('user_id')
+    const id = sessionStorage.getItem('is_company') == 1 ? sessionStorage.getItem('company_id') : sessionStorage.getItem('user_id')
     axios
       .get(BACKEND_URL + `/return/get_return_id?user_id=${id}`)
       .then((resp) => {

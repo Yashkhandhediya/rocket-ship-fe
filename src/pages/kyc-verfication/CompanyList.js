@@ -223,7 +223,7 @@ const CompanyList = () => {
     <div className="mt-2 flex justify-end mr-4">
       <button className='bg-red-600 p-2 mt-4 ml-4 border rounded-md shadow-md text-white font-semibold'
         onClick={() => {
-            localStorage.clear()
+            sessionStorage.clear()
             sessionStorage.clear()
             window.location.href = '/login'
         }}>Logout</button>

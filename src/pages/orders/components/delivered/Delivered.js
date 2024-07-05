@@ -36,9 +36,9 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 // import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 const Delivered = ({ data, isLoading }) => {
-  const id_user = localStorage.getItem('user_id');
-  const id_company = localStorage.getItem('company_id');
-  const is_company = localStorage.getItem('is_company');
+  const id_user = sessionStorage.getItem('user_id');
+  const id_company = sessionStorage.getItem('company_id');
+  const is_company = sessionStorage.getItem('is_company');
 
   const user_id = is_company == 1 ? id_company : id_user;
 
@@ -170,7 +170,7 @@ const Delivered = ({ data, isLoading }) => {
   const handleReturn = (id) => {
     console.log('IDDDDDDDDd', id);
     axios
-      .post(BACKEND_URL + `/return/initiate_return?order_id=${id}&user_id=${localStorage.getItem('user_id')}`)
+      .post(BACKEND_URL + `/return/initiate_return?order_id=${id}&user_id=${sessionStorage.getItem('user_id')}`)
       .then((res) => {
         console.log('Repsonse Of Initiate Return', res.data);
         toast('Return Initiate', { type: 'success' });

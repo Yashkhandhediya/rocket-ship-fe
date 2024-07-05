@@ -23,7 +23,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
   const location = useLocation()
   const data = location?.state?.data || {}
-  const id_user = localStorage.getItem('user_id')
+  const id_user = sessionStorage.getItem('user_id')
   const [suggestionData,setSuggestionData] = useState([])
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestionProductData,setSuggestionProductData] = useState([])

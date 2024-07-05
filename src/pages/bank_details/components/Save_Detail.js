@@ -21,7 +21,7 @@ const Save_Detail = ({info}) => {
 
 //   const handleData = () => {
 //     // You can use this data to send to the server
-//     axios.get(BACKEND_URL + `/bankdetails/bank_details_get?user_id=${localStorage.getItem('user_id')}`)
+//     axios.get(BACKEND_URL + `/bankdetails/bank_details_get?user_id=${sessionStorage.getItem('user_id')}`)
 //     .then((res) => {
 //       console.log("Response Bank Detail",res)
 //       setData(res.data)

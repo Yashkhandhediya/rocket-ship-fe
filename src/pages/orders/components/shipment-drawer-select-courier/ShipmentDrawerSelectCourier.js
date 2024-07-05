@@ -64,7 +64,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
   const fetchShipmentDetails = () => {
     setIsLoading(true);
     axios
-      .get(`${BACKEND_URL}/order/${orderDetails?.id}/estimate?user_id=${localStorage.getItem('user_id')}`)
+      .get(`${BACKEND_URL}/order/${orderDetails?.id}/estimate?user_id=${sessionStorage.getItem('user_id')}`)
       .then((resp) => {
         if (resp.status === 200) {
           setShipmentDetails(resp?.data);

@@ -4,7 +4,7 @@ import { settings_modules } from '../manage-role/user-management/constants';
 
 const Settings = () => {
   let settings = [];
-  const is_company = localStorage.getItem('is_company');
+  const is_company = sessionStorage.getItem('is_company');
 
   const mapModuleToLink = (module) => ({
     title: module.label,
@@ -12,7 +12,7 @@ const Settings = () => {
     icon: module.icon,
   });
 
-  const setting_module = localStorage.getItem('setting_modules');
+  const setting_module = sessionStorage.getItem('setting_modules');
   if (setting_module == null || setting_module?.length == 0) {
     settings = [
       {

@@ -14,11 +14,11 @@ import { ACCESS_TOKEN } from '../../common/utils/config';
 export let modifyFlag = 0;
 export let modifyId;
 
-const is_admin = localStorage.getItem('is_admin');
+const is_admin = sessionStorage.getItem('is_admin');
 
 const Allindent = () => {
-  const temp = localStorage.getItem('user_id');
-  const is_company = localStorage.getItem('is_company');
+  const temp = sessionStorage.getItem('user_id');
+  const is_company = sessionStorage.getItem('is_company');
   const { url_user_id } = useParams();
   console.log('url_user', url_user_id);
   let user_name = null;
@@ -45,7 +45,7 @@ const Allindent = () => {
 
   console.log('IDFFFFFF', selectedTab);
 
-  if(url_user_id == 'undefined' && localStorage.getItem('is_company') == 1){
+  if(url_user_id == 'undefined' && sessionStorage.getItem('is_company') == 1){
     navigate('/User')
   }
 
@@ -81,7 +81,7 @@ const Allindent = () => {
       }
       console.log("yash")
       setAllData(info);
-      let tab_dummy = JSON.parse(localStorage.getItem('activeTab')) || 0
+      let tab_dummy = JSON.parse(sessionStorage.getItem('activeTab')) || 0
       if (tab_dummy == 0){
         filteredData = info
       }
@@ -98,14 +98,14 @@ const Allindent = () => {
 
   let count = 1;
   useEffect(() => {
-    if (localStorage.getItem('is_kyc') == 1) {
+    if (sessionStorage.getItem('is_kyc') == 1) {
       if (count == 1) {
         toast('Complete Your KYC First', { type: 'error' });
         count++;
       }
       navigate('/seller/home');
       return;
-    } else if (localStorage.getItem('is_kyc') == 2) {
+    } else if (sessionStorage.getItem('is_kyc') == 2) {
       if (count == 1) {
         toast('KYC Verification Is Pending.', { type: 'error' });
         count++;
@@ -396,10 +396,10 @@ const Allindent = () => {
                   </div>
                   <div className="flex flex-col">
                     <div className="mr-2 self-end text-sm font-medium">
-                      {localStorage.getItem('user_name')}
+                      {sessionStorage.getItem('user_name')}
                     </div>
                     <div className="mr-2 self-end text-xs font-medium">
-                      {`Mobile No : ${localStorage.getItem('contact_no') || '9876543212'}`}
+                      {`Mobile No : ${sessionStorage.getItem('contact_no') || '9876543212'}`}
                     </div>
                   </div>
                 </div>
@@ -552,7 +552,7 @@ const Allindent = () => {
                   <div className="mt-2 flex flex-row items-center justify-between p-1 ">
                     <div className="mt-2">
                       <label className="text-xs font-semibold text-purple-400">COUNTER PRICE</label>
-                      {data.counter_price == null && localStorage.getItem('is_company') == 0 && localStorage.getItem('activeTab') == 2 ? (
+                      {data.counter_price == null && sessionStorage.getItem('is_company') == 0 && sessionStorage.getItem('activeTab') == 2 ? (
                         <input
                           type="text"
                           value={rcslPrice[data.id] || ''}
@@ -570,7 +570,7 @@ const Allindent = () => {
                       )}
                     </div>
 
-                    {localStorage.getItem('is_company') == 0 ? (
+                    {sessionStorage.getItem('is_company') == 0 ? (
                       showBtn && (
                         <div className="mt-2">
                           {data.trip_status !== 2 &&
@@ -624,7 +624,7 @@ const Allindent = () => {
                   <div className="mt-2 flex flex-row items-center justify-between p-1 ">
                     <div className="mt-2">
                       <label className="text-xs font-semibold text-purple-400">OFFLINE PRICE</label>
-                      {data.counter_price != null && localStorage.getItem('is_company') == 1 && localStorage.getItem('activeTab') == 2? (
+                      {data.counter_price != null && sessionStorage.getItem('is_company') == 1 && sessionStorage.getItem('activeTab') == 2? (
                         <input
                           type="text"
                           value={offlinePrice || ''}
@@ -642,7 +642,7 @@ const Allindent = () => {
                       )}
                     </div>
 
-                    {localStorage.getItem('is_company') == 1 && (
+                    {sessionStorage.getItem('is_company') == 1 && (
                       <div className="mt-4 flex flex-row">
                         {data.trip_status !== 2 &&
                           data.trip_status !== 3 &&

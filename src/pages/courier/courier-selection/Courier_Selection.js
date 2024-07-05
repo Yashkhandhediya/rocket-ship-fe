@@ -23,7 +23,7 @@ function Courier_Selection() {
 
   const handleData = () => {
     axios
-      .get(BACKEND_URL + `/userpartner/get_user_partner?user_id=${localStorage.getItem('user_id')}`)
+      .get(BACKEND_URL + `/userpartner/get_user_partner?user_id=${sessionStorage.getItem('user_id')}`)
       .then((res) => {
         console.log('Courier Data', res.data);
         setData(res.data);

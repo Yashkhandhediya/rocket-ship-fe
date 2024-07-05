@@ -3,17 +3,17 @@ import { infoIcon } from '../../icons';
 import { CustomTooltip } from '../custom-tooltip';
 
 const Tabs = ({ tabs, tabClassNames, panelClassNames, onTabChange = () => {} }) => {
-  const [activeTab, setActiveTab] = useState(JSON.parse(localStorage.getItem('activeTab')) || 0);
+  const [activeTab, setActiveTab] = useState(JSON.parse(sessionStorage.getItem('activeTab')) || 0);
   console.log('Activeeeeeeee', activeTab);
 
   const handleClick = (index) => {
     setActiveTab(index);
     onTabChange(index);
-    localStorage.setItem('activeTab', JSON.stringify(index));
+    sessionStorage.setItem('activeTab', JSON.stringify(index));
   };
 
   useEffect(() => {
-    localStorage.setItem('activeTab', JSON.stringify(activeTab));
+    sessionStorage.setItem('activeTab', JSON.stringify(activeTab));
   }, []);
 
   return (

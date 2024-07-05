@@ -14,9 +14,9 @@ const Address_Modal = ({ setShow, addressId, addressData, fetchUserAddressList }
   const [isPincodeValid, setIsPincodeValid] = useState(false);
   const [isRTOPincodeValid, setIsRTOPincodeValid] = useState(false);
   const dataAddress = addressData.find((address) => address.id === addressId);
-  const id_user = localStorage.getItem('user_id');
-  const id_company = localStorage.getItem('company_id');
-  const is_company = localStorage.getItem('is_company');
+  const id_user = sessionStorage.getItem('user_id');
+  const id_company = sessionStorage.getItem('company_id');
+  const is_company = sessionStorage.getItem('is_company');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   console.log(dataAddress, addressId);

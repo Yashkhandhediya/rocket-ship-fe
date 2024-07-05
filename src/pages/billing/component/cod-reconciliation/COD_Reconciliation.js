@@ -105,7 +105,7 @@ const COD_Reconciliation = ({ charges, data }) => {
                         <img src={remitance} alt="" width={'200px'} />
                         <div className='text-3xl mt-10 text-[#b54040] font-bold'>Your remittance is on its way.</div>
                         <div className='text-[15px] text-[#313131] mt-2 font-semibold opacity-80'>
-                            Hey {localStorage.getItem('user_name')}, We release COD remittance 3 times in a week and on the 8th day from the date of delivery.
+                            Hey {sessionStorage.getItem('user_name')}, We release COD remittance 3 times in a week and on the 8th day from the date of delivery.
                         </div>
                         <div className="mt-8">
                             <button className="bg-[#b54040] px-16 py-3 rounded-3xl text-white text-[13px]">
@@ -121,7 +121,7 @@ const COD_Reconciliation = ({ charges, data }) => {
                         <img src={remitance} alt="" width={'200px'} />
                         <div className='text-3xl mt-10 text-[#b54040] font-bold'>Your remittance is on its way.</div>
                         <div className='text-[15px] text-[#313131] mt-2 font-semibold opacity-80'>
-                            Hey {localStorage.getItem('user_name')}, We release COD remittance 3 times in a week and on the 8th day from the date of delivery.
+                            Hey {sessionStorage.getItem('user_name')}, We release COD remittance 3 times in a week and on the 8th day from the date of delivery.
                         </div>
                         <div className="mt-8">
                             <button className="bg-[#b54040] px-16 py-3 rounded-3xl text-white text-[13px]">

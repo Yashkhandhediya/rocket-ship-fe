@@ -28,9 +28,9 @@ const WeightDiscrepancy = () => {
   // const [images,setImages] = useState([])
   const [id, setId] = useState(null);
   const fileInputRef = useRef(null);
-  const id_user = localStorage.getItem('user_id');
-  const company_id = localStorage.getItem('company_id');
-  const is_company = localStorage.getItem('is_company');
+  const id_user = sessionStorage.getItem('user_id');
+  const company_id = sessionStorage.getItem('company_id');
+  const is_company = sessionStorage.getItem('is_company');
   const [loading, setLoading] = useState(false);
   const userId = is_company == 1 ? company_id : id_user;
   const [filteredWDId, setFilteredWDId] = useState([]);
@@ -97,7 +97,7 @@ const WeightDiscrepancy = () => {
   const fetchWeightDiscrepancies = () => {
     axios
       .get(
-        BACKEND_URL + `/weight_discrepancy/get_weight_discrepancy?user_id=${localStorage.getItem('user_id')}`,
+        BACKEND_URL + `/weight_discrepancy/get_weight_discrepancy?user_id=${sessionStorage.getItem('user_id')}`,
       )
       .then(async (resp) => {
         if (resp.status === 200) {
@@ -173,7 +173,7 @@ const WeightDiscrepancy = () => {
     const headers = { 'Content-Type': 'multipart/form-data' };
     try {
       const response = await axios.post(
-        `${BACKEND_URL}/weight_discrepancy/import/?user_id=${localStorage.getItem('user_id')}`,
+        `${BACKEND_URL}/weight_discrepancy/import/?user_id=${sessionStorage.getItem('user_id')}`,
         formData,
         { headers },
       );
@@ -272,7 +272,7 @@ const WeightDiscrepancy = () => {
 
       try {
         const response = await axios.post(
-          `${BACKEND_URL}/weight_discrepancy/?user_id=${localStorage.getItem('user_id')}`,
+          `${BACKEND_URL}/weight_discrepancy/?user_id=${sessionStorage.getItem('user_id')}`,
           discrepancyData,
           { headers },
         );

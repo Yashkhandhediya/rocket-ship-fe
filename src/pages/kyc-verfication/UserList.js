@@ -65,8 +65,8 @@ const UserList = () => {
         const imgUrl = URL.createObjectURL(res.data)
         setAadharImg(imgUrl)
         console.log("PICCCCCCCCCCCCCc",aadharImg)
-        // let newVal = localStorage.getItem('balance') - rechargeAmount
-        // localStorage.setItem('balance',newVal)
+        // let newVal = sessionStorage.getItem('balance') - rechargeAmount
+        // sessionStorage.setItem('balance',newVal)
         // window.location.reload()
     }).catch((err) => {
         console.log("Error In Rechargeee",err)
@@ -78,8 +78,8 @@ const UserList = () => {
         const imgUrl = URL.createObjectURL(res.data)
         setUserImg(imgUrl)
         console.log("PICCCCCCCCCCCCCc",userImg)
-        // let newVal = localStorage.getItem('balance') - rechargeAmount
-        // localStorage.setItem('balance',newVal)
+        // let newVal = sessionStorage.getItem('balance') - rechargeAmount
+        // sessionStorage.setItem('balance',newVal)
         // window.location.reload()
     }).catch((err) => {
         console.log("Error In Rechargeee",err)
@@ -201,9 +201,9 @@ const UserList = () => {
 
          <button className='bg-red-600 p-2 mt-4 mr-8 border rounded-md shadow-md text-white font-semibold'
           onClick={() => {
-              localStorage.removeItem('user_name')
-              localStorage.removeItem('is_super')
-              localStorage.removeItem('access_token')
+              sessionStorage.removeItem('user_name')
+              sessionStorage.removeItem('is_super')
+              sessionStorage.removeItem('access_token')
               sessionStorage.clear()
               window.location.href = '/login'
           }}>Logout</button>

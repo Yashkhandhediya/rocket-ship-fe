@@ -14,7 +14,7 @@ const User = () => {
   const [userData, setUserData] = useState([])
   const [fetchData, setFetchData] = useState(false)
   const navigate = useNavigate()
-  const company_id = localStorage.getItem('company_id');
+  const company_id = sessionStorage.getItem('company_id');
   const [idUser,setIdUser] = useState(null)
   const [showkyc,setShowKyc] = useState(false)
   const [aadharImg,setAadharImg] = useState(null)
@@ -49,8 +49,8 @@ const User = () => {
         const imgUrl = URL.createObjectURL(res.data)
         setAadharImg(imgUrl)
         console.log("PICCCCCCCCCCCCCc",aadharImg)
-        // let newVal = localStorage.getItem('balance') - rechargeAmount
-        // localStorage.setItem('balance',newVal)
+        // let newVal = sessionStorage.getItem('balance') - rechargeAmount
+        // sessionStorage.setItem('balance',newVal)
         // window.location.reload()
     }).catch((err) => {
         console.log("Error In Rechargeee",err)
@@ -62,8 +62,8 @@ const User = () => {
         const imgUrl = URL.createObjectURL(res.data)
         setUserImg(imgUrl)
         console.log("PICCCCCCCCCCCCCc",userImg)
-        // let newVal = localStorage.getItem('balance') - rechargeAmount
-        // localStorage.setItem('balance',newVal)
+        // let newVal = sessionStorage.getItem('balance') - rechargeAmount
+        // sessionStorage.setItem('balance',newVal)
         // window.location.reload()
     }).catch((err) => {
         console.log("Error In Rechargeee",err)

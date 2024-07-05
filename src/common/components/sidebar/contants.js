@@ -20,11 +20,11 @@ import truckSize from '../../icons/sidebar-icons/truckSize.svg'
 import { logout } from './utils';
 import { modules } from '../../../pages/manage-role/user-management/constants';
 
-const is_admin = localStorage.getItem('is_admin');
-const user_id = localStorage.getItem('user_id');
-const is_company = localStorage.getItem('is_company');
-const is_super = localStorage.getItem('is_super');
-const access_modules = localStorage.getItem('modules');
+const is_admin = sessionStorage.getItem('is_admin');
+const user_id = sessionStorage.getItem('user_id');
+const is_company = sessionStorage.getItem('is_company');
+const is_super = sessionStorage.getItem('is_super');
+const access_modules = sessionStorage.getItem('modules');
 
 const mapModuleToLink = (module) => ({
   title: module.label,
@@ -91,7 +91,7 @@ export const sidebarLinks = [
 
 
 // if(access_modules == null || access_modules?.length == 0){
-// if (localStorage.getItem('is_super') != 3) {
+// if (sessionStorage.getItem('is_super') != 3) {
 //   sidebarLinks = [
 //     {
 //       title: 'Home',
@@ -272,7 +272,7 @@ export const sidebarLinks = [
 //       onClick: logout,
 //     },
 //   ].filter((option) => option !== null);
-// } else if (localStorage.getItem('is_super') == 3) {
+// } else if (sessionStorage.getItem('is_super') == 3) {
 //   sidebarLinks = [
 //     {
 //       title: 'KYC',

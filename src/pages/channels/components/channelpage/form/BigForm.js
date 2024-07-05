@@ -22,7 +22,7 @@ const BigForm = () => {
 
     const redirectToBigAuth = async () => {
         axios
-            .post(BACKEND_URL+`/bigcommerce/create-webhook?HASH_CODE=${hashCode}&AUTH_TOKEN=${authToken}&user_id=${localStorage.getItem('user_id')}&shop_name=${storeName}`)
+            .post(BACKEND_URL+`/bigcommerce/create-webhook?HASH_CODE=${hashCode}&AUTH_TOKEN=${authToken}&user_id=${sessionStorage.getItem('user_id')}&shop_name=${storeName}`)
 
             .then(async (resp) => {
                 if (resp.status === 200) {

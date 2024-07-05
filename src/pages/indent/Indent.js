@@ -22,10 +22,10 @@ const Indent = () => {
   const [loading,setLoading] = useState(false);
   const [truckTypes, setTruckTypes] = useState(null);
   const [materialTypes, setMaterialTypes] = useState(null);
-  const is_company = localStorage.getItem('is_company');
-  const id_user = localStorage.getItem('user_id');
+  const is_company = sessionStorage.getItem('is_company');
+  const id_user = sessionStorage.getItem('user_id');
   const id = is_company == 1 ? company_id : id_user;
-  const company_id = localStorage.getItem('company_id');
+  const company_id = sessionStorage.getItem('company_id');
   const [isValidPhone, setIsValidPhone] = useState(true);
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
@@ -148,7 +148,7 @@ const Indent = () => {
     });
   };
 
-  const userName = localStorage.getItem('user_name');
+  const userName = sessionStorage.getItem('user_name');
   const userOptions = [
     {
       label: 'Yash Khandhediya' + '+91 9033871787',
@@ -242,14 +242,14 @@ const Indent = () => {
 
   let count = 1;
   useEffect(() => {
-    if (localStorage.getItem('is_kyc') == 1) {
+    if (sessionStorage.getItem('is_kyc') == 1) {
       if (count == 1) {
         toast('Complete Your KYC First', { type: 'error' });
         count++;
       }
       navigate('/seller/home');
       return;
-    } else if (localStorage.getItem('is_kyc') == 2) {
+    } else if (sessionStorage.getItem('is_kyc') == 2) {
       if (count == 1) {
         toast('KYC Verification Is Pending.', { type: 'error' });
         count++;
@@ -551,7 +551,7 @@ const Indent = () => {
 
     // try {
     //     axios
-    //       .get(BACKEND_URL + `${temp_url}?string=${String(pincode)}&created_by=${localStorage.getItem('user_id')}`)
+    //       .get(BACKEND_URL + `${temp_url}?string=${String(pincode)}&created_by=${sessionStorage.getItem('user_id')}`)
     //       .then((resp) => {
     //         if (resp.status === 200) {
     //           setSuggestions(resp.data)
@@ -620,7 +620,7 @@ const Indent = () => {
     let temp_url = `/address/address_suggestion/`
     try {
         axios
-          .get(BACKEND_URL + `${temp_url}?string=${String(value)}&created_by=${localStorage.getItem('company_id')}`)
+          .get(BACKEND_URL + `${temp_url}?string=${String(value)}&created_by=${sessionStorage.getItem('company_id')}`)
           .then((resp) => {
             if (resp.status === 200) {
               setBgColor(true)
@@ -710,7 +710,7 @@ const Indent = () => {
     <PageWithSidebar>
       {isLoading && <Loader />}
       <Address isVisible={isPopupVisible} onClose={togglePopup} />
-      {localStorage.getItem('is_company') == 0 && <div className="flex flex-col items-center justify-center gap-4 p-3">
+      {sessionStorage.getItem('is_company') == 0 && <div className="flex flex-col items-center justify-center gap-4 p-3">
         <div className="flex w-[80%] flex-row justify-between gap-8 rounded p-4 shadow">
           <div className="flex w-1/2 flex-col">
           <label

@@ -15,9 +15,9 @@ const Manage_pickup_add = () => {
   const [openIndex, setOpenIndex] = useState(null);
   const [openRTOIndex, setOpenRTOIndex] = useState(null);
   const [showAddressModal, setShowAddressModal] = useState(false);
-  const id_user = localStorage.getItem('user_id');
-  const id_company = localStorage.getItem('company_id');
-  const is_company = localStorage.getItem('is_company');
+  const id_user = sessionStorage.getItem('user_id');
+  const id_company = sessionStorage.getItem('company_id');
+  const is_company = sessionStorage.getItem('is_company');
   const [addressId, setAddressId] = useState(null);
 
   console.log(addressId, pickupAddress);
