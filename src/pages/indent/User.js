@@ -7,6 +7,7 @@ import { CustomDataTable } from '../../common/components';
 import { Badge } from 'flowbite-react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 const User = () => {
@@ -14,6 +15,11 @@ const User = () => {
   const [fetchData, setFetchData] = useState(false)
   const navigate = useNavigate()
   const company_id = localStorage.getItem('company_id');
+  const [idUser,setIdUser] = useState(null)
+  const [showkyc,setShowKyc] = useState(false)
+  const [aadharImg,setAadharImg] = useState(null)
+  const [userImg,setUserImg] = useState(null)
+  const [kyc_status,setKyc_status] = useState(0)
 
     useEffect(() => {
 
@@ -32,6 +38,52 @@ const User = () => {
     console.log("yash row", row.original)
       navigate('/all-indent/'+row.original.id)
   }
+
+  const handleKYC = (row) => {
+    setIdUser(row?.id)
+    setShowKyc(true)
+    const headers={'Content-Type': 'application/json'};
+    axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=user_aadhar`,{ responseType: 'blob' }).
+    then((res) => {
+        console.log("Recharge Responsee",res)
+        const imgUrl = URL.createObjectURL(res.data)
+        setAadharImg(imgUrl)
+        console.log("PICCCCCCCCCCCCCc",aadharImg)
+        // let newVal = localStorage.getItem('balance') - rechargeAmount
+        // localStorage.setItem('balance',newVal)
+        // window.location.reload()
+    }).catch((err) => {
+        console.log("Error In Rechargeee",err)
+    })
+
+    axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=selfie`,{ responseType: 'blob' }).
+    then((res) => {
+        console.log("Recharge Responsee",res)
+        const imgUrl = URL.createObjectURL(res.data)
+        setUserImg(imgUrl)
+        console.log("PICCCCCCCCCCCCCc",userImg)
+        // let newVal = localStorage.getItem('balance') - rechargeAmount
+        // localStorage.setItem('balance',newVal)
+        // window.location.reload()
+    }).catch((err) => {
+        console.log("Error In Rechargeee",err)
+    })
+  }
+
+  const handleAcceptKYC = () => {
+    setKyc_status(1)
+    const headers={'Content-Type': 'application/json'};
+    axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=user&status=${3}&id=${idUser}`,{headers})
+    .then((res) => {
+      console.log("Response ",res)
+      toast("KYC Verification Successfully",{type:'success'})
+      setShowKyc(false);
+      // window.location.reload()
+    }).catch((err) => {
+      console.log("ERRRRRR",err)
+      toast("Error in KYC verification",{type:'error'})
+    })
+ }
   
   const getColumns = () => {
     const columnHelper = createColumnHelper();
@@ -78,6 +130,17 @@ const User = () => {
           );
         },
       }),
+      columnHelper.accessor('kyc_status_id', {
+              header: 'KYC Status',
+              cell: ({ row }) => {
+                return (
+                  <div className="flex flex-col gap-2 text-left text-xs">
+                    {/* {row?.original?.wallet_balance && <div>{row?.original?.wallet_balance}</div>} */}
+                    <div>{row?.original?.kyc_status_id == 1 ? 'Upload Pending' : row?.original?.kyc_status_id == 2 ? 'Approve Pending' : 'Approved'}</div>
+                  </div>
+                );
+              },
+        }),
       columnHelper.accessor('action', {
         header: 'Action',
         cell: ({ row }) => {
@@ -92,6 +155,15 @@ const User = () => {
                   {'Indent'}
                 </button>
               )}
+             {row?.original?.kyc_status_id != 3 && (
+            <button
+             id={row?.original?.id}
+             className="min-w-fit rounded bg-red-400 px-4 py-1.5 text-white hover:bg-green-600"
+              onClick={()=>handleKYC(row)}
+                  >
+                 {'KYC'}
+            </button> 
+            )}
             </div>
           );
         },
@@ -126,6 +198,40 @@ const User = () => {
         enablePagination={true}
         tableWrapperStyles={{ height: '78vh' }}
       />}
+       {showkyc && (
+            <div className="absolute inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
+              <div className="w-[30%] bg-white p-6 rounded-lg">
+              <div className="flex flex-row justify-between">
+              <h2 className="text-lg font-semibold mb-4">Validate KYC</h2>
+                <button
+                className="border-0 mb-4 bg-transparent p-1 pt-0 text-2xl font-semibold leading-none text-black opacity-100 outline-none focus:outline-none"
+                onClick={() => {setShowKyc(false)}}>
+                <span className="block h-6 w-6 bg-transparent text-black opacity-50 outline-none focus:outline-none">
+                  ×
+                </span>
+              </button>
+              </div>
+                <div className="flex flex-row justify-evenly">
+                    <img src={aadharImg}  alt='Aadhar Image' className='w-40 shadow-md mb-4' />
+                    <img src={userImg}  alt='User Image' className='w-40 shadow-md mb-4' />
+                </div>
+                <div className="flex justify-center">
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                    onClick={handleAcceptKYC}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 ml-2 rounded-lg"
+                    onClick={() => setShowKyc(false)}
+                  >
+                    Decline
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
      </PageWithSidebar>
       
     {/* <button className='bg-purple-200 font-semibold' onClick={handleUser}>User</button> */}
