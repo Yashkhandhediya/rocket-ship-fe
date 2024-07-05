@@ -98,21 +98,22 @@ const Allindent = () => {
 
   let count = 1;
   useEffect(() => {
-    if (localStorage.getItem('is_kyc') == 1) {
-      if (count == 1) {
-        toast('Complete Your KYC First', { type: 'error' });
-        count++;
-      }
-      navigate('/seller/home');
-      return;
-    } else if (localStorage.getItem('is_kyc') == 2) {
-      if (count == 1) {
-        toast('KYC Verification Is Pending.', { type: 'error' });
-        count++;
-      }
-      navigate('/seller/home');
-      return;
-    }
+
+    // if (localStorage.getItem('is_kyc') == 1) {
+    //   if (count == 1) {
+    //     toast('Complete Your KYC First', { type: 'error' });
+    //     count++;
+    //   }
+    //   navigate('/book');
+    //   return;
+    // } else if (localStorage.getItem('is_kyc') == 2) {
+    //   if (count == 1) {
+    //     toast('KYC Verification Is Pending.', { type: 'error' });
+    //     count++;
+    //   }
+    //   navigate('/book');
+    //   return;
+    // }
 
     fetchData();
   }, [url_user_id]);
