@@ -4,6 +4,7 @@ import { Field } from "../../../../common/components";
 import { upload } from "../../../../common/icons";
 import axios from "axios";
 import { BACKEND_URL } from "../../../../common/utils/env.config";
+import { ACCESS_TOKEN } from "../../../../common/utils/config";
 
 const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
     const user_name = localStorage.getItem('user_name')
@@ -154,7 +155,7 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
         try {
             // API call to submit document
             if(KYCType == "company"){
-                const headers = { 'Content-Type': 'multipart/form-data' };
+                const headers = { 'Content-Type': 'multipart/form-data','Authorization':ACCESS_TOKEN };
                 axios.post(BACKEND_URL + `/kyc/upload_selfie/?image_id=${id_company}&user_name=${user_name}&type=company_pan`,
                 formData,
                 {headers}
@@ -166,7 +167,7 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
                 })
             }
             else{
-                const headers = { 'Content-Type': 'multipart/form-data' };
+                const headers = { 'Content-Type': 'multipart/form-data','Authorization':ACCESS_TOKEN };
                 axios.post(BACKEND_URL + `/kyc/upload_selfie/?image_id=${id_user}&user_name=${user_name}&type=user_aadhar`,
                 formData,
                 {headers}
@@ -197,7 +198,7 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
     }
 
     const handleDocument2Submission = () => {
-        const headers = { 'Content-Type': 'application/json' };
+        const headers = { 'Content-Type': 'application/json','Authorization':ACCESS_TOKEN };
         const formData = new FormData();
         console.log("FRONTTTTTTTTT",document.type2Front)
         const type2FrontBlob = dataURLtoBlob(document.type2Front);
@@ -205,7 +206,7 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
         formData.append('file',type2FrontBlob ,'selfie.jpg');
         try {
             // API call to submit document
-            const headers = { 'Content-Type': 'multipart/form-data' };
+            const headers = { 'Content-Type': 'multipart/form-data','Authorization':ACCESS_TOKEN };
             axios.post(BACKEND_URL + `/kyc/upload_selfie/?image_id=${id_company}&user_name=${user_name}&type=company_logo`,
             formData,
             {headers}
@@ -236,7 +237,7 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
         formData.append('file',type3FrontBlob ,'selfie.jpg');
         try {
             // API call to submit document
-            const headers = { 'Content-Type': 'multipart/form-data' };
+            const headers = { 'Content-Type': 'multipart/form-data','Authorization':ACCESS_TOKEN };
             axios.post(BACKEND_URL + `/kyc/upload_selfie/?image_id=${id_company}&user_name=${user_name}&type=company_gst`,
             formData,
             {headers}
@@ -265,7 +266,7 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
         formData.append('file',type4FrontBlob ,'selfie.jpg');
         try {
             // API call to submit document
-            const headers = { 'Content-Type': 'multipart/form-data' };
+            const headers = { 'Content-Type': 'multipart/form-data','Authorization':ACCESS_TOKEN };
             axios.post(BACKEND_URL + `/kyc/upload_selfie/?image_id=${id_company}&user_name=${user_name}&type=company_stamp`,
             formData,
             {headers}
@@ -341,13 +342,14 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
     const completeKYC = () => {
         if (isCompleteKYC()) {
             // toast.success('KYC completed successfully', { type: 'success' })
-            const headers={'Content-Type': 'application/json'};
+            const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
             const id = localStorage.getItem('is_company') == 1 ? id_company : id_user
             const type_client = localStorage.getItem('is_company') == 1 ? 'company' : 'user'
             axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=${type_client}&status=${2}&id=${id}`,{headers})
             .then((res) => {
                 console.log("Response ",res)
                 toast("KYC Verification Successfully",{type:'success'})
+                localStorage.setItem('is_kyc',2)
             }).catch((err) => {
                 console.log("ERRRRRR",err)
                 toast("Error in KYC verification",{type:'error'})

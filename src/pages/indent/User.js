@@ -79,6 +79,8 @@ const User = () => {
       console.log("Response ",res)
       toast("KYC Verification Successfully",{type:'success'})
       setShowKyc(false);
+      localStorage.setItem('is_kyc',3)
+      navigate('/book')
       // window.location.reload()
     }).catch((err) => {
       console.log("ERRRRRR",err)
