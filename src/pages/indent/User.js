@@ -40,10 +40,11 @@ const User = () => {
   }
 
   const handleKYC = (row) => {
-    setIdUser(row?.id)
+    // console.log("RRRRRRRR",row,row?.original?.id)
+    setIdUser(row?.original?.id)
     setShowKyc(true)
     const headers={'Content-Type': 'application/json'};
-    axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=user_aadhar`,{ responseType: 'blob' }).
+    axios.get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=user_aadhar`,{ responseType: 'blob' }).
     then((res) => {
         console.log("Recharge Responsee",res)
         const imgUrl = URL.createObjectURL(res.data)
@@ -56,7 +57,7 @@ const User = () => {
         console.log("Error In Rechargeee",err)
     })
 
-    axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=selfie`,{ responseType: 'blob' }).
+    axios.get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=selfie`,{ responseType: 'blob' }).
     then((res) => {
         console.log("Recharge Responsee",res)
         const imgUrl = URL.createObjectURL(res.data)
