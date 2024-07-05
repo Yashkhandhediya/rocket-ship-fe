@@ -3,7 +3,8 @@ import { infoIcon } from '../../icons';
 import { CustomTooltip } from '../custom-tooltip';
 
 const Tabs = ({ tabs, tabClassNames, panelClassNames, onTabChange = () => {} }) => {
-  const [activeTab, setActiveTab] = useState(JSON.parse(localStorage.getItem('activeTab')) || 0);
+  const [activeTab, setActiveTab] = useState(0);
+  // const [activeTab, setActiveTab] = useState(JSON.parse(localStorage.getItem('activeTab')) || 0);
   console.log('Activeeeeeeee', activeTab);
 
   const handleClick = (index) => {
@@ -12,9 +13,9 @@ const Tabs = ({ tabs, tabClassNames, panelClassNames, onTabChange = () => {} }) 
     localStorage.setItem('activeTab', JSON.stringify(index));
   };
 
-  useEffect(() => {
-    localStorage.setItem('activeTab', JSON.stringify(activeTab));
-  }, []);
+  // useEffect(() => {
+  //   localStorage.setItem('activeTab', JSON.stringify(activeTab));
+  // }, []);
 
   return (
     <div className="mb-4">

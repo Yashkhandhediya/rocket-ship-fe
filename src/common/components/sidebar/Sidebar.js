@@ -37,15 +37,16 @@ const Sidebar = () => {
   };
 
   const handleTruckSizeSubmit = () => {
-    if(truckSize == null){
-      toast.error('Please Enter truck size')
+    if (truckSize == null) {
+      toast.error('Please Enter truck size');
+      return;
     }
     axios
       .post(
         BACKEND_URL +
           `/trucktype/create_truck_type/?created_by=${localStorage.getItem(
-            'company_id'
-          )}&truck_type=${truckSize}`
+            'company_id',
+          )}&truck_type=${truckSize}`,
       )
       .then((response) => {
         console.log('Truck Size created:', response.data);
@@ -58,15 +59,16 @@ const Sidebar = () => {
   };
 
   const handleMaterialTypeSubmit = () => {
-    if(materialType == null){
-      toast.error('Please Enter material type')
+    if (materialType == null) {
+      toast.error('Please Enter material type');
+      return;
     }
     axios
       .post(
         BACKEND_URL +
           `/materialtype/create_material_type/?created_by=${localStorage.getItem(
-            'company_id'
-          )}&material_type=${materialType}`
+            'company_id',
+          )}&material_type=${materialType}`,
       )
       .then((response) => {
         console.log('Material Type created:', response.data);
@@ -82,15 +84,15 @@ const Sidebar = () => {
     <div
       id="mySidebar"
       className="group/sidebar hover:z-100 fixed left-0 top-0 z-50 h-full w-[70px] overflow-x-hidden overflow-y-hidden bg-[#912517] text-white transition-all duration-500 hover:w-[218px] hover:overflow-y-auto [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar]:w-1"
-      onMouseLeave={handleMouseLeave}
-    >
-      <div className="z-100 flex justify-center items-center sticky top-0 h-[10%] w-full bg-[#912517] pt-2.5">
+      onMouseLeave={handleMouseLeave}>
+      <div className="z-100 sticky top-0 flex h-[10%] w-full items-center justify-center bg-[#912517] pt-2.5">
         <div className="mb-2">
           <img src={logo} className=" group-hover/sidebar:hidden" />
           <img src={logo} className="hidden group-hover/sidebar:block" />
         </div>
       </div>
-      <hr className="mt-4 mb-4 border-[#c] text-[#0000001a] md:hidden" />
+      <p className="hidden text-center group-hover/sidebar:block">Book truck by veracity</p>
+      <hr className="mb-4 mt-4 border-[#c] text-[#0000001a] md:hidden" />
       <div className="mt-14">
         {sidebarLinks.map((nav, i) => {
           if (nav.path) {
@@ -105,8 +107,7 @@ const Sidebar = () => {
                     if (nav.onClick === 'openTruckSizeModal') openTruckSizeModal();
                     if (nav.onClick === 'openMaterialTypeModal') openMaterialTypeModal();
                   }
-                }}
-              >
+                }}>
                 <div className="group/sidebarItem mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#c38d8d]">
                   <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" />
                   <img src={nav.hoverIcon} className="hidden h-6 w-6 group-hover/sidebarItem:block" />
@@ -122,29 +123,32 @@ const Sidebar = () => {
                 <div
                   className="group/sidebarItem mx-3.5 mb-3 flex cursor-pointer items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#980909]"
                   onClick={() => handleAccordionToggle(i)}
-                  aria-expanded={openAccordion === i}
-                >
+                  aria-expanded={openAccordion === i}>
                   <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" />
                   <img src={nav.hoverIcon} className="hidden h-6 w-6 group-hover/sidebarItem:block" />
-                  <div className="ml-3 w-full flex justify-between truncate text-xs group-hover/sidebarItem:text-[#980909] ">
+                  <div className="ml-3 flex w-full justify-between truncate text-xs group-hover/sidebarItem:text-[#980909] ">
                     <span>{nav.title}</span>
-                    <span className="w-full flex justify-end">
+                    <span className="flex w-full justify-end">
                       <svg
                         data-accordion-icon
-                        className={`w-5 h-5 truncate group-hover/sidebarItem:text-[#980909] shrink-0 ${openAccordion === i ? 'rotate-180' : 'rotate-0'} transform origin-center transition-transform duration-300 ease-in-out shrink-0`}
+                        className={`h-5 w-5 shrink-0 truncate group-hover/sidebarItem:text-[#980909] ${
+                          openAccordion === i ? 'rotate-180' : 'rotate-0'
+                        } shrink-0 origin-center transform transition-transform duration-300 ease-in-out`}
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         strokeWidth="1.5"
                         stroke="currentColor"
                         fill="none"
-                        viewBox="0 0 24 24"
-                      >
+                        viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                       </svg>
                     </span>
                   </div>
                 </div>
-                <div id={'accordion-collapse-body-1'} className={`${openAccordion === i ? 'block' : 'hidden'}`} aria-labelledby={'accordion-collapse-heading-1'}>
+                <div
+                  id={'accordion-collapse-body-1'}
+                  className={`${openAccordion === i ? 'block' : 'hidden'}`}
+                  aria-labelledby={'accordion-collapse-heading-1'}>
                   <div className="ml-6 font-normal">
                     {nav.subMenuOptions &&
                       nav.subMenuOptions.map((subNav, i) => (
@@ -162,10 +166,13 @@ const Sidebar = () => {
             );
           } else {
             return (
-              <div key={i} className="translate-y-0" onClick={() => {
-                if (nav.onClick === 'openTruckSizeModal') openTruckSizeModal();
-                if (nav.onClick === 'openMaterialTypeModal') openMaterialTypeModal();
-              }}>
+              <div
+                key={i}
+                className="translate-y-0"
+                onClick={() => {
+                  if (nav.onClick === 'openTruckSizeModal') openTruckSizeModal();
+                  if (nav.onClick === 'openMaterialTypeModal') openMaterialTypeModal();
+                }}>
                 <div className="group/sidebarItem mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-white hover:bg-white hover:text-[#980909]">
                   <span className="ml-3 truncate text-xs group-hover/sidebarItem:text-[#980909] ">
                     {nav.title}

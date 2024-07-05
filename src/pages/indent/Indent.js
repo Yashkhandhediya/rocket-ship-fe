@@ -19,17 +19,17 @@ export let info = [];
 const Indent = () => {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [truckTypes, setTruckTypes] = useState(null);
   const [materialTypes, setMaterialTypes] = useState(null);
   const is_company = localStorage.getItem('is_company');
   const id_user = localStorage.getItem('user_id');
-  const id = is_company == 1 ? company_id : id_user;
   const company_id = localStorage.getItem('company_id');
+  const id = is_company == 1 ? company_id : id_user;
   const [isValidPhone, setIsValidPhone] = useState(true);
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
-  const [bgColor,setBgColor] = useState(false)
+  const [bgColor, setBgColor] = useState(false);
   const data = location.state?.data || {};
   console.log('Dataaaaaa', data);
   // console.log("Dataaaaaaaa",props.location.state.targetPrice)
@@ -48,8 +48,11 @@ const Indent = () => {
   //     destination_id:''
   // })
   const [selectedCity, setSelectedCity] = useState({
-    source: `${data?.from_area || ''} ${data?.from_city || ''} ${data?.from_state || ''} ${data?.from_country || ''}`,
-    destination: `${data?.to_area || ''} ${data?.to_city || ''} ${data?.to_state || ''} ${data?.to_country || ''}` || '',
+    source: `${data?.from_area || ''} ${data?.from_city || ''} ${data?.from_state || ''} ${
+      data?.from_country || ''
+    }`,
+    destination:
+      `${data?.to_area || ''} ${data?.to_city || ''} ${data?.to_state || ''} ${data?.to_country || ''}` || '',
   });
   const [isDropdownOpen, setIsDropdownOpen] = useState({
     source: false,
@@ -94,7 +97,9 @@ const Indent = () => {
   const getMaterialType = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/materialtype/get_material_type/?created_by=${company_id}`);
+      const response = await axios.get(
+        `${BACKEND_URL}/materialtype/get_material_type/?created_by=${company_id}`,
+      );
       setMaterialTypes(response.data);
     } catch (err) {
       toast(`There is error while fetching data`, { type: 'error' });
@@ -118,8 +123,8 @@ const Indent = () => {
 
   const [remarks, setRemarks] = useState(data?.remarks || '');
   const [totalKm, setTotalKm] = useState(data?.kilometer || 0);
-  const [fromId,setFromId] = useState('')
-  const [toId,setToId] = useState('')
+  const [fromId, setFromId] = useState('');
+  const [toId, setToId] = useState('');
 
   const [personInfo, setPersonInfo] = useState({
     coordinate_name: data?.coordinator_name || '',
@@ -242,7 +247,6 @@ const Indent = () => {
 
   let count = 1;
   useEffect(() => {
-
     // if (localStorage.getItem('is_kyc') == 1) {
     //   if (count == 1) {
     //     toast('Complete Your KYC First', { type: 'error' });
@@ -338,8 +342,8 @@ const Indent = () => {
           trip_status: 0,
           to_pincode: sourcePin,
           from_pincode: destinationPin,
-          from_address_id:fromId,
-          to_address_id:toId,
+          from_address_id: fromId,
+          to_address_id: toId,
           // remarks:remarks,
           kilometer: totalKm,
           // coordinator_name:personInfo?.coordinate_name,
@@ -460,8 +464,8 @@ const Indent = () => {
           volumetric_weight: volumatricWeight,
           to_pincode: sourcePin,
           from_pincode: destinationPin,
-          from_address_id:fromId,
-          to_address_id:toId,
+          from_address_id: fromId,
+          to_address_id: toId,
           // remarks:remarks,
           kilometer: totalKm,
           // coordinator_name:personInfo?.coordinate_name,
@@ -529,12 +533,12 @@ const Indent = () => {
     //   console.error(e);
     // }
 
-     try {
+    try {
       axios
         .get(`${BACKEND_URL}/pincode/${pincode}`)
         .then((resp) => {
           if (resp.status === 200) {
-            setSuggestions(resp.data)
+            setSuggestions(resp.data);
           } else {
             toast(`City/State not found for this pincode: ${pincode}`, { type: 'error' });
           }
@@ -545,8 +549,6 @@ const Indent = () => {
     } catch (e) {
       console.error(e);
     }
-
-
 
     // let temp_url = `/address/address_suggestion/`
 
@@ -610,7 +612,6 @@ const Indent = () => {
     }));
   };
 
-
   const togglePopup = () => {
     searchParams.set('open', 'false');
     setSearchParams(searchParams);
@@ -618,28 +619,31 @@ const Indent = () => {
   };
 
   const fetchSuggestions = async (value) => {
-    let temp_url = `/address/address_suggestion/`
+    let temp_url = `/address/address_suggestion/`;
     try {
-        axios
-          .get(BACKEND_URL + `${temp_url}?string=${String(value)}&created_by=${localStorage.getItem('company_id')}`)
-          .then((resp) => {
-            if (resp.status === 200) {
-              setBgColor(true)
-              setSuggestions(resp.data)
-              if(resp.data.length == 0){
-                setBgColor(false)
-                fetchPincodeDetails(value,'')
-              }
-            } else {
-              toast(`City/State not found for this pincode: ${value}`, { type: 'error' });
+      axios
+        .get(
+          BACKEND_URL +
+            `${temp_url}?string=${String(value)}&created_by=${localStorage.getItem('company_id')}`,
+        )
+        .then((resp) => {
+          if (resp.status === 200) {
+            setBgColor(true);
+            setSuggestions(resp.data);
+            if (resp.data.length == 0) {
+              setBgColor(false);
+              fetchPincodeDetails(value, '');
             }
-          })
-          .catch(() => {
-            toast(`Unable to get location from this pincode: ${value}`, { type: 'error' });
-          });
-      } catch (e) {
-        console.error(e);
-      }
+          } else {
+            toast(`City/State not found for this pincode: ${value}`, { type: 'error' });
+          }
+        })
+        .catch(() => {
+          toast(`Unable to get location from this pincode: ${value}`, { type: 'error' });
+        });
+    } catch (e) {
+      console.error(e);
+    }
 
     // try {
     //   axios
@@ -701,7 +705,9 @@ const Indent = () => {
   const theme = {
     container: 'relative w-full',
     input: 'w-full p-2 text-lg',
-    suggestionsContainer: `absolute z-20 ${bgColor ? 'bg-yellow-200' : 'bg-white'} max-h-52 overflow-y-auto w-full shadow-md`,
+    suggestionsContainer: `absolute z-20 ${
+      bgColor ? 'bg-yellow-200' : 'bg-white'
+    } max-h-52 overflow-y-auto w-full shadow-md`,
     suggestionsList: 'list-none  m-0 p-0',
     suggestion: 'p-2 cursor-pointer',
     suggestionHighlighted: 'bg-gray-300',
@@ -711,240 +717,247 @@ const Indent = () => {
     <PageWithSidebar>
       {isLoading && <Loader />}
       <Address isVisible={isPopupVisible} onClose={togglePopup} />
-      {localStorage.getItem('is_company') == 0 && <div className="flex flex-col items-center justify-center gap-4 p-3">
-        <div className="flex w-[80%] flex-row justify-between gap-8 rounded p-4 shadow">
-          <div className="flex w-1/2 flex-col">
-          <label
-          htmlFor="sourcePincode"
-          className={`mb-2 flex items-center  text-sm font-medium text-gray-600`}>
-          From Pincode
-        </label>
-             <Autosuggest
-                  suggestions={suggestions}
-                  onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                  onSuggestionsClearRequested={onSuggestionsClearRequested}
-                  getSuggestionValue={getSuggestionValue}
-                  renderSuggestion={renderSuggestion}
-                  inputProps={inputProps}
-                  onSuggestionSelected={(event, { suggestion }) => {
-                    const { area, city, state, country,id } = suggestion;
-                          setSelectedCity((prev) => ({ ...prev, source: `${area + ","}${city + ","}${state + ","}${country}` }));
-                          setFromId(id)
-                      }}
-                  theme={theme}
-              />
-            {/* {!isValidAddress && <p className="mt-1 text-xs text-red-500">Address is required.</p>} */}
-          </div>
-          <div className="flex w-1/2 flex-col">
-          <label
-          htmlFor="destinationPincode"
-          className={`mb-2 flex items-center  text-sm font-medium text-gray-600`}>
-          To Pincode
-        </label>
-        <Autosuggest
-                  suggestions={suggestions}
-                  onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                  onSuggestionsClearRequested={onSuggestionsClearRequested}
-                  getSuggestionValue={getDestSuggestionValue}
-                  renderSuggestion={renderSuggestion}
-                  inputProps={inputDestProps}
-                  onSuggestionSelected={(event, { suggestion }) => {
-                    const { area, city, state, country, id } = suggestion;
-                        setSelectedCity((prev) => ({ ...prev, destination: `${area + ","}${city + ","}${state + ","}${country}` }));
-                        setToId(id)
-                      }}
-                  theme={theme}
-              />
-            {/* {!isValidAddress && <p className="mt-1 text-xs text-red-500">Address is required.</p>} */}
-          </div>
-        </div>
-
-        <div className="flex w-[80%] flex-row justify-between gap-8 rounded p-4 shadow">
-          <div className="flex w-1/2 flex-col">
-            <p className="flex flex-row items-center justify-between">
-              <span className="font-medium">
-                <span className="text-lg text-red-800">*</span> From Area, City, State, Country
-              </span>
-              <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-700 text-[18px] text-white">
-                <span style={{ marginTop: '-2px' }}>+</span>
-              </div>
-            </p>
-            <input
-              ref={inputRef}
-              className="h-10 w-[100%] cursor-not-allowed rounded border-0 bg-gray-100 px-2 outline-none ring-0 focus:outline-none focus:ring-0"
-              placeholder=""
-              type="text"
-              value={selectedCity.source}
-              disabled
-            />
-            {/* <Dropdown isOpen={isDropdownOpen.source} type='source' /> */}
-          </div>
-          <div className="flex w-1/2 flex-col">
-            <p className="flex flex-row items-center justify-between">
-              <span className="font-medium">
-                <span className="text-lg text-red-800">*</span> To Area, City, State, Country
-              </span>
-              <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-700 text-[18px] text-white">
-                <span style={{ marginTop: '-2px' }}>+</span>
-              </div>
-            </p>
-            <input
-              ref={inputRef}
-              className="h-10 w-[100%] cursor-not-allowed rounded border-0 bg-gray-100 px-2 outline-none ring-0 focus:outline-none focus:ring-0"
-              placeholder=""
-              type="text"
-              value={selectedCity.destination}
-              disabled
-            />
-            {/* <Dropdown isOpen={isDropdownOpen.destination} type='destination' /> */}
-          </div>
-        </div>
-
-        <div className="mb-3 w-[80%] justify-center items-center md:flex">
-          <div className="flex w-1/2 justify-center gap-5">
-            <div className="text-lg font-medium">{'Type Of Shipment :'}</div>
-            <div className="flex items-center gap-2">
-              <input
-                type="radio"
-                id="ftl"
-                value="ftl"
-                name="type"
-                checked={shipmentDetails?.type === 'ftl'}
-                onChange={handleShipment}
-              />
-              <label htmlFor="ftl" className="text-xs font-medium text-gray-900">
-                FTL
+      {localStorage.getItem('is_company') == 0 && (
+        <div className="flex flex-col items-center justify-center gap-4 p-3">
+          <div className="flex w-[80%] flex-row justify-between gap-8 rounded p-4 shadow">
+            <div className="flex w-1/2 flex-col">
+              <label
+                htmlFor="sourcePincode"
+                className={`mb-2 flex items-center  text-sm font-medium text-gray-600`}>
+                From Pincode
               </label>
+              <Autosuggest
+                suggestions={suggestions}
+                onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                onSuggestionsClearRequested={onSuggestionsClearRequested}
+                getSuggestionValue={getSuggestionValue}
+                renderSuggestion={renderSuggestion}
+                inputProps={inputProps}
+                onSuggestionSelected={(event, { suggestion }) => {
+                  const { area, city, state, country, id } = suggestion;
+                  setSelectedCity((prev) => ({
+                    ...prev,
+                    source: `${area + ','}${city + ','}${state + ','}${country}`,
+                  }));
+                  setFromId(id);
+                }}
+                theme={theme}
+              />
+              {/* {!isValidAddress && <p className="mt-1 text-xs text-red-500">Address is required.</p>} */}
             </div>
-            <div className="flex items-center gap-2">
-              <input
-                type="radio"
-                id="ptl"
-                value="ptl"
-                name="type"
-                checked={shipmentDetails?.type === 'ptl'}
-                onChange={handleShipment}
-              />
-              <label htmlFor="ptl" className="items-center text-xs font-medium text-gray-900">
-                PTL
+            <div className="flex w-1/2 flex-col">
+              <label
+                htmlFor="destinationPincode"
+                className={`mb-2 flex items-center  text-sm font-medium text-gray-600`}>
+                To Pincode
               </label>
+              <Autosuggest
+                suggestions={suggestions}
+                onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                onSuggestionsClearRequested={onSuggestionsClearRequested}
+                getSuggestionValue={getDestSuggestionValue}
+                renderSuggestion={renderSuggestion}
+                inputProps={inputDestProps}
+                onSuggestionSelected={(event, { suggestion }) => {
+                  const { area, city, state, country, id } = suggestion;
+                  setSelectedCity((prev) => ({
+                    ...prev,
+                    destination: `${area + ','}${city + ','}${state + ','}${country}`,
+                  }));
+                  setToId(id);
+                }}
+                theme={theme}
+              />
+              {/* {!isValidAddress && <p className="mt-1 text-xs text-red-500">Address is required.</p>} */}
             </div>
           </div>
-        </div>
 
-        <div className="flex w-[80%] flex-wrap justify-between gap-4 rounded p-6 shadow">
-          <div className="flex w-[49%] flex-row justify-between">
-            <Field
-              type={'date'}
-              id={'date'}
-              label={'PickUp Date And Time'}
-              inputClassNames={'text-xs'}
-              labelClassNames={'text-xs'}
-              placeHolder={'Enter PickUp Date'}
-              required={true}
-              minDate={moment(new Date()).format('YYYY-MM-DD')}
-              // maxDate={moment(new Date()).format('YYYY-MM-DD')}
-              value={pickUpDate.date}
-              onChange={handlePickUpDate}
-            />
-            <Field
-              type={'time'}
-              id={'time'}
-              inputClassNames={'text-xs mt-6 ml-2'}
-              labelClassNames={'text-xs'}
-              placeHolder={''}
-              required={true}
-              value={pickUpDate.time}
-              onChange={handlePickUpDate}
-            />
+          <div className="flex w-[80%] flex-row justify-between gap-8 rounded p-4 shadow">
+            <div className="flex w-1/2 flex-col">
+              <p className="flex flex-row items-center justify-between">
+                <span className="font-medium">
+                  <span className="text-lg text-red-800">*</span> From Area, City, State, Country
+                </span>
+                <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-700 text-[18px] text-white">
+                  <span style={{ marginTop: '-2px' }}>+</span>
+                </div>
+              </p>
+              <input
+                ref={inputRef}
+                className="h-10 w-[100%] cursor-not-allowed rounded border-0 bg-gray-100 px-2 outline-none ring-0 focus:outline-none focus:ring-0"
+                placeholder=""
+                type="text"
+                value={selectedCity.source}
+                disabled
+              />
+              {/* <Dropdown isOpen={isDropdownOpen.source} type='source' /> */}
+            </div>
+            <div className="flex w-1/2 flex-col">
+              <p className="flex flex-row items-center justify-between">
+                <span className="font-medium">
+                  <span className="text-lg text-red-800">*</span> To Area, City, State, Country
+                </span>
+                <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-700 text-[18px] text-white">
+                  <span style={{ marginTop: '-2px' }}>+</span>
+                </div>
+              </p>
+              <input
+                ref={inputRef}
+                className="h-10 w-[100%] cursor-not-allowed rounded border-0 bg-gray-100 px-2 outline-none ring-0 focus:outline-none focus:ring-0"
+                placeholder=""
+                type="text"
+                value={selectedCity.destination}
+                disabled
+              />
+              {/* <Dropdown isOpen={isDropdownOpen.destination} type='destination' /> */}
+            </div>
           </div>
 
-          {shipmentDetails.type == 'ptl' && (
-            <div className="w-[49%]">
+          <div className="mb-3 w-[80%] items-center justify-center md:flex">
+            <div className="flex w-1/2 justify-center gap-5">
+              <div className="text-lg font-medium">{'Type Of Shipment :'}</div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  id="ftl"
+                  value="ftl"
+                  name="type"
+                  checked={shipmentDetails?.type === 'ftl'}
+                  onChange={handleShipment}
+                />
+                <label htmlFor="ftl" className="text-xs font-medium text-gray-900">
+                  FTL
+                </label>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  id="ptl"
+                  value="ptl"
+                  name="type"
+                  checked={shipmentDetails?.type === 'ptl'}
+                  onChange={handleShipment}
+                />
+                <label htmlFor="ptl" className="items-center text-xs font-medium text-gray-900">
+                  PTL
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex w-[80%] flex-wrap justify-between gap-4 rounded p-6 shadow">
+            <div className="flex w-[49%] flex-row justify-between">
               <Field
-                value={pkgs}
-                label="No. of Pkgs"
+                type={'date'}
+                id={'date'}
+                label={'PickUp Date And Time'}
                 inputClassNames={'text-xs'}
                 labelClassNames={'text-xs'}
-                type="number"
-                onChange={(e) => setPkgs(e.target.value)}
+                placeHolder={'Enter PickUp Date'}
+                required={true}
+                minDate={moment(new Date()).format('YYYY-MM-DD')}
+                // maxDate={moment(new Date()).format('YYYY-MM-DD')}
+                value={pickUpDate.date}
+                onChange={handlePickUpDate}
+              />
+              <Field
+                type={'time'}
+                id={'time'}
+                inputClassNames={'text-xs mt-6 ml-2'}
+                labelClassNames={'text-xs'}
+                placeHolder={''}
+                required={true}
+                value={pickUpDate.time}
+                onChange={handlePickUpDate}
               />
             </div>
-          )}
 
-          {shipmentDetails.type == 'ptl' && (
-            <div className="w-full md:flex">
-              <div className="w-full gap-4 md:flex">
-                <label className="dark:text-white mb-3 mt-1 block text-base font-medium text-gray-600">
-                  {'Enter Packages dimensions to calculate Volumetric Weight'}
-                </label>
-                <div className="sm:w-/12 pb-2 md:pb-0">
-                  <Field
-                    type={'number'}
-                    id={'length'}
-                    inputClassNames={'text-xs'}
-                    placeHolder={'0.00'}
-                    required={true}
-                    rightAddOn="CM"
-                    value={truckDimention?.length || ''}
-                    onChange={handleTruckDimention}
-                  />
-                </div>
-                <div className="sm:w-/12 pb-2 md:pb-0">
-                  <Field
-                    type={'number'}
-                    id={'width'}
-                    inputClassNames={'text-xs'}
-                    placeHolder={'0.00'}
-                    required={true}
-                    rightAddOn="CM"
-                    value={truckDimention?.width || ''}
-                    onChange={handleTruckDimention}
-                  />
-                </div>
-                <div className="sm:w-/12 pb-2 md:pb-0">
-                  <Field
-                    type={'number'}
-                    id={'height'}
-                    inputClassNames={'text-xs'}
-                    placeHolder={'0.00'}
-                    required={true}
-                    rightAddOn="CM"
-                    value={truckDimention?.height || ''}
-                    onChange={handleTruckDimention}
-                  />
+            {shipmentDetails.type == 'ptl' && (
+              <div className="w-[49%]">
+                <Field
+                  value={pkgs}
+                  label="No. of Pkgs"
+                  inputClassNames={'text-xs'}
+                  labelClassNames={'text-xs'}
+                  type="number"
+                  onChange={(e) => setPkgs(e.target.value)}
+                />
+              </div>
+            )}
+
+            {shipmentDetails.type == 'ptl' && (
+              <div className="w-full md:flex">
+                <div className="w-full gap-4 md:flex">
+                  <label className="dark:text-white mb-3 mt-1 block text-base font-medium text-gray-600">
+                    {'Enter Packages dimensions to calculate Volumetric Weight'}
+                  </label>
+                  <div className="sm:w-/12 pb-2 md:pb-0">
+                    <Field
+                      type={'number'}
+                      id={'length'}
+                      inputClassNames={'text-xs'}
+                      placeHolder={'0.00'}
+                      required={true}
+                      rightAddOn="CM"
+                      value={truckDimention?.length || ''}
+                      onChange={handleTruckDimention}
+                    />
+                  </div>
+                  <div className="sm:w-/12 pb-2 md:pb-0">
+                    <Field
+                      type={'number'}
+                      id={'width'}
+                      inputClassNames={'text-xs'}
+                      placeHolder={'0.00'}
+                      required={true}
+                      rightAddOn="CM"
+                      value={truckDimention?.width || ''}
+                      onChange={handleTruckDimention}
+                    />
+                  </div>
+                  <div className="sm:w-/12 pb-2 md:pb-0">
+                    <Field
+                      type={'number'}
+                      id={'height'}
+                      inputClassNames={'text-xs'}
+                      placeHolder={'0.00'}
+                      required={true}
+                      rightAddOn="CM"
+                      value={truckDimention?.height || ''}
+                      onChange={handleTruckDimention}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {shipmentDetails.type == 'ptl' && (
-            <div className=" my-5 w-[49%] rounded-md bg-[#ecf2fe99] p-5 text-sm font-medium text-gray-900">
-              <div className="mb-1 flex">
-                <p>{'Volumetric Weight'}</p>
-                <p className="ml-9">{volumatricWeight + 'kg.'}</p>
+            {shipmentDetails.type == 'ptl' && (
+              <div className=" my-5 w-[49%] rounded-md bg-[#ecf2fe99] p-5 text-sm font-medium text-gray-900">
+                <div className="mb-1 flex">
+                  <p>{'Volumetric Weight'}</p>
+                  <p className="ml-9">{volumatricWeight + 'kg.'}</p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {shipmentDetails.type == 'ftl' && (
+            {shipmentDetails.type == 'ftl' && (
+              <div className="w-[49%]">
+                <CustomMultiSelect
+                  isMulti={false}
+                  label={'Truck Type'}
+                  options={truckTypesData}
+                  selected={truckType}
+                  closeMenuOnSelect={true}
+                  placeholder={truckType}
+                  hideSelectedOptions={false}
+                  onChange={(value) => {
+                    setTruckType(value);
+                  }}
+                />
+              </div>
+            )}
             <div className="w-[49%]">
-              <CustomMultiSelect
-                isMulti={false}
-                label={'Truck Type'}
-                options={ truckTypesData}
-                selected={truckType}
-                closeMenuOnSelect={true}
-                placeholder={truckType}
-                hideSelectedOptions={false}
-                onChange={(value) => {
-                  setTruckType(value);
-                }}
-              />
-            </div>
-          )}
-          <div className="w-[49%]">
-            {/* <CustomMultiSelect
+              {/* <CustomMultiSelect
                             isMulti={false}
                             placeholder={userOptions[0].label}
                             label={'Contact Person'}
@@ -955,141 +968,141 @@ const Indent = () => {
                             }}
                         /> */}
 
-            <Field
-              type="text"
-              id="contact_name"
-              label="Contact Person"
-              inputClassNames="text-xs"
-              labelClassNames="text-xs"
-              placeHolder="Enter Contact Name"
-              required={true}
-              value={contactPersonInfo?.contact_name}
-              onChange={handleContactPersonInfoChange}
-            />
-          </div>
-          <div className="w-[49%]">
-            <CustomMultiSelect
-              isMulti={false}
-              label={'Material Type'}
-              options={materialTypesData}
-              selected={materialType}
-              closeMenuOnSelect={true}
-              placeholder={materialType}
-              hideSelectedOptions={false}
-              onChange={(value) => {
-                setMaterialType(value);
-              }}
-            />
-          </div>
-          <div className="w-[49%]">
-            <div className="flex w-full">
-              <div className="flex-grow pr-2">
-                <CustomMultiSelect
-                  isMulti={false}
-                  label={'Weight'}
-                  options={weightTypes}
-                  selected={tons}
-                  closeMenuOnSelect={true}
-                  placeholder={tons}
-                  hideSelectedOptions={false}
-                  onChange={(value) => {
-                    setTons(value);
-                  }}
-                />
-              </div>
-              <div className="mt-6 flex-grow pr-4">
-                <Field
-                  value={targetWeight}
-                  type="number"
-                  placeholder="Enter Weight"
-                  onChange={(e) => setTargetWeight(e.target.value)}
-                />
+              <Field
+                type="text"
+                id="contact_name"
+                label="Contact Person"
+                inputClassNames="text-xs"
+                labelClassNames="text-xs"
+                placeHolder="Enter Contact Name"
+                required={true}
+                value={contactPersonInfo?.contact_name}
+                onChange={handleContactPersonInfoChange}
+              />
+            </div>
+            <div className="w-[49%]">
+              <CustomMultiSelect
+                isMulti={false}
+                label={'Material Type'}
+                options={materialTypesData}
+                selected={materialType}
+                closeMenuOnSelect={true}
+                placeholder={materialType}
+                hideSelectedOptions={false}
+                onChange={(value) => {
+                  setMaterialType(value);
+                }}
+              />
+            </div>
+            <div className="w-[49%]">
+              <div className="flex w-full">
+                <div className="flex-grow pr-2">
+                  <CustomMultiSelect
+                    isMulti={false}
+                    label={'Weight'}
+                    options={weightTypes}
+                    selected={tons}
+                    closeMenuOnSelect={true}
+                    placeholder={tons}
+                    hideSelectedOptions={false}
+                    onChange={(value) => {
+                      setTons(value);
+                    }}
+                  />
+                </div>
+                <div className="mt-6 flex-grow pr-4">
+                  <Field
+                    value={targetWeight}
+                    type="number"
+                    placeholder="Enter Weight"
+                    onChange={(e) => setTargetWeight(e.target.value)}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          <div className="w-[49%]">
-            <Field
-              value={targetPrice}
-              label="Target Price"
-              type="number"
-              placeholder="Enter Target Price"
-              onChange={(e) => setTargetPrice(e.target.value)}
-              leftAddOn="₹"
-            />
-          </div>
+            <div className="w-[49%]">
+              <Field
+                value={targetPrice}
+                label="Target Price"
+                type="number"
+                placeholder="Enter Target Price"
+                onChange={(e) => setTargetPrice(e.target.value)}
+                leftAddOn="₹"
+              />
+            </div>
 
-          <div className="w-[49%]">
-            <div className="flex w-full">
-              <div className="flex-grow pr-2">
-                <Field
-                  type="text"
-                  id="remark"
-                  label="Remarks"
-                  inputClassNames="text-xs"
-                  labelClassNames="text-xs"
-                  placeHolder="Enter Remark"
-                  required={true}
-                  value={remarks}
-                  onChange={(e) => setRemarks(e.target.value)}
-                />
+            <div className="w-[49%]">
+              <div className="flex w-full">
+                <div className="flex-grow pr-2">
+                  <Field
+                    type="text"
+                    id="remark"
+                    label="Remarks"
+                    inputClassNames="text-xs"
+                    labelClassNames="text-xs"
+                    placeHolder="Enter Remark"
+                    required={true}
+                    value={remarks}
+                    onChange={(e) => setRemarks(e.target.value)}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          
-          <div className="w-[49%]">
-            <Field
-              value={totalKm}
-              label="Total Km"
-              type="number"
-              placeholder="Enter Total Kilometer"
-              // onChange={(e) => setTotalKm(e.target.value)}
-              isDisabled={true}
-              inputClassNames="cursor-not-allowed"
-              leftAddOn="Km."
-            />
-          </div>
 
-          <div className="w-[49%]">
-            <div className="flex w-full">
-              <div className="flex-grow pr-2">
-                <Field
-                  type="text"
-                  id="coordinate_name"
-                  label="Coordinate Name"
-                  inputClassNames="text-xs"
-                  labelClassNames="text-xs"
-                  placeHolder="Enter Name"
-                  required={false}
-                  value={personInfo?.coordinate_name}
-                  // value={`Mann thakkar`}
-                  isDisabled={false}
-                  onChange={handlePersonInfoChange}
-                />
+            <div className="w-[49%]">
+              <Field
+                value={totalKm}
+                label="Total Km"
+                type="number"
+                placeholder="Enter Total Kilometer"
+                // onChange={(e) => setTotalKm(e.target.value)}
+                isDisabled={true}
+                inputClassNames="cursor-not-allowed"
+                leftAddOn="Km."
+              />
+            </div>
+
+            <div className="w-[49%]">
+              <div className="flex w-full">
+                <div className="flex-grow pr-2">
+                  <Field
+                    type="text"
+                    id="coordinate_name"
+                    label="Coordinate Name"
+                    inputClassNames="text-xs"
+                    labelClassNames="text-xs"
+                    placeHolder="Enter Name"
+                    required={false}
+                    value={personInfo?.coordinate_name}
+                    // value={`Mann thakkar`}
+                    isDisabled={false}
+                    onChange={handlePersonInfoChange}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          <div className="w-[49%]">
-            <Field
-              id="coordinate_number"
-              // value={`8401747809`}
-              value={personInfo?.coordinate_number}
-              label="Mobile No."
-              inputClassNames="text-xs"
-              labelClassNames="text-xs"
-              type="number"
-              placeholder="Enter Mobile Number"
-              isDisabled={false}
-              onChange={handlePersonMobileNumberChange}
+            <div className="w-[49%]">
+              <Field
+                id="coordinate_number"
+                // value={`8401747809`}
+                value={personInfo?.coordinate_number}
+                label="Mobile No."
+                inputClassNames="text-xs"
+                labelClassNames="text-xs"
+                type="number"
+                placeholder="Enter Mobile Number"
+                isDisabled={false}
+                onChange={handlePersonMobileNumberChange}
                 leftAddOn="+91"
-              onBlur={() => {
+                onBlur={() => {
                   setIsValidPhone(/^\d{10}$/.test(personInfo?.coordinate_number));
-              }}
-            />
-            {!isValidPhone && (
-              <p className="mt-1 text-xs text-red-500">Please enter a valid 10-digit number.</p>
-            )}
-          </div>
-          {/* <div className="w-[100%]">
+                }}
+              />
+              {!isValidPhone && (
+                <p className="mt-1 text-xs text-red-500">Please enter a valid 10-digit number.</p>
+              )}
+            </div>
+            {/* <div className="w-[100%]">
             <Field
               id="address"
               // value={personInfo?.coordinate_number}
@@ -1102,21 +1115,22 @@ const Indent = () => {
               onChange={handlePersonMobileNumberChange}
             />
           </div> */}
+          </div>
+          <button
+            className="bottom-4 ml-10 rounded-full bg-blue-600 p-2 text-lg font-semibold text-white hover:bg-blue-800 md:w-1/2"
+            onClick={() => {
+              // let upDateId = id + 1;
+              // setId(upDateId);
+              if (!modifyFlag) {
+                handleSubmit();
+              } else {
+                handleModify();
+              }
+            }}>
+            {modifyFlag == 0 ? '+ Create Indent' : '+ Modify Indent'}
+          </button>
         </div>
-        <button
-          className="bottom-4 ml-10 rounded-full bg-blue-600 p-2 text-lg font-semibold text-white hover:bg-blue-800 md:w-1/2"
-          onClick={() => {
-            // let upDateId = id + 1;
-            // setId(upDateId);
-            if (!modifyFlag) {
-              handleSubmit();
-            } else {
-              handleModify();
-            }
-          }}>
-          {modifyFlag == 0 ? '+ Create Indent' : '+ Modify Indent'}
-        </button>
-      </div>}
+      )}
     </PageWithSidebar>
   );
 };
