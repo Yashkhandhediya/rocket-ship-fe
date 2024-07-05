@@ -139,7 +139,8 @@ const OtpPopup = ({
         if (response.data.flag == 1 && is_super != 3) {
           toast('Login Success', { type: 'success' });
           // navigate('/seller/home');
-          navigate(`/all-indent/${id_user}`);
+          // navigate(`/all-indent/${id_user}`);
+          navigate('/book');
           window.location.reload();
         } else {
           setMessage(true);
