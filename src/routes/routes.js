@@ -59,6 +59,7 @@ import { InvoicePreferences, LabelPreferences } from '../pages/Label-Invoice';
 import { BillingAddress } from '../pages/billing-address';
 import { ShiprocketBankDetails } from '../pages/shiprocket-bank-details';
 import { RefundSetting, ReturnSettings } from '../pages/return-settings';
+import AddAddress from '../pages/add-address/AddAddress';
 
 const routes = createBrowserRouter([
   {
@@ -322,9 +323,13 @@ const routes = createBrowserRouter([
     path: '/refund-settings',
     element: <PrivateRoute component={<RefundSetting />} />,
   },
+  // {
+  //   path: '/add-address',
+  //   element: <PrivateRoute component={<Indent />} />,
+  // },
   {
     path: '/add-address',
-    element: <PrivateRoute component={<Indent />} />,
+    element: <PrivateRoute component={<AddAddress />} />,
   },
 ]);
 

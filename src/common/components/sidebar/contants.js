@@ -36,7 +36,7 @@ const mapModuleToLink = (module) => ({
 export const sidebarLinks = [
   is_company == 1 && {
     title: 'Add Address',
-    path: '/indent?open=true',
+    path: '/add-address',
     icon: bill,
     hoverIcon: bill,
   },
