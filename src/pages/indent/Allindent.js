@@ -397,10 +397,12 @@ const Allindent = () => {
                   </div>
                   <div className="flex flex-col">
                     <div className="mr-2 self-end text-sm font-medium">
-                      {localStorage.getItem('user_name')}
+                      {/* {localStorage.getItem('user_name')} */}
+                      {data?.name}
                     </div>
                     <div className="mr-2 self-end text-xs font-medium">
-                      {`Mobile No : ${localStorage.getItem('contact_no') || '9876543212'}`}
+                      {/* {`Mobile No : ${localStorage.getItem('contact_no') || '9876543212'}`} */}
+                      {`Mobile No : ${data?.contact_no || '9876543212'}`}
                     </div>
                   </div>
                 </div>
