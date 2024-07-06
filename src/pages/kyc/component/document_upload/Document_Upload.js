@@ -7,9 +7,9 @@ import { BACKEND_URL } from "../../../../common/utils/env.config";
 import { ACCESS_TOKEN } from "../../../../common/utils/config";
 
 const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
-    const user_name = localStorage.getItem('user_name')
-    const id_user = localStorage.getItem("user_id")
-    const id_company = localStorage.getItem("company_id")
+    const user_name = sessionStorage.getItem('user_name')
+    const id_user = sessionStorage.getItem("user_id")
+    const id_company = sessionStorage.getItem("company_id")
     const [documentType1, setDocumentType1] = useState('');
     const [documentType2, setDocumentType2] = useState('');
     const [documentType3, setDocumentType3] = useState('');
@@ -343,13 +343,13 @@ const Document_Upload = ({ setIsKYCCompleted,KYCType="user" }) => {
         if (isCompleteKYC()) {
             // toast.success('KYC completed successfully', { type: 'success' })
             const headers={'Content-Type': 'application/json','Authorization':ACCESS_TOKEN};
-            const id = localStorage.getItem('is_company') == 1 ? id_company : id_user
-            const type_client = localStorage.getItem('is_company') == 1 ? 'company' : 'user'
+            const id = sessionStorage.getItem('is_company') == 1 ? id_company : id_user
+            const type_client = sessionStorage.getItem('is_company') == 1 ? 'company' : 'user'
             axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=${type_client}&status=${2}&id=${id}`,{headers})
             .then((res) => {
                 console.log("Response ",res)
                 toast("KYC Verification Successfully",{type:'success'})
-                localStorage.setItem('is_kyc',2)
+                sessionStorage.setItem('is_kyc',2)
             }).catch((err) => {
                 console.log("ERRRRRR",err)
                 toast("Error in KYC verification",{type:'error'})

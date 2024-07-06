@@ -1,7 +1,7 @@
 import { stepperTickmark } from '../../../../common/icons';
 
 const Stepper = ({ step }) => {
-  const is_company = localStorage.getItem('is_company')
+  const is_company = sessionStorage.getItem('is_company')
   let labels = {};
 
   if (is_company == 0) {

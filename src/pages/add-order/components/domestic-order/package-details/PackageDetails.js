@@ -20,7 +20,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
   const location = useLocation();
   let { isEdit, order_id } = location?.state || {};
   console.log('EDDDITTT', isEdit);
-  const id_user = localStorage.getItem('user_id');
+  const id_user = sessionStorage.getItem('user_id');
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order);
   const editDetails = useSelector((state) => state?.editOrder?.domestic_order);
   console.log('EDDDDDDDDDDD', editDetails);

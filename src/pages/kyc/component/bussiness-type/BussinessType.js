@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 
 export let KYC_type = 'company'
 const BussinessType = ({ currentStep, handleChangeStep }) => {
-    const is_company = localStorage.getItem('is_company')
+    const is_company = sessionStorage.getItem('is_company')
     const [bussinessData, setBussinessData] = useState({
         bussinessType: '',
         companyType: ''

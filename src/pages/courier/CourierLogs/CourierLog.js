@@ -32,7 +32,7 @@ function CourierLog() {
       const currentPageData = data.slice((page - 1) * per_page, page * per_page);
 
       const handleLogData = () => {
-        axios.get(BACKEND_URL + `/userpartner/update_status_history?user_id=${localStorage.getItem('user_id')}&page=${page}&page_size=${per_page}`)
+        axios.get(BACKEND_URL + `/userpartner/update_status_history?user_id=${sessionStorage.getItem('user_id')}&page=${page}&page_size=${per_page}`)
         .then((res) => {
           console.log("Log Data",res.data)
           setData(res.data);

@@ -13,8 +13,8 @@ const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
     const [selfieText, setSelfieText] = useState('Take Selfie');
     const [type, setType] = useState('open'); // open, capture, retake
     const [capturedImage, setCapturedImage] = useState(null);
-    const user_name = localStorage.getItem('user_name')
-    const id_user = localStorage.getItem("user_id")
+    const user_name = sessionStorage.getItem('user_name')
+    const id_user = sessionStorage.getItem("user_id")
 
     const handleCamera = async (type) => {
         if (type === 'open') {

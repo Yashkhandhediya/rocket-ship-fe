@@ -18,7 +18,7 @@ const Catalogue = () => {
   const [selectedFile, setSelectedFile] = useState('');
   const [downloadPopup, setDownloadPopup] = useState(false);
   const [loading, setLoading] = useState(false);
-  const user_email = localStorage.getItem('user_email');
+  const user_email = sessionStorage.getItem('user_email');
   const [itemsPerPage, setItemsPerPage] = useState(15);
   // const [currentItems, setCurrentItems] = useState([]);
   const [data, setData] = useState([]);

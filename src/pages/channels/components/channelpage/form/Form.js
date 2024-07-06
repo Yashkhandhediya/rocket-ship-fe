@@ -25,7 +25,7 @@ const Form = () => {
         // console.log(BACKEND_URL+`/shopify/redirect?url=${url}`)
 
         axios
-            .get(BACKEND_URL+`/shopify/redirect?url=${url}&user_id=${localStorage.getItem('user_id')}&shop_name=${storeName}`)
+            .get(BACKEND_URL+`/shopify/redirect?url=${url}&user_id=${sessionStorage.getItem('user_id')}&shop_name=${storeName}`)
 
             .then(async (resp) => {
                 if (resp.status === 200) {

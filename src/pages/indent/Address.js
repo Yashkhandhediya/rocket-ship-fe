@@ -30,7 +30,7 @@ const Address = ({ isVisible, onClose }) => {
   const handleSubmit = () => {
     console.log("Submit Address API")
     checkField()
-    axios.post(BACKEND_URL + `/address/truck_booking_address/?created_by=${localStorage.getItem('company_id')}`,
+    axios.post(BACKEND_URL + `/address/truck_booking_address/?created_by=${sessionStorage.getItem('company_id')}`,
       address
     ).then((res) => {
       console.log("Response Data",res.data)

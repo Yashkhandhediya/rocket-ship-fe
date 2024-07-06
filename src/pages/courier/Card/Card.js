@@ -7,7 +7,7 @@ const Card = ({cards,setCards,initialCards,onCardsUpdate}) => {
   const [data,setData] = useState([])
 
   const handleData = () => {
-    axios.get(BACKEND_URL + `/userpartner/custom_courier_priority?user_id=${localStorage.getItem('user_id')}`)
+    axios.get(BACKEND_URL + `/userpartner/custom_courier_priority?user_id=${sessionStorage.getItem('user_id')}`)
     .then((res) => {
       console.log("Data Courier",res.data)
       const responseNames = res.data; 

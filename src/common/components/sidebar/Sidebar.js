@@ -44,7 +44,7 @@ const Sidebar = () => {
     axios
       .post(
         BACKEND_URL +
-          `/trucktype/create_truck_type/?created_by=${localStorage.getItem(
+          `/trucktype/create_truck_type/?created_by=${sessionStorage.getItem(
             'company_id',
           )}&truck_type=${truckSize}`,
       )
@@ -66,7 +66,7 @@ const Sidebar = () => {
     axios
       .post(
         BACKEND_URL +
-          `/materialtype/create_material_type/?created_by=${localStorage.getItem(
+          `/materialtype/create_material_type/?created_by=${sessionStorage.getItem(
             'company_id',
           )}&material_type=${materialType}`,
       )

@@ -25,9 +25,9 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
     //API to get data
     setLoading(true);
     const url = fromDateURL && toDateURL && freezeStatus != 5 && freezeStatus != 0
-      ? `${BACKEND_URL}/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&from=${fromDateURL}&to=${toDateURL}&status_name=${freezeStatus}&user_id=${localStorage.getItem('user_id')}`
+      ? `${BACKEND_URL}/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&from=${fromDateURL}&to=${toDateURL}&status_name=${freezeStatus}&user_id=${sessionStorage.getItem('user_id')}`
 
-      : `${BACKEND_URL}/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&status_name=${freezeStatus}&user_id=${localStorage.getItem('user_id')}`;
+      : `${BACKEND_URL}/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&status_name=${freezeStatus}&user_id=${sessionStorage.getItem('user_id')}`;
 
     axios.get(url, {})
       .then((response) => {

@@ -4,7 +4,7 @@ import { BACKEND_URL } from "../../../../common/utils/env.config"
 
 const Completed_KYC = () => {
     const [userImg,setUserImg] = useState(null)
-    const id_user = localStorage.getItem('user_id')
+    const id_user = sessionStorage.getItem('user_id')
     const handleImage = () => {
         axios.get(BACKEND_URL + `/kyc/?id=${id_user}&type=selfie`,{ responseType: 'blob' }).
         then((res) => {
@@ -12,8 +12,8 @@ const Completed_KYC = () => {
             const imgUrl = URL.createObjectURL(res.data)
             setUserImg(imgUrl)
             console.log("PICCCCCCCCCCCCCc",userImg)
-            // let newVal = localStorage.getItem('balance') - rechargeAmount
-            // localStorage.setItem('balance',newVal)
+            // let newVal = sessionStorage.getItem('balance') - rechargeAmount
+            // sessionStorage.setItem('balance',newVal)
             // window.location.reload()
         }).catch((err) => {
             console.log("Error In Rechargeee",err)

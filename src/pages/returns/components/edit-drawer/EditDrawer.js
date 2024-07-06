@@ -12,9 +12,9 @@ import { useDispatch, useSelector } from 'react-redux';
 const EditDrawer = ({ isOpen, onClose, fieldNames = [], data }) => {
   const [validationTriggered, setValidationTriggered] = useState(false);
   const [addressList, setAddressList] = useState([]);
-  const id_user = localStorage.getItem('user_id');
-  const id_company = localStorage.getItem('company_id');
-  const is_company = localStorage.getItem('is_company');
+  const id_user = sessionStorage.getItem('user_id');
+  const id_company = sessionStorage.getItem('company_id');
+  const is_company = sessionStorage.getItem('is_company');
   const domesticReturnFormValues = useSelector((state) => state?.addReturn?.single_return) || {};
   console.log(
     'Returnnnnnnnnn',

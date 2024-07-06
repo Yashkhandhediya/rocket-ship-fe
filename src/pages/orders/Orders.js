@@ -18,16 +18,16 @@ import { setFilteredOrders } from '../../redux';
 export let resData = [];
 const Orders = () => {
   const location = useLocation();
-  const id_user = localStorage.getItem('user_id');
-  const company_id = localStorage.getItem('company_id');
+  const id_user = sessionStorage.getItem('user_id');
+  const company_id = sessionStorage.getItem('company_id');
   const [isLoading, setIsLoading] = useState(true);
-  const is_company = localStorage.getItem('is_company');
+  const is_company = sessionStorage.getItem('is_company');
   const [loading, setLoading] = useState(false);
   const userId = is_company == 1 ? company_id : id_user;
   const [filteredOrderId, setFilteredOrderId] = useState([]);
   const [searchBy, setSearchBy] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  const [activeTab, setActiveTab] = useState(JSON.parse(localStorage.getItem('activeOrderTab')) || 0);
+  const [activeTab, setActiveTab] = useState(JSON.parse(sessionStorage.getItem('activeOrderTab')) || 0);
 
   console.log(filteredOrderId, searchBy, errorMsg);
 
@@ -104,7 +104,7 @@ const Orders = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem('activeTab', activeTab);
+    sessionStorage.setItem('activeTab', activeTab);
     fetchFilteredOrders();
   }, [query]);
 
@@ -114,7 +114,7 @@ const Orders = () => {
   const hasFetched = useRef(false);
 
   const fetchNewOrders = () => {
-    if (localStorage.getItem('is_company') == 1 && !flag) {
+    if (sessionStorage.getItem('is_company') == 1 && !flag) {
       navigate('/all-user');
       return;
     }
@@ -139,14 +139,14 @@ const Orders = () => {
 
   let count = 1;
   useEffect(() => {
-    if (localStorage.getItem('is_kyc') == 1) {
+    if (sessionStorage.getItem('is_kyc') == 1) {
       if (count == 1) {
         toast('Complete Your KYC First', { type: 'error' });
         count++;
       }
       navigate('/seller/home');
       return;
-    } else if (localStorage.getItem('is_kyc') == 2) {
+    } else if (sessionStorage.getItem('is_kyc') == 2) {
       if (count == 1) {
         toast('KYC Verification Is Pending.', { type: 'error' });
         count++;

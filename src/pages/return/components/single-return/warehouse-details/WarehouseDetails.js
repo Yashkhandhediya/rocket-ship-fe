@@ -23,7 +23,7 @@ const WarehouseDetails = ({ currentStep, handleChangeStep }) => {
     const [searchAddress, setSearchAddress] = useState('');
     const [addressList, setAddressList] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState(addressList.length ? addressList[0] : null);
-    const id_user = localStorage.getItem('user_id')
+    const id_user = sessionStorage.getItem('user_id')
     
     const fetchUserAddressList = () => {
         axios

@@ -11,7 +11,7 @@ const SignUpUser = () => {
   const navigate = useNavigate();
   const [flag, setFlag] = useState(0);
   const [signupInput, setSignupInput] = useState({
-    company_id: localStorage.getItem('company_id'),
+    company_id: sessionStorage.getItem('company_id'),
     first_name: '',
     last_name: '',
     email_address: '',
@@ -49,7 +49,7 @@ const SignUpUser = () => {
     }
     setFlag(1);
     const headers = { 'Content-Type': 'application/json' };
-    if (localStorage.getItem('access_token') != null) {
+    if (sessionStorage.getItem('access_token') != null) {
       axios
         .post(
           BACKEND_URL + '/users/signup',

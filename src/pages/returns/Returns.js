@@ -20,15 +20,15 @@ const Returns = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  const is_company = localStorage.getItem('is_company');
+  const is_company = sessionStorage.getItem('is_company');
   const [filteredOrderId, setFilteredOrderId] = useState([]);
   const [searchBy, setSearchBy] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
-  const id_user = localStorage.getItem('user_id');
-  const company_id = localStorage.getItem('company_id');
+  const id_user = sessionStorage.getItem('user_id');
+  const company_id = sessionStorage.getItem('company_id');
   const userId = is_company == 1 ? company_id : id_user;
-  const [activeTab, setActiveTab] = useState(JSON.parse(localStorage.getItem('activeTab')) || 0);
+  const [activeTab, setActiveTab] = useState(JSON.parse(sessionStorage.getItem('activeTab')) || 0);
 
   console.log(filteredOrderId, searchBy, errorMsg);
 
@@ -98,7 +98,7 @@ const Returns = () => {
 
   useEffect(() => {
     fetchFilteredOrders();
-    localStorage.setItem('activeTab', JSON.stringify(activeTab));
+    sessionStorage.setItem('activeTab', JSON.stringify(activeTab));
   }, [query]);
 
   const allReturnsList = useSelector((state) => state?.returnsList);
@@ -128,11 +128,11 @@ const Returns = () => {
 
   useEffect(() => {
     const checkKycStatus = () => {
-      if (localStorage.getItem('is_kyc') == 1) {
+      if (sessionStorage.getItem('is_kyc') == 1) {
         toast('Complete Your KYC First', { type: 'error' });
         navigate('/seller/home');
         return true;
-      } else if (localStorage.getItem('is_kyc') == 2) {
+      } else if (sessionStorage.getItem('is_kyc') == 2) {
         toast('KYC Verification Is Pending.', { type: 'error' });
         navigate('/seller/home');
         return true;
@@ -140,7 +140,7 @@ const Returns = () => {
       return false;
     };
 
-    if (localStorage.getItem('is_company') == 1 && !flag) {
+    if (sessionStorage.getItem('is_company') == 1 && !flag) {
       navigate('/all-users');
       return;
     }

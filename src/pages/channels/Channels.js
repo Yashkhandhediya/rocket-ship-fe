@@ -50,7 +50,7 @@ const Channels = () => {
     }
   };
 
-  const id_user = localStorage.getItem('user_id')
+  const id_user = sessionStorage.getItem('user_id')
   const fetchApiChannels = async () => {
     try {
       const response = await axios.get(`${BACKEND_URL}/shopchannel/get_store_by_user_id?user_id=${id_user}`);
@@ -142,14 +142,14 @@ const Channels = () => {
                     <div className="flex h-1/3 items-center justify-center text-[14px] font-normal text-[#E02424]">
                       <button
                         className={`w-32 rounded-md border border-[#E02424] bg-white py-0.5 ${
-                          localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2
+                          sessionStorage.getItem('is_kyc') == 1 || sessionStorage.getItem('is_kyc') == 2
                             ? 'cursor-not-allowed'
                             : ''
                         }`}
                         onClick={() => {
                           navigate('/channels/add_channel', { state: channel.id });
                         }}
-                        disabled={localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2}
+                        disabled={sessionStorage.getItem('is_kyc') == 1 || sessionStorage.getItem('is_kyc') == 2}
                       >
                         Connect
                       </button>

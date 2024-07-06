@@ -13,7 +13,7 @@ const Company_profile = () => {
   const [data,setData] = useState(null)
   // This is a dummy data, you can replace it with your own data
   const [companyDetails, setCompanyDetails] = useState({
-    companyId: localStorage.getItem('company_id') != 'undefined' ? localStorage.getItem('company_id') : '12345678',
+    companyId: sessionStorage.getItem('company_id') != 'undefined' ? sessionStorage.getItem('company_id') : '12345678',
     companyName: '',
     website: '',
     email: '',
@@ -35,7 +35,7 @@ const Company_profile = () => {
   // This function is used to handle the form submit
   const handleSumbit = () => {
     // You can use this data to send to the server
-    // if(localStorage.getItem('is_company') == 0){
+    // if(sessionStorage.getItem('is_company') == 0){
     //   toast("User Can't See Company Data",{type:'error'})
     //   return;
     // }
@@ -51,12 +51,12 @@ const Company_profile = () => {
   }
 
   const handleData = () => {
-    // if(localStorage.getItem('is_company') == 0){
+    // if(sessionStorage.getItem('is_company') == 0){
     //   toast("User Can't See Company Data",{type:'error'})
     //   return;
     // }
 
-    axios.get(BACKEND_URL + `/company/${localStorage.getItem('company_id')}`)
+    axios.get(BACKEND_URL + `/company/${sessionStorage.getItem('company_id')}`)
     .then((res) => {
       console.log("Company Data ",res.data)
       // setData(res.data)

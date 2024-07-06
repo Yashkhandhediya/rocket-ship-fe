@@ -18,7 +18,7 @@ const Users = () => {
   const [rechargeAmount, setRechargeAmount] = useState(amount);
   const [showkyc, setShowKyc] = useState(false);
   const [idUser, setIdUser] = useState(null);
-  const company_id = localStorage.getItem('company_id');
+  const company_id = sessionStorage.getItem('company_id');
   const [aadharImg, setAadharImg] = useState(null);
   const [userImg, setUserImg] = useState(null);
   const [kyc_status, setKyc_status] = useState(0);
@@ -86,8 +86,8 @@ const Users = () => {
         const imgUrl = URL.createObjectURL(res.data);
         setAadharImg(imgUrl);
         console.log('PICCCCCCCCCCCCCc', aadharImg);
-        // let newVal = localStorage.getItem('balance') - rechargeAmount
-        // localStorage.setItem('balance',newVal)
+        // let newVal = sessionStorage.getItem('balance') - rechargeAmount
+        // sessionStorage.setItem('balance',newVal)
         // window.location.reload()
       })
       .catch((err) => {
@@ -101,8 +101,8 @@ const Users = () => {
         const imgUrl = URL.createObjectURL(res.data);
         setUserImg(imgUrl);
         console.log('PICCCCCCCCCCCCCc', userImg);
-        // let newVal = localStorage.getItem('balance') - rechargeAmount
-        // localStorage.setItem('balance',newVal)
+        // let newVal = sessionStorage.getItem('balance') - rechargeAmount
+        // sessionStorage.setItem('balance',newVal)
         // window.location.reload()
       })
       .catch((err) => {
@@ -131,8 +131,8 @@ const Users = () => {
   //   axios.post(BACKEND_URL + `/kyc/?id=${idUser}&type=user_aadhar`).
   //   then((res) => {
   //       console.log("Recharge Responsee",res)
-  //       // let newVal = localStorage.getItem('balance') - rechargeAmount
-  //       // localStorage.setItem('balance',newVal)
+  //       // let newVal = sessionStorage.getItem('balance') - rechargeAmount
+  //       // sessionStorage.setItem('balance',newVal)
   //       window.location.reload()
   //   }).catch((err) => {
   //       console.log("Error In Rechargeee")
@@ -166,8 +166,8 @@ const Users = () => {
               console.log('ERRRRRRRRRR', err);
             });
         }
-        // let newVal = localStorage.getItem('balance') - rechargeAmount
-        // localStorage.setItem('balance',newVal)
+        // let newVal = sessionStorage.getItem('balance') - rechargeAmount
+        // sessionStorage.setItem('balance',newVal)
         // window.location.reload()
       })
       .catch((err) => {

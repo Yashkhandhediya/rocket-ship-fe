@@ -64,7 +64,7 @@ const DiscrepancyTable = ({ data, setLoading }) => {
   const updateStatus = (id) => {
     axios
       .put(
-        `${BACKEND_URL}/weight_discrepancy/update?id=${id}&user_id=${localStorage.getItem('user_id')}`,
+        `${BACKEND_URL}/weight_discrepancy/update?id=${id}&user_id=${sessionStorage.getItem('user_id')}`,
         { status_name: 'Discrepancy Accepted' },
         { headers: { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN } },
       )

@@ -8,7 +8,7 @@ const RechargeModal = ({ setShowRechargeModal }) => {
   const [amount, setAmount] = useState(500);
   const [couponCode, setCouponCode] = useState(''); // eslint-disable-line
   const [couponCodeAmount, setCouponCodeAmount] = useState(0); // eslint-disable-line
-  const balance = localStorage.getItem('balance') == 0 ? "0.00" : localStorage.getItem('balance')
+  const balance = sessionStorage.getItem('balance') == 0 ? "0.00" : sessionStorage.getItem('balance')
 
   const formData = new FormData();
   formData.append('amount', amount * 100);
@@ -37,8 +37,8 @@ const RechargeModal = ({ setShowRechargeModal }) => {
   };
 
   const handleCreatePayment = async () => {
-    // const id_user = localStorage.getItem('user_id')
-    const id_company = localStorage.getItem('company_id')
+    // const id_user = sessionStorage.getItem('user_id')
+    const id_company = sessionStorage.getItem('company_id')
     // console.log("USERRRRRRRRRRR",id_user)
 
     // formData.append("user_id",id_user)

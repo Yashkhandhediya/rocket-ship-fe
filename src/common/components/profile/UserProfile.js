@@ -36,10 +36,10 @@ const UserProfile = () => {
 
 
   const handleData = () => {
-    axios.get(BACKEND_URL + `/users/${localStorage.getItem('user_id')}`)
+    axios.get(BACKEND_URL + `/users/${sessionStorage.getItem('user_id')}`)
     .then((res) => {
       console.log("Response User Data",res.data)
-      localStorage.setItem('user_name',res.data.first_name)
+      sessionStorage.setItem('user_name',res.data.first_name)
       setData(res.data)
       setFirstName(res.data.first_name)
       setLastName(res.data.last_name)
@@ -57,7 +57,7 @@ const UserProfile = () => {
 
   const handleUpdate = () => {
     console.log("Upadte")
-    axios.put(BACKEND_URL + `/users/${localStorage.getItem('user_id')}`,{
+    axios.put(BACKEND_URL + `/users/${sessionStorage.getItem('user_id')}`,{
       first_name: firstName,
       last_name: lastName
     }).then((res) => {

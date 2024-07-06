@@ -59,7 +59,7 @@ const COD_Remittance = () => {
     }
 
     const handleCOD = () => {
-        axios.post(BACKEND_URL + `/order/create_cod_remittance?user_id=${localStorage.getItem('user_id')}`, {
+        axios.post(BACKEND_URL + `/order/create_cod_remittance?user_id=${sessionStorage.getItem('user_id')}`, {
             "order_id": parseInt(remittanceInfo?.order_id),
             "cod_to_be_remitted": parseInt(remittanceInfo?.cod_to_be_remitted),
             "last_cod_remitted": parseInt(remittanceInfo?.last_cod_remitted),
@@ -90,7 +90,7 @@ const COD_Remittance = () => {
     }
 
     const handleCODData = () => {
-        axios.get(BACKEND_URL + `/order/get_cod_remittance?user_id=${localStorage.getItem('user_id')}&from_date=${fromDate}&to_date=${toDate}`)
+        axios.get(BACKEND_URL + `/order/get_cod_remittance?user_id=${sessionStorage.getItem('user_id')}&from_date=${fromDate}&to_date=${toDate}`)
         .then((res) => {
             console.log("COD DATA",res.data)
             setData(res.data)

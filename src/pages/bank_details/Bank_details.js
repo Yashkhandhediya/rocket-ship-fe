@@ -26,7 +26,7 @@ const Bank_details = () => {
 
 
   const handleData = () => {
-    axios.get(BACKEND_URL + `/bankdetails/bank_details_get?user_id=${localStorage.getItem('user_id')}`)
+    axios.get(BACKEND_URL + `/bankdetails/bank_details_get?user_id=${sessionStorage.getItem('user_id')}`)
     .then((res) => {
       console.log("Response Bank Detail",res)
       if(res.data.length > 0){
@@ -47,7 +47,7 @@ const Bank_details = () => {
   const handleSumbit = () => {
     // You can use this data to send to the server
     axios.post(BACKEND_URL + `/bankdetails/bank_details_post`,{
-      user_id: localStorage.getItem('user_id'),
+      user_id: sessionStorage.getItem('user_id'),
       account_holder_name: bankDetails.accountHolderName,
       account_number: bankDetails.accountNo,
       account_type_id: parseInt(bankDetails.accountType == 'savings' ? 0 : 1),

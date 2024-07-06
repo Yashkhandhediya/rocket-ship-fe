@@ -14,8 +14,8 @@ import { ShipmentOverview } from './components/shipment-overview';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const id_user = localStorage.getItem('user_id');
-  const company_id = localStorage.getItem('company_id');
+  const id_user = sessionStorage.getItem('user_id');
+  const company_id = sessionStorage.getItem('company_id');
   const oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().slice(0, 10);
   const todayDate = new Date().toISOString().slice(0, 10);
   const [fromDate, setFromDate] = useState(oneMonthAgo.toString());
@@ -254,7 +254,7 @@ const Dashboard = () => {
               <div style={{ textAlign: 'center' }}>
                 {loading && <Loader />}
                 {/* <h1>Dashboard</h1> */}
-                {localStorage.getItem('is_kyc') == 1 && (
+                {sessionStorage.getItem('is_kyc') == 1 && (
                   <div className="ml-4 mr-4 mt-2 w-[98%] rounded-lg border bg-red-600 p-2 shadow-md hover:underline">
                     <Link to={'/seller/kyc'} className="text-white">
                       Click here to complete your KYC and get non-disrupted shipping and COD remittances

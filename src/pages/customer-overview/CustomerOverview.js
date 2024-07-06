@@ -17,9 +17,9 @@ function CustomerOverview() {
   const [viewData, setViewData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { buyerId } = useParams();
-  const id_user = localStorage.getItem('user_id');
-  const id_company = localStorage.getItem('company_id');
-  const is_company = localStorage.getItem('is_company');
+  const id_user = sessionStorage.getItem('user_id');
+  const id_company = sessionStorage.getItem('company_id');
+  const is_company = sessionStorage.getItem('is_company');
 
   const user_id = is_company == 1 ? id_company : id_user;
   const queryParams = new URLSearchParams(location.search);

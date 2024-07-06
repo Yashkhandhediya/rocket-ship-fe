@@ -1,7 +1,7 @@
 import { Navbar } from '../navbar';
 import Sidebar from '../sidebar/Sidebar';
 
-const is_super = localStorage.getItem('is_super')
+const is_super = sessionStorage.getItem('is_super')
 const PageWithSidebar = ({ children }) => {
   return (
     <div className="h-screen max-h-screen w-screen overflow-hidden bg-[#f8f8f8]">

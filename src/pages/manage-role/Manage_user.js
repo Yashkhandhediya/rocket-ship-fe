@@ -16,7 +16,7 @@ const Manage_user = () => {
 
 
   const handleData = () => {
-    axios.get(BACKEND_URL + `/roleuser/created_user_roles?created_by=${localStorage.getItem('company_id')}`)
+    axios.get(BACKEND_URL + `/roleuser/created_user_roles?created_by=${sessionStorage.getItem('company_id')}`)
     .then((res) => {
       console.log("Response User Data",res.data)
       setData(res.data)

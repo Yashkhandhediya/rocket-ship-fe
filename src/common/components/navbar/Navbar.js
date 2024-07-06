@@ -8,16 +8,16 @@ import { toast } from 'react-toastify';
 import RechargeModal from '../../../pages/home/components/rechareModal/RechargeModal';
 
 const Navbar = () => {
-  const is_company = localStorage.getItem('is_company');
+  const is_company = sessionStorage.getItem('is_company');
   console.log('ISSSSSSSSSSS', is_company);
-  const user = localStorage.getItem('user_name') ? localStorage.getItem('user_name') : null;
+  const user = sessionStorage.getItem('user_name') ? sessionStorage.getItem('user_name') : null;
   console.log('USEEEEEEEEEEEE', user);
-  const balance = localStorage.getItem('balance') <= 0 ? '0.00' : localStorage.getItem('balance');
+  const balance = sessionStorage.getItem('balance') <= 0 ? '0.00' : sessionStorage.getItem('balance');
   const navigate = useNavigate();
   const [userData, setUserData] = useState({});
   const [showRechargeModal, setShowRechargeModal] = useState(false);
-  const id_user = localStorage.getItem('user_id');
-  const id_company = localStorage.getItem('company_id');
+  const id_user = sessionStorage.getItem('user_id');
+  const id_company = sessionStorage.getItem('company_id');
   const [showPopup, setShowPopup] = useState(false);
   const [rechargeAmount, setRechargeAmount] = useState('');
   const handleRequest = () => {
@@ -33,8 +33,8 @@ const Navbar = () => {
       )
       .then((res) => {
         console.log('Recharge Responsee', res);
-        // let newVal = localStorage.getItem('balance') - rechargeAmount
-        // localStorage.setItem('balance',newVal)
+        // let newVal = sessionStorage.getItem('balance') - rechargeAmount
+        // sessionStorage.setItem('balance',newVal)
         toast.success('Request Recharge successful!');
         setRechargeAmount('');
       })
@@ -47,7 +47,7 @@ const Navbar = () => {
 
   const navbarLinks = [
     {
-      label: localStorage.getItem('is_company') == 1 ? 'Company' : 'User',
+      label: sessionStorage.getItem('is_company') == 1 ? 'Company' : 'User',
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-6 w-6">
           <path
@@ -59,7 +59,7 @@ const Navbar = () => {
       ),
       onClick: () => {
         console.log('User'); //eslint-disable-line
-        localStorage.getItem('is_company') == 0
+        sessionStorage.getItem('is_company') == 0
           ? navigate('/user-profile')
           : navigate('/company-general-details');
       },
@@ -166,11 +166,11 @@ const Navbar = () => {
         </svg>
       ),
       onClick: () => {
-        localStorage.removeItem('user_name');
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('is_super');
-        localStorage.removeItem('modules');
-        localStorage.removeItem('setting_modules');
+        sessionStorage.removeItem('user_name');
+        sessionStorage.removeItem('access_token');
+        sessionStorage.removeItem('is_super');
+        sessionStorage.removeItem('modules');
+        sessionStorage.removeItem('setting_modules');
         window.location.href = '/login';
       },
     },
@@ -191,18 +191,18 @@ const Navbar = () => {
       setUserData(response.data);
       console.log('Hallllllllllllll', userData, response.data);
       if (response.data.wallet_balance == null || response.data.wallet_balance <= 0) {
-        localStorage.setItem('balance', 0.0);
-        localStorage.setItem(
+        sessionStorage.setItem('balance', 0.0);
+        sessionStorage.setItem(
           'modules',
           response.data.modules.module.map((mod) => mod.id),
         );
-        localStorage.setItem(
+        sessionStorage.setItem(
           'setting_modules',
           response.data.modules.setting_module.map((mod) => mod.id),
         );
         console.log('BALLLLLLLL', balance);
       } else {
-        localStorage.setItem('balance', response.data.wallet_balance);
+        sessionStorage.setItem('balance', response.data.wallet_balance);
       }
     } catch (error) {
       console.log(error); //eslint-disable-line
@@ -277,7 +277,7 @@ const Navbar = () => {
           </button>
         )}
       </div> */}
-      <h1 className='text-base mr-4'>{localStorage.getItem('user_name')}</h1>
+      <h1 className='text-base mr-4'>{sessionStorage.getItem('user_name')}</h1>
       <div className="flex flex-row items-center gap-2">
         {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-5 w-5">
           <path

@@ -15,9 +15,9 @@ import { useSelector } from 'react-redux';
 const Tabs = ({ tabs, tabClassNames, activeTab, setActiveTab, onTabChange = () => {} }) => {
   console.log('Activeeeeeeee', activeTab);
   const filteredOrders = useSelector((state) => state.filteredOrdersList);
-  const id_user = localStorage.getItem('user_id');
-  const id_company = localStorage.getItem('company_id');
-  const is_company = localStorage.getItem('is_company');
+  const id_user = sessionStorage.getItem('user_id');
+  const id_company = sessionStorage.getItem('company_id');
+  const is_company = sessionStorage.getItem('is_company');
 
   const [data, setData] = useState([]);
   const [itemsPerPage, setItemsPerPage] = useState(15);
@@ -61,7 +61,7 @@ const Tabs = ({ tabs, tabClassNames, activeTab, setActiveTab, onTabChange = () =
   const handleClick = (index) => {
     setActiveTab(index);
     onTabChange(index);
-    localStorage.setItem('activeOrderTab', JSON.stringify(index));
+    sessionStorage.setItem('activeOrderTab', JSON.stringify(index));
   };
 
   useEffect(() => {

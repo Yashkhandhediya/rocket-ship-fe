@@ -110,7 +110,7 @@ function Courier() {
       };
 
     const hanldePriority = () => {
-        axios.put(BACKEND_URL + `/userpartner/update_courier_priority?user_id=${localStorage.getItem('user_id')}&courier_priority_id=${activeCard}`,card.map(c => c.id))
+        axios.put(BACKEND_URL + `/userpartner/update_courier_priority?user_id=${sessionStorage.getItem('user_id')}&courier_priority_id=${activeCard}`,card.map(c => c.id))
         .then((res) => {
             toast("Courier Priority Has Been SetUp",{type:'success'})
         })
@@ -120,7 +120,7 @@ function Courier() {
     }
 
     const handleCourierPriority = () => {
-        axios.get(BACKEND_URL + `/userpartner/courier_priority?user_id=${localStorage.getItem('user_id')}`)
+        axios.get(BACKEND_URL + `/userpartner/courier_priority?user_id=${sessionStorage.getItem('user_id')}`)
         .then((res) => {
             console.log("RESPONSEEEEEEE",res.data)
            if(res.data.courier_priority_type  == "recommended by cargo"){

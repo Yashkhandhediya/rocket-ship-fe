@@ -121,8 +121,8 @@ const User_Management = () => {
         axios.post(BACKEND_URL + '/roleuser/add_user',{
             "first_name": userInfo?.full_name,
             "email_address": userInfo?.email_address,
-            "company_id": parseInt(localStorage.getItem('company_id')),
-            "created_by": parseInt(localStorage.getItem('company_id')),
+            "company_id": parseInt(sessionStorage.getItem('company_id')),
+            "created_by": parseInt(sessionStorage.getItem('company_id')),
             "show_info": showPersonalInfo == "Yes" ? 1 : 0,
             "modules_id": modulesId,
             "setting_modules_id":settingModulesId
@@ -151,8 +151,8 @@ const User_Management = () => {
         axios.put(BACKEND_URL + `/roleuser/update_user?role_user_id=${userData?.user?.id}`,{
             "first_name": userInfo?.full_name,
             "email_address": userInfo?.email_address,
-            "company_id": parseInt(localStorage.getItem('company_id')),
-            "created_user_id": parseInt(localStorage.getItem('user_id')),
+            "company_id": parseInt(sessionStorage.getItem('company_id')),
+            "created_user_id": parseInt(sessionStorage.getItem('user_id')),
             "show_info": showPersonalInfo == "Yes" ? 1 : 0,
             "modules_id": modulesId,
             "setting_modules_id":settingModulesId
