@@ -247,21 +247,21 @@ const Indent = () => {
 
   let count = 1;
   useEffect(() => {
-    if (sessionStorage.getItem('is_kyc') == 1) {
-      if (count == 1) {
-        toast('Complete Your KYC First', { type: 'error' });
-        count++;
-      }
-      navigate('/seller/home');
-      return;
-    } else if (sessionStorage.getItem('is_kyc') == 2) {
-      if (count == 1) {
-        toast('KYC Verification Is Pending.', { type: 'error' });
-        count++;
-      }
-      navigate('/seller/home');
-      return;
-    }
+    // if (sessionStorage.getItem('is_kyc') == 1) {
+    //   if (count == 1) {
+    //     toast('Complete Your KYC First', { type: 'error' });
+    //     count++;
+    //   }
+    //   navigate('/seller/home');
+    //   return;
+    // } else if (sessionStorage.getItem('is_kyc') == 2) {
+    //   if (count == 1) {
+    //     toast('KYC Verification Is Pending.', { type: 'error' });
+    //     count++;
+    //   }
+    //   navigate('/seller/home');
+    //   return;
+    // }
 
     function handleClickOutside(event) {
       if (

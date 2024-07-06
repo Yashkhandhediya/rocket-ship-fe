@@ -40,13 +40,13 @@ const Allindent = () => {
   const [popupCardId, setPopupCardId] = useState(null);
   const [showBtn, setShowBtn] = useState(true);
   const [showOfflineBtn, setShowOfflineBtn] = useState(false);
-  const [offlinePrice,setOfflinePrice] = useState(0)
+  const [offlinePrice, setOfflinePrice] = useState(0);
   const [showOfflinePricePrompt, setShowOfflinePricePrompt] = useState(false);
 
   console.log('IDFFFFFF', selectedTab);
 
-  if(url_user_id == 'undefined' && sessionStorage.getItem('is_company') == 1){
-    navigate('/User')
+  if (url_user_id == 'undefined' && sessionStorage.getItem('is_company') == 1) {
+    navigate('/User');
   }
 
   function formatTimestamp(timestamp) {
@@ -79,16 +79,15 @@ const Allindent = () => {
           info.push(response.data[i]);
         }
       }
-      console.log("yash")
+      console.log('yash');
       setAllData(info);
-      let tab_dummy = JSON.parse(sessionStorage.getItem('activeTab')) || 0
-      if (tab_dummy == 0){
-        filteredData = info
-      }
-      else {
+      let tab_dummy = JSON.parse(sessionStorage.getItem('activeTab')) || 0;
+      if (tab_dummy == 0) {
+        filteredData = info;
+      } else {
         filteredData = info.filter((data) => data.trip_status == tab_dummy - 1);
       }
-      
+
       setFilteredInfo(filteredData);
       setDataFetch(true);
     } catch (err) {
@@ -98,21 +97,21 @@ const Allindent = () => {
 
   let count = 1;
   useEffect(() => {
-    if (sessionStorage.getItem('is_kyc') == 1) {
-      if (count == 1) {
-        toast('Complete Your KYC First', { type: 'error' });
-        count++;
-      }
-      navigate('/seller/home');
-      return;
-    } else if (sessionStorage.getItem('is_kyc') == 2) {
-      if (count == 1) {
-        toast('KYC Verification Is Pending.', { type: 'error' });
-        count++;
-      }
-      navigate('/seller/home');
-      return;
-    }
+    // if (sessionStorage.getItem('is_kyc') == 1) {
+    //   if (count == 1) {
+    //     toast('Complete Your KYC First', { type: 'error' });
+    //     count++;
+    //   }
+    //   navigate('/seller/home');
+    //   return;
+    // } else if (sessionStorage.getItem('is_kyc') == 2) {
+    //   if (count == 1) {
+    //     toast('KYC Verification Is Pending.', { type: 'error' });
+    //     count++;
+    //   }
+    //   navigate('/seller/home');
+    //   return;
+    // }
 
     fetchData();
   }, [url_user_id]);
@@ -134,39 +133,43 @@ const Allindent = () => {
   };
 
   const checkConfirmRejectButtonShowCondition = (data) => {
-    console.log("yasah")
-    if (is_company == 1){
-      return false
-    }else
-      return (data.trip_status !== 2 &&
-      data.trip_status !== 3 &&
-      data.trip_status !== 0 &&
-      data?.counter_price == null)
-  }
-
+    console.log('yasah');
+    if (is_company == 1) {
+      return false;
+    } else
+      return (
+        data.trip_status !== 2 &&
+        data.trip_status !== 3 &&
+        data.trip_status !== 0 &&
+        data?.counter_price == null
+      );
+  };
 
   const checkCounterPriceShowCondition = (data) => {
-    console.log("yasah")
-    if (is_company == 1){
-      return false
-    }else
-      return (data.trip_status !== 2 &&
-      data.trip_status !== 3 &&
-      data.trip_status !== 0 &&
-      data?.counter_price == null)
-  }
-
+    console.log('yasah');
+    if (is_company == 1) {
+      return false;
+    } else
+      return (
+        data.trip_status !== 2 &&
+        data.trip_status !== 3 &&
+        data.trip_status !== 0 &&
+        data?.counter_price == null
+      );
+  };
 
   const checkCounterPriceDisabledCondition = (data) => {
-    console.log("yasah")
-    if (is_company == 1){
-      return false
-    }else
-      return (data.trip_status !== 2 &&
-      data.trip_status !== 3 &&
-      data.trip_status !== 0 &&
-      data?.counter_price == null)
-  }
+    console.log('yasah');
+    if (is_company == 1) {
+      return false;
+    } else
+      return (
+        data.trip_status !== 2 &&
+        data.trip_status !== 3 &&
+        data.trip_status !== 0 &&
+        data?.counter_price == null
+      );
+  };
 
   const handlePriceChange = (id, value) => {
     setPrice({ ...price, [id]: value }); // Update the price for the corresponding card
@@ -231,15 +234,11 @@ const Allindent = () => {
       id: id,
       status_code: status,
     };
-    if (offlinePrice != null){
-      newObj.offline_price = offlinePrice
+    if (offlinePrice != null) {
+      newObj.offline_price = offlinePrice;
     }
     axios
-      .post(
-        BACKEND_URL + '/indent/booking_confirmation',
-        newObj,
-        { headers },
-      )
+      .post(BACKEND_URL + '/indent/booking_confirmation', newObj, { headers })
       .then((res) => {
         console.log('111111111', res);
         if (res?.data?.status_code == 401) {
@@ -252,7 +251,7 @@ const Allindent = () => {
           : toast('Price Successfully Rejected', { type: 'error' });
         setLoading(false);
         setShowBtn(false);
-        setPopupCardId(null)
+        setPopupCardId(null);
         window.location.reload();
       })
       .catch((err) => {
@@ -279,16 +278,16 @@ const Allindent = () => {
   }, [selectedTab]);
 
   const handleRejectClick = (id) => {
-    setShowBtn(false)
+    setShowBtn(false);
     setShowPopup(true);
     setPopupCardId(id);
   };
 
   const handleConfirmClick = (id) => {
-    setShowBtn(false)
-    setShowOfflinePricePrompt(true)
+    setShowBtn(false);
+    setShowOfflinePricePrompt(true);
     setPopupCardId(id);
-  }
+  };
 
   const handleReasonChange = (e) => {
     setSelectedReason(e.target.value);
@@ -497,64 +496,61 @@ const Allindent = () => {
                   )}
                   {showBtn && (
                     <div className="mt-6 flex flex-row">
-                      { checkConfirmRejectButtonShowCondition(data) && (
-                          <button
-                            className="mr-2 rounded-lg bg-blue-500 px-3  py-2 text-xs font-semibold text-white hover:bg-blue-600"
-                            onClick={() => {
-                              handleConfirmation(data.id, 2);
-                            }}>
-                            Confirm
-                          </button>
-                        )}
                       {checkConfirmRejectButtonShowCondition(data) && (
-                          <button
-                            className="rounded-lg bg-red-500 px-3  py-2 text-xs font-semibold text-white hover:bg-red-600"
-                            onClick={() => {
-                              handleConfirmation(data.id, 3);
-                            }}>
-                            Reject
-                          </button>
-                        )}
+                        <button
+                          className="mr-2 rounded-lg bg-blue-500 px-3  py-2 text-xs font-semibold text-white hover:bg-blue-600"
+                          onClick={() => {
+                            handleConfirmation(data.id, 2);
+                          }}>
+                          Confirm
+                        </button>
+                      )}
+                      {checkConfirmRejectButtonShowCondition(data) && (
+                        <button
+                          className="rounded-lg bg-red-500 px-3  py-2 text-xs font-semibold text-white hover:bg-red-600"
+                          onClick={() => {
+                            handleConfirmation(data.id, 3);
+                          }}>
+                          Reject
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
 
-
                 {showOfflinePricePrompt && (
-                      <div className="fixed inset-0 bg-gray-200 bg-opacity-5 flex justify-center items-start">
-                          <div className="bg-white p-4 rounded-lg w-96 mt-16">
-                          <p className="text-lg font-semibold mb-4"> Do you want to Add offline price?</p>
-                          <div className="flex justify-end">
-                            <button
-                              className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
-                              onClick={() => {
-                                setShowOfflineBtn(true)
-                                setShowOfflinePricePrompt(false);
-                              }}
-                            >
-                              Yes
-                            </button>
-                            <button
-                              className="rounded-lg bg-gray-300 px-3 py-2 text-xs font-semibold text-gray-800 hover:bg-gray-400"
-                              onClick={() => {
-                                setShowOfflinePricePrompt(false);
-                                handleConfirmation(data.id, 2);
-                              }}
-                            >
-                              No
-                            </button>
-                          </div>
-                        </div>
+                  <div className="fixed inset-0 flex items-start justify-center bg-gray-200 bg-opacity-5">
+                    <div className="mt-16 w-96 rounded-lg bg-white p-4">
+                      <p className="mb-4 text-lg font-semibold"> Do you want to Add offline price?</p>
+                      <div className="flex justify-end">
+                        <button
+                          className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
+                          onClick={() => {
+                            setShowOfflineBtn(true);
+                            setShowOfflinePricePrompt(false);
+                          }}>
+                          Yes
+                        </button>
+                        <button
+                          className="rounded-lg bg-gray-300 px-3 py-2 text-xs font-semibold text-gray-800 hover:bg-gray-400"
+                          onClick={() => {
+                            setShowOfflinePricePrompt(false);
+                            handleConfirmation(data.id, 2);
+                          }}>
+                          No
+                        </button>
                       </div>
-                    )}
+                    </div>
+                  </div>
+                )}
 
-
-                    
                 {data?.actual_price != null && (
                   <div className="mt-2 flex flex-row items-center justify-between p-1 ">
                     <div className="mt-2">
                       <label className="text-xs font-semibold text-purple-400">COUNTER PRICE</label>
-                      {data.counter_price == null && sessionStorage.getItem('is_company') == 0 && sessionStorage.getItem('activeTab') == 2 ? (
+                      {data.counter_price == null &&
+                      sessionStorage.getItem('is_company') == 0 &&
+                      sessionStorage.getItem('activeTab') == 2 ? (
                         <input
                           type="text"
                           value={rcslPrice[data.id] || ''}
@@ -578,8 +574,7 @@ const Allindent = () => {
                           {data.trip_status !== 2 &&
                             data.trip_status !== 3 &&
                             data.trip_status !== 0 &&
-                            data.counter_price == null &&
-                             (
+                            data.counter_price == null && (
                               <button
                                 className="mt-2 rounded-lg bg-green-500 px-2 py-1 font-semibold text-white hover:bg-green-600"
                                 onClick={() => {
@@ -602,7 +597,7 @@ const Allindent = () => {
                                   className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
                                   onClick={() => {
                                     // handleConfirmation(data.id, 2);
-                                    handleConfirmClick(data.id)
+                                    handleConfirmClick(data.id);
                                   }}>
                                   Confirm
                                 </button>
@@ -621,12 +616,14 @@ const Allindent = () => {
                   </div>
                 )}
 
-
-                {((showOfflineBtn && popupCardId == data.id) || data.offline_price && data.offline_price > 0) && (
+                {((showOfflineBtn && popupCardId == data.id) ||
+                  (data.offline_price && data.offline_price > 0)) && (
                   <div className="mt-2 flex flex-row items-center justify-between p-1 ">
                     <div className="mt-2">
                       <label className="text-xs font-semibold text-purple-400">OFFLINE PRICE</label>
-                      {data.counter_price != null && sessionStorage.getItem('is_company') == 1 && sessionStorage.getItem('activeTab') == 2? (
+                      {data.counter_price != null &&
+                      sessionStorage.getItem('is_company') == 1 &&
+                      sessionStorage.getItem('activeTab') == 2 ? (
                         <input
                           type="text"
                           value={offlinePrice || ''}
@@ -651,7 +648,7 @@ const Allindent = () => {
                           data.trip_status !== 0 &&
                           data.counter_price > 0 && (
                             <>
-                              {(
+                              {
                                 <button
                                   className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
                                   onClick={() => {
@@ -659,7 +656,7 @@ const Allindent = () => {
                                   }}>
                                   Confirm
                                 </button>
-                              )}
+                              }
                               {/* {(
                                 <button
                                   className="rounded-lg bg-red-500 px-3 py-2 text-xs font-semibold text-white hover:bg-red-600"
@@ -698,10 +695,9 @@ const Allindent = () => {
                       <button
                         className="ml-2 mr-2 rounded-md border bg-red-500 p-2 text-sm text-white"
                         onClick={() => {
-                          setShowPopup(false)
-                          window.location.reload()
-                        }
-                        }>
+                          setShowPopup(false);
+                          window.location.reload();
+                        }}>
                         Cancel
                       </button>
                     </div>
