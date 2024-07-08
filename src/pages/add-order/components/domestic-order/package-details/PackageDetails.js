@@ -85,6 +85,8 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     }).toDate();
   };
 
+  console.log(formDirectField, domesticOrderFormValues);
+
   const placeOrder = async () => {
     setIsLoading(true);
     const date = getFullDateForPayload(domesticOrderFormValues?.date);
@@ -162,13 +164,13 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
       ...formDirectField,
       volumatric_weight: volumatricWeight,
       applicable_weight: applicableWeight,
-      length: package_info?.length || 0,
-      width: package_info?.width || 0,
-      height: package_info?.height || 0,
+      length: package_info?.length || formDirectField?.length || 0,
+      width: package_info?.width || formDirectField?.width || 0,
+      height: package_info?.height || formDirectField?.height || 0,
     });
     console.log(formDirectField, package_info);
-    // }, [volumatricWeight, applicableWeight, package_info]);
-  }, [package_info]);
+  }, [volumatricWeight, applicableWeight, package_info]);
+  // }, [package_info]);
 
   useEffect(() => {
     if (!isEmpty(domesticOrderFormValues)) {
