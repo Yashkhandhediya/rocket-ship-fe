@@ -14,7 +14,6 @@ import Loader from '../../../../../common/loader/Loader';
 // import { isEdit, order_id } from '../../../../orders/components/new/New'
 import { package_info } from '../order-details/OrderDetails';
 
-
 export default function PackageDetails({ currentStep, handleChangeStep }) {
   // console.log("DIMMMMMMMMM",package_info)
   const dispatch = useDispatch();
@@ -24,7 +23,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
   console.log('EDDDITTT', isEdit);
   const id_user = localStorage.getItem('user_id');
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order);
-  console.log("DOm VALLLL",domesticOrderFormValues)
+  console.log('DOm VALLLL', domesticOrderFormValues);
   const editDetails = useSelector((state) => state?.editOrder?.domestic_order);
   console.log('EDDDDDDDDDDD', editDetails);
   const [validationTriggered, setValidationTriggered] = useState(false);
@@ -32,7 +31,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
   const [courierType, setCourierType] = useState('surface');
   const [formDirectField, setFormDirectField] = useState({
     length: 0,
-    width:  0,
+    width: 0,
     height: 0,
     dead_weight: '',
     applicable_weight: '',
@@ -43,16 +42,17 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
 
   const divisor = courierType === 'air' ? 5000 : 4750;
 
-  const volumatricWeight = useMemo(
-    () =>
-      (
-        (Number(formDirectField?.length || 0) *
-          Number(formDirectField?.width || 0) *
-          Number(formDirectField?.height || 0)) /
-        divisor
-      ).toFixed(5),
-    [formDirectField, courierType]
-  ) || 0;
+  const volumatricWeight =
+    useMemo(
+      () =>
+        (
+          (Number(formDirectField?.length || 0) *
+            Number(formDirectField?.width || 0) *
+            Number(formDirectField?.height || 0)) /
+          divisor
+        ).toFixed(5),
+      [formDirectField, courierType],
+    ) || 0;
 
   const applicableWeight = useMemo(
     () =>
@@ -62,13 +62,13 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     [volumatricWeight, formDirectField?.dead_weight],
   );
 
-
   const setDirectKeysInForm = (event) => {
     const { id, value } = event.target;
     setFormDirectField({
       ...formDirectField,
       [id]: value,
     });
+    console.log(id, value, formDirectField);
   };
 
   const getFullDateForPayload = (date) => {
@@ -166,7 +166,9 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
       width: package_info?.width || 0,
       height: package_info?.height || 0,
     });
-  }, [volumatricWeight, applicableWeight,package_info]);
+    console.log(formDirectField, package_info);
+    // }, [volumatricWeight, applicableWeight, package_info]);
+  }, [package_info]);
 
   useEffect(() => {
     if (!isEmpty(domesticOrderFormValues)) {
@@ -241,7 +243,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
               required={true}
               rightAddOn="Kg"
               value={formDirectField?.dead_weight || ''}
-              onChange={setDirectKeysInForm}
+              onChange={(e) => setDirectKeysInForm(e)}
             />
             {validationTriggered && !formDirectField?.dead_weight && (
               <p className="mt-1 text-xs text-red-500">Weight is required</p>
@@ -275,7 +277,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
                       required={true}
                       rightAddOn="CM"
                       value={formDirectField?.length || ''}
-                      onChange={setDirectKeysInForm}
+                      onChange={(e) => setDirectKeysInForm(e)}
                     />
                     {validationTriggered && !formDirectField?.length && (
                       <p className="mt-1 text-xs text-red-500">Length is required</p>
@@ -293,7 +295,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
                       required={true}
                       rightAddOn="CM"
                       value={formDirectField?.width || ''}
-                      onChange={setDirectKeysInForm}
+                      onChange={(e) => setDirectKeysInForm(e)}
                     />
                     {validationTriggered && !formDirectField?.width && (
                       <p className="mt-1 text-xs text-red-500">Breadth is required</p>
@@ -311,7 +313,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
                       required={true}
                       rightAddOn="CM"
                       value={formDirectField?.height || ''}
-                      onChange={setDirectKeysInForm}
+                      onChange={(e) => setDirectKeysInForm(e)}
                     />
                     {validationTriggered && !formDirectField?.height && (
                       <p className="mt-1 text-xs text-red-500">Height is required</p>
