@@ -144,7 +144,6 @@ const OtpPopup = ({
           toast('OTP Mismatched', { type: 'error' });
           console.log('OTP Mismatched');
         }
-        window.location.reload();
         // if(1){
         //   toast('Login Success',{type:'success'})
         //   navigate('/')
