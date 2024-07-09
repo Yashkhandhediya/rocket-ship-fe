@@ -5,6 +5,7 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import ResetPassword from './ResetPassword';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Loader } from '../../common/components';
 
 const OtpPopup = ({
   userType = 'user',
@@ -18,6 +19,7 @@ const OtpPopup = ({
   const id_user = sessionStorage.getItem('user_id');
   const [seconds, setSeconds] = useState(45);
   const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [message, setMessage] = useState(false);
   const [OTP, setOTP] = useState(Array(6).fill(''));
@@ -119,6 +121,11 @@ const OtpPopup = ({
     e.preventDefault();
     const joinOTP = OTP.join('');
     console.log('OTP checkingg', OTP, userId);
+    if (joinOTP.length < 6) {
+      toast('Enter your OTP', { type: 'error' });
+      return;
+    }
+    setLoading(true);
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     const tempId = userType === 'user' ? userId : companyId;
     const otpURL =
@@ -128,6 +135,7 @@ const OtpPopup = ({
     axios
       .get(BACKEND_URL + otpURL, { otp: OTP, user_id: tempId }, { headers })
       .then((response) => {
+        setLoading(false);
         sessionStorage.setItem('is_otpVerified', JSON.stringify(true));
         console.log(response);
         if (is_super == 3) {
@@ -147,13 +155,13 @@ const OtpPopup = ({
           toast('OTP Mismatched', { type: 'error' });
           console.log('OTP Mismatched');
         }
-        window.location.reload();
         // if(1){
         //   toast('Login Success',{type:'success'})
         //   navigate('/')
         // }
       })
       .catch((error) => {
+        setLoading(false);
         console.log(error);
       });
     // navigate('/login')
@@ -163,6 +171,11 @@ const OtpPopup = ({
     e.preventDefault();
     const joinOTP = OTP.join('');
     console.log('OTP checkingg', OTP, userId);
+    if (joinOTP.length < 6) {
+      toast('Enter your OTP', { type: 'error' });
+      return;
+    }
+    setLoading(true);
     const tempId = userType === 'user' ? userId : companyId;
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     const verifyURL =
@@ -172,6 +185,7 @@ const OtpPopup = ({
     axios
       .get(BACKEND_URL + verifyURL, { headers })
       .then((response) => {
+        setLoading(false);
         console.log(response);
         if (response.data.flag == 1) {
           navigate('/resetpassword', { state: { username, userType } });
@@ -186,6 +200,7 @@ const OtpPopup = ({
         // }
       })
       .catch((error) => {
+        setLoading(false);
         console.log(error);
       });
     // navigate('/login')
@@ -193,6 +208,7 @@ const OtpPopup = ({
 
   return (
     <>
+      {loading && <Loader />}
       <div className="relative mx-auto w-full max-w-lg rounded-2xl bg-white px-6 pb-9 pt-10 shadow-xl">
         <div className="mx-auto flex w-full max-w-md flex-col space-y-16">
           <div className="flex flex-col items-center justify-center space-y-2 text-center">
