@@ -124,6 +124,7 @@ const OtpPopup = ({
       userType === 'user'
         ? `/login/verify_otp/?otp=${joinOTP}&user_id=${tempId}`
         : `/company/verify_otp/?otp=${joinOTP}&id=${tempId}`;
+
     axios
       .get(BACKEND_URL + otpURL, { otp: OTP, user_id: tempId }, { headers })
       .then((response) => {
@@ -159,12 +160,17 @@ const OtpPopup = ({
     e.preventDefault();
     const joinOTP = OTP.join('');
     console.log('OTP checkingg', OTP, userId);
+
     const tempId = userType === 'user' ? userId : companyId;
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     const verifyURL =
       userType === 'user'
         ? `/users/verify_forgot_pass_otp/?otp=${joinOTP}&user_id=${tempId}`
         : `/company/verify_otp/?otp=${joinOTP}&id=${tempId}`;
+    if (joinOTP.length < 6) {
+      toast('Enter your OTP', { type: 'error' });
+      return;
+    }
     axios
       .get(BACKEND_URL + verifyURL, { headers })
       .then((response) => {
@@ -183,6 +189,7 @@ const OtpPopup = ({
       })
       .catch((error) => {
         console.log(error);
+        toast('There is some error', { type: 'error' });
       });
     // navigate('/login')
   };
