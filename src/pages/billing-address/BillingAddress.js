@@ -48,7 +48,7 @@ function BillingAddress() {
     setLoading(true);
     try {
       const response = await axios.get(`${BACKEND_URL}/address/?user_id=${user_id}`);
-      const data = response.data.filter((data) => data.type_id === 3)[1];
+      const data = response.data.filter((data) => data.type_id === 3)[response.data.length - 1];
       setAddressInfo({
         type_id: 3,
         contact_no: data.contact_no,
@@ -79,15 +79,6 @@ function BillingAddress() {
         ...addressInfo,
         complete_address: `${addressInfo.complete_address},${addressLine2}`,
       });
-      setAddressInfo({
-        type_id: 3,
-        contact_no: '',
-        complete_address: '',
-        pincode: '',
-        city: '',
-        state: '',
-      });
-      setAddressLine2('');
       toast('Address Saved Successfully', { type: 'success' });
     } catch (err) {
       console.log(err);
