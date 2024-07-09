@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import OtpPopup from './OtpPopup';
 import { homelogo, LogoRCSL } from '../../common/images';
+import { Loader } from '../../common/components';
 // import { GoogleLogin } from 'react-google-login';
 // import {gapi} from 'gapi-script'
 
@@ -15,6 +16,7 @@ const LogIn = () => {
   const [userId, setUserId] = useState(null);
   const [companyId, setCompanyId] = useState(null);
   const [handlePopup, setHandlePopup] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [loginInput, setLoginInput] = useState({
     username: '',
     password: '',
@@ -56,7 +58,7 @@ const LogIn = () => {
     console.log('backend url', BACKEND_URL);
     const apiURL = userType === 'user' ? '/login/access-token' : '/company/access-token';
     const otpURL = userType === 'user' ? '/login' : '/company';
-
+    setLoading(true);
     axios
       .post(
         BACKEND_URL + apiURL,
@@ -67,6 +69,7 @@ const LogIn = () => {
         { headers },
       )
       .then((response) => {
+        setLoading(false);
         localStorage.setItem('user_id', response.data.user_id);
         localStorage.setItem('company_id', response.data.company_id);
         localStorage.setItem('is_company', response.data.is_company);
@@ -82,6 +85,7 @@ const LogIn = () => {
           setCompanyId(response.data.company_id);
           localStorage.setItem('access_token', response.data.access_token);
           localStorage.setItem('user_name', response.data?.user_name?.split(' ')[0]);
+          setLoading(true);
           axios
             .post(
               BACKEND_URL + `${otpURL}/generate_otp?email_id=${loginInput.username}&user_id=${user_id}`,
@@ -89,10 +93,12 @@ const LogIn = () => {
               { headers },
             )
             .then((otpResponse) => {
+              setLoading(false);
               setHandlePopup(true);
               console.log(otpResponse);
             })
             .catch((otpError) => {
+              setLoading(false);
               console.error('Error fetching OTP:', otpError);
               toast('Error generating OTP', { type: 'error' });
             });
@@ -103,6 +109,7 @@ const LogIn = () => {
         }
       })
       .catch((error) => {
+        setLoading(false);
         console.error('Login error:', error);
         toast('An error occurred during login', { type: 'error' });
       });
@@ -119,6 +126,8 @@ const LogIn = () => {
 
   return (
     <>
+      {loading && <Loader />}
+
       <div className="flex-column flex h-full">
         <div className="flex h-full w-[49%] flex-col items-center justify-center">
           <img src={homelogo} className="h-full w-[97%] object-cover" alt="Logo"></img>

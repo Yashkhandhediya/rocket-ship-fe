@@ -5,6 +5,7 @@ import OtpPopup from './OtpPopup';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { type_user } from './LogIn';
+import { toast } from 'react-toastify';
 
 const ForgotPassword = () => {
   const location = useLocation();
@@ -32,10 +33,7 @@ const ForgotPassword = () => {
     return emailRegex.test(email);
   };
 
-  console.log(userId);
-
   const handleOtp = () => {
-    setShowOtp(true);
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     const otpURL =
       type_user === 'user'
@@ -44,6 +42,12 @@ const ForgotPassword = () => {
     axios
       .post(BACKEND_URL + otpURL, { headers })
       .then((otpResponse) => {
+        console.log(otpResponse);
+        if (otpResponse.data.status === 'User not found') {
+          toast(otpResponse.data.detail, { type: 'error' });
+          return;
+        }
+        setShowOtp(true);
         console.log(otpResponse);
         setUserId(otpResponse.data.user_id);
         setCompId(otpResponse.data.comp_id);
