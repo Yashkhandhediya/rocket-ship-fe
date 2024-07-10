@@ -60,7 +60,7 @@ const ForgotPassword = () => {
               });
           }
         else if (otpResponse.data.status === 'User not found') {
-          setErrorMessage('Email does not exist');
+          setErrorMessage('Sorry, we couldnt find an account with that email.');
         } 
       })
       .catch((otpError) => {
@@ -77,7 +77,7 @@ const ForgotPassword = () => {
           </button>
           <h2 className="mb-6 text-2xl font-bold">Forgot Your Password</h2>
           <h3 className="mb-6 text-base">Enter your email to receive OTP for password reset.</h3>
-          {errorMessage && <p className="mb-4 text-red-500">{errorMessage}</p>}
+          
           <form className="mb-6">
             <Field
               type= 'email'
@@ -88,7 +88,9 @@ const ForgotPassword = () => {
               value={userInput.username}
               onChange={handleChangeInput}
             />
+            {errorMessage && <p className="mb-4 text-red-500">{errorMessage}</p>}
           </form>
+          
           <div>
             <button
               className={`mb-6 mt-4 flex w-full flex-row items-center justify-center rounded-xl border border-none bg-blue-700 p-4 text-center text-base font-semibold text-white shadow-sm outline-none hover:bg-blue-800 ${
