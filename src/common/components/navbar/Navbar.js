@@ -6,17 +6,11 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../utils/env.config';
 import { toast } from 'react-toastify';
 import RechargeModal from '../../../pages/home/components/rechareModal/RechargeModal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
-import { MdLockReset } from 'react-icons/md';
-import { GrEdit } from 'react-icons/gr';
-import { IoLogOutOutline } from 'react-icons/io5';
 
 const Navbar = () => {
   const is_company = sessionStorage.getItem('is_company');
   console.log('ISSSSSSSSSSS', is_company);
   const user = sessionStorage.getItem('user_name') ? sessionStorage.getItem('user_name') : null;
-  const email = sessionStorage.getItem('user_email') ? sessionStorage.getItem('user_email') : null;
   console.log('USEEEEEEEEEEEE', user);
   const balance = sessionStorage.getItem('balance') <= 0 ? '0.00' : sessionStorage.getItem('balance');
   const navigate = useNavigate();
@@ -29,6 +23,7 @@ const Navbar = () => {
   const handleRequest = () => {
     setShowPopup(true);
   };
+
 
   const handleRecharge = () => {
     const headers = { 'Content-Type': 'application/json' };
@@ -53,105 +48,132 @@ const Navbar = () => {
 
   const navbarLinks = [
     {
+      label: sessionStorage.getItem('is_company') == 1 ? 'Company' : 'User',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-6 w-6">
+          <path
+            fillRule="evenodd"
+            d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      ),
+      onClick: () => {
+        console.log('User'); //eslint-disable-line
+        sessionStorage.getItem('is_company') == 0
+          ? navigate('/user-profile')
+          : navigate('/company-general-details');
+      },
+    },
+    {
       label: userData ? user : 'User',
-      email: userData ? email : 'Email',
-      icon: <FontAwesomeIcon icon={faUserCircle} className="text-6xl" />,
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-6 w-6">
+          <path
+            fillRule="evenodd"
+            d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      ),
       onClick: () => {
         console.log('User'); //eslint-disable-line
       },
     },
+    // {
+    //   label: 'Current Plan',
+    //   icon: (
+    //     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-6 w-6">
+    //       <path
+    //         fillRule="evenodd"
+    //         d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+    //         clipRule="evenodd"
+    //       />
+    //     </svg>
+    //   ),
+    //   onClick: () => {
+    //     console.log('Current Plan'); //eslint-disable-line
+    //   },
+    // },
+    // {
+    //   label: 'Refer & Earn',
+    //   icon: (
+    //     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-6 w-6">
+    //       <path
+    //         fillRule="evenodd"
+    //         d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+    //         clipRule="evenodd"
+    //       />
+    //     </svg>
+    //   ),
+    //   onClick: () => {
+    //     console.log('Refer and Earn'); //eslint-disable-line
+    //   },
+    // },
+    // {
+    //   label: 'Rate Us',
+    //   icon: (
+    //     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-6 w-6">
+    //       <path
+    //         fillRule="evenodd"
+    //         d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+    //         clipRule="evenodd"
+    //       />
+    //     </svg>
+    //   ),
+    //   onClick: () => {
+    //     console.log('Rate Us'); //eslint-disable-line
+    //   },
+    // },
+    // {
+    //   label: 'Terms & Conditions',
+    //   icon: (
+    //     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-6 w-6">
+    //       <path
+    //         fillRule="evenodd"
+    //         d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+    //         clipRule="evenodd"
+    //       />
+    //     </svg>
+    //   ),
+    //   onClick: () => {
+    //     console.log('Terms & Conditions'); //eslint-disable-line
+    //   },
+    // },
     {
-      othersLinks: [
-        // {
-        //   label: 'Current Plan',
-        //   icon: (
-        //     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-6 w-6">
-        //       <path
-        //         fillRule="evenodd"
-        //         d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-        //         clipRule="evenodd"
-        //       />
-        //     </svg>
-        //   ),
-        //   onClick: () => {
-        //     console.log('Current Plan'); //eslint-disable-line
-        //   },
-        // },
-        // {
-        //   label: 'Refer & Earn',
-        //   icon: (
-        //     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-6 w-6">
-        //       <path
-        //         fillRule="evenodd"
-        //         d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-        //         clipRule="evenodd"
-        //       />
-        //     </svg>
-        //   ),
-        //   onClick: () => {
-        //     console.log('Refer and Earn'); //eslint-disable-line
-        //   },
-        // },
-        // {
-        //   label: 'Rate Us',
-        //   icon: (
-        //     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-6 w-6">
-        //       <path
-        //         fillRule="evenodd"
-        //         d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-        //         clipRule="evenodd"
-        //       />
-        //     </svg>
-        //   ),
-        //   onClick: () => {
-        //     console.log('Rate Us'); //eslint-disable-line
-        //   },
-        // },
-        // {
-        //   label: 'Terms & Conditions',
-        //   icon: (
-        //     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-6 w-6">
-        //       <path
-        //         fillRule="evenodd"
-        //         d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-        //         clipRule="evenodd"
-        //       />
-        //     </svg>
-        //   ),
-        //   onClick: () => {
-        //     console.log('Terms & Conditions'); //eslint-disable-line
-        //   },
-        // },
-        {
-          label: 'Change Password',
-          icon: <MdLockReset />,
-          onClick: () => {
-            navigate('/change-password');
-          },
-        },
-        {
-          label: 'Edit Profile',
-          icon: <GrEdit />,
-          onClick: () => {
-            console.log('User'); //eslint-disable-line
-            sessionStorage.getItem('is_company') == 0
-              ? navigate('/user-profile')
-              : navigate('/company-general-details');
-          },
-        },
-        {
-          label: 'Logout',
-          icon: <IoLogOutOutline />,
-          onClick: () => {
-            sessionStorage.removeItem('user_name');
-            sessionStorage.removeItem('access_token');
-            sessionStorage.removeItem('is_super');
-            sessionStorage.removeItem('modules');
-            sessionStorage.removeItem('setting_modules');
-            window.location.href = '/login';
-          },
-        },
-      ],
+      label: 'Change Password',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-6 w-6">
+          <path
+            fillRule="evenodd"
+            d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      ),
+      onClick: () => {
+        navigate('/change-password');
+      },
+    },
+    {
+      label: 'Logout',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-6 w-6">
+          <path
+            fillRule="evenodd"
+            d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      ),
+      onClick: () => {
+        sessionStorage.removeItem('user_name');
+        sessionStorage.removeItem('access_token');
+        sessionStorage.removeItem('is_super');
+        sessionStorage.removeItem('modules');
+        sessionStorage.removeItem('setting_modules');
+        window.location.href = '/login';
+      },
     },
   ];
 
@@ -256,9 +278,8 @@ const Navbar = () => {
           </button>
         )}
       </div> */}
+      <h1 className='text-base mr-4'>{sessionStorage.getItem('user_name')}</h1>
       <div className="flex flex-row items-center gap-2">
-        <h1 className="text-base">{sessionStorage.getItem('user_name')}</h1>
-
         {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-5 w-5">
           <path
             fillRule="evenodd"
@@ -284,15 +305,14 @@ const Navbar = () => {
           label=""
           dismissOnClick={false}
           renderTrigger={() => (
-            <button className="flex flex-row items-center gap-1 p-1 hover:bg-white">
-              {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-5 w-5">
+            <button className="flex flex-row p-1 hover:bg-[#f1f1f1]">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-5 w-5">
                 <path
                   fillRule="evenodd"
                   d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
                   clipRule="evenodd"
                 />
-              </svg> */}
-              <FontAwesomeIcon icon={faUserCircle} className="text-3xl" />
+              </svg>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-5 w-4">
                 <path
                   fillRule="evenodd"
@@ -306,30 +326,9 @@ const Navbar = () => {
             <DropdownItem
               key={index}
               onClick={link.onClick}
-              className="my-3 flex w-56 items-center justify-center gap-4 font-medium hover:bg-white">
-              {index === 0 ? (
-                <div className="flex flex-col">
-                  {link.icon}
-                  <p className="text-base">{link.label}</p>
-                  <p className="text-[13px] text-zinc-400">{link.email}</p>
-                </div>
-              ) : (
-                link.othersLinks.map((link, index) => {
-                  return (
-                    <>
-                      <span
-                        key={index}
-                        className="rounded-full bg-zinc-200 p-2 text-2xl"
-                        onClick={link.onClick}>
-                        {' '}
-                        <Tooltip key={index} content={link.label}>
-                          {link.icon}
-                        </Tooltip>
-                      </span>
-                    </>
-                  );
-                })
-              )}
+              className="my-3 flex flex-row items-center gap-4 pr-12 font-medium">
+              {link.icon}
+              <p>{link.label}</p>
             </DropdownItem>
           ))}
         </Dropdown>
