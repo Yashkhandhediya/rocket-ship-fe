@@ -223,7 +223,7 @@ const LogIn = () => {
               </Link> */}
                       <Link
                         to={userType === 'user' ? '/signup-user' : '/signup'}
-                        className="text-decoration-none text-red-700">
+                        className="text-decoration-none text-[#2684FC]">
                         Sign Up Now
                       </Link>
                     </p>
