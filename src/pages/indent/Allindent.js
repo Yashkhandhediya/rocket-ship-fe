@@ -71,6 +71,7 @@ const Allindent = () => {
 
   const fetchData = async () => {
     let filteredData = [];
+    setLoading(true);
     try {
       const response = await axios.get(BACKEND_URL + `/indent/get_indents?created_by=${url_user_id}`);
       console.log('RESPONSE', response, response.data.length);
@@ -92,6 +93,8 @@ const Allindent = () => {
       setDataFetch(true);
     } catch (err) {
       console.log('ERRRRRRRR', err);
+    } finally {
+      setLoading(false);
     }
   };
 
