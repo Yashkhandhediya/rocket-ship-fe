@@ -53,7 +53,6 @@ const ForgotPassword = () => {
                 console.log('Generate OTP Response:', generateOtpResponse);
                 setUserId(generateOtpResponse.data.user_id);
                 setCompId(generateOtpResponse.data.comp_id);
-                console.log(user_id, comp_id)
   
               })
               .catch((generateOtpError) => {
