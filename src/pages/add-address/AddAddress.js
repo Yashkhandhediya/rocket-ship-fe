@@ -4,6 +4,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
+import Loader from '../../common/loader/Loader';
 
 const Field = ({ id, label, type, value, onChange, onBlur, isValid, errorMessage, placeholder }) => (
   <div className="flex flex-col">
@@ -13,7 +14,7 @@ const Field = ({ id, label, type, value, onChange, onBlur, isValid, errorMessage
     <div className="flex items-center">
       {type === 'tel' && (
         <div className="flex items-center">
-          <span className="flex items-center justify-center rounded-l-md border border-gray-300 border-r-0 bg-gray-200 p-[5px] px-2">
+          <span className="flex items-center justify-center rounded-l-md border border-r-0 border-gray-300 bg-gray-200 p-[5px] px-2">
             +91
           </span>
           <input
@@ -51,6 +52,7 @@ const AddAddress = () => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [isValidPhone, setIsValidPhone] = useState(true);
   const [locationName, setLocationName] = useState('');
+  const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState('');
   const [pincode, setPincode] = useState('');
   const [state, setState] = useState('');
@@ -68,14 +70,16 @@ const AddAddress = () => {
       state,
       city,
     };
-
+    setLoading(true);
     axios
       .post(BACKEND_URL + '/locations/create', newLocation)
       .then((response) => {
+        setLoading(false);
         toast('Location added successfully!', { type: 'success' });
         navigate('/'); // Redirect to a different page after saving
       })
       .catch((err) => {
+        setLoading(false);
         toast('Error adding location', { type: 'error' });
         console.error(err);
       });
@@ -87,10 +91,11 @@ const AddAddress = () => {
 
   return (
     <PageWithSidebar>
+      {loading && <Loader />}
       <div className="flex flex-col items-center justify-center gap-8 p-3">
-      <div className='w-9/12 mt-4'>
-        <h1 className="my-2 self-start text-2xl font-bold">Add Location&apos;s Detail</h1>
-      </div>
+        <div className="mt-4 w-9/12">
+          <h1 className="my-2 self-start text-2xl font-bold">Add Location&apos;s Detail</h1>
+        </div>
         <div className="w-9/12 rounded p-4 shadow">
           <form onSubmit={handleSaveLocation}>
             <div className="flex w-full flex-col flex-wrap gap-8">
@@ -129,7 +134,7 @@ const AddAddress = () => {
                 />
               </div>
               <div className="flex justify-between">
-                <div className='w-4/12 mr-1'>
+                <div className="mr-1 w-4/12">
                   <Field
                     id="pincode"
                     type="text"
@@ -140,7 +145,7 @@ const AddAddress = () => {
                     placeholder="Enter User's Pincode"
                   />
                 </div>
-                <div className='w-4/12 mr-1'>
+                <div className="mr-1 w-4/12">
                   <Field
                     id="state"
                     type="text"
@@ -151,7 +156,7 @@ const AddAddress = () => {
                     placeholder="Please Select State"
                   />
                 </div>
-                <div className='w-4/12'>
+                <div className="w-4/12">
                   <Field
                     id="city"
                     type="text"
@@ -165,10 +170,10 @@ const AddAddress = () => {
               </div>
             </div>
 
-            <div className="text-center mt-5">
+            <div className="mt-5 text-center">
               <button
                 type="submit"
-                className="mt-4 rounded-full font-semibold w-7/12 bg-blue-700 px-4 py-2 text-white hover:bg-blue-900">
+                className="mt-4 w-7/12 rounded-full bg-blue-700 px-4 py-2 font-semibold text-white hover:bg-blue-900">
                 verify & Save Location
               </button>
             </div>

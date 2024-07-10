@@ -382,6 +382,7 @@ const Indent = () => {
       })
       .catch((error) => {
         console.error('Error:', error);
+        setLoading(false);
         toast('Error in Create Indent', { type: 'error' });
       });
   };
