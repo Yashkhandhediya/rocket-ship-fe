@@ -8,8 +8,8 @@ import { Field } from '../../common/components';
 import { Tabs } from '../../common/components/tabs';
 import { trip_status_filter } from '../orders/duck';
 import { toast } from 'react-toastify';
-import Loader from '../../common/loader/Loader';
 import { ACCESS_TOKEN } from '../../common/utils/config';
+import { Loader } from '../../common/components';
 
 export let modifyFlag = 0;
 export let modifyId;
