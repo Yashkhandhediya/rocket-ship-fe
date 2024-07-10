@@ -204,13 +204,13 @@ const LogIn = () => {
                   />
                 </div>
                 <div className="mb-3 text-sm">
-                  <Link onClick={handleForgotPassword} className="text-decoration-none text-red-700">
+                  <Link onClick={handleForgotPassword} className="text-decoration-none text-[#1072f1]">
                     Forgot Password?
                   </Link>
                 </div>
                 <button
                   type="button"
-                  className="dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 mb-2 w-full rounded-lg bg-red-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300"
+                  className="dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900 mb-2 w-full rounded-lg bg-[#2684FC] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#1072f1] focus:outline-none focus:ring-4 focus:ring-blue-300"
                   onClick={handleSubmit}>
                   Login
                 </button>

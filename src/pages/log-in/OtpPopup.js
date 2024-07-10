@@ -256,7 +256,7 @@ const OtpPopup = ({
                 <div className="flex flex-col space-y-5">
                   <div className="flex flex-col">
                     <button
-                      className="flex w-full flex-row items-center justify-center rounded-xl border border-none bg-blue-700 py-5 text-center text-sm text-white shadow-sm outline-none"
+                      className="flex w-full flex-row items-center justify-center rounded-xl border border-none bg-[#2684FC] py-5 text-center text-sm text-white shadow-sm outline-none"
                       onClick={!upDatePassWord ? handleSubmitOtp : handleResetPassword}>
                       Verify Account
                     </button>

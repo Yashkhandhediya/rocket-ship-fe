@@ -14,11 +14,13 @@ import {
   return1,
   boost,
   newHome,
-  
 } from '../../icons/sidebar-icons';
-import truckSize from '../../icons/sidebar-icons/truckSize.svg' 
+import truckSize from '../../icons/sidebar-icons/truckSize.svg';
 import { logout } from './utils';
 import { modules } from '../../../pages/manage-role/user-management/constants';
+import createIndentIcon from './icons/create_indent.png';
+import AllIndentIcon from './icons/all_tbbv.png';
+import { RiPagesLine } from 'react-icons/ri';
 
 const is_admin = sessionStorage.getItem('is_admin');
 const user_id = sessionStorage.getItem('user_id');
@@ -34,44 +36,6 @@ const mapModuleToLink = (module) => ({
 });
 
 export const sidebarLinks = [
-  is_company == 1 && {
-    title: 'Add Address',
-    path: '/add-address',
-    icon: bill,
-    hoverIcon: bill,
-  },
-  !parseInt(is_admin) && {
-    title: 'Book',
-    path: '/book',
-    icon: book,
-    hoverIcon: book,
-  },
-  !parseInt(is_admin) && {
-    title: 'Create Indent',
-    path: '/indent',
-    icon: book,
-    hoverIcon: book,
-  },
-  !parseInt(is_admin) && {
-    title: 'All Indent',
-    path: '/all-indent/' + user_id,
-    icon: book,
-    hoverIcon: book,
-  },
-  parseInt(is_company) && {
-    title: 'Truck Size',
-    path: '#',
-    onClick: 'openTruckSizeModal',
-    icon: truckSize,
-    hoverIcon: truckSize,
-  },
-  parseInt(is_company) && {
-    title: 'Material Type',
-    path: '#',
-    onClick: 'openMaterialTypeModal',
-    icon: book,
-    hoverIcon: book,
-  },
   parseInt(is_admin) && {
     title: 'User Booking',
     path: '/User',
@@ -79,16 +43,61 @@ export const sidebarLinks = [
     hoverIcon: book,
   },
   parseInt(is_company)
-      ? {
-          title: 'Add User',
-          path: '/signup-user',
-          icon: user,
-          hoverIcon: user,
-        }
-      : null,
+    ? {
+        title: 'Create User',
+        path: '/signup-user',
+        icon: user,
+        hoverIcon: user,
+      }
+    : null,
+
+  parseInt(is_company) && {
+    title: 'Masters',
+    icon: weight,
+    hoverIcon: weight,
+    subMenuOptions: [
+      {
+        title: 'Add Address',
+        path: '/add-address',
+        icon: bill,
+        hoverIcon: bill,
+      },
+      {
+        title: 'Material Type',
+        path: '#',
+        onClick: 'openMaterialTypeModal',
+        icon: book,
+        hoverIcon: book,
+      },
+      {
+        title: 'Truck Size',
+        path: '#',
+        onClick: 'openTruckSizeModal',
+        icon: truckSize,
+        hoverIcon: truckSize,
+      },
+    ],
+  },
+
+  // !parseInt(is_admin) && {
+  //   title: 'Book',
+  //   path: '/book',
+  //   icon: book,
+  //   hoverIcon: book,
+  // },
+  !parseInt(is_admin) && {
+    title: 'Create Indent',
+    path: '/indent',
+    icon: createIndentIcon,
+    hoverIcon: createIndentIcon,
+  },
+  !parseInt(is_admin) && {
+    title: 'All Indent',
+    path: '/all-indent/' + user_id,
+    icon: AllIndentIcon,
+    hoverIcon: AllIndentIcon,
+  },
 ].filter((option) => option);
-
-
 
 // if(access_modules == null || access_modules?.length == 0){
 // if (sessionStorage.getItem('is_super') != 3) {
