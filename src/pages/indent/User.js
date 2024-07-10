@@ -123,16 +123,16 @@ const User = () => {
           );
         },
       }),
-      columnHelper.accessor('wallet_balance', {
-        header: 'Wallet Balance',
-        cell: ({ row }) => {
-          return (
-            <div className="flex flex-col gap-2 text-left text-xs">
-              {row?.original?.wallet_balance && <div>{row?.original?.wallet_balance}</div>}
-            </div>
-          );
-        },
-      }),
+      // columnHelper.accessor('wallet_balance', {
+      //   header: 'Wallet Balance',
+      //   cell: ({ row }) => {
+      //     return (
+      //       <div className="flex flex-col gap-2 text-left text-xs">
+      //         {row?.original?.wallet_balance && <div>{row?.original?.wallet_balance}</div>}
+      //       </div>
+      //     );
+      //   },
+      // }),
       columnHelper.accessor('kyc_status_id', {
               header: 'KYC Status',
               cell: ({ row }) => {
