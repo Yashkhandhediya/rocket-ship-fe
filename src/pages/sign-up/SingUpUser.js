@@ -209,7 +209,7 @@ const SignUpUser = () => {
             </div> */}
             <button
               type="button"
-              className=" dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 mb-2 mt-4 w-full rounded-lg bg-red-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300"
+              className=" dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900 mb-2 mt-4 w-full rounded-lg bg-[#2684FC] px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300"
               onClick={() => {
                 if (flag == 0) {
                   handleSubmit();
@@ -219,7 +219,7 @@ const SignUpUser = () => {
             </button>
             <div className="flex justify-center gap-1">
               <p>Already have an account?</p>
-              <Link to={'/login'} className="text-decoration-none text-red-700">
+              <Link to={'/login'} className="text-decoration-none text-[#2684FC]">
                 Login
               </Link>
             </div>

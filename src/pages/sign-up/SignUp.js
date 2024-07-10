@@ -8,14 +8,14 @@ import { toast } from 'react-toastify';
 const SignUp = () => {
   const navigate = useNavigate();
   const [signupInput, setSignupInput] = useState({
-    company_name: "",
-    company_address: "",
-    email_address: "",
-    contact_no: "",
-    password: "",
-    company_gst_no: ""
+    company_name: '',
+    company_address: '',
+    email_address: '',
+    contact_no: '',
+    password: '',
+    company_gst_no: '',
   });
-  const [gstError, setGstError] = useState("");
+  const [gstError, setGstError] = useState('');
 
   const handleChangeInput = (e) => {
     const { id, value } = e.target;
@@ -32,36 +32,42 @@ const SignUp = () => {
 
   const handleSubmit = () => {
     if (!validateGST(signupInput.company_gst_no)) {
-      setGstError("Invalid GST Number");
-      toast("Invalid GST Number", { type: 'error' });
+      setGstError('Invalid GST Number');
+      toast('Invalid GST Number', { type: 'error' });
       return;
     } else {
-      setGstError("");
+      setGstError('');
     }
 
     const headers = { 'Content-Type': 'application/json' };
-    axios.post(BACKEND_URL + '/company/signup', {
-      name: signupInput.company_name,
-      gst: signupInput.company_gst_no,
-      password: signupInput.password,
-      contact: parseInt(signupInput.contact_no),
-      email: signupInput.email_address,
-      address: signupInput.company_address
-    }, { headers }).then((res) => {
-      console.log("Response of Sign up", res)
-      if (res.data.msg === "User already exits") {
-        toast("User Already Exists", { type: 'error' });
-      } 
-      else if (res.data.msg === "Company already exits") {
-        toast("Company Already Exists", { type: 'error' });
+    axios
+      .post(
+        BACKEND_URL + '/company/signup',
+        {
+          name: signupInput.company_name,
+          gst: signupInput.company_gst_no,
+          password: signupInput.password,
+          contact: parseInt(signupInput.contact_no),
+          email: signupInput.email_address,
+          address: signupInput.company_address,
+        },
+        { headers },
+      )
+      .then((res) => {
+        console.log('Response of Sign up', res);
+        if (res.data.msg === 'User already exits') {
+          toast('User Already Exists', { type: 'error' });
+        } else if (res.data.msg === 'Company already exits') {
+          toast('Company Already Exists', { type: 'error' });
         } else {
-        toast("Sign Up Successfully", { type: 'success' });
-        navigate('/login');
-      }
-    }).catch((err) => {
-      console.log("Error in signup", err);
-      toast("Some Error in Sign Up", { type: 'error' });
-    });
+          toast('Sign Up Successfully', { type: 'success' });
+          navigate('/login');
+        }
+      })
+      .catch((err) => {
+        console.log('Error in signup', err);
+        toast('Some Error in Sign Up', { type: 'error' });
+      });
   };
 
   return (
@@ -134,21 +140,20 @@ const SignUp = () => {
           />
           <div className="mb-3 text-sm">
             {`By clicking Sign up for Free, you agree to Cloud Cargo's `}
-            <Link to={'/login'} className="text-decoration-none text-red-700">
+            <Link to={'/login'} className="text-decoration-none text-[#2684FC]">
               {'Terms Of Service and Privacy Policy.'}
             </Link>
           </div>
           <button
             type="button"
-            className="dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 mb-2 w-full rounded-lg bg-red-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300"
-            onClick={handleSubmit}
-          >
+            className="dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900 mb-2 w-full rounded-lg bg-[#2684FC] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#2684FC] focus:outline-none focus:ring-4 focus:ring-blue-300"
+            onClick={handleSubmit}>
             Sign up for Free
           </button>
           <div className="text-center">
             <p className="text-sm">
               Already have an account?{' '}
-              <Link to={'/login'} className="text-decoration-none text-red-700">
+              <Link to={'/login'} className="text-decoration-none text-[#2684FC]">
                 Login
               </Link>
             </p>
