@@ -343,7 +343,7 @@ const Navbar = () => {
                   <p className="text-center text-[13px] text-zinc-400">{link.email}</p>
                 </div>
               ) : (
-                <div className="flex w-full justify-around">
+                <div key={index} className="flex w-full justify-around">
                   {link?.othersLinks?.map((link, index) => {
                     return (
                       <span
