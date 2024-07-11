@@ -61,6 +61,10 @@ const Sidebar = () => {
       });
   };
 
+  const handleToggleSidebar = () => {
+    setIsSideBarOpen((prev) => !prev);
+  };
+
   const handleMaterialTypeSubmit = () => {
     if (materialType == null) {
       toast.error('Please Enter material type');
@@ -86,20 +90,23 @@ const Sidebar = () => {
   return (
     <div
       id="mySidebar"
-      className={` z-50 h-full w-[70px] overflow-x-hidden overflow-y-hidden border-r border-gray-200 bg-white text-black shadow transition-all duration-500 ${
-        isSideBarOpen && 'z-100 w-[218px] overflow-y-auto'
+      className={`h-full overflow-x-hidden overflow-y-hidden border-r border-gray-200 bg-white text-black shadow transition-all duration-500 ${
+        isSideBarOpen ? 'z-100 w-[218px] overflow-y-auto' : 'z-50  w-[70px]'
       } [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar]:w-1`}>
-      <div className="z-100 flex h-16 w-full items-center border-b bg-white px-2">
-        <div className="mb-2">
-          <img src={logo} className={`${isSideBarOpen ? 'hidden' : ''}`} />
-          <img src={logo} className={` ${isSideBarOpen ? 'block' : 'hidden'}`} />
+      <div className="z-100 flex h-16 w-full items-center justify-between border-b bg-white  px-2">
+        <div className="">
+          <img src={logo} className={`${isSideBarOpen ? 'hidden h-14' : ''}`} />
+          <img src={logo} className={` ${isSideBarOpen ? 'block h-14' : 'hidden'}`} />
         </div>
-        <RiMenuFold3Line2 className="flex-shrink-0 flex-grow-0 cursor-pointer rounded-full p-2 text-4xl text-cyan-400 shadow-lg" />
+        <RiMenuFold3Line2
+          className="flex-shrink-0 flex-grow-0 cursor-pointer rounded-full p-2 text-4xl text-cyan-400 shadow-lg"
+          onClick={handleToggleSidebar}
+        />
       </div>
       {/* <hr className="my-4 border-[#c] text-[#0000001a] md:hidden" /> */}
       <div className="mt-4">
         <div className="mx-3.5 mb-3 flex flex-col">
-          <p className="mb-3 font-bold text-zinc-500">MAIN HOME</p>
+          <p className={`${isSideBarOpen ? 'mb-3 font-bold text-zinc-500' : 'hidden'}`}>MAIN HOME</p>
 
           <Link to={`/book`}>
             <div className={`flex items-center p-2`}>
@@ -109,7 +116,7 @@ const Sidebar = () => {
             </div>
           </Link>
         </div>
-        <p className="mx-3.5 mb-3 font-bold text-zinc-500">ALL PAGES</p>
+        <p className={`${isSideBarOpen ? 'mx-3.5 mb-3 font-bold text-zinc-500' : 'hidden'}`}>ALL PAGES</p>
         {sidebarLinks.map((nav, i) => {
           if (nav.path) {
             return (

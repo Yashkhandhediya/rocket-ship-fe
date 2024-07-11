@@ -59,7 +59,7 @@ const Navbar = () => {
 
   const navbarLinks = [
     {
-      label: sessionStorage.getItem('is_company') == 1 ? 'Company' : 'User',
+      label: userData ? user : 'User',
       email: userData ? email : 'Email',
       icon: <FontAwesomeIcon icon={faUserCircle} className="text-6xl" />,
       onClick: () => {
