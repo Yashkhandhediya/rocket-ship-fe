@@ -28,7 +28,7 @@ const Tabs = ({ tabs, tabClassNames, panelClassNames, onTabChange = () => {} }) 
             <button
               key={tab.id}
               className={`me-2 inline-flex items-center rounded-t-lg border-b-4 p-2 ${
-                i === activeTab ? 'border-red-600 text-rose-500' : 'border-transparent text-[#9CA3AF]'
+                i === activeTab ? 'border-sky-600 text-sky-500' : 'border-transparent text-sky-500'
               } ${tabClassNames}`}
               id={`${tab.id}-tab`}
               type="button"

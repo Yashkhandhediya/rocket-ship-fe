@@ -71,16 +71,20 @@ const Allindent = () => {
 
   const fetchData = async () => {
     let filteredData = [];
+    info.length = 0;
     setLoading(true);
     try {
       const response = await axios.get(BACKEND_URL + `/indent/get_indents?created_by=${url_user_id}`);
-      console.log('RESPONSE', response, response.data.length);
+      // console.log('RESPONSE', response, response.data.length);
       if (response.data.length > 0 && info.length == 0) {
+        console.log('RESPONSE', response, response.data.length);
         for (let i = 0; i < response.data.length; i++) {
           info.push(response.data[i]);
+          console.log(response.data[i].length);
         }
       }
       console.log('yash');
+      console.log(info);
       setAllData(info);
       let tab_dummy = JSON.parse(sessionStorage.getItem('activeTab')) || 0;
       if (tab_dummy == 0) {
@@ -90,6 +94,7 @@ const Allindent = () => {
       }
 
       setFilteredInfo(filteredData);
+      console.log(filteredData.length, allData.length);
       setDataFetch(true);
     } catch (err) {
       console.log('ERRRRRRRR', err);
@@ -329,7 +334,7 @@ const Allindent = () => {
               <div className="mx-3 mt-5 w-full rounded-lg bg-white p-4 shadow">
                 <div className="mb-2 flex w-full flex-row items-end justify-between border-b border-gray-200 pb-2">
                   <div className="flex w-full flex-row">
-                    <div className="w-[60%] text-sm font-semibold text-red-500">
+                    <div className="w-[60%] text-sm font-semibold text-sky-500">
                       {data.id} | {data?.coordinator_name || ''} | {data?.coordinator_mobile || ''}
                     </div>
                     <button
@@ -338,7 +343,7 @@ const Allindent = () => {
                         handleModify(data.id);
                       }}>
                       <svg
-                        className="h-5 w-5 text-blue-500"
+                        className="h-5 w-5 text-sky-500"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -351,7 +356,7 @@ const Allindent = () => {
                       </svg>
                     </button>
                   </div>
-                  <div className="w-[40%] text-xs text-red-500">
+                  <div className="w-[40%] text-xs text-sky-500">
                     {formatTimestamp(data?.created_date)}
                     {/* {Math.ceil((new Date(data.pickupDate) - new Date() )/(1000 * 60 * 60).toPrecision(1))}h */}
                   </div>

@@ -16,8 +16,6 @@ const User = () => {
   const [userData, setUserData] = useState([])
   const [fetchData, setFetchData] = useState(false)
   const navigate = useNavigate()
-  // const company_id = comp_id ? comp_id : sessionStorage.getItem('company_id');  const [idUser,setIdUser] = useState(null)
-  // console.log('xxxxxxxxxxxxxxxxxxxxxxxxx',comp_id);
   const { comp_id } = useParams(); // Use useParams to get the route parameter
   const company_id = comp_id ? comp_id : sessionStorage.getItem('company_id');
 

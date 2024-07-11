@@ -14,7 +14,7 @@ import { GrEdit } from 'react-icons/gr';
 import { IoLogOutOutline } from 'react-icons/io5';
 import { FaRegComments } from 'react-icons/fa6';
 import { IoNotificationsOutline } from 'react-icons/io5';
-import { IoIosArrowDown } from 'react-icons/io';
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
 const Navbar = () => {
   const is_company = sessionStorage.getItem('is_company');
@@ -31,6 +31,11 @@ const Navbar = () => {
   const id_company = sessionStorage.getItem('company_id');
   const [showPopup, setShowPopup] = useState(false);
   const [rechargeAmount, setRechargeAmount] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const handleToggleDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
 
   const handleRequest = () => {
     setShowPopup(true);
@@ -205,7 +210,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="sticky top-0 z-50 flex h-20 w-full flex-row justify-end gap-3 bg-white text-[13px] font-medium shadow">
+    <div className="sticky top-0 z-50 flex h-20 w-full flex-row justify-end gap-3 bg-white text-[13px] font-medium shadow ">
       {/* <div className="flex flex-row items-center gap-2 border-r-[1px] px-3">
         <Tooltip content={<QuickActions />} style="light" className="shadow">
           <button className="flex cursor-pointer flex-row items-center gap-2">
@@ -267,8 +272,8 @@ const Navbar = () => {
       </div> */}
 
       <div className=" flex flex-row items-center gap-3">
-        <FaRegComments className="rounded-full bg-blue-50 p-2 text-3xl" />
-        <IoNotificationsOutline className="rounded-full bg-blue-50 p-2 text-3xl" />
+        {/* <FaRegComments className="rounded-full bg-blue-50 p-2 text-3xl" />
+        <IoNotificationsOutline className="rounded-full bg-blue-50 p-2 text-3xl" /> */}
 
         {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-5 w-5">
           <path
@@ -291,12 +296,14 @@ const Navbar = () => {
             />
           </svg>
         </button> */}
-        <Dropdown
-          label=""
-          dismissOnClick={false}
-          renderTrigger={() => (
-            <button className="flex items-center gap-2 px-2">
-              {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-5 w-5">
+        {/* aria-expanded */}
+
+        <div>
+          {/* // ref={dropdownRef}
+          // dismissOnClick={false}
+          // renderTrigger={() => ( */}
+          <button className="relative flex items-center gap-2 px-2" onClick={handleToggleDropdown}>
+            {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#90949D" className="h-5 w-5">
                 <path
                   fillRule="evenodd"
                   d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
@@ -312,46 +319,49 @@ const Navbar = () => {
               </svg>
               </svg> */}
 
-              <FontAwesomeIcon icon={faUserCircle} className="text-3xl" />
-              <div className="flex flex-col">
-                <h1 className="text-left text-base">{sessionStorage.getItem('user_name')}</h1>
-                <p className="flex items-center gap-1 text-[#2684FC]">
-                  <span>Edit Profile</span> <IoIosArrowDown className="self-center" />
-                </p>
-              </div>
-            </button>
-          )}>
-          {navbarLinks.map((link, index) => (
-            <DropdownItem
-              key={index}
-              onClick={link.onClick}
-              className="my-3 flex w-56 items-center justify-center gap-4 font-medium hover:bg-white">
-              {index === 0 ? (
-                <div className="flex flex-col">
+            <FontAwesomeIcon icon={faUserCircle} className="text-3xl" />
+            <div className="flex flex-col">
+              <h1 className="text-left text-base">{sessionStorage.getItem('user_name')}</h1>
+              <p className="flex items-center gap-1 text-sky-500">
+                <span>Edit Profile</span>{' '}
+                {isDropdownOpen ? (
+                  <IoIosArrowUp className="self-center" />
+                ) : (
+                  <IoIosArrowDown className="self-center" />
+                )}
+              </p>
+            </div>
+          </button>
+        </div>
+        {isDropdownOpen && (
+          <div className="absolute right-0 top-14 my-3 flex h-56 w-56 flex-col items-center justify-center gap-4 border bg-white px-2 py-5 font-medium shadow transition-all duration-500">
+            {navbarLinks.map((link, index) => {
+              return index === 0 ? (
+                <div key={index} onClick={link.onClick} className="flex cursor-pointer flex-col">
                   {link.icon}
-                  <p className="text-base">{link.label}</p>
-                  <p className="text-[13px] text-zinc-400">{link.email}</p>
+                  <p className="text-center text-base">{link.label}</p>
+                  <p className="text-center text-[13px] text-zinc-400">{link.email}</p>
                 </div>
               ) : (
-                link.othersLinks.map((link, index) => {
-                  return (
-                    <>
+                <div key={index} className="flex w-full justify-around">
+                  {link?.othersLinks?.map((link, index) => {
+                    return (
                       <span
                         key={index}
-                        className="rounded-full bg-zinc-200 p-2 text-2xl"
+                        className="cursor-pointer rounded-full bg-zinc-200 p-2 text-2xl"
                         onClick={link.onClick}>
                         {' '}
                         <Tooltip key={index} content={link.label}>
                           {link.icon}
                         </Tooltip>
                       </span>
-                    </>
-                  );
-                })
-              )}
-            </DropdownItem>
-          ))}
-        </Dropdown>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
       {showPopup && (
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-gray-400 bg-opacity-50 outline-none focus:outline-none">

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
-import Loader from '../../common/loader/Loader';
+import { Loader } from '../../common/components';
 
 const Field = ({ id, label, type, value, onChange, onBlur, isValid, errorMessage, placeholder }) => (
   <div className="flex flex-col">

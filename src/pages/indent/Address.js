@@ -1,7 +1,8 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
+import { Loader } from '../../common/components';
 
 const Address = ({ isVisible, onClose }) => {
   const [address, setAddress] = useState({
@@ -11,6 +12,7 @@ const Address = ({ isVisible, onClose }) => {
     state: '',
     country: '',
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,44 +23,57 @@ const Address = ({ isVisible, onClose }) => {
   };
 
   const checkField = () => {
-    if (address.area === '' || address.pincode === '' || address.city === '' || address.state === '' || address.country === ''){
+    if (
+      address.area === '' ||
+      address.pincode === '' ||
+      address.city === '' ||
+      address.state === '' ||
+      address.country === ''
+    ) {
       toast.error('Please fill all the fields');
     }
-  }
-
+  };
 
   const handleSubmit = () => {
-    console.log("Submit Address API")
-    checkField()
-    axios.post(BACKEND_URL + `/address/truck_booking_address/?created_by=${sessionStorage.getItem('company_id')}`,
-      address
-    ).then((res) => {
-      console.log("Response Data",res.data)
-      toast("Address Saved Successfully",{type:'success'})
-      setAddress({...address,
-        area: '',
-        pincode: '',
-        city: '',
-        state: '',
-        country: '',
+    console.log('Submit Address API');
+    checkField();
+    setLoading(true);
+    axios
+      .post(
+        BACKEND_URL + `/address/truck_booking_address/?created_by=${sessionStorage.getItem('company_id')}`,
+        address,
+      )
+      .then((res) => {
+        setLoading(false);
+        console.log('Response Data', res.data);
+        toast('Address Saved Successfully', { type: 'success' });
+        setAddress({ ...address, area: '', pincode: '', city: '', state: '', country: '' });
+        onClose();
       })
-      onClose()
-    }).catch((err) => {
-      console.log("Error In saving",err)
-      toast("Error In saving Address",{type:'error'})
-    })
-  }
-
+      .catch((err) => {
+        setLoading(false);
+        console.log('Error In saving', err);
+        toast('Error In saving Address', { type: 'error' });
+      });
+  };
 
   return (
-    
     isVisible && (
       <div className="relative">
-        <div className={`fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50 ${isVisible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'} transition-opacity duration-500 ease-out`}>
-          <div className={`bg-white p-10 rounded shadow-lg w-[50%] transform ${isVisible ? 'translate-y-0' : '-translate-y-full'} transition-transform duration-500 ease-out`}>
+        {loading && <Loader />}
+        <div
+          className={`fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50 ${
+            isVisible ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+          } transition-opacity duration-500 ease-out`}>
+          <div
+            className={`w-[50%] transform rounded bg-white p-10 shadow-lg ${
+              isVisible ? 'translate-y-0' : '-translate-y-full'
+            } transition-transform duration-500 ease-out`}>
             <h2 className="mb-4 text-xl font-bold">Enter Address</h2>
             <div className="mb-4">
-              <label htmlFor="area" className="mb-2 block text-sm font-medium text-gray-700">Area</label>
+              <label htmlFor="area" className="mb-2 block text-sm font-medium text-gray-700">
+                Area
+              </label>
               <input
                 type="text"
                 id="area"
@@ -70,7 +85,9 @@ const Address = ({ isVisible, onClose }) => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="pincode" className="mb-2 block text-sm font-medium text-gray-700">Pincode</label>
+              <label htmlFor="pincode" className="mb-2 block text-sm font-medium text-gray-700">
+                Pincode
+              </label>
               <input
                 type="text"
                 id="pincode"
@@ -82,7 +99,9 @@ const Address = ({ isVisible, onClose }) => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="city" className="mb-2 block text-sm font-medium text-gray-700">City</label>
+              <label htmlFor="city" className="mb-2 block text-sm font-medium text-gray-700">
+                City
+              </label>
               <input
                 type="text"
                 id="city"
@@ -94,7 +113,9 @@ const Address = ({ isVisible, onClose }) => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="state" className="mb-2 block text-sm font-medium text-gray-700">State</label>
+              <label htmlFor="state" className="mb-2 block text-sm font-medium text-gray-700">
+                State
+              </label>
               <input
                 type="text"
                 id="state"
@@ -106,7 +127,9 @@ const Address = ({ isVisible, onClose }) => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="country" className="mb-2 block text-sm font-medium text-gray-700">Country</label>
+              <label htmlFor="country" className="mb-2 block text-sm font-medium text-gray-700">
+                Country
+              </label>
               <input
                 type="text"
                 id="country"
@@ -120,21 +143,20 @@ const Address = ({ isVisible, onClose }) => {
             <div className="flex justify-end space-x-2">
               <button
                 onClick={onClose}
-                className="rounded-md bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300"
-              >
+                className="rounded-md bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300">
                 Cancel
               </button>
               <button
                 onClick={handleSubmit}
-                className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-              >
+                className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
                 Save
               </button>
             </div>
           </div>
         </div>
-      </div>)
-  )
-}
+      </div>
+    )
+  );
+};
 
-export default Address
+export default Address;

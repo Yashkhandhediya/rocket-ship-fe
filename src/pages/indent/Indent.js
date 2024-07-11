@@ -337,7 +337,8 @@ const Indent = () => {
           origin_id: 10,
           pkgs: pkgs,
           weight: parseInt(targetWeight),
-          pickupDate: pickUpDate.date,
+          pickup_date: pickUpDate.date,
+          pickup_time: pickUpDate.time,
           volumetric_weight: volumatricWeight,
           trip_status: 0,
           to_pincode: sourcePin,
@@ -779,9 +780,9 @@ const Indent = () => {
                 <span className="font-medium">
                   <span className="text-lg text-red-800">*</span> From Area, City, State, Country
                 </span>
-                <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-700 text-[18px] text-white">
+                {/* <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-blue-700 text-[18px] text-white">
                   <span style={{ marginTop: '-2px' }}>+</span>
-                </div>
+                </div> */}
               </p>
               <input
                 ref={inputRef}
@@ -798,9 +799,9 @@ const Indent = () => {
                 <span className="font-medium">
                   <span className="text-lg text-red-800">*</span> To Area, City, State, Country
                 </span>
-                <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-700 text-[18px] text-white">
+                {/* <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-blue-700 text-[18px] text-white">
                   <span style={{ marginTop: '-2px' }}>+</span>
-                </div>
+                </div> */}
               </p>
               <input
                 ref={inputRef}
