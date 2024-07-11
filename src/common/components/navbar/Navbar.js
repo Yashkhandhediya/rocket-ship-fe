@@ -337,7 +337,7 @@ const Navbar = () => {
           <div className="absolute right-0 top-14 my-3 flex h-56 w-56 flex-col items-center justify-center gap-4 border bg-white px-2 py-5 font-medium shadow transition-all duration-500">
             {navbarLinks.map((link, index) => {
               return index === 0 ? (
-                <div key={index} onClick={link.onClick} className="flex flex-col">
+                <div key={index} onClick={link.onClick} className="flex cursor-pointer flex-col">
                   {link.icon}
                   <p className="text-center text-base">{link.label}</p>
                   <p className="text-center text-[13px] text-zinc-400">{link.email}</p>
