@@ -8,14 +8,19 @@ import { Badge } from 'flowbite-react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
+
 
 
 const User = () => {
   const [userData, setUserData] = useState([])
   const [fetchData, setFetchData] = useState(false)
   const navigate = useNavigate()
-  const company_id = sessionStorage.getItem('company_id');
-  const [idUser,setIdUser] = useState(null)
+  // const company_id = comp_id ? comp_id : sessionStorage.getItem('company_id');  const [idUser,setIdUser] = useState(null)
+  // console.log('xxxxxxxxxxxxxxxxxxxxxxxxx',comp_id);
+  const { comp_id } = useParams(); // Use useParams to get the route parameter
+  const company_id = comp_id ? comp_id : sessionStorage.getItem('company_id');
+
   const [showkyc,setShowKyc] = useState(false)
   const [aadharImg,setAadharImg] = useState(null)
   const [userImg,setUserImg] = useState(null)
