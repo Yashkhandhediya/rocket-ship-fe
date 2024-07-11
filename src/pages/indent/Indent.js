@@ -780,9 +780,9 @@ const Indent = () => {
                 <span className="font-medium">
                   <span className="text-lg text-red-800">*</span> From Area, City, State, Country
                 </span>
-                <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-blue-700 text-[18px] text-white">
+                {/* <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-blue-700 text-[18px] text-white">
                   <span style={{ marginTop: '-2px' }}>+</span>
-                </div>
+                </div> */}
               </p>
               <input
                 ref={inputRef}
@@ -799,9 +799,9 @@ const Indent = () => {
                 <span className="font-medium">
                   <span className="text-lg text-red-800">*</span> To Area, City, State, Country
                 </span>
-                <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-blue-700 text-[18px] text-white">
+                {/* <div className=" flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-blue-700 text-[18px] text-white">
                   <span style={{ marginTop: '-2px' }}>+</span>
-                </div>
+                </div> */}
               </p>
               <input
                 ref={inputRef}
