@@ -90,12 +90,12 @@ const Sidebar = () => {
   return (
     <div
       id="mySidebar"
-      className={`h-full overflow-x-hidden overflow-y-hidden border-r border-gray-200 bg-white text-black shadow transition-all duration-500 ${
+      className={` h-full overflow-x-hidden overflow-y-hidden border-r border-gray-200 bg-white text-black shadow transition-all duration-500 ${
         isSideBarOpen ? 'z-100 w-[218px] overflow-y-auto' : 'z-50  w-[70px]'
       } [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar]:w-1`}>
-      <div className="z-100 flex h-16 w-full items-center justify-between border-b bg-white  px-2">
-        <div className="">
-          <img src={logo} className={`${isSideBarOpen ? 'hidden h-14' : ''}`} />
+      <div className="z-100 h-18 flex w-full items-center justify-between border-b bg-white px-2 pb-4 pt-2">
+        <div className="h-14">
+          <img src={logo} className={`${isSideBarOpen ? 'hidden h-14' : 'pt-7'}`} />
           <img src={logo} className={` ${isSideBarOpen ? 'block h-14' : 'hidden'}`} />
         </div>
         <RiMenuFold3Line2

@@ -205,7 +205,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="flex h-16 w-full flex-row justify-end gap-3 bg-white py-3 text-[13px] font-medium shadow">
+    <div className="z-100 sticky top-0 flex h-20 w-full flex-row justify-end gap-3 bg-white text-[13px] font-medium shadow">
       {/* <div className="flex flex-row items-center gap-2 border-r-[1px] px-3">
         <Tooltip content={<QuickActions />} style="light" className="shadow">
           <button className="flex cursor-pointer flex-row items-center gap-2">
@@ -266,7 +266,7 @@ const Navbar = () => {
         )}
       </div> */}
 
-      <div className="flex flex-row items-center gap-3">
+      <div className=" flex flex-row items-center gap-3">
         <FaRegComments className="rounded-full bg-blue-50 p-2 text-3xl" />
         <IoNotificationsOutline className="rounded-full bg-blue-50 p-2 text-3xl" />
 
