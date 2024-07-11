@@ -93,7 +93,7 @@ const LogIn = () => {
               { headers },
             )
             .then((otpResponse) => {
-              setLoading(false);rrrr
+              setLoading(false);
               setHandlePopup(true);
               console.log(otpResponse);
             })

@@ -60,12 +60,12 @@ import { BillingAddress } from '../pages/billing-address';
 import { ShiprocketBankDetails } from '../pages/shiprocket-bank-details';
 import { RefundSetting, ReturnSettings } from '../pages/return-settings';
 import AddAddress from '../pages/add-address/AddAddress';
-<<<<<<< HEAD
+
 import Companies from '../pages/indent/Companies';
-=======
-import { TruckSize } from '../pages/truck';
+
+import { Trucks } from '../pages/trucks';
 import { MaterialType } from '../pages/material-type';
->>>>>>> ca5f065ebdae03a399ebc301f643b888abd8de1a
+import TruckLists from '../pages/trucks/TruckLists';
 
 const routes = createBrowserRouter([
   {
@@ -130,7 +130,7 @@ const routes = createBrowserRouter([
   },
   {
     path: '/user/:comp_id',
-    element: <PrivateRoute component={<User  />} />,
+    element: <PrivateRoute component={<User />} />,
   },
   {
     path: '/all-user',
@@ -342,12 +342,16 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<AddAddress />} />,
   },
   {
-    path: '/material-type',
+    path: '/materials',
     element: <PrivateRoute component={<MaterialType />} />,
   },
   {
-    path: '/truck-size',
-    element: <PrivateRoute component={<TruckSize />} />,
+    path: '/trucks',
+    element: <PrivateRoute component={<Trucks />} />,
+  },
+  {
+    path: '/trucks/:companyId',
+    element: <PrivateRoute component={<TruckLists />} />,
   },
 ]);
 

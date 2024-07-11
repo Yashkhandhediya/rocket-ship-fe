@@ -63,21 +63,21 @@ export const sidebarLinks = [
     hoverIcon: weight,
     subMenuOptions: [
       {
-        title: 'Add Address',
+        title: 'Address',
         path: '/add-address',
         icon: bill,
         hoverIcon: bill,
       },
       {
-        title: 'Material Type',
-        path: '/material-type',
+        title: 'Materials',
+        path: '/materials',
         onClick: 'openMaterialTypeModal',
         icon: book,
         hoverIcon: book,
       },
       {
-        title: 'Truck Size',
-        path: '/truck-size',
+        title: 'Trucks',
+        path: '/trucks',
         onClick: 'openTruckSizeModal',
         icon: truckSize,
         hoverIcon: truckSize,
