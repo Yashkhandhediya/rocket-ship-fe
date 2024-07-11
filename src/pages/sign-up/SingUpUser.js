@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Field } from '../../common/components';
+import { Field, Loader } from '../../common/components';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
@@ -10,6 +10,7 @@ import { ACCESS_TOKEN } from '../../common/utils/config';
 const SignUpUser = () => {
   const navigate = useNavigate();
   const [flag, setFlag] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [signupInput, setSignupInput] = useState({
     company_id: sessionStorage.getItem('company_id'),
     first_name: '',
@@ -48,6 +49,7 @@ const SignUpUser = () => {
       return;
     }
     setFlag(1);
+    setLoading(true);
     const headers = { 'Content-Type': 'application/json' };
     if (sessionStorage.getItem('access_token') != null) {
       axios
@@ -65,6 +67,7 @@ const SignUpUser = () => {
           { headers },
         )
         .then((res) => {
+          setLoading(false);
           console.log('Reponse of Sign up', res);
           if (res.data.msg == 'User already exits') {
             toast('User Already Exists', { type: 'error' });
@@ -75,6 +78,7 @@ const SignUpUser = () => {
           }
         })
         .catch((err) => {
+          setLoading(false);
           console.log('Error in signup', err);
           toast('Some Error in Sign Up', { type: 'error' });
         });
@@ -94,6 +98,7 @@ const SignUpUser = () => {
           { headers },
         )
         .then((res) => {
+          setLoading(false);
           console.log('Reponse of Sign up', res);
           if (res.data.msg == 'User already exits') {
             toast('User Already Exists', { type: 'error' });
@@ -104,6 +109,7 @@ const SignUpUser = () => {
           }
         })
         .catch((err) => {
+          setLoading(false);
           console.log('Error in signup', err);
           toast('Some Error in Sign Up', { type: 'error' });
         });
@@ -112,6 +118,8 @@ const SignUpUser = () => {
 
   return (
     <div className="flex-column flex h-full">
+      {loading && <Loader />}
+
       <div className="flex h-full w-[49%] flex-col items-center justify-center">
         <img src={homelogo} className="h-full w-[97%] object-cover"></img>
       </div>

@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Field } from '../../common/components';
+import { Field, Loader } from '../../common/components';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [signupInput, setSignupInput] = useState({
     company_name: '',
     company_address: '',
@@ -38,7 +39,7 @@ const SignUp = () => {
     } else {
       setGstError('');
     }
-
+    setLoading(true);
     const headers = { 'Content-Type': 'application/json' };
     axios
       .post(
@@ -54,6 +55,7 @@ const SignUp = () => {
         { headers },
       )
       .then((res) => {
+        setLoading(false);
         console.log('Response of Sign up', res);
         if (res.data.msg === 'User already exits') {
           toast('User Already Exists', { type: 'error' });
@@ -65,6 +67,7 @@ const SignUp = () => {
         }
       })
       .catch((err) => {
+        setLoading(false);
         console.log('Error in signup', err);
         toast('Some Error in Sign Up', { type: 'error' });
       });
@@ -72,6 +75,7 @@ const SignUp = () => {
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center">
+      {loading && <Loader />}
       <div className="mb-8 text-center text-4xl font-bold">
         <h1>Truck Booking</h1>
       </div>
