@@ -210,7 +210,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="sticky top-0 z-50 flex h-20 w-full flex-row justify-end gap-3 bg-white text-[13px] font-medium shadow">
+    <div className="sticky top-0 z-50 flex h-20 w-full flex-row justify-end gap-3 bg-white text-[13px] font-medium shadow ">
       {/* <div className="flex flex-row items-center gap-2 border-r-[1px] px-3">
         <Tooltip content={<QuickActions />} style="light" className="shadow">
           <button className="flex cursor-pointer flex-row items-center gap-2">
@@ -322,7 +322,7 @@ const Navbar = () => {
             <FontAwesomeIcon icon={faUserCircle} className="text-3xl" />
             <div className="flex flex-col">
               <h1 className="text-left text-base">{sessionStorage.getItem('user_name')}</h1>
-              <p className="flex items-center gap-1 text-[#2684FC]">
+              <p className="flex items-center gap-1 text-sky-500">
                 <span>Edit Profile</span>{' '}
                 {isDropdownOpen ? (
                   <IoIosArrowUp className="self-center" />
@@ -334,7 +334,7 @@ const Navbar = () => {
           </button>
         </div>
         {isDropdownOpen && (
-          <div className="absolute right-0 top-14 my-3 flex h-56 w-56 flex-col items-center justify-center gap-4 border bg-white px-2 py-5 font-medium shadow">
+          <div className="absolute right-0 top-14 my-3 flex h-56 w-56 flex-col items-center justify-center gap-4 border bg-white px-2 py-5 font-medium shadow transition-all duration-500">
             {navbarLinks.map((link, index) => {
               return index === 0 ? (
                 <div key={index} onClick={link.onClick} className="flex flex-col">

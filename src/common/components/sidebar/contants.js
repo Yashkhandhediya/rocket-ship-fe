@@ -64,14 +64,14 @@ export const sidebarLinks = [
       },
       {
         title: 'Material Type',
-        path: '#',
+        path: '/material-type',
         onClick: 'openMaterialTypeModal',
         icon: book,
         hoverIcon: book,
       },
       {
         title: 'Truck Size',
-        path: '#',
+        path: '/truck-size',
         onClick: 'openTruckSizeModal',
         icon: truckSize,
         hoverIcon: truckSize,

@@ -175,7 +175,7 @@ const Sidebar = () => {
                       nav.subMenuOptions.map((subNav, i) => (
                         <Link to={subNav.path} key={i} className="translate-y-0">
                           <div className=" mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-black ">
-                            <span className="ml-3 truncate text-xs ">{subNav.title}</span>
+                            <span className="ml-3 truncate text-sm ">{subNav.title}</span>
                           </div>
                         </Link>
                       ))}

@@ -165,7 +165,7 @@ const User = () => {
               {
                 <button
                   id={row?.original?.id}
-                  className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
+                  className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-green-600"
                   onClick={() => handleIndent(row)}>
                   {'Indent'}
                 </button>
@@ -173,7 +173,7 @@ const User = () => {
               {row?.original?.kyc_status_id != 3 && (
                 <button
                   id={row?.original?.id}
-                  className="min-w-fit rounded bg-red-400 px-4 py-1.5 text-white hover:bg-green-600"
+                  className="min-w-fit rounded bg-sky-400 px-4 py-1.5 text-white hover:bg-green-600"
                   onClick={() => handleKYC(row)}>
                   {'KYC'}
                 </button>

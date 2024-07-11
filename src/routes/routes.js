@@ -60,6 +60,8 @@ import { BillingAddress } from '../pages/billing-address';
 import { ShiprocketBankDetails } from '../pages/shiprocket-bank-details';
 import { RefundSetting, ReturnSettings } from '../pages/return-settings';
 import AddAddress from '../pages/add-address/AddAddress';
+import { TruckSize } from '../pages/truck';
+import { MaterialType } from '../pages/material-type';
 
 const routes = createBrowserRouter([
   {
@@ -330,6 +332,14 @@ const routes = createBrowserRouter([
   {
     path: '/add-address',
     element: <PrivateRoute component={<AddAddress />} />,
+  },
+  {
+    path: '/material-type',
+    element: <PrivateRoute component={<MaterialType />} />,
+  },
+  {
+    path: '/truck-size',
+    element: <PrivateRoute component={<TruckSize />} />,
   },
 ]);
 
