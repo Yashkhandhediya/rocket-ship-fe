@@ -162,11 +162,11 @@ const Company_profile = () => {
           </div>
           <div>
             <button
-              className="flex h-8 w-28 items-center gap-4 rounded bg-[#B07828] text-white"
+              className="flex h-8 w-28 items-center gap-4 rounded bg-sky-500 text-white"
               onClick={() => {
                 handleSumbit();
               }}>
-              <div className="flex h-8 w-2/5 items-center justify-center rounded-l bg-[#895d20]">
+              <div className="flex h-8 w-2/5 items-center justify-center rounded-l bg-sky-600">
                 <FontAwesomeIcon icon={faSave} />
               </div>
               <div>Save</div>

@@ -22,15 +22,16 @@ const Change_password = () => {
   // This function is used to handle the form submit
   const handleSumbit = async () => {
     // You can use this data to send to the server
-    if(password.currentPassword == password.newPassword){
-      toast.error("New password cannot be the same as current password");
+    if (password.currentPassword == password.newPassword) {
+      toast.error('New password cannot be the same as current password');
       return;
     }
-    const temp_url = is_company == 0 ? `${BACKEND_URL}/login/password_change?old_password=${password.currentPassword}&user_id=${user_id}&new_password=${password.newPassword}`
-    : `${BACKEND_URL}/login/password_change?old_password=${password.currentPassword}&company_id=${user_id}&new_password=${password.newPassword}`
+    const temp_url =
+      is_company == 0
+        ? `${BACKEND_URL}/login/password_change?old_password=${password.currentPassword}&user_id=${user_id}&new_password=${password.newPassword}`
+        : `${BACKEND_URL}/login/password_change?old_password=${password.currentPassword}&company_id=${user_id}&new_password=${password.newPassword}`;
     try {
-      const response = await axios.get(`${temp_url}`,
-      );
+      const response = await axios.get(`${temp_url}`);
       if (response.data.massage === 'entered password is incorrect') {
         toast(response.data.massage, { type: 'error' });
       } else {
@@ -94,7 +95,7 @@ const Change_password = () => {
         </div>
         <div className="flex items-center justify-center">
           <button
-            className="flex h-8 w-20 items-center justify-center gap-4 rounded bg-[#B07828] text-white"
+            className="flex h-8 w-20 items-center justify-center gap-4 rounded bg-sky-500 text-white"
             onClick={() => {
               handleSumbit();
             }}>

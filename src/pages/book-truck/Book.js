@@ -196,7 +196,7 @@ const Book = () => {
                 </div>
               </div>
               <div className="flex flex-col">
-                <div className="flex flex-row justify-between bg-[#b0772826] px-3 py-1 text-[16px] font-medium text-[#5f5f5f]">
+                <div className="flex flex-row justify-between bg-sky-50 px-3 py-1 text-[16px] font-medium text-[#5f5f5f]">
                   <p>Truck Type</p>
                   <p>Charges</p>
                 </div>
@@ -215,7 +215,7 @@ const Book = () => {
                 </div>
                 <div className="text-[14px] font-medium">
                   <button
-                    className="rounded bg-[#B07828] px-3 py-0.5 text-white"
+                    className="rounded bg-sky-500 px-3 py-0.5 text-white"
                     onClick={() => {
                       setShowModal(true);
                     }}>

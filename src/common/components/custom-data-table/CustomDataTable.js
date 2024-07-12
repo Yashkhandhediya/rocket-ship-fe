@@ -9,6 +9,7 @@ import NoOrdersFound from '../../../pages/orders/components/no-order-found/NoOrd
 const CustomDataTable = ({
   columns,
   rowData,
+  enableCheckBox,
   isHeaderSticky = true,
   enableRowSelection,
   onRowSelectStateChange,
@@ -25,22 +26,26 @@ const CustomDataTable = ({
     return [
       enableRowSelection && {
         id: 'select',
-        header: ({ table }) => (
-          <FlowbiteCheckbox
-            color={'red'}
-            className="px-0 opacity-50"
-            checked={table.getIsAllRowsSelected()}
-            onChange={table.getToggleAllRowsSelectedHandler()}
-          />
-        ),
-        cell: ({ row }) => (
-          <FlowbiteCheckbox
-            color={'red'}
-            checked={row.getIsSelected()}
-            disabled={!row.getCanSelect()}
-            onChange={row.getToggleSelectedHandler()}
-          />
-        ),
+        header: ({ table }) => {
+          enableCheckBox && (
+            <FlowbiteCheckbox
+              color={'red'}
+              className="px-0 opacity-50"
+              checked={table.getIsAllRowsSelected()}
+              onChange={table.getToggleAllRowsSelectedHandler()}
+            />
+          );
+        },
+        cell: ({ row }) => {
+          enableCheckBox && (
+            <FlowbiteCheckbox
+              color={'red'}
+              checked={row.getIsSelected()}
+              disabled={!row.getCanSelect()}
+              onChange={row.getToggleSelectedHandler()}
+            />
+          );
+        },
       },
       ...columns,
     ].filter(Boolean);
@@ -96,7 +101,9 @@ const CustomDataTable = ({
       style={{ ...tableWrapperStyles, scrollbarGutter: 'stable' }}>
       <Table className="mb-3 w-full">
         <Table.Head
-          className={`h-[2.875rem] text-xs font-medium ${isHeaderSticky ? 'sticky top-0 z-[1]' : 'sticky top-0 z-[10]'}`}>
+          className={`h-[2.875rem] text-xs font-medium ${
+            isHeaderSticky ? 'sticky top-0 z-[1]' : 'sticky top-0 z-[10]'
+          }`}>
           {table.getFlatHeaders().map((header, headerInd) => {
             return (
               <Table.HeadCell
