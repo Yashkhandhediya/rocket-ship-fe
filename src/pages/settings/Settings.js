@@ -459,7 +459,7 @@ const Settings = () => {
             <div
               key={index}
               className="flex min-h-72 w-full flex-col gap-5 rounded-lg border px-3 py-5 lg:w-[24%]">
-              <div className="card-heading flex flex-row items-center gap-5 text-[16px] font-medium text-[#666666]">
+              <div className="card-heading flex flex-row items-center gap-5 text-[16px] font-medium">
                 {setting.icon}
                 {setting.title}
               </div>
@@ -468,7 +468,7 @@ const Settings = () => {
                   <Link
                     key={index}
                     to={item.link}
-                    className="ml-[14%] flex w-4/5 flex-row items-center justify-between text-[12px] text-green-500">
+                    className="ml-[14%] flex w-4/5 flex-row items-center justify-between text-[12px] text-sky-500">
                     {item.title}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
