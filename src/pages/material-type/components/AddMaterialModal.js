@@ -5,13 +5,16 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 function AddMaterialModal({ handleClose, getMaterialData, editData, handleSetEdit }) {
-  console.log(editData);
-
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const company_id = sessionStorage.getItem('company_id');
   const [material_type, setMaterial_type] = useState(editData ? editData.material_type : '');
 
   const handleAddMaterial = async () => {
+    if (material_type === '') {
+      setError('Material Name is Required');
+      return;
+    }
     setLoading(true);
     handleClose();
     try {
@@ -73,6 +76,7 @@ function AddMaterialModal({ handleClose, getMaterialData, editData, handleSetEdi
               value={material_type}
               onChange={(e) => setMaterial_type(e.target.value)}
             />
+            {error && <p className="w-1/2 text-xs text-red-500">{error}</p>}
           </div>
           <div className="flex w-full justify-center gap-4">
             <button

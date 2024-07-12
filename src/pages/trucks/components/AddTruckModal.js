@@ -10,6 +10,7 @@ function AddTruckModal({ handleClose, getTruckData, editData, handleSetEdit }) {
 
   const [loading, setLoading] = useState(false);
   const company_id = sessionStorage.getItem('company_id');
+  const [errors, setErrors] = useState(null);
   const [truckData, setTruckData] = useState({
     truck_type: editData ? editData?.truck_type : 'Select Type',
     capacity_type: editData ? editData?.capacity_type : 'KG',
@@ -17,6 +18,16 @@ function AddTruckModal({ handleClose, getTruckData, editData, handleSetEdit }) {
     truck_dimension: editData ? editData.truck_dimension : '',
     capacity: editData ? editData.capacity : '',
   });
+
+  const requiredFields = () => {
+    const newErrors = {};
+
+    if (truckData.truck_type === 'Select Type') newErrors.truck_type = 'Truck type is Required';
+    if (truckData.truck_dimension === '') newErrors.truck_dimension = 'Truck Dimension is Required';
+    if (truckData.truck_number === '') newErrors.truck_number = 'Truck Number is Required';
+    if (truckData.capacity === '') newErrors.capacity = 'Truck Capacity is Required';
+    return newErrors;
+  };
 
   const handleToggleCapacity = (e) => {
     const { innerText } = e.target;
@@ -26,6 +37,11 @@ function AddTruckModal({ handleClose, getTruckData, editData, handleSetEdit }) {
   console.log(truckData);
 
   const handleAddTruck = async () => {
+    const requiredError = requiredFields();
+    if (Object.keys(requiredError).length > 0) {
+      setErrors(requiredError);
+      return;
+    }
     setLoading(true);
     handleClose();
     try {
@@ -51,6 +67,11 @@ function AddTruckModal({ handleClose, getTruckData, editData, handleSetEdit }) {
   };
 
   const handleEditTruck = async () => {
+    const requiredError = requiredFields();
+    if (Object.keys(requiredError).length > 0) {
+      setErrors(requiredError);
+      return;
+    }
     setLoading(true);
     handleClose();
 
@@ -102,6 +123,7 @@ function AddTruckModal({ handleClose, getTruckData, editData, handleSetEdit }) {
                 setTruckData({ ...truckData, truck_type: value });
               }}
             />
+            {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_type}</p>}
           </div>
 
           <div className="mb-2 ">
@@ -128,6 +150,7 @@ function AddTruckModal({ handleClose, getTruckData, editData, handleSetEdit }) {
                 </button>
               </div>
             </div>
+            {errors && <p className="w-1/2 text-xs text-red-500">{errors?.capacity}</p>}
           </div>
           <div className="mb-2 ">
             <label htmlFor="truck_number" className="block text-[12px] font-medium ">
@@ -140,18 +163,20 @@ function AddTruckModal({ handleClose, getTruckData, editData, handleSetEdit }) {
               value={truckData.truck_number}
               onChange={(e) => setTruckData({ ...truckData, truck_number: e.target.value })}
             />
+            {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_number}</p>}
           </div>
           <div className="mb-4">
-            <label htmlFor="truck_dimensions" className="block text-[12px] font-medium ">
+            <label htmlFor="truck_dimension" className="block text-[12px] font-medium ">
               Truck Dimensions <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
-              id="truck_dimensions"
+              id="truck_dimension"
               className="mt-1 block w-full rounded-sm border border-gray-200 px-2.5 py-1 text-[12px] shadow-sm focus:border-blue-50 focus:outline-none"
               value={truckData.truck_dimension}
               onChange={(e) => setTruckData({ ...truckData, truck_dimension: e.target.value })}
             />
+            {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_dimension}</p>}
           </div>
           <div className="flex w-full justify-center gap-4">
             <button
