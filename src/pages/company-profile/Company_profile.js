@@ -53,6 +53,7 @@ const Company_profile = () => {
         setLoading(false);
         console.log('Info', res.data);
         toast('Company Info Saved', { type: 'success' });
+        window.location.reload()
       })
       .catch((err) => {
         setLoading(false);
