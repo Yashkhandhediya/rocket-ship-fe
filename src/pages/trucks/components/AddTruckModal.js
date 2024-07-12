@@ -14,7 +14,7 @@ function AddTruckModal({ handleClose, getTruckData, editData, handleSetEdit }) {
     truck_type: editData ? editData?.truck_type : 'Select Type',
     capacity_type: editData ? editData?.capacity_type : 'KG',
     truck_number: editData ? editData.truck_number : '',
-    truckDimensions: editData ? editData.length : '',
+    truck_dimension: editData ? editData.truck_dimension : '',
     capacity: editData ? editData.capacity : '',
   });
 
@@ -31,15 +31,13 @@ function AddTruckModal({ handleClose, getTruckData, editData, handleSetEdit }) {
     try {
       const response = await axios.post(`${BACKEND_URL}/trucktype/create_truck_type/`, {
         ...truckData,
-        length: truckData.truckDimensions,
-        height: truckData.truckDimensions,
         created_by: company_id,
       });
       setTruckData({
         truck_type: 'Select Type',
         capacity_type: '',
         truck_number: '',
-        truckDimensions: '',
+        truck_dimension: '',
         capacity: '',
       });
       console.log(response);
@@ -59,14 +57,12 @@ function AddTruckModal({ handleClose, getTruckData, editData, handleSetEdit }) {
     try {
       const response = await axios.put(`${BACKEND_URL}/trucktype/update_truck_type/?id=${editData.id}`, {
         ...truckData,
-        length: truckData.truckDimensions,
-        height: truckData.truckDimensions,
       });
       setTruckData({
         truck_type: 'Select Type',
         capacity_type: '',
         truck_number: '',
-        truckDimensions: '',
+        truck_dimension: '',
         capacity: '',
       });
       handleSetEdit();
@@ -153,8 +149,8 @@ function AddTruckModal({ handleClose, getTruckData, editData, handleSetEdit }) {
               type="text"
               id="truck_dimensions"
               className="mt-1 block w-full rounded-sm border border-gray-200 px-2.5 py-1 text-[12px] shadow-sm focus:border-blue-50 focus:outline-none"
-              value={truckData.truckDimensions}
-              onChange={(e) => setTruckData({ ...truckData, truckDimensions: e.target.value })}
+              value={truckData.truck_dimension}
+              onChange={(e) => setTruckData({ ...truckData, truck_dimension: e.target.value })}
             />
           </div>
           <div className="flex w-full justify-center gap-4">
