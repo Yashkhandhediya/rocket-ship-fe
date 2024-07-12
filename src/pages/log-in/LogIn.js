@@ -86,10 +86,14 @@ const LogIn = () => {
           sessionStorage.setItem('access_token', response.data.access_token);
           sessionStorage.setItem('user_name', response.data?.user_name?.split(' ')[0]);
           setLoading(true);
+          const otpPayload = {
+            email_id: String(loginInput.username),
+            [userType === 'user' ? 'user_id' : 'comp_id']: String(user_id),
+          };
           axios
             .post(
-              BACKEND_URL + `${otpURL}/generate_otp?email_id=${loginInput.username}&user_id=${user_id}`,
-              { email_id: String(loginInput.username), user_id: String(response.data.user_id) },
+              BACKEND_URL + `${otpURL}/generate_otp?email_id=${loginInput.username}&${userType === 'user' ? 'user_id' : 'comp_id'}=${user_id}`,
+              otpPayload,
               { headers },
             )
             .then((otpResponse) => {
