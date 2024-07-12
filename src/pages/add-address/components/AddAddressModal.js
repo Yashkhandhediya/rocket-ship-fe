@@ -56,6 +56,7 @@ function AddAddressModal({ handleClose, getAddressData, editData, handleSetEdit 
   const [city, setCity] = useState(editData ? editData.city : '');
   const [country, setCountry] = useState(editData ? editData.country : '');
   const company_id = sessionStorage.getItem('company_id');
+  const [error, setError] = useState(null);
 
   const handleClear = () => {
     setAddress('');
@@ -65,8 +66,24 @@ function AddAddressModal({ handleClose, getAddressData, editData, handleSetEdit 
     setState('');
   };
 
+  const requiredFields = () => {
+    const newErrors = {};
+
+    if (address === '') newErrors.address = 'Address is Required';
+    if (city === '') newErrors.city = 'City is Required';
+    if (pincode === '') newErrors.pincode = 'Pincode is Required';
+    if (state === '') newErrors.state = 'State is Required';
+    if (country === '') newErrors.country = 'Country is Required';
+    return newErrors;
+  };
   const handleSaveLocation = () => {
+    const requiredError = requiredFields();
+    if (Object.keys(requiredError).length > 0) {
+      setError(requiredError);
+      return;
+    }
     setLoading(true);
+    handleClose();
     axios
       .post(BACKEND_URL + `/address/truck_booking_address/?created_by=${company_id}`, {
         area: address,
@@ -77,8 +94,6 @@ function AddAddressModal({ handleClose, getAddressData, editData, handleSetEdit 
       })
       .then((response) => {
         setLoading(false);
-        handleClose();
-
         handleClear();
         getAddressData();
         toast('Address Added successfully!', { type: 'success' });
@@ -138,6 +153,7 @@ function AddAddressModal({ handleClose, getAddressData, editData, handleSetEdit 
                 isValid={true}
                 placeholder="House/Floor No. Building Name or Street, Locality"
               />
+              {error && <p className="w-1/2 text-xs text-red-500">{error?.address}</p>}
             </div>
             <div>
               <Field
@@ -149,6 +165,7 @@ function AddAddressModal({ handleClose, getAddressData, editData, handleSetEdit 
                 isValid={true}
                 placeholder="Enter Pincode"
               />
+              {error && <p className="w-1/2 text-xs text-red-500">{error?.pincode}</p>}
             </div>
             <div className="flex gap-2">
               <div>
@@ -161,6 +178,7 @@ function AddAddressModal({ handleClose, getAddressData, editData, handleSetEdit 
                   isValid={true}
                   placeholder="Enter State"
                 />
+                {error && <p className=" text-xs text-red-500">{error?.state}</p>}
               </div>
               <div>
                 <Field
@@ -172,6 +190,7 @@ function AddAddressModal({ handleClose, getAddressData, editData, handleSetEdit 
                   isValid={true}
                   placeholder="Enter City"
                 />
+                {error && <p className="w-1/2 text-xs text-red-500">{error?.city}</p>}
               </div>
             </div>
             <div>
@@ -184,6 +203,7 @@ function AddAddressModal({ handleClose, getAddressData, editData, handleSetEdit 
                 isValid={true}
                 placeholder="Enter Country"
               />
+              {error && <p className="w-1/2 text-xs text-red-500">{error?.country}</p>}
             </div>
           </div>
 
