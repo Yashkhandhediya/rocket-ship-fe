@@ -18,7 +18,6 @@ import {
   Book,
   Indent,
   Allindent,
-  Address,
   User,
   ForgotPassword,
   ResetPassword,
@@ -27,6 +26,7 @@ import {
   UserList,
   Catalogue,
   Manage_user,
+  Address,
 } from '../pages';
 
 import Tracking from '../pages/tracking/Tracking';
@@ -59,13 +59,13 @@ import { InvoicePreferences, LabelPreferences } from '../pages/Label-Invoice';
 import { BillingAddress } from '../pages/billing-address';
 import { ShiprocketBankDetails } from '../pages/shiprocket-bank-details';
 import { RefundSetting, ReturnSettings } from '../pages/return-settings';
-import AddAddress from '../pages/add-address/AddAddress';
 
 import Companies from '../pages/indent/Companies';
 
 import { Trucks } from '../pages/trucks';
 import { MaterialType } from '../pages/material-type';
 import TruckLists from '../pages/trucks/TruckLists';
+import Addresses from '../pages/add-address/Addresses';
 
 const routes = createBrowserRouter([
   {
@@ -338,8 +338,8 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<Companies />} />,
   },
   {
-    path: '/add-address',
-    element: <PrivateRoute component={<AddAddress />} />,
+    path: '/address',
+    element: <PrivateRoute component={<Addresses />} />,
   },
   {
     path: '/materials',

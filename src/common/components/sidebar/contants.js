@@ -36,12 +36,13 @@ const mapModuleToLink = (module) => ({
 });
 
 export const sidebarLinks = [
-  parseInt(is_admin) == 1 && parseInt(is_company) == 1 && {
-    title: 'User Booking',
-    path: '/User',
-    icon: book,
-    hoverIcon: book,
-  },
+  parseInt(is_admin) == 1 &&
+    parseInt(is_company) == 1 && {
+      title: 'User Booking',
+      path: '/User',
+      icon: book,
+      hoverIcon: book,
+    },
   parseInt(is_admin) == 2 && {
     title: 'Company',
     path: '/companies',
@@ -64,7 +65,7 @@ export const sidebarLinks = [
     subMenuOptions: [
       {
         title: 'Address',
-        path: '/add-address',
+        path: '/address',
         icon: bill,
         hoverIcon: bill,
       },
