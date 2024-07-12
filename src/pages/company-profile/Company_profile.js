@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
+import { Loader } from '../../common/components';
 
 const Company_profile = () => {
   const [data, setData] = useState(null);
@@ -18,7 +19,7 @@ const Company_profile = () => {
     email: '',
     logo: '',
   });
-
+  const [loading, setLoading] = useState(false);
   // This function is used to handle the file change and show the image in place of the input
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -40,6 +41,7 @@ const Company_profile = () => {
     // }
 
     console.log(companyDetails); //eslint-disable-line
+    setLoading(true);
     axios
       .put(
         BACKEND_URL +
@@ -48,10 +50,12 @@ const Company_profile = () => {
           }&company_name=${companyDetails?.companyName.toString()}`,
       )
       .then((res) => {
+        setLoading(false);
         console.log('Info', res.data);
         toast('Company Info Saved', { type: 'success' });
       })
       .catch((err) => {
+        setLoading(false);
         toast('Error in Saving Info', { type: 'error' });
       });
   };
@@ -61,10 +65,12 @@ const Company_profile = () => {
     //   toast("User Can't See Company Data",{type:'error'})
     //   return;
     // }
-
+    setLoading(true);
     axios
       .get(BACKEND_URL + `/company/${sessionStorage.getItem('company_id')}`)
       .then((res) => {
+        setLoading(false);
+
         console.log('Company Data ', res.data);
         // setData(res.data)
         setCompanyDetails({
@@ -77,6 +83,8 @@ const Company_profile = () => {
         sessionStorage.setItem('user_name', res.data.name);
       })
       .catch((err) => {
+        setLoading(false);
+
         toast('error in fetching data', { type: 'error' });
       });
   };
@@ -88,12 +96,13 @@ const Company_profile = () => {
 
   return (
     <PageWithSidebar>
+      {loading && <Loader />}
       <div className="header mx-2 border-b border-[#b3b3b3] bg-[#FAFBFC] p-2 text-xl">
         Settings-Company Profile
       </div>
       <div className="mx-2 w-full bg-[#EDEDED] px-6 pb-16">
         <div className="pb-5 pt-2 font-bold text-[#656565]">
-          <Link to={'/settings'} className="font-semibold text-green-500">
+          <Link to={'/settings'} className="font-semibold text-sky-500">
             Settings
           </Link>{' '}
           &gt; Company &gt; Company Profile
@@ -122,7 +131,7 @@ const Company_profile = () => {
                 type="text"
                 id="company_name"
                 name="company_name"
-                className="h-7 w-full rounded-sm border border-[#b3b3b3] bg-white p-2 text-[12px] font-normal focus:border-green-400 focus:ring-0"
+                className="h-7 w-full rounded-sm border border-[#b3b3b3] bg-white p-2 text-[12px] font-normal focus:border-sky-400 focus:ring-0"
                 value={companyDetails.companyName}
                 onChange={(e) => {
                   setCompanyDetails({ ...companyDetails, companyName: e.target.value });
@@ -136,7 +145,7 @@ const Company_profile = () => {
                 placeholder="https://www.example.com"
                 id="website"
                 name="website"
-                className="h-7 w-full rounded-sm border border-[#b3b3b3] bg-white p-2 text-[12px] font-normal focus:border-green-400 focus:ring-0"
+                className="h-7 w-full rounded-sm border border-[#b3b3b3] bg-white p-2 text-[12px] font-normal focus:border-sky-400 focus:ring-0"
                 value={companyDetails.website}
                 onChange={(e) => {
                   setCompanyDetails({ ...companyDetails, website: e.target.value });
