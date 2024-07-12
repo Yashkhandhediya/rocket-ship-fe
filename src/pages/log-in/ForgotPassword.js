@@ -30,7 +30,7 @@ const ForgotPassword = () => {
   };
 
   const handleSubmit = () => {
-    setErrorMessage(''); // Clear previous error message
+    setErrorMessage('');
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     const otpURL =
       type_user === 'user'
@@ -39,21 +39,28 @@ const ForgotPassword = () => {
 
     setLoading(true);
     axios
-      .post(BACKEND_URL + otpURL, { headers })
+      .post(BACKEND_URL + otpURL, {}, { headers })
       .then((otpResponse) => {
         console.log('OTP Response:', otpResponse);
         if (otpResponse.data.status === 'Success') {
-          // Proceed to generate OTP
           const generateOtpUrl = type_user === 'user' ? `/users/generate_otp` : `/company/generate_otp`;
-          console.log(generateOtpUrl);
-          setHandlePopup(true); // Show OTP popup
+          let queryParams = `?email_id=${encodeURIComponent(userInput.username)}`;
+  
+          if (type_user !== 'user') {
+            const compId = otpResponse.data.comp_id;
+            queryParams += `&comp_id=${encodeURIComponent(compId)}`;
+            setCompId(compId);
+          }
+  
+          const fullUrl = BACKEND_URL + generateOtpUrl + queryParams;
+          console.log(fullUrl);
+          setHandlePopup(true);
           axios
-            .post(BACKEND_URL + generateOtpUrl, { email: userInput.username }, { headers })
+            .post(fullUrl, {}, { headers })
             .then((generateOtpResponse) => {
               setLoading(false);
               console.log('Generate OTP Response:', generateOtpResponse);
               setUserId(generateOtpResponse.data.user_id);
-              setCompId(generateOtpResponse.data.comp_id);
             })
             .catch((generateOtpError) => {
               setLoading(false);
