@@ -345,12 +345,12 @@ const routes = createBrowserRouter([
     path: '/materials',
     element: <PrivateRoute component={<MaterialType />} />,
   },
+  // {
+  //   path: '/trucks',
+  //   element: <PrivateRoute component={<Trucks />} />,
+  // },
   {
     path: '/trucks',
-    element: <PrivateRoute component={<Trucks />} />,
-  },
-  {
-    path: '/trucks/:companyId',
     element: <PrivateRoute component={<TruckLists />} />,
   },
 ]);
