@@ -5,7 +5,6 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { truckTypes } from './constants';
 
-
 function AddTruckModal({ handleClose, getTruckData, editData, handleSetEdit }) {
   console.log(editData);
 
@@ -58,7 +57,7 @@ function AddTruckModal({ handleClose, getTruckData, editData, handleSetEdit }) {
         capacity: '',
       });
       console.log(response);
-      getTruckData();
+      getTruckData(company_id);
       toast('Added Truck Sucessfully', { type: 'success' });
     } catch (err) {
       toast('There is some error while Adding Truck', { type: 'error' });
@@ -89,7 +88,7 @@ function AddTruckModal({ handleClose, getTruckData, editData, handleSetEdit }) {
       });
       handleSetEdit();
       console.log(response);
-      getTruckData();
+      getTruckData(company_id);
       toast('Edited Truck Sucessfully', { type: 'success' });
     } catch (err) {
       toast('There is some error while Editing Truck', { type: 'error' });

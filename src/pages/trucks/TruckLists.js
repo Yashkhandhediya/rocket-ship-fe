@@ -107,7 +107,7 @@ function TruckLists() {
     try {
       const response = await axios.get(`${BACKEND_URL}/trucktype/get_truck_types/?created_by=${companyId}`);
       setTruckData(response.data);
-      setSelectedCompanyName(companyName)
+      setSelectedCompanyName(companyName);
       setShowTruckTable(true);
     } catch (err) {
       console.log('Error fetching truck data', err);
@@ -123,10 +123,6 @@ function TruckLists() {
     setShowAddTruck(true);
   };
 
-  const handleSetEdit = () => {
-    setEditData(null);
-  };
-
   const handleDelete = async (id) => {
     setShowDelete(false);
     setLoading(true);
@@ -139,6 +135,10 @@ function TruckLists() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSetEdit = () => {
+    setEditData(null);
   };
 
   const handleClose = () => {
@@ -184,13 +184,17 @@ function TruckLists() {
         ) : null
       ) : (
         <div>
-          <p className="mx-3 mt-3 text-lg font-medium">Truck Master {`>`} {selectedCompanyName}</p>
-          <div className="flex justify-end gap-5">
-           {is_admin === '2' && <button
-              className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
-              onClick={handleShowList}>
-              Back
-            </button>}
+          <p className="mx-3 mt-3 text-lg font-medium">
+            Truck Master {`>`} {selectedCompanyName}
+          </p>
+          <div className="mr-4 flex justify-end gap-5">
+            {is_admin === '2' && (
+              <button
+                className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+                onClick={handleShowList}>
+                Back
+              </button>
+            )}
             <button
               className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
               onClick={handleShowAddTruckModal}>
@@ -213,7 +217,7 @@ function TruckLists() {
               </thead>
               <tbody>
                 {truckData &&
-                  truckData.map((data, index) => (
+                  truckData?.map((data, index) => (
                     <tr key={data.id} className={`border  bg-white  font-semibold text-gray-500`}>
                       <td className=" border px-4 py-4 text-center">{index + 1}</td>
                       <td className=" border px-4 py-4 text-center">
@@ -234,9 +238,7 @@ function TruckLists() {
                       <td className=" border px-4 py-4 text-center">
                         {data.truck_number ? data.truck_number : '-'}
                       </td>
-                      <td className=" border px-4 py-4 text-center">
-                        {data.truck_dimension ? `${data.truck_dimension} L * ${data.truck_dimension} H` : '-'}
-                      </td>
+                      <td className=" border px-4 py-4 text-center">{data.truck_dimension}</td>
                       <td className=" border px-4 py-4 text-center">
                         <div className="flex items-center justify-center gap-4 text-2xl">
                           <RiDeleteBin6Line
