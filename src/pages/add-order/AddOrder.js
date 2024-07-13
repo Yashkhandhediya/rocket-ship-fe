@@ -3,6 +3,7 @@ import { BulkOrder, DomesticOrder, InternationalOrder, QuickShipment } from './c
 import { Tabs } from '../../common/components';
 import { blackLeftArrow } from '../../common/icons';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
+import Loader from '../../common/loader/Loader';
 
 const AddOrder = () => {
   const tabData = [
