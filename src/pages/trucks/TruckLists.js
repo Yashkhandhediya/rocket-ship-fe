@@ -8,6 +8,11 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import { Loader } from '../../common/components';
 import { toast } from 'react-toastify';
 import emptyBox from '../../common/images/empty-box.png';
+import truck from '../../common/images/truck.png';
+import lcvTruck from '../../common/images/lcv_truck.png';
+import hyva from '../../common/images/hyva.png';
+import container from '../../common/images/container.png';
+import trailer from '../../common/images/trailer.png';
 
 function TruckLists() {
   const [showDelete, setShowDelete] = useState(false);
@@ -138,7 +143,13 @@ function TruckLists() {
                       {data.truck_type ? data.truck_type : '-'}
                     </td>
                     <td className=" border px-4 py-4 text-center">
-                      <img src="" />-
+                      {data.truck_type === 'Truck' && <img src={truck} className="inline-block h-10" />}
+                      {data.truck_type === 'LCV' && <img src={lcvTruck} className="inline-block h-10" />}
+                      {data.truck_type === 'Container' && (
+                        <img src={container} className="inline-block h-10" />
+                      )}
+                      {data.truck_type === 'Trailer' && <img src={trailer} className="inline-block h-10" />}
+                      {data.truck_type === 'Hyva' && <img src={hyva} className="inline-block h-10" />}
                     </td>
                     <td className=" border px-2 py-4 text-center">
                       {data.capacity ? data.capacity : '-'} {data.capacity_type ? data.capacity_type : ''}
@@ -147,7 +158,7 @@ function TruckLists() {
                       {data.truck_number ? data.truck_number : '-'}
                     </td>
                     <td className=" border px-4 py-4 text-center">
-                      {data.length ? `${data.length} L *` : ''} {data.height ? `${data.height} H` : '-'}
+                      {data.truck_dimension ? `${data.truck_dimension} L * ${data.truck_dimension} H` : '-'}
                     </td>
                     <td className=" border px-4 py-4 text-center">
                       <div className="flex items-center justify-center gap-4 text-2xl">

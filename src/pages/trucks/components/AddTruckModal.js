@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { CustomMultiSelect, Loader } from '../../../common/components';
-import { truckTypes } from '../../indent/data';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { truckTypes } from './constants';
 
 function AddTruckModal({ handleClose, getTruckData, editData, handleSetEdit }) {
   console.log(editData);
