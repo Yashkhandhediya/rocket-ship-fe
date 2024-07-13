@@ -23,11 +23,16 @@ function Addresses() {
   const [fetchData, setFetchData] = useState(false);
   const [idUser, setIdUser] = useState(null);
   const [showAddressTable, setShowAddressTable] = useState(false);
+  const [selectedCompanyName, setSelectedCompanyName] = useState('');
   const is_admin = sessionStorage.getItem('is_admin');
 
   useEffect(() => {
-    fetchDataFromAPI();
-  }, []);
+    if (is_admin === '2') {
+      fetchDataFromAPI();
+    } else {
+      getAddressData(company_id);
+    }
+  }, [is_admin, company_id]);
 
   const fetchDataFromAPI = async () => {
     axios
@@ -84,7 +89,7 @@ function Addresses() {
             <div className="flex gap-2 text-left text-xs">
               <div
                 className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
-                onClick={() => { handleKYC(row?.original?.id); }}>
+                onClick={() => { handleKYC(row?.original?.id, row?.original?.name); }}>
                 {'Show Details'}
               </div>
             </div>
@@ -98,12 +103,13 @@ function Addresses() {
     return <div>Details for {row.companyName}</div>;
   };
 
-  const getAddressData = async (companyId) => {
+  const getAddressData = async (companyId, companyName) => {
     setLoading(true);
     try {
       const response = await axios.get(`${BACKEND_URL}/address/get_address/?company_id=${companyId}`);
       console.log(response);
       setAddressData(response.data);
+      setSelectedCompanyName(companyName); // Update the company name
       setShowAddressTable(true);
     } catch (err) {
       console.log(err);
@@ -113,8 +119,8 @@ function Addresses() {
     }
   };
 
-  const handleKYC = (companyId) => {
-    getAddressData(companyId);
+  const handleKYC = (companyId, companyName) => {
+    getAddressData(companyId, companyName);
   };
 
   const handleEdit = (id) => {
@@ -186,13 +192,13 @@ function Addresses() {
       ) : (
         <div>
           <div className="flex justify-between items-center">
-            <p className="mx-3 mt-3 text-lg font-medium">Address {`>`} Reliance & Co.</p>
+            <p className="mx-3 mt-3 text-lg font-medium">Address {`>`} {selectedCompanyName}</p>
             <div className="flex justify-end gap-5">
-              <button
+              {is_admin === '2' && <button
                 className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
                 onClick={handleShowList}>
                 Back
-              </button>
+              </button>}
               <button
                 className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
                 onClick={handleShowAddressModal}>

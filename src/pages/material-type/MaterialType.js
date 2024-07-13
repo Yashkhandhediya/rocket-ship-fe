@@ -22,11 +22,16 @@ function MaterialType() {
   const [userData, setUserData] = useState([]);
   const [fetchData, setFetchData] = useState(false);
   const [showMaterialTable, setShowMaterialTable] = useState(false);
+  const [selectedCompanyName, setSelectedCompanyName] = useState('');
   const is_admin = sessionStorage.getItem('is_admin');
 
   useEffect(() => {
-    fetchDataFromAPI();
-  }, []);
+    if (is_admin === '2') {
+      fetchDataFromAPI();
+    } else {
+      getMaterialData(company_id);
+    }
+  }, [is_admin, company_id]);
 
   const fetchDataFromAPI = async () => {
     try {
@@ -80,7 +85,7 @@ function MaterialType() {
             <div className="flex gap-2 text-left text-xs">
               <div
                 className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
-                onClick={() => handleKYC(row?.original?.id)}>
+                onClick={() => handleKYC(row?.original?.id, row?.original?.name)}>
                 {'Show Details'}
               </div>
             </div>
@@ -94,18 +99,19 @@ function MaterialType() {
     return <div>Details for {row.companyName}</div>;
   };
 
-  const handleKYC = (companyId) => {
-    getMaterialData(companyId);
+  const handleKYC = (companyId, companyName) => {
+    getMaterialData(companyId, companyName);
   };
 
-  const getMaterialData = async () => {
+  const getMaterialData = async (companyId, companyName) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/materialtype/get_material_type/?created_by=${company_id}`,
+        `${BACKEND_URL}/materialtype/get_material_type/?created_by=${companyId}`,
       );
       console.log(response);
       setMaterialData(response.data);
+      setSelectedCompanyName(companyName);
       setShowMaterialTable(true);
     } catch (err) {
       console.log(err);
@@ -133,7 +139,7 @@ function MaterialType() {
       await axios.delete(
         `${BACKEND_URL}/materialtype/delete_material_type/?material_id=${id}`,
       );
-      getMaterialData();
+      getMaterialData(company_id, selectedCompanyName);
       toast('Delete Sucessfully', { type: 'success' });
     } catch (err) {
       console.log(err);
@@ -186,13 +192,13 @@ function MaterialType() {
         ) : null
       ) : (
         <div>
-          <p className="mx-3 mt-3 text-lg font-medium">Materials {`>`} Reliance & Co.</p>
+          <p className="mx-3 mt-3 text-lg font-medium">Materials {`>`} {selectedCompanyName}</p>
           <div className="flex justify-end gap-5">
-            <button
+            {is_admin === '2' && <button
               className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
               onClick={handleShowList}>
               Back
-            </button>
+            </button>}
             <button
               className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
               onClick={handleShowAddMaterialModal}>
