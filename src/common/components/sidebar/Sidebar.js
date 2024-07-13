@@ -16,6 +16,7 @@ const Sidebar = () => {
   const [isMaterialTypeModalOpen, setMaterialTypeModalOpen] = useState(false);
   const [truckSize, setTruckSize] = useState(null);
   const [materialType, setMaterialType] = useState(null);
+  const is_admin = sessionStorage.getItem('is_admin');
 
   const handleAccordionToggle = (index) => {
     setOpenAccordion((prev) => (prev === index ? 0 : index));
@@ -106,9 +107,9 @@ const Sidebar = () => {
       {/* <hr className="my-4 border-[#c] text-[#0000001a] md:hidden" /> */}
       <div className="mt-4">
         <div className="mx-3.5 mb-3 flex flex-col">
-          <p className={`${isSideBarOpen ? 'mb-3 font-bold text-zinc-500' : 'hidden'}`}>MAIN HOME</p>
+          {parseInt(is_admin) !== 2 && <p className={`${isSideBarOpen ? 'mb-3 font-bold text-zinc-500' : 'hidden'}`}>MAIN HOME</p>}
 
-          <Link to={`/book`}>
+          <Link to={parseInt(is_admin) === 2 ? "/adminkyc" : "/book"}>
             <div className={`flex items-center p-2`}>
               <img src={homeIcon} className={`h-6 w-6 ${isSideBarOpen ? 'hidden' : ''}`} />
               <img src={homeIcon} className={` h-6 w-6 ${isSideBarOpen ? 'block' : 'hidden'}`} />
@@ -116,7 +117,7 @@ const Sidebar = () => {
             </div>
           </Link>
         </div>
-        <p className={`${isSideBarOpen ? 'mx-3.5 mb-3 font-bold text-zinc-500' : 'hidden'}`}>ALL PAGES</p>
+        {parseInt(is_admin) !== 2 && <p className={`${isSideBarOpen ? 'mx-3.5 mb-3 font-bold text-zinc-500' : 'hidden'}`}>ALL PAGES</p>}
         {sidebarLinks.map((nav, i) => {
           if (nav.path) {
             return (

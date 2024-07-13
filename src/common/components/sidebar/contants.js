@@ -44,12 +44,12 @@ export const sidebarLinks = [
       hoverIcon: book,
     },
   parseInt(is_admin) == 2 && {
-    title: 'Company',
+    title: 'Show Booking',
     path: '/companies',
     icon: book,
     hoverIcon: book,
   },
-  parseInt(is_company)
+  parseInt(is_admin) != 2 && parseInt(is_company)
     ? {
         title: 'Create User',
         path: '/signup-user',

@@ -66,6 +66,7 @@ import { Trucks } from '../pages/trucks';
 import { MaterialType } from '../pages/material-type';
 import TruckLists from '../pages/trucks/TruckLists';
 import Addresses from '../pages/add-address/Addresses';
+import Adminkyc from '../pages/book-truck/Adminkyc';
 
 const routes = createBrowserRouter([
   {
@@ -336,6 +337,10 @@ const routes = createBrowserRouter([
   {
     path: '/companies',
     element: <PrivateRoute component={<Companies />} />,
+  },
+  {
+    path: '/adminkyc',
+    element: <PrivateRoute component={<Adminkyc />} />,
   },
   {
     path: '/address',

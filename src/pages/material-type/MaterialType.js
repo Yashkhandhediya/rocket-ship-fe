@@ -4,6 +4,8 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import { GrEdit } from 'react-icons/gr';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
+import { createColumnHelper } from '@tanstack/react-table';
+import { CustomDataTable } from '../../common/components';
 import { Loader } from '../../common/components';
 import { toast } from 'react-toastify';
 import AddMaterialModal from './components/AddMaterialModal';
@@ -17,6 +19,84 @@ function MaterialType() {
   const company_id = sessionStorage.getItem('company_id');
   const [deleteId, setDeleteId] = useState(null);
   const [editData, setEditData] = useState(null);
+  const [userData, setUserData] = useState([]);
+  const [fetchData, setFetchData] = useState(false);
+  const [showMaterialTable, setShowMaterialTable] = useState(false);
+  const is_admin = sessionStorage.getItem('is_admin');
+
+  useEffect(() => {
+    fetchDataFromAPI();
+  }, []);
+
+  const fetchDataFromAPI = async () => {
+    try {
+      const res = await axios.get(`${BACKEND_URL}/company/all_company/`);
+      console.log('RESSSSSSSSSSSSS', res);
+      const filteredData = res.data.filter(item => item.kyc_status_id === 1);
+      setUserData(filteredData);
+      setFetchData(true);
+    } catch (err) {
+      console.log('ERRRRRRRRRR', err);
+    }
+  };
+
+  const getColumns = () => {
+    const columnHelper = createColumnHelper();
+    return [
+      columnHelper.accessor('name', {
+        header: 'Company Name',
+        cell: ({ row }) => {
+          return (
+            <div className="flex flex-col gap-2 text-left text-xs">
+              {row?.original?.name && <div>{row?.original?.name}</div>}
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor('email', {
+        header: 'Email Address',
+        cell: ({ row }) => {
+          return (
+            <div className="flex flex-col gap-2 text-left text-xs">
+              {row?.original?.email && <div>{row?.original?.email}</div>}
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor('contact', {
+        header: 'Contact No.',
+        cell: ({ row }) => {
+          return (
+            <div className="flex flex-col gap-2 text-left text-xs">
+              {row?.original?.contact && <div>{row?.original?.contact}</div>}
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor('action', {
+        header: 'Action',
+        cell: ({ row }) => {
+          return (
+            <div className="flex gap-2 text-left text-xs">
+              <div
+                className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
+                onClick={() => handleKYC(row?.original?.id)}>
+                {'Show Details'}
+              </div>
+            </div>
+          );
+        },
+      }),
+    ];
+  };
+
+  const rowSubComponent = (row) => {
+    return <div>Details for {row.companyName}</div>;
+  };
+
+  const handleKYC = (companyId) => {
+    getMaterialData(companyId);
+  };
 
   const getMaterialData = async () => {
     setLoading(true);
@@ -26,6 +106,7 @@ function MaterialType() {
       );
       console.log(response);
       setMaterialData(response.data);
+      setShowMaterialTable(true);
     } catch (err) {
       console.log(err);
       toast('There is some error while fetching data', { type: 'error' });
@@ -49,7 +130,7 @@ function MaterialType() {
     setShowDelete(false);
     setLoading(true);
     try {
-      const response = await axios.delete(
+      await axios.delete(
         `${BACKEND_URL}/materialtype/delete_material_type/?material_id=${id}`,
       );
       getMaterialData();
@@ -66,24 +147,119 @@ function MaterialType() {
     setShowAddMaterial(false);
   };
 
-  const handleShowAddMaterialModal = (id) => {
+  const handleShowAddMaterialModal = () => {
     setShowAddMaterial((prev) => !prev);
   };
-  console.log(deleteId);
 
   const handleShowDeleteModal = (id) => {
-    console.log(deleteId);
     setDeleteId(id);
     setShowDelete((prev) => !prev);
   };
 
-  useEffect(() => {
-    getMaterialData();
-  }, []);
+  const handleShowList = () => {
+    setShowMaterialTable(false);
+    fetchDataFromAPI(); // Re-fetch company data when showing the list
+  };
 
   return (
     <PageWithSidebar>
       {loading && <Loader />}
+      {is_admin === '2' && !showMaterialTable ? (
+        fetchData ? (
+          userData.length > 0 ? (
+            <CustomDataTable
+              columns={getColumns()}
+              rowData={userData}
+              enableRowSelection={true}
+              shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
+              onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}
+              rowSubComponent={rowSubComponent}
+              enablePagination={true}
+              tableWrapperStyles={{ height: '78vh' }}
+            />
+          ) : (
+            <div className="flex h-[calc(100vh-5rem)] flex-col items-center justify-center bg-white">
+              <img src={emptyBox} className="h-60" />
+              <p>{`No Action Required`}</p>
+            </div>
+          )
+        ) : null
+      ) : (
+        <div>
+          <p className="mx-3 mt-3 text-lg font-medium">Materials {`>`} Reliance & Co.</p>
+          <div className="flex justify-end gap-5">
+            <button
+              className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+              onClick={handleShowList}>
+              Back
+            </button>
+            <button
+              className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+              onClick={handleShowAddMaterialModal}>
+              <span className="text-2xl">+</span>
+              Add Material
+            </button>
+          </div>
+          <div className="mx-2 mt-3 min-w-full overflow-hidden rounded-lg shadow">
+            <table className="w-full text-[12px]">
+              <thead className="border bg-white">
+                <tr>
+                  <th className="w-1/6 border px-4 py-2 text-center">Sr. No</th>
+                  <th className="w-4/6 border px-4 py-2 text-center">Material Name</th>
+                  <th className="w-1/6 border  px-4 py-2 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {materialData &&
+                  materialData?.map((data, index) => (
+                    <tr key={data.id} className={`border bg-white font-semibold text-gray-500`}>
+                      <td className="border px-4 py-4 text-center">{index + 1}</td>
+                      <td className="border px-4 py-4 text-center">
+                        {data.material_type ? data.material_type : '-'}
+                      </td>
+                      <td className="border px-4 py-4 text-center">
+                        <div className="flex items-center justify-center gap-4 text-2xl">
+                          <RiDeleteBin6Line
+                            className="cursor-pointer"
+                            onClick={() => handleShowDeleteModal(data.id)}
+                          />
+                          <GrEdit className="cursor-pointer" onClick={() => handleEdit(data.id)} />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+            {materialData.length === 0 && (
+              <div className="flex h-96 flex-col items-center justify-center bg-white">
+                <img src={emptyBox} className="h-60" />
+                <p>{`Start by creating a new material using the 'Add Material' button above.`}</p>
+              </div>
+            )}
+            {materialData.length > 0 && (
+              <div className="flex w-full justify-between bg-white p-2 text-sm">
+                <div className="flex items-center gap-3 text-gray-500">
+                  <p>Showing</p>
+                  <select className="rounded-lg border-gray-300 px-1 py-0">
+                    <option>10</option>
+                    <option>20</option>
+                    <option>30</option>
+                    <option>40</option>
+                  </select>
+                  <p>Entries</p>
+                </div>
+                <div className="flex gap-2">
+                  <button className="rounded border border-gray-300 px-2 py-0 text-lg">{`<`}</button>
+                  <button className="rounded bg-sky-500 px-2 py-0 text-sm text-white">1</button>
+                  <button className="rounded px-2 py-0 text-sm">2</button>
+                  <button className="rounded px-2 py-0 text-sm">3</button>
+                  <button className="rounded border border-gray-300 px-2 py-0 text-center text-lg">{`>`}</button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
       {showDelete && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#24292e57]">
           <div className="flex h-36 w-64 flex-col items-center justify-center gap-4 rounded-lg bg-white px-4 text-sm font-medium">
@@ -109,76 +285,6 @@ function MaterialType() {
           handleSetEdit={handleSetEdit}
         />
       )}
-      <p className="mx-3 mt-3 text-lg font-medium">Materials {`>`} Reliance & Co.</p>
-      <div className="flex justify-end">
-        <button
-          className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
-          onClick={handleShowAddMaterialModal}>
-          <span className="text-2xl">+</span>
-          Add Material
-        </button>
-      </div>
-      <div className="mx-2 mt-3 min-w-full overflow-hidden rounded-lg shadow">
-        <table className=" w-full text-[12px]">
-          <thead className="border bg-white">
-            <tr>
-              <th className="w-1/6 border px-4 py-2 text-center">Sr. No</th>
-              <th className="w-4/6 border px-4 py-2 text-center">Material Name</th>
-              <th className="w-1/6 border  px-4 py-2 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {materialData &&
-              materialData?.map((data, index) => {
-                return (
-                  <tr key={data.id} className={`border  bg-white  font-semibold text-gray-500`}>
-                    <td className=" border px-4 py-4 text-center">{index + 1}</td>
-                    <td className=" border px-4 py-4 text-center">
-                      {data.material_type ? data.material_type : '-'}
-                    </td>
-
-                    <td className=" border px-4 py-4 text-center">
-                      <div className="flex items-center justify-center gap-4 text-2xl">
-                        <RiDeleteBin6Line
-                          className="cursor-pointer"
-                          onClick={() => handleShowDeleteModal(data.id)}
-                        />
-                        <GrEdit className="cursor-pointer" onClick={() => handleEdit(data.id)} />
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
-        {materialData.length === 0 && (
-          <div className="flex h-96 flex-col items-center justify-center bg-white">
-            <img src={emptyBox} className="h-60" />
-            <p>{`Start by creating a new material using the 'Add Material' button above.`}</p>
-          </div>
-        )}
-        {materialData.length > 0 && (
-          <div className="flex w-full justify-between bg-white p-2 text-sm">
-            <div className="flex items-center gap-3 text-gray-500">
-              <p>Showing</p>
-              <select className="rounded-lg border-gray-300 px-1 py-0">
-                <option>10</option>
-                <option>20</option>
-                <option>30</option>
-                <option>40</option>
-              </select>
-              <p>Entries</p>
-            </div>
-            <div className="flex gap-2">
-              <button className="rounded border  border-gray-300 px-2 py-0 text-lg">{`<`}</button>
-              <button className="rounded bg-sky-500 px-2 py-0 text-sm text-white">1</button>
-              <button className="rounded px-2 py-0 text-sm">2</button>
-              <button className="rounded px-2 py-0 text-sm">3</button>
-              <button className="rounded border border-gray-300 px-2 py-0 text-center text-lg">{`>`}</button>
-            </div>
-          </div>
-        )}
-      </div>
     </PageWithSidebar>
   );
 }

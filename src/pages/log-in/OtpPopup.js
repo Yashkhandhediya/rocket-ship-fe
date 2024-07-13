@@ -17,6 +17,7 @@ const OtpPopup = ({
   console.log('DATAAAAAAAAA', userType);
   const is_super = sessionStorage.getItem('is_super');
   const id_user = sessionStorage.getItem('user_id');
+  const is_admin = sessionStorage.getItem('is_admin');
   const [seconds, setSeconds] = useState(45);
   const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
   const [loading, setLoading] = useState(false);
@@ -148,7 +149,7 @@ const OtpPopup = ({
           toast('Login Success', { type: 'success' });
           // navigate('/seller/home');
           // navigate(`/all-indent/${id_user}`);
-          navigate('/book');
+          navigate(parseInt(is_admin) === 2 ? "/adminkyc" : "/book");
           window.location.reload();
         } else {
           setMessage(true);

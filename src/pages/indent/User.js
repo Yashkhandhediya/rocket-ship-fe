@@ -175,7 +175,7 @@ const User = () => {
               {
                 <button
                   id={row?.original?.id}
-                  className="min-w-fit rounded bg-sky-600 px-4 py-1.5 text-white hover:bg-sky-700"
+                  className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
                   onClick={() => handleIndent(row)}>
                   {'Indent'}
                 </button>

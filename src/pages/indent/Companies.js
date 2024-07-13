@@ -88,8 +88,8 @@ const Companies = () => {
                 to={{
                   pathname: `/user/${row?.original?.id}`,
                 }}
-                className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600">
-                {'Users'}
+                className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700">
+                {'Show Users'}
               </Link>
             </div>
           );
