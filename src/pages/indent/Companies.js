@@ -39,7 +39,7 @@ const Companies = () => {
     const columnHelper = createColumnHelper();
     return [
       columnHelper.accessor('name', {
-        header: 'Name',
+        header: 'Company Name',
         cell: ({ row }) => {
           return (
             <div className="flex flex-col gap-2 text-left text-xs">
