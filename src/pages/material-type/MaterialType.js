@@ -7,11 +7,12 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import { Loader } from '../../common/components';
 import { toast } from 'react-toastify';
 import AddMaterialModal from './components/AddMaterialModal';
+import emptyBox from '../../common/images/empty-box.png';
 
 function MaterialType() {
   const [showDelete, setShowDelete] = useState(false);
   const [showAddMaterial, setShowAddMaterial] = useState(false);
-  const [materialData, setMaterialData] = useState(null);
+  const [materialData, setMaterialData] = useState([]);
   const [loading, setLoading] = useState(false);
   const company_id = sessionStorage.getItem('company_id');
   const [deleteId, setDeleteId] = useState(null);
@@ -150,25 +151,33 @@ function MaterialType() {
               })}
           </tbody>
         </table>
-        <div className="flex w-full justify-between bg-white p-2 text-sm">
-          <div className="flex items-center gap-3 text-gray-500">
-            <p>Showing</p>
-            <select className="rounded-lg border-gray-300 px-1 py-0">
-              <option>10</option>
-              <option>20</option>
-              <option>30</option>
-              <option>40</option>
-            </select>
-            <p>Entries</p>
+        {materialData.length === 0 && (
+          <div className="flex h-96 flex-col items-center justify-center bg-white">
+            <img src={emptyBox} className="h-60" />
+            <p>{`Start by creating a new material using the 'Add Material' button above.`}</p>
           </div>
-          <div className="flex gap-2">
-            <button className="rounded border  border-gray-300 px-2 py-0 text-lg">{`<`}</button>
-            <button className="rounded bg-sky-500 px-2 py-0 text-sm text-white">1</button>
-            <button className="rounded px-2 py-0 text-sm">2</button>
-            <button className="rounded px-2 py-0 text-sm">3</button>
-            <button className="rounded border border-gray-300 px-2 py-0 text-center text-lg">{`>`}</button>
+        )}
+        {materialData.length > 0 && (
+          <div className="flex w-full justify-between bg-white p-2 text-sm">
+            <div className="flex items-center gap-3 text-gray-500">
+              <p>Showing</p>
+              <select className="rounded-lg border-gray-300 px-1 py-0">
+                <option>10</option>
+                <option>20</option>
+                <option>30</option>
+                <option>40</option>
+              </select>
+              <p>Entries</p>
+            </div>
+            <div className="flex gap-2">
+              <button className="rounded border  border-gray-300 px-2 py-0 text-lg">{`<`}</button>
+              <button className="rounded bg-sky-500 px-2 py-0 text-sm text-white">1</button>
+              <button className="rounded px-2 py-0 text-sm">2</button>
+              <button className="rounded px-2 py-0 text-sm">3</button>
+              <button className="rounded border border-gray-300 px-2 py-0 text-center text-lg">{`>`}</button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </PageWithSidebar>
   );

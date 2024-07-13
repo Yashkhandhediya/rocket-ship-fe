@@ -207,7 +207,7 @@ const DocumentVerification = ({ currentStep, handleChangeStep, setIsKYCCompleted
                     <div className="flex justify-start gap-4">
                         <button
                             type="button"
-                            className="dark:focus:ring-red-900 rounded-lg bg-red-600 px-10 py-2 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300"
+                            className="dark:focus:ring-sky-900 rounded-lg bg-sky-600 px-10 py-2 text-sm font-medium text-white hover:bg-sky-800 focus:outline-none focus:ring-4 focus:ring-sky-300"
                         // onClick={() => changeNextStep('NEXT')}
                         >
                             {'Next'}

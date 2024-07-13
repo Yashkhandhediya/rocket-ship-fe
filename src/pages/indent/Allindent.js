@@ -10,6 +10,7 @@ import { trip_status_filter } from '../orders/duck';
 import { toast } from 'react-toastify';
 import { ACCESS_TOKEN } from '../../common/utils/config';
 import { Loader } from '../../common/components';
+import emptyBox from '../../common/images/empty-box.png';
 
 export let modifyFlag = 0;
 export let modifyId;
@@ -326,6 +327,16 @@ const Allindent = () => {
           onTabChange={handleTabChange}
         />
       </div>
+      {filteredInfo.length === 0 && (
+        <div className="flex h-96 flex-col items-center justify-center">
+          <img src={emptyBox} className="h-60" />
+          <p>{selectedTab === 0 && 'No Indents are created yet'}</p>
+          <p>{selectedTab === 1 && 'No Indents Available'}</p>
+          <p>{selectedTab === 2 && 'No pending bookings found'}</p>
+          <p>{selectedTab === 3 && 'No confirmed bookings found'}</p>
+          <p>{selectedTab === 4 && 'No Rejected bookings found'}</p>
+        </div>
+      )}
       {console.log('kkkkkkkkkkkk', info)}
       {dataFetch && (
         <div className="flex flex-wrap">

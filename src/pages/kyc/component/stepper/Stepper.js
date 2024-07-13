@@ -1,18 +1,16 @@
 import { stepperTickmark } from '../../../../common/icons';
 
 const Stepper = ({ step }) => {
-  const is_company = sessionStorage.getItem('is_company')
+  const is_company = sessionStorage.getItem('is_company');
   let labels = {};
 
   if (is_company == 0) {
-    
     labels = {
       1: 'Bussiness Type',
       2: 'Photo Identification',
       3: 'Document Verification',
     };
   } else {
-    
     labels = {
       1: 'Bussiness Type',
       2: 'Document Verification',
@@ -34,7 +32,7 @@ const Stepper = ({ step }) => {
         }`}>
         <div
           className={`mr-2.5 h-[22px] w-[22px] rounded-full border ${
-            isDisabled ? 'border-[#d3d3d3s] opacity-60' : 'border-red-700'
+            isDisabled ? 'border-[#d3d3d3s] opacity-60' : 'border-sky-700'
           } bg-white`}>
           {count}
         </div>
