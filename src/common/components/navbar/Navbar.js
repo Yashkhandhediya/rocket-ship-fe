@@ -210,7 +210,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="sticky top-0 z-50 flex h-20 w-full flex-row justify-end gap-3 bg-white text-[13px] font-medium shadow ">
+    <div className="sticky top-0 z-40 flex h-20 w-full flex-row justify-end gap-3 bg-white text-[13px] font-medium shadow">
       {/* <div className="flex flex-row items-center gap-2 border-r-[1px] px-3">
         <Tooltip content={<QuickActions />} style="light" className="shadow">
           <button className="flex cursor-pointer flex-row items-center gap-2">

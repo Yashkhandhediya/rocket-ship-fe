@@ -5,6 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { truckTypes } from './constants';
 
+
 function AddTruckModal({ handleClose, getTruckData, editData, handleSetEdit }) {
   console.log(editData);
 

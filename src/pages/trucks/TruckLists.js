@@ -37,7 +37,7 @@ function TruckLists() {
     setLoading(true);
     try {
       const res = await axios.get(`${BACKEND_URL}/company/all_company/`);
-      const filteredData = res.data.filter(item => item.kyc_status_id === 1);
+      const filteredData = res.data.filter((item) => item.kyc_status_id === 1);
       setUserData(filteredData);
       setFetchData(true);
     } catch (err) {
@@ -79,7 +79,7 @@ function TruckLists() {
         cell: ({ row }) => (
           <div className="flex gap-2 text-left text-xs">
             <div
-              className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700 cursor-pointer"
+              className="min-w-fit cursor-pointer rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
               onClick={() => handleKYC(row?.original?.id)}>
               Show Details
             </div>
@@ -216,7 +216,9 @@ function TruckLists() {
                       <td className=" border px-4 py-4 text-center">
                         {data.truck_type === 'Truck' && <img src={truck} className="inline-block h-10" />}
                         {data.truck_type === 'LCV' && <img src={lcvTruck} className="inline-block h-10" />}
-                        {data.truck_type === 'Container' && <img src={container} className="inline-block h-10" />}
+                        {data.truck_type === 'Container' && (
+                          <img src={container} className="inline-block h-10" />
+                        )}
                         {data.truck_type === 'Trailer' && <img src={trailer} className="inline-block h-10" />}
                         {data.truck_type === 'Hyva' && <img src={hyva} className="inline-block h-10" />}
                       </td>
@@ -297,6 +299,95 @@ function TruckLists() {
           handleSetEdit={handleSetEdit}
         />
       )}
+      <p className="mx-3 mt-3 text-lg font-medium">Truck Master</p>
+      <div className="flex justify-end">
+        <button
+          className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+          onClick={handleShowAddTruckModal}>
+          <span className="text-2xl">+</span>
+          Add Truck
+        </button>
+      </div>
+      <div className="mx-2 mt-3 min-w-full overflow-hidden rounded-lg shadow">
+        <table className=" w-full text-[12px]">
+          <thead className="border bg-white">
+            <tr>
+              <th className="w-16 border px-4 py-2 text-center">Sr. No</th>{' '}
+              <th className="w-20 border px-4 py-2 text-center">Truck Type</th>{' '}
+              <th className="w-20 border  px-4 py-2 text-center">Truck Image</th>
+              <th className="w-24  border px-4 py-2 text-center">Vehical Capacity</th>
+              <th className="w-28 border  px-4 py-2 text-center">Truck Number</th>
+              <th className="w-28 border  px-4 py-2 text-center">Truck Dimensions</th>
+              <th className="w-24 border  px-4 py-2 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {truckData &&
+              truckData.map((data, index) => {
+                return (
+                  <tr key={data.id} className={`border  bg-white  font-semibold text-gray-500`}>
+                    <td className=" border px-4 py-4 text-center">{index + 1}</td>
+                    <td className=" border px-4 py-4 text-center">
+                      {data.truck_type ? data.truck_type : '-'}
+                    </td>
+                    <td className=" border px-4 py-4 text-center">
+                      {data.truck_type === 'Truck' && <img src={truck} className="inline-block h-10" />}
+                      {data.truck_type === 'LCV' && <img src={lcvTruck} className="inline-block h-10" />}
+                      {data.truck_type === 'Container' && (
+                        <img src={container} className="inline-block h-10" />
+                      )}
+                      {data.truck_type === 'Trailer' && <img src={trailer} className="inline-block h-10" />}
+                      {data.truck_type === 'Hyva' && <img src={hyva} className="inline-block h-10" />}
+                    </td>
+                    <td className=" border px-2 py-4 text-center">
+                      {data.capacity ? data.capacity : '-'} {data.capacity_type ? data.capacity_type : ''}
+                    </td>
+                    <td className=" border px-4 py-4 text-center">
+                      {data.truck_number ? data.truck_number : '-'}
+                    </td>
+                    <td className=" border px-4 py-4 text-center">{data.truck_dimension}</td>
+                    <td className=" border px-4 py-4 text-center">
+                      <div className="flex items-center justify-center gap-4 text-2xl">
+                        <RiDeleteBin6Line
+                          className="cursor-pointer"
+                          onClick={() => handleShowDeleteModal(data.id)}
+                        />
+                        <GrEdit className="cursor-pointer" onClick={() => handleEdit(data.id)} />
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
+        {truckData.length === 0 && (
+          <div className="flex h-96 flex-col items-center justify-center bg-white">
+            <img src={emptyBox} className="h-60" />
+            <p>{`Start by creating a new truck using the 'Add Truck' button above.`}</p>
+          </div>
+        )}
+        {truckData.length > 0 && (
+          <div className="flex w-full justify-between bg-white p-2 text-sm">
+            <div className="flex items-center gap-3 text-gray-500">
+              <p>Showing</p>
+              <select className="rounded-lg border-gray-300 px-1 py-0">
+                <option>10</option>
+                <option>20</option>
+                <option>30</option>
+                <option>40</option>
+              </select>
+              <p>Entries</p>
+            </div>
+            <div className="flex gap-2">
+              <button className="rounded border  border-gray-300 px-2 py-0 text-lg">{`<`}</button>
+              <button className="rounded bg-sky-500 px-2 py-0 text-sm text-white">1</button>
+              <button className="rounded px-2 py-0 text-sm">2</button>
+              <button className="rounded px-2 py-0 text-sm">3</button>
+              <button className="rounded border border-gray-300 px-2 py-0 text-center text-lg">{`>`}</button>
+            </div>
+          </div>
+        )}
+      </div>
     </PageWithSidebar>
   );
 }

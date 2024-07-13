@@ -91,25 +91,22 @@ const Sidebar = () => {
   return (
     <div
       id="mySidebar"
-      className={` z-50 h-full overflow-x-hidden overflow-y-hidden border-r border-gray-200 bg-white text-black shadow transition-all duration-500 ${
-        isSideBarOpen ? ' w-[218px] overflow-y-auto' : ' w-[70px]'
-      } [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar]:w-1`}>
+      className="group/sidebar hover:z-100 fixed left-0 top-0 z-50 h-full w-[70px] overflow-x-hidden overflow-y-hidden bg-white transition-all duration-500 hover:w-[218px] hover:overflow-y-auto [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar]:w-1"
+      onMouseLeave={handleMouseLeave}>
       <div className="z-100 h-18 flex w-full items-center justify-between border-b bg-white px-2 pb-4 pt-2">
         <div className="h-14">
-          <img src={logo} className={`${isSideBarOpen ? 'hidden h-14' : 'pt-7'}`} />
-          <img src={logo} className={` ${isSideBarOpen ? 'block h-14' : 'hidden'}`} />
+          <img src={logo} className="h-14 pt-7 group-hover/sidebar:hidden" />
+          <img src={logo} className="hidden h-14 group-hover/sidebar:block" />
         </div>
-        <RiMenuFold3Line2
-          className="flex-shrink-0 flex-grow-0 cursor-pointer rounded-full p-2 text-4xl text-cyan-400 shadow-lg"
-          onClick={handleToggleSidebar}
-        />
       </div>
       {/* <hr className="my-4 border-[#c] text-[#0000001a] md:hidden" /> */}
       <div className="mt-4">
         <div className="mx-3.5 mb-3 flex flex-col">
-          {parseInt(is_admin) !== 2 && <p className={`${isSideBarOpen ? 'mb-3 font-bold text-zinc-500' : 'hidden'}`}>MAIN HOME</p>}
+          {parseInt(is_admin) !== 2 && (
+            <p className="mb-3 hidden font-bold text-zinc-500 group-hover/sidebar:block">MAIN HOME</p>
+          )}
 
-          <Link to={parseInt(is_admin) === 2 ? "/adminkyc" : "/book"}>
+          <Link to={parseInt(is_admin) === 2 ? '/adminkyc' : '/book'}>
             <div className={`flex items-center p-2`}>
               <img src={homeIcon} className={`h-6 w-6 ${isSideBarOpen ? 'hidden' : ''}`} />
               <img src={homeIcon} className={` h-6 w-6 ${isSideBarOpen ? 'block' : 'hidden'}`} />
@@ -117,7 +114,10 @@ const Sidebar = () => {
             </div>
           </Link>
         </div>
-        {parseInt(is_admin) !== 2 && <p className={`${isSideBarOpen ? 'mx-3.5 mb-3 font-bold text-zinc-500' : 'hidden'}`}>ALL PAGES</p>}
+        {parseInt(is_admin) !== 2 && (
+          <p className="mx-3.5 mb-3 hidden font-bold text-zinc-500 group-hover/sidebar:block">ALL PAGES</p>
+        )}
+
         {sidebarLinks.map((nav, i) => {
           if (nav.path) {
             return (
@@ -133,8 +133,8 @@ const Sidebar = () => {
                   }
                 }}>
                 <div className={`mx-3.5 mb-3 flex items-center rounded-[4px] p-2 text-black`}>
-                  <img src={nav.icon} className={`h-6 w-6 ${isSideBarOpen ? 'hidden' : ''}`} />
-                  <img src={nav.hoverIcon} className={` h-6 w-6 ${isSideBarOpen ? 'block' : 'hidden'}`} />
+                  <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" />
+                  <img src={nav.hoverIcon} className="hidden h-6 w-6 group-hover/sidebarItem:block" />
                   <span className={`ml-3 truncate text-sm font-medium	uppercase`}>{nav.title}</span>
                 </div>
               </Link>
@@ -146,8 +146,8 @@ const Sidebar = () => {
                   className=" mx-3.5 mb-3 flex cursor-pointer items-center rounded-[4px] p-2 text-black "
                   onClick={() => handleAccordionToggle(i)}
                   aria-expanded={openAccordion === i}>
-                  <img src={nav.icon} className={`h-6 w-6 ${isSideBarOpen ? 'hidden' : ''}`} />
-                  <img src={nav.hoverIcon} className={` h-6 w-6 ${isSideBarOpen ? 'block' : 'hidden'}`} />
+                  <img src={nav.icon} className="h-6 w-6 group-hover/sidebarItem:hidden" />
+                  <img src={nav.hoverIcon} className="hidden h-6 w-6 group-hover/sidebarItem:block" />
                   <div className="ml-3 flex w-full justify-between truncate text-xs ">
                     <span className="text-sm font-medium uppercase">{nav.title}</span>
                     <span className="flex w-full justify-end">
