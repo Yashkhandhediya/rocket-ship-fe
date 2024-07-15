@@ -223,7 +223,7 @@ const User = () => {
           </div>
           {is_admin === '2' && (
             <Link
-              to={`/companies`}
+              to={`/adminkyc`}
               className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow">
               Back
             </Link>

@@ -13,7 +13,7 @@ import emptyBox from '../../common/images/empty-box.png';
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function Addresses() {
   const [showDelete, setShowDelete] = useState(false);
@@ -30,6 +30,7 @@ function Addresses() {
   const [selectedCompanyName, setSelectedCompanyName] = useState('');
   const is_admin = sessionStorage.getItem('is_admin');
   const { state } = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (state) {
@@ -259,7 +260,7 @@ function Addresses() {
               {is_admin === '2' && (
                 <button
                   className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
-                  onClick={handleShowList}>
+                  onClick={() => navigate(`/adminkyc`)}>
                   Back
                 </button>
               )}

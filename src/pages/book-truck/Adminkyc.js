@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CustomDataTable } from '../../common/components';
+import { CustomDataTable, Loader } from '../../common/components';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
@@ -26,6 +26,7 @@ const Adminkyc = () => {
   const [companyLogo, setCompanyLogo] = useState(null);
   const [companyGst, setCompanyGst] = useState(null);
   const [companyStamp, setCompanyStamp] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchDataFromAPI();
@@ -34,6 +35,7 @@ const Adminkyc = () => {
   const navigate = useNavigate();
 
   const fetchDataFromAPI = async () => {
+    setLoading(true);
     axios
       .get(BACKEND_URL + `/company/all_company/`)
       .then((res) => {
@@ -41,8 +43,10 @@ const Adminkyc = () => {
         const filteredData = res.data.filter((item) => item.kyc_status_id === 1);
         setUserData(filteredData);
         setFetchData(true);
+        setLoading(false);
       })
       .catch((err) => {
+        setLoading(false);
         console.log('ERRRRRRRRRR', err);
       });
   };
@@ -156,6 +160,7 @@ const Adminkyc = () => {
   return (
     <>
       <PageWithSidebar>
+        {loading && <Loader />}
         {fetchData ? (
           userData.length > 0 ? (
             <CustomDataTable
