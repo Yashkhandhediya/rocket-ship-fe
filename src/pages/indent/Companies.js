@@ -4,7 +4,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { createColumnHelper } from '@tanstack/react-table';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Companies = () => {
   const [userData, setUserData] = useState([]);
@@ -12,6 +12,7 @@ const Companies = () => {
   const [showKyc, setShowKyc] = useState(false);
   const [aadharImg, setAadharImg] = useState('');
   const [userImg, setUserImg] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDataFromAPI();
@@ -84,13 +85,18 @@ const Companies = () => {
                 </button>
                 
               )} */}
-              <Link
+              {/* <Link
                 to={{
                   pathname: `/user/${row?.original?.id}`,
                 }}
                 className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700">
                 {'Show Users'}
-              </Link>
+              </Link> */}
+              <button
+                className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
+                onClick={() => navigate(`/user/${row?.original?.id}`, { state: row?.original?.name })}>
+                {'Show Users'}
+              </button>
             </div>
           );
         },

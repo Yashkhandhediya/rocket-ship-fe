@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { CustomDataTable, Loader } from '../../common/components';
 import { Badge } from 'flowbite-react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
-import { useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
 
@@ -22,7 +22,7 @@ const User = () => {
   const [kyc_status, setKyc_status] = useState(0);
   const [loading, setLoading] = useState(false);
   const [idUser, setIdUser] = useState(null);
-
+  const { state } = useLocation();
   useEffect(() => {
     setLoading(true);
     axios
@@ -210,6 +210,17 @@ const User = () => {
   return (
     <>
       <PageWithSidebar>
+        {state && (
+          <div className="m-4 flex gap-1">
+            <Link to={`/companies`} className="font-medium text-sky-500">
+              {' '}
+              Companies
+            </Link>
+            <p>
+              {`>`} {state}
+            </p>
+          </div>
+        )}
         {loading && <Loader />}
         {fetchData && (
           <CustomDataTable
