@@ -110,9 +110,9 @@ function Addresses() {
     ];
   };
 
-  const rowSubComponent = (row) => {
-    return <div>Details for {row.companyName}</div>;
-  };
+  // const rowSubComponent = (row) => {
+  //   return <div>Details for {row.companyName}</div>;
+  // };
 
   const getAddressData = async (companyId, companyName) => {
     setLoading(true);
@@ -203,9 +203,9 @@ function Addresses() {
               columns={getColumns()}
               rowData={userData}
               enableRowSelection={true}
-              shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
+              shouldRenderRowSubComponent={() => console.log(`Boolean(Math.ceil(Math.random() * 10) % 2)`)}
               onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}
-              rowSubComponent={rowSubComponent}
+              // rowSubComponent={rowSubComponent}
               enablePagination={true}
               tableWrapperStyles={{ height: '78vh' }}
             />
