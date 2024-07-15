@@ -148,6 +148,7 @@ function TruckLists() {
 
   const handleEdit = (id) => {
     const data = truckData.find((data) => data.id === id);
+    console.log(id);
     setEditData(data);
     setShowAddTruck(true);
   };
@@ -157,7 +158,11 @@ function TruckLists() {
     setLoading(true);
     try {
       await axios.delete(`${BACKEND_URL}/trucktype/delete_truck_type/?truck_type_id=${id}`);
-      getTruckData(company_id, selectedCompanyName);
+      if (state) {
+        getTruckData(state.id, state.name);
+      } else {
+        getTruckData(company_id, selectedCompanyName);
+      }
       toast('Delete Successfully', { type: 'success' });
     } catch (err) {
       console.log('Error deleting truck data', err);
@@ -369,6 +374,7 @@ function TruckLists() {
           getTruckData={getTruckData}
           editData={editData}
           handleSetEdit={handleSetEdit}
+          state={state}
         />
       )}
     </PageWithSidebar>
