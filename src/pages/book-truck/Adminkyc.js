@@ -7,6 +7,12 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { Link, useNavigate } from 'react-router-dom';
 import emptyBox from '../../common/images/empty-box.png';
 import { toast } from 'react-toastify';
+import addressIcon from '../../common/images/address_icon.png';
+import kycIcon from '../../common/images/kyc_verification_icon.png';
+import truckIcon from '../../common/images/truck_icon.png';
+import materialIcon from '../../common/images/materials_icon.png';
+import userIcon from '../../common/images/show_users_icon.png';
+import { Tooltip } from 'flowbite-react';
 
 const Adminkyc = () => {
   const [userData, setUserData] = useState([]);
@@ -99,27 +105,42 @@ const Adminkyc = () => {
           return (
             <div className="flex gap-2 text-left text-xs">
               <div
-                className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
+                className="min-w-fit rounded bg-sky-500 px-2 py-1.5 text-white hover:bg-sky-700"
                 onClick={() => {
                   setIdUser(row?.original?.id);
                   setShowPopup(true);
                 }}>
-                {'KYC'}
+                <Tooltip content="KYC">
+                  <img src={kycIcon} className="h-5" />
+                </Tooltip>
               </div>
               <button
-                className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
+                className="min-w-fit rounded bg-sky-500 px-2 py-1 text-white hover:bg-sky-700"
                 onClick={() => navigate(`/trucks`, { state: row?.original })}>
-                {'Show Trucks'}
+                <Tooltip content="Trucks">
+                  <img src={truckIcon} className="h-5" />
+                </Tooltip>
               </button>
               <button
-                className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
+                className="min-w-fit rounded bg-sky-500 px-2 py-1.5 text-white hover:bg-sky-700"
                 onClick={() => navigate(`/materials`, { state: row?.original })}>
-                {'Show Materials'}
+                <Tooltip content="Materials">
+                  <img src={materialIcon} className="h-5" />
+                </Tooltip>
               </button>
               <button
-                className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
+                className="min-w-fit rounded bg-sky-500 px-2 py-1.5 text-white hover:bg-sky-700"
                 onClick={() => navigate(`/address`, { state: row?.original })}>
-                {'Show Address'}
+                <Tooltip content="Addresses">
+                  <img src={addressIcon} className="h-5" />
+                </Tooltip>
+              </button>
+              <button
+                className="min-w-fit rounded bg-sky-500 px-2 py-1.5 text-white hover:bg-sky-700"
+                onClick={() => navigate(`/user/${row?.original?.id}`, { state: row?.original?.name })}>
+                <Tooltip content="Users">
+                  <img src={userIcon} className="h-5" />
+                </Tooltip>
               </button>
             </div>
           );

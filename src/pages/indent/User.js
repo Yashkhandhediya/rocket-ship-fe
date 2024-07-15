@@ -20,9 +20,13 @@ const User = () => {
   const [aadharImg, setAadharImg] = useState(null);
   const [userImg, setUserImg] = useState(null);
   const [kyc_status, setKyc_status] = useState(0);
+  const is_admin = sessionStorage.getItem('is_admin');
   const [loading, setLoading] = useState(false);
   const [idUser, setIdUser] = useState(null);
   const { state } = useLocation();
+
+  console.log(state);
+
   useEffect(() => {
     setLoading(true);
     axios
@@ -210,17 +214,21 @@ const User = () => {
   return (
     <>
       <PageWithSidebar>
-        {state && (
+        <div className="flex items-center justify-between px-4">
           <div className="m-4 flex gap-1">
-            <Link to={`/companies`} className="font-medium text-sky-500">
-              {' '}
-              Companies
-            </Link>
+            Company
             <p>
               {`>`} {state}
             </p>
           </div>
-        )}
+          {is_admin === '2' && (
+            <Link
+              to={`/companies`}
+              className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow">
+              Back
+            </Link>
+          )}
+        </div>
         {loading && <Loader />}
         {fetchData && (
           <CustomDataTable

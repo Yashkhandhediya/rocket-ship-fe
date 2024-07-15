@@ -43,12 +43,12 @@ export const sidebarLinks = [
       icon: book,
       hoverIcon: book,
     },
-  parseInt(is_admin) == 2 && {
-    title: 'Show Booking',
-    path: '/companies',
-    icon: book,
-    hoverIcon: book,
-  },
+  // parseInt(is_admin) == 2 && {
+  //   title: 'Show Booking',
+  //   path: '/companies',
+  //   icon: book,
+  //   hoverIcon: book,
+  // },
   parseInt(is_admin) != 2 && parseInt(is_company)
     ? {
         title: 'Create User',
@@ -58,33 +58,35 @@ export const sidebarLinks = [
       }
     : null,
 
-  parseInt(is_company) && {
-    title: 'Masters',
-    icon: weight,
-    hoverIcon: weight,
-    subMenuOptions: [
-      {
-        title: 'Address',
-        path: '/address',
-        icon: bill,
-        hoverIcon: bill,
-      },
-      {
-        title: 'Materials',
-        path: '/materials',
-        onClick: 'openMaterialTypeModal',
-        icon: book,
-        hoverIcon: book,
-      },
-      {
-        title: 'Trucks',
-        path: '/trucks',
-        onClick: 'openTruckSizeModal',
-        icon: truckSize,
-        hoverIcon: truckSize,
-      },
-    ],
-  },
+  parseInt(is_company) && parseInt(is_admin) != 2
+    ? {
+        title: 'Masters',
+        icon: weight,
+        hoverIcon: weight,
+        subMenuOptions: [
+          {
+            title: 'Address',
+            path: '/address',
+            icon: bill,
+            hoverIcon: bill,
+          },
+          {
+            title: 'Materials',
+            path: '/materials',
+            onClick: 'openMaterialTypeModal',
+            icon: book,
+            hoverIcon: book,
+          },
+          {
+            title: 'Trucks',
+            path: '/trucks',
+            onClick: 'openTruckSizeModal',
+            icon: truckSize,
+            hoverIcon: truckSize,
+          },
+        ],
+      }
+    : null,
 
   // !parseInt(is_admin) && {
   //   title: 'Book',
