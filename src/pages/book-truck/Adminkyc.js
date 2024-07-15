@@ -4,33 +4,35 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { createColumnHelper } from '@tanstack/react-table';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import emptyBox from '../../common/images/empty-box.png';
 import { toast } from 'react-toastify';
 
 const Adminkyc = () => {
   const [userData, setUserData] = useState([]);
   const [fetchData, setFetchData] = useState(false);
-  const [idUser, setIdUser] = useState(null)
+  const [idUser, setIdUser] = useState(null);
   const [showKyc, setShowKyc] = useState(false);
   const [aadharImg, setAadharImg] = useState('');
   const [userImg, setUserImg] = useState('');
-  const [showPopup, setShowPopup] = useState(false)
-  const [companyPan, setCompanyPan] = useState(null)
-  const [companyLogo, setCompanyLogo] = useState(null)
-  const [companyGst, setCompanyGst] = useState(null)
-  const [companyStamp, setCompanyStamp] = useState(null)
+  const [showPopup, setShowPopup] = useState(false);
+  const [companyPan, setCompanyPan] = useState(null);
+  const [companyLogo, setCompanyLogo] = useState(null);
+  const [companyGst, setCompanyGst] = useState(null);
+  const [companyStamp, setCompanyStamp] = useState(null);
 
   useEffect(() => {
     fetchDataFromAPI();
   }, []);
+
+  const navigate = useNavigate();
 
   const fetchDataFromAPI = async () => {
     axios
       .get(BACKEND_URL + `/company/all_company/`)
       .then((res) => {
         console.log('RESSSSSSSSSSSSS', res);
-        const filteredData = res.data.filter(item => item.kyc_status_id === 1);
+        const filteredData = res.data.filter((item) => item.kyc_status_id === 1);
         setUserData(filteredData);
         setFetchData(true);
       })
@@ -41,19 +43,21 @@ const Adminkyc = () => {
 
   const handleAcceptKYC = () => {
     const headers = { 'Content-Type': 'application/json' };
-    axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=company&status=${3}&id=${idUser}`, { headers })
+    axios
+      .post(BACKEND_URL + `/kyc/kyc_status/?client_type=company&status=${3}&id=${idUser}`, { headers })
       .then((res) => {
-        console.log("Response ", res)
-        toast("KYC Verification Successfully", { type: 'success' })
+        console.log('Response ', res);
+        toast('KYC Verification Successfully', { type: 'success' });
         setShowPopup(false);
         setTimeout(() => {
           window.location.reload();
         }, 2000);
-      }).catch((err) => {
-        console.log("ERRRRRR", err)
-        toast("Error in KYC verification", { type: 'error' })
       })
-  }
+      .catch((err) => {
+        console.log('ERRRRRR', err);
+        toast('Error in KYC verification', { type: 'error' });
+      });
+  };
 
   const getColumns = () => {
     const columnHelper = createColumnHelper();
@@ -96,9 +100,27 @@ const Adminkyc = () => {
             <div className="flex gap-2 text-left text-xs">
               <div
                 className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
-                onClick={() => { setIdUser(row?.original?.id); setShowPopup(true); }}>
+                onClick={() => {
+                  setIdUser(row?.original?.id);
+                  setShowPopup(true);
+                }}>
                 {'KYC'}
               </div>
+              <button
+                className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
+                onClick={() => navigate(`/trucks`, { state: row?.original })}>
+                {'Show Trucks'}
+              </button>
+              <button
+                className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
+                onClick={() => navigate(`/materials`, { state: row?.original })}>
+                {'Show Materials'}
+              </button>
+              <button
+                className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
+                onClick={() => navigate(`/address`, { state: row?.original })}>
+                {'Show Address'}
+              </button>
             </div>
           );
         },
@@ -106,9 +128,9 @@ const Adminkyc = () => {
     ];
   };
 
-  const rowSubComponent = (row) => {
-    return <div>Details for {row.companyName}</div>;
-  };
+  // const rowSubComponent = (row) => {
+  //   return <div>Details for {row.companyName}</div>;
+  // };
 
   return (
     <>
@@ -119,9 +141,9 @@ const Adminkyc = () => {
               columns={getColumns()}
               rowData={userData}
               enableRowSelection={true}
-              shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
+              shouldRenderRowSubComponent={() => console.log(`Boolean(Math.ceil(Math.random() * 10) % 2)`)}
               onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}
-              rowSubComponent={rowSubComponent}
+              // rowSubComponent={rowSubComponent}
               enablePagination={true}
               tableWrapperStyles={{ height: '78vh' }}
             />
@@ -135,12 +157,14 @@ const Adminkyc = () => {
 
         {showPopup && (
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
-            <div className="w-[60%] bg-white p-6 rounded-lg">
+            <div className="w-[60%] rounded-lg bg-white p-6">
               <div className="flex flex-row justify-between">
                 <h2 className="text-lg font-semibold">Validate KYC</h2>
                 <button
                   className="bg-transparent p-1 pt-0 text-2xl font-semibold leading-none text-black opacity-100 outline-none focus:outline-none"
-                  onClick={() => { setShowPopup(false) }}>
+                  onClick={() => {
+                    setShowPopup(false);
+                  }}>
                   <span className="block h-6 w-6 bg-transparent text-black opacity-50 outline-none focus:outline-none">
                     ×
                   </span>
@@ -149,25 +173,41 @@ const Adminkyc = () => {
 
               <div className="mt-6 flex flex-col items-center justify-center md:w-[50%]">
                 <div className="flex flex-row items-center justify-between  md:w-[99%]">
-                  <img src={companyPan} alt='Company PAN' className=' ml-20 mb-4 md:w-full ' style={{ width: '300px', height: '300px' }} />
-                  <img src={companyGst} alt='Company GST' className=' ml-20 mb-4 md:w-full ' style={{ width: '300px', height: '300px' }} />
+                  <img
+                    src={companyPan}
+                    alt="Company PAN"
+                    className=" mb-4 ml-20 md:w-full "
+                    style={{ width: '300px', height: '300px' }}
+                  />
+                  <img
+                    src={companyGst}
+                    alt="Company GST"
+                    className=" mb-4 ml-20 md:w-full "
+                    style={{ width: '300px', height: '300px' }}
+                  />
                 </div>
                 <div className="flex flex-row items-center justify-between md:w-[99%]">
-                  <img src={companyStamp} alt='Company Stamp' className='w-40 ml-20 mb-4 md:w-full h-25' style={{ width: '300px', height: '300px' }} />
-                  <img src={companyLogo} alt='Company LOGO' className='w-40 ml-20 mb-4 md:w-full h-25' style={{ width: '300px', height: '300px' }} />
+                  <img
+                    src={companyStamp}
+                    alt="Company Stamp"
+                    className="h-25 mb-4 ml-20 w-40 md:w-full"
+                    style={{ width: '300px', height: '300px' }}
+                  />
+                  <img
+                    src={companyLogo}
+                    alt="Company LOGO"
+                    className="h-25 mb-4 ml-20 w-40 md:w-full"
+                    style={{ width: '300px', height: '300px' }}
+                  />
                 </div>
               </div>
               <div className="flex justify-center">
-                <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                  onClick={handleAcceptKYC}
-                >
+                <button className="rounded-lg bg-blue-500 px-4 py-2 text-white" onClick={handleAcceptKYC}>
                   Accept
                 </button>
                 <button
-                  className="bg-red-500 text-white px-4 py-2 ml-2 rounded-lg"
-                  onClick={() => setShowPopup(false)}
-                >
+                  className="ml-2 rounded-lg bg-red-500 px-4 py-2 text-white"
+                  onClick={() => setShowPopup(false)}>
                   Decline
                 </button>
               </div>

@@ -10,6 +10,10 @@ import { Loader } from '../../common/components';
 import { toast } from 'react-toastify';
 import AddMaterialModal from './components/AddMaterialModal';
 import emptyBox from '../../common/images/empty-box.png';
+import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useLocation } from 'react-router-dom';
 
 function MaterialType() {
   const [showDelete, setShowDelete] = useState(false);
@@ -25,8 +29,13 @@ function MaterialType() {
   const [showMaterialTable, setShowMaterialTable] = useState(false);
   const [selectedCompanyName, setSelectedCompanyName] = useState('');
   const is_admin = sessionStorage.getItem('is_admin');
+  const { state } = useLocation();
 
   useEffect(() => {
+    if (state) {
+      getMaterialData(state.id);
+      return;
+    }
     if (is_admin === '2') {
       fetchDataFromAPI();
     } else {
@@ -94,6 +103,22 @@ function MaterialType() {
         },
       }),
     ];
+  };
+
+  const [isFocused, setIsFocused] = useState(false);
+  const [query, setQuery] = useState('');
+
+  const handleFocused = () => {
+    setIsFocused(true);
+  };
+
+  const handleSearch = (e) => {
+    setQuery(e.target.value);
+  };
+
+  const clearSearch = () => {
+    setQuery('');
+    setIsFocused(false);
   };
 
   const rowSubComponent = (row) => {
@@ -192,23 +217,57 @@ function MaterialType() {
       ) : (
         <div>
           <p className="mx-3 mt-3 text-lg font-medium">
-            Materials {`>`} {selectedCompanyName ? selectedCompanyName : companyName}
+            Materials {`>`} {state ? state?.name : selectedCompanyName ? selectedCompanyName : companyName}
           </p>
-          <div className="flex justify-between gap-5">
-            <div></div>
-            {is_admin === '2' && (
+          <div className="flex items-center justify-between gap-5 px-4">
+            <div className="relative w-1/4">
+              <form className="my-4 flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
+                <FontAwesomeIcon icon={faSearch} className=" text-gray-500" />
+                <input
+                  type="text"
+                  placeholder="Search By Material Name"
+                  value={query}
+                  onChange={(e) => handleSearch(e)}
+                  onFocus={handleFocused}
+                  className="text-semibold m-0 w-full border-transparent p-0 text-[12px] placeholder-gray-400 focus:border-transparent focus:outline-none focus:ring-0"
+                />
+                {isFocused && (
+                  <FontAwesomeIcon
+                    icon={faXmark}
+                    className="cursor-pointer text-lg text-gray-500"
+                    onClick={clearSearch}
+                  />
+                )}
+              </form>
+              {/* {query.length != 0 && (
+              <div
+                className={`absolute w-full cursor-pointer rounded-lg bg-white p-4 text-[12px] shadow-lg hover:bg-gray-200  ${
+                  errorMsg ? 'text-red-800' : 'text-gray-400'
+                } hover:text-red-800`}
+                onClick={handlePostFilteredOrder}>
+                {!loading ? (
+                  <p className={`text-left`}>{searchBy ? `${searchBy}: ${query}` : `${errorMsg}`}</p>
+                ) : (
+                  <p className="h-full w-full animate-pulse rounded-lg bg-gray-300 text-left">.</p>
+                )}
+              </div>
+            )} */}
+            </div>
+            <div className="flex justify-end gap-5">
+              {is_admin === '2' && (
+                <button
+                  className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+                  onClick={handleShowList}>
+                  Back
+                </button>
+              )}
               <button
                 className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
-                onClick={handleShowList}>
-                Back
+                onClick={handleShowAddMaterialModal}>
+                <span className="text-2xl">+</span>
+                Add Material
               </button>
-            )}
-            <button
-              className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
-              onClick={handleShowAddMaterialModal}>
-              <span className="text-2xl">+</span>
-              Add Material
-            </button>
+            </div>
           </div>
           <div className="mx-2 mt-3 min-w-full overflow-hidden rounded-lg shadow">
             <table className="w-full text-[12px]">

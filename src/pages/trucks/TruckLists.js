@@ -15,6 +15,10 @@ import container from '../../common/images/container.png';
 import trailer from '../../common/images/trailer.png';
 import { createColumnHelper } from '@tanstack/react-table';
 import { CustomDataTable } from '../../common/components';
+import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useLocation } from 'react-router-dom';
 
 function TruckLists() {
   const [showDelete, setShowDelete] = useState(false);
@@ -30,14 +34,21 @@ function TruckLists() {
   const [showTruckTable, setShowTruckTable] = useState(false);
   const is_admin = sessionStorage.getItem('is_admin');
   const [selectedCompanyName, setSelectedCompanyName] = useState('');
+  const { state } = useLocation();
 
   useEffect(() => {
+    if (state) {
+      getTruckData(state.id);
+      return;
+    }
     if (is_admin === '2') {
       fetchDataFromAPI();
     } else {
       getTruckData(company_id);
     }
   }, [is_admin, company_id]);
+
+  console.log(state);
 
   const fetchDataFromAPI = async () => {
     setLoading(true);
@@ -101,6 +112,22 @@ function TruckLists() {
 
   const handleKYC = (companyId, companyName) => {
     getTruckData(companyId, companyName);
+  };
+
+  const [isFocused, setIsFocused] = useState(false);
+  const [query, setQuery] = useState('');
+
+  const handleFocused = () => {
+    setIsFocused(true);
+  };
+
+  const handleSearch = (e) => {
+    setQuery(e.target.value);
+  };
+
+  const clearSearch = () => {
+    setQuery('');
+    setIsFocused(false);
   };
 
   const getTruckData = async (companyId, companyName) => {
@@ -186,22 +213,57 @@ function TruckLists() {
       ) : (
         <div>
           <p className="mx-3 mt-3 text-lg font-medium">
-            Truck Master {`>`} {selectedCompanyName ? selectedCompanyName : companyName}
+            Truck Master {`>`} {state ? state?.name : selectedCompanyName ? selectedCompanyName : companyName}
           </p>
-          <div className="mr-4 flex justify-end gap-5">
-            {is_admin === '2' && (
+          <div className="flex items-center justify-between gap-5 px-4">
+            <div className="relative w-1/4">
+              <form className="my-4 flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
+                <FontAwesomeIcon icon={faSearch} className=" text-gray-500" />
+                <input
+                  type="text"
+                  placeholder="Search By Truck Name"
+                  value={query}
+                  onChange={(e) => handleSearch(e)}
+                  onFocus={handleFocused}
+                  className="text-semibold m-0 w-full border-transparent p-0 text-[12px] placeholder-gray-400 focus:border-transparent focus:outline-none focus:ring-0"
+                />
+                {isFocused && (
+                  <FontAwesomeIcon
+                    icon={faXmark}
+                    className="cursor-pointer text-lg text-gray-500"
+                    onClick={clearSearch}
+                  />
+                )}
+              </form>
+              {/* {query.length != 0 && (
+              <div
+                className={`absolute w-full cursor-pointer rounded-lg bg-white p-4 text-[12px] shadow-lg hover:bg-gray-200  ${
+                  errorMsg ? 'text-red-800' : 'text-gray-400'
+                } hover:text-red-800`}
+                onClick={handlePostFilteredOrder}>
+                {!loading ? (
+                  <p className={`text-left`}>{searchBy ? `${searchBy}: ${query}` : `${errorMsg}`}</p>
+                ) : (
+                  <p className="h-full w-full animate-pulse rounded-lg bg-gray-300 text-left">.</p>
+                )}
+              </div>
+            )} */}
+            </div>
+            <div className="flex justify-end gap-5">
+              {is_admin === '2' && (
+                <button
+                  className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+                  onClick={handleShowList}>
+                  Back
+                </button>
+              )}
               <button
                 className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
-                onClick={handleShowList}>
-                Back
+                onClick={handleShowAddTruckModal}>
+                <span className="text-2xl">+</span>
+                Add Truck
               </button>
-            )}
-            <button
-              className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
-              onClick={handleShowAddTruckModal}>
-              <span className="text-2xl">+</span>
-              Add Truck
-            </button>
+            </div>
           </div>
           <div className="mx-2 mt-3 min-w-full overflow-hidden rounded-lg shadow">
             <table className=" w-full text-[12px]">
