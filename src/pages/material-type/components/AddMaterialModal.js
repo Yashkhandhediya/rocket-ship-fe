@@ -24,7 +24,7 @@ function AddMaterialModal({ handleClose, getMaterialData, editData, handleSetEdi
       });
       setMaterial_type('');
       console.log(response);
-      getMaterialData();
+      getMaterialData(company_id);
       toast('Added Material Sucessfully', { type: 'success' });
     } catch (err) {
       toast('There is some error while Adding Material', { type: 'error' });
@@ -47,7 +47,7 @@ function AddMaterialModal({ handleClose, getMaterialData, editData, handleSetEdi
       setMaterial_type('');
       handleSetEdit();
       console.log(response);
-      getMaterialData();
+      getMaterialData(company_id);
       toast('Edited Material Sucessfully', { type: 'success' });
     } catch (err) {
       toast('There is some error while Editing Material', { type: 'error' });
