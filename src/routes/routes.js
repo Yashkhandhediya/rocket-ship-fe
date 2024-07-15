@@ -63,7 +63,7 @@ import { RefundSetting, ReturnSettings } from '../pages/return-settings';
 import Companies from '../pages/indent/Companies';
 
 import { Trucks } from '../pages/trucks';
-import { MaterialType } from '../pages/material-type';
+import { MaterialTypes } from '../pages/material-type';
 import TruckLists from '../pages/trucks/TruckLists';
 import Addresses from '../pages/add-address/Addresses';
 import Adminkyc from '../pages/book-truck/Adminkyc';
@@ -348,7 +348,7 @@ const routes = createBrowserRouter([
   },
   {
     path: '/materials',
-    element: <PrivateRoute component={<MaterialType />} />,
+    element: <PrivateRoute component={<MaterialTypes />} />,
   },
   // {
   //   path: '/trucks',

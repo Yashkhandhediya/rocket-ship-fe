@@ -15,7 +15,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-function MaterialType() {
+function MaterialTypes() {
   const [showDelete, setShowDelete] = useState(false);
   const [showAddMaterial, setShowAddMaterial] = useState(false);
   const [materialData, setMaterialData] = useState([]);
@@ -352,6 +352,7 @@ function MaterialType() {
           handleClose={handleClose}
           getMaterialData={getMaterialData}
           editData={editData}
+          state={state}
           handleSetEdit={handleSetEdit}
         />
       )}
@@ -359,4 +360,4 @@ function MaterialType() {
   );
 }
 
-export default MaterialType;
+export default MaterialTypes;

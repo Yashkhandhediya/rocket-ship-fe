@@ -1,1 +1,1 @@
-export { default as MaterialType } from './MaterialType';
+export { default as MaterialTypes } from './MaterialTypes';

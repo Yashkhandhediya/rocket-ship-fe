@@ -31,6 +31,7 @@ function Addresses() {
   const is_admin = sessionStorage.getItem('is_admin');
   const { state } = useLocation();
   const navigate = useNavigate();
+  const companyId = is_admin == 2 ? state.id : company_id;
 
   useEffect(() => {
     if (state) {
@@ -151,7 +152,7 @@ function Addresses() {
     setLoading(true);
     try {
       const response = await axios.delete(`${BACKEND_URL}/address/delete_booking_address/?address_id=${id}`);
-      getAddressData(company_id);
+      getAddressData(companyId);
       toast('Delete Successfully', { type: 'success' });
     } catch (err) {
       console.log(err);
@@ -362,6 +363,7 @@ function Addresses() {
           handleClose={handleClose}
           getAddressData={getAddressData}
           editData={editData}
+          stateData={state}
           handleSetEdit={handleSetEdit}
         />
       )}

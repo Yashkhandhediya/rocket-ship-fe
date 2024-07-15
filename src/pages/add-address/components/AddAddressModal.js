@@ -46,7 +46,7 @@ const Field = ({ id, label, type, value, onChange, onBlur, isValid, errorMessage
   </div>
 );
 
-function AddAddressModal({ handleClose, getAddressData, editData, handleSetEdit }) {
+function AddAddressModal({ handleClose, getAddressData, stateData, editData, handleSetEdit }) {
   console.log(editData);
 
   const [loading, setLoading] = useState(false);
@@ -56,7 +56,10 @@ function AddAddressModal({ handleClose, getAddressData, editData, handleSetEdit 
   const [city, setCity] = useState(editData ? editData.city : '');
   const [country, setCountry] = useState(editData ? editData.country : '');
   const company_id = sessionStorage.getItem('company_id');
+  const is_admin = sessionStorage.getItem('is_admin');
+
   const [error, setError] = useState(null);
+  const companyId = is_admin == 2 ? stateData.id : company_id;
 
   const handleClear = () => {
     setAddress('');
@@ -85,7 +88,7 @@ function AddAddressModal({ handleClose, getAddressData, editData, handleSetEdit 
     setLoading(true);
     handleClose();
     axios
-      .post(BACKEND_URL + `/address/truck_booking_address/?created_by=${company_id}`, {
+      .post(BACKEND_URL + `/address/truck_booking_address/?created_by=${companyId}`, {
         area: address,
         pincode,
         state,
@@ -95,8 +98,7 @@ function AddAddressModal({ handleClose, getAddressData, editData, handleSetEdit 
       .then((response) => {
         setLoading(false);
         handleClear();
-        console.log(company_id);
-        getAddressData(company_id);
+        getAddressData(companyId);
         toast('Address Added successfully!', { type: 'success' });
       })
       .catch((err) => {
@@ -122,7 +124,7 @@ function AddAddressModal({ handleClose, getAddressData, editData, handleSetEdit 
         setLoading(false);
         handleClear();
         handleSetEdit();
-        getAddressData(company_id);
+        getAddressData(companyId);
         toast('Address Updated successfully!', { type: 'success' });
       })
       .catch((err) => {
