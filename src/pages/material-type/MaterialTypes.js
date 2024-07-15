@@ -31,6 +31,7 @@ function MaterialTypes() {
   const is_admin = sessionStorage.getItem('is_admin');
   const { state } = useLocation();
   const navigate = useNavigate();
+  const companyId = is_admin == 2 ? state.id : company_id;
 
   useEffect(() => {
     if (state) {
@@ -164,7 +165,7 @@ function MaterialTypes() {
     setLoading(true);
     try {
       await axios.delete(`${BACKEND_URL}/materialtype/delete_material_type/?material_id=${id}`);
-      getMaterialData(company_id, selectedCompanyName);
+      getMaterialData(companyId, selectedCompanyName);
       toast('Delete Sucessfully', { type: 'success' });
     } catch (err) {
       console.log(err);
