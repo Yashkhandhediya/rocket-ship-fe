@@ -95,7 +95,8 @@ function AddAddressModal({ handleClose, getAddressData, editData, handleSetEdit 
       .then((response) => {
         setLoading(false);
         handleClear();
-        getAddressData();
+        console.log(company_id);
+        getAddressData(company_id);
         toast('Address Added successfully!', { type: 'success' });
       })
       .catch((err) => {
@@ -121,7 +122,7 @@ function AddAddressModal({ handleClose, getAddressData, editData, handleSetEdit 
         setLoading(false);
         handleClear();
         handleSetEdit();
-        getAddressData();
+        getAddressData(company_id);
         toast('Address Updated successfully!', { type: 'success' });
       })
       .catch((err) => {

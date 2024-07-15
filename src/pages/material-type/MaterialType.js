@@ -19,6 +19,7 @@ function MaterialType() {
   const company_id = sessionStorage.getItem('company_id');
   const [deleteId, setDeleteId] = useState(null);
   const [editData, setEditData] = useState(null);
+  const companyName = sessionStorage.getItem('user_name');
   const [userData, setUserData] = useState([]);
   const [fetchData, setFetchData] = useState(false);
   const [showMaterialTable, setShowMaterialTable] = useState(false);
@@ -37,7 +38,7 @@ function MaterialType() {
     try {
       const res = await axios.get(`${BACKEND_URL}/company/all_company/`);
       console.log('RESSSSSSSSSSSSS', res);
-      const filteredData = res.data.filter(item => item.kyc_status_id === 1);
+      const filteredData = res.data.filter((item) => item.kyc_status_id === 1);
       setUserData(filteredData);
       setFetchData(true);
     } catch (err) {
@@ -136,9 +137,7 @@ function MaterialType() {
     setShowDelete(false);
     setLoading(true);
     try {
-      await axios.delete(
-        `${BACKEND_URL}/materialtype/delete_material_type/?material_id=${id}`,
-      );
+      await axios.delete(`${BACKEND_URL}/materialtype/delete_material_type/?material_id=${id}`);
       getMaterialData(company_id, selectedCompanyName);
       toast('Delete Sucessfully', { type: 'success' });
     } catch (err) {
@@ -192,13 +191,18 @@ function MaterialType() {
         ) : null
       ) : (
         <div>
-          <p className="mx-3 mt-3 text-lg font-medium">Materials {`>`} {selectedCompanyName}</p>
-          <div className="flex justify-end gap-5">
-            {is_admin === '2' && <button
-              className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
-              onClick={handleShowList}>
-              Back
-            </button>}
+          <p className="mx-3 mt-3 text-lg font-medium">
+            Materials {`>`} {selectedCompanyName ? selectedCompanyName : companyName}
+          </p>
+          <div className="flex justify-between gap-5">
+            <div></div>
+            {is_admin === '2' && (
+              <button
+                className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+                onClick={handleShowList}>
+                Back
+              </button>
+            )}
             <button
               className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
               onClick={handleShowAddMaterialModal}>

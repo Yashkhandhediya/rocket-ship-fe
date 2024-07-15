@@ -22,6 +22,7 @@ function TruckLists() {
   const [truckData, setTruckData] = useState([]);
   const [loading, setLoading] = useState(false);
   const company_id = sessionStorage.getItem('company_id');
+  const companyName = sessionStorage.getItem('user_name');
   const [deleteId, setDeleteId] = useState(null);
   const [editData, setEditData] = useState(null);
   const [userData, setUserData] = useState([]);
@@ -185,7 +186,7 @@ function TruckLists() {
       ) : (
         <div>
           <p className="mx-3 mt-3 text-lg font-medium">
-            Truck Master {`>`} {selectedCompanyName}
+            Truck Master {`>`} {selectedCompanyName ? selectedCompanyName : companyName}
           </p>
           <div className="mr-4 flex justify-end gap-5">
             {is_admin === '2' && (

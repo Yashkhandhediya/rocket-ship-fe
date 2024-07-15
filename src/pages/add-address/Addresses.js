@@ -17,11 +17,11 @@ function Addresses() {
   const [addressData, setAddressData] = useState([]);
   const [loading, setLoading] = useState(false);
   const company_id = sessionStorage.getItem('company_id');
+  const companyName = sessionStorage.getItem('user_name');
   const [deleteId, setDeleteId] = useState(null);
   const [editData, setEditData] = useState(null);
   const [userData, setUserData] = useState([]);
   const [fetchData, setFetchData] = useState(false);
-  const [idUser, setIdUser] = useState(null);
   const [showAddressTable, setShowAddressTable] = useState(false);
   const [selectedCompanyName, setSelectedCompanyName] = useState('');
   const is_admin = sessionStorage.getItem('is_admin');
@@ -39,7 +39,7 @@ function Addresses() {
       .get(BACKEND_URL + `/company/all_company/`)
       .then((res) => {
         console.log('RESSSSSSSSSSSSS', res);
-        const filteredData = res.data.filter(item => item.kyc_status_id === 1);
+        const filteredData = res.data.filter((item) => item.kyc_status_id === 1);
         setUserData(filteredData);
         setFetchData(true);
       })
@@ -89,7 +89,9 @@ function Addresses() {
             <div className="flex gap-2 text-left text-xs">
               <div
                 className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
-                onClick={() => { handleKYC(row?.original?.id, row?.original?.name); }}>
+                onClick={() => {
+                  handleKYC(row?.original?.id, row?.original?.name);
+                }}>
                 {'Show Details'}
               </div>
             </div>
@@ -191,14 +193,18 @@ function Addresses() {
         ) : null
       ) : (
         <div>
-          <div className="flex justify-between items-center">
-            <p className="mx-3 mt-3 text-lg font-medium">Address {`>`} {selectedCompanyName}</p>
+          <div className="flex items-center justify-between">
+            <p className="mx-3 mt-3 text-lg font-medium">
+              Address {`>`} {selectedCompanyName ? selectedCompanyName : companyName}
+            </p>
             <div className="flex justify-end gap-5">
-              {is_admin === '2' && <button
-                className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
-                onClick={handleShowList}>
-                Back
-              </button>}
+              {is_admin === '2' && (
+                <button
+                  className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+                  onClick={handleShowList}>
+                  Back
+                </button>
+              )}
               <button
                 className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
                 onClick={handleShowAddressModal}>
@@ -295,7 +301,7 @@ function Addresses() {
       {showAddAddress && (
         <AddAddressModal
           handleClose={handleClose}
-          getAddressData={() => getAddressData(idUser)}
+          getAddressData={getAddressData}
           editData={editData}
           handleSetEdit={handleSetEdit}
         />
