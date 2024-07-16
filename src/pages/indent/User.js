@@ -9,6 +9,9 @@ import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithS
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
+import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const User = () => {
   const [userData, setUserData] = useState([]);
@@ -23,6 +26,11 @@ const User = () => {
   const is_admin = sessionStorage.getItem('is_admin');
   const [loading, setLoading] = useState(false);
   const [idUser, setIdUser] = useState(null);
+  const [searchData, setSearchData] = useState([]);
+  const [isFocused, setIsFocused] = useState(false);
+  const [query, setQuery] = useState('');
+  const user_data = query.length !== 0 ? searchData : userData;
+
   const { state } = useLocation();
 
   console.log(state);
@@ -48,6 +56,18 @@ const User = () => {
     navigate('/all-indent/' + row.original.id);
   };
 
+  const handleFocused = () => {
+    setIsFocused(true);
+  };
+
+  const handleSearch = (e) => {
+    setQuery(e.target.value);
+  };
+
+  const clearSearch = () => {
+    setQuery('');
+    setIsFocused(false);
+  };
   const handleKYC = (row) => {
     // console.log("RRRRRRRR",row,row?.original?.id)
     setIdUser(row?.original?.id);
@@ -110,6 +130,22 @@ const User = () => {
         toast('Error in KYC verification', { type: 'error' });
       });
   };
+
+  const getSearchData = async () => {
+    try {
+      const response = await axios.get(
+        `${BACKEND_URL}/users/search_user/?string=${query}&company_id=${company_id}`,
+      );
+      console.log(response);
+      setSearchData(response.data);
+    } catch (err) {
+      toast(`There is Some error while searching`, { type: 'error' });
+    }
+  };
+
+  useEffect(() => {
+    getSearchData();
+  }, [query]);
 
   const getColumns = () => {
     const columnHelper = createColumnHelper();
@@ -214,8 +250,8 @@ const User = () => {
   return (
     <>
       <PageWithSidebar>
-        <div className="flex items-center justify-between px-4">
-          <div className="m-4 flex gap-1">
+        <div className="mt-4 flex items-center justify-between px-4">
+          <div className="flex gap-1">
             Company
             <p>
               {`>`} {state}
@@ -229,11 +265,31 @@ const User = () => {
             </Link>
           )}
         </div>
+        <div className="relative my-4 w-1/4 px-4">
+          <form className=" flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
+            <FontAwesomeIcon icon={faSearch} className=" text-gray-500" />
+            <input
+              type="text"
+              placeholder="Search By User Name"
+              value={query}
+              onChange={(e) => handleSearch(e)}
+              onFocus={handleFocused}
+              className="text-semibold m-0 w-full border-transparent p-0 text-[12px] placeholder-gray-400 focus:border-transparent focus:outline-none focus:ring-0"
+            />
+            {isFocused && (
+              <FontAwesomeIcon
+                icon={faXmark}
+                className="cursor-pointer text-lg text-gray-500"
+                onClick={clearSearch}
+              />
+            )}
+          </form>
+        </div>
         {loading && <Loader />}
         {fetchData && (
           <CustomDataTable
             columns={getColumns()}
-            rowData={userData}
+            rowData={user_data}
             enableCheckBox={false}
             enableRowSelection={true}
             shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}

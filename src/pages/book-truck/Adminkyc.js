@@ -13,6 +13,9 @@ import truckIcon from '../../common/images/truck_icon.png';
 import materialIcon from '../../common/images/materials_icon.png';
 import userIcon from '../../common/images/show_users_icon.png';
 import { Tooltip } from 'flowbite-react';
+import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Adminkyc = () => {
   const [userData, setUserData] = useState([]);
@@ -26,6 +29,10 @@ const Adminkyc = () => {
   const [companyLogo, setCompanyLogo] = useState(null);
   const [companyGst, setCompanyGst] = useState(null);
   const [companyStamp, setCompanyStamp] = useState(null);
+  const [searchData, setSearchData] = useState([]);
+  const [isFocused, setIsFocused] = useState(false);
+  const [query, setQuery] = useState('');
+  const user_data = query.length !== 0 ? searchData : userData;
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -68,6 +75,33 @@ const Adminkyc = () => {
         toast('Error in KYC verification', { type: 'error' });
       });
   };
+
+  const getSearchData = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/company/search_company/?string=${query}`);
+      console.log(response);
+      setSearchData(response.data);
+    } catch (err) {
+      toast(`There is Some error while searching`, { type: 'error' });
+    }
+  };
+
+  const handleFocused = () => {
+    setIsFocused(true);
+  };
+
+  const handleSearch = (e) => {
+    setQuery(e.target.value);
+  };
+
+  const clearSearch = () => {
+    setQuery('');
+    setIsFocused(false);
+  };
+
+  useEffect(() => {
+    getSearchData();
+  }, [query]);
 
   const getColumns = () => {
     const columnHelper = createColumnHelper();
@@ -170,12 +204,32 @@ const Adminkyc = () => {
   return (
     <>
       <PageWithSidebar>
+        <div className="relative my-4 w-1/4 px-4">
+          <form className=" flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
+            <FontAwesomeIcon icon={faSearch} className=" text-gray-500" />
+            <input
+              type="text"
+              placeholder="Search By Company Name"
+              value={query}
+              onChange={(e) => handleSearch(e)}
+              onFocus={handleFocused}
+              className="text-semibold m-0 w-full border-transparent p-0 text-[12px] placeholder-gray-400 focus:border-transparent focus:outline-none focus:ring-0"
+            />
+            {isFocused && (
+              <FontAwesomeIcon
+                icon={faXmark}
+                className="cursor-pointer text-lg text-gray-500"
+                onClick={clearSearch}
+              />
+            )}
+          </form>
+        </div>
         {loading && <Loader />}
         {fetchData ? (
           userData.length > 0 ? (
             <CustomDataTable
               columns={getColumns()}
-              rowData={userData}
+              rowData={user_data}
               enableRowSelection={true}
               shouldRenderRowSubComponent={() => console.log(`Boolean(Math.ceil(Math.random() * 10) % 2)`)}
               onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}

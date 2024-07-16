@@ -19,6 +19,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { debounce } from 'lodash';
 
 function TruckLists() {
   const [showDelete, setShowDelete] = useState(false);
@@ -36,10 +37,14 @@ function TruckLists() {
   const [selectedCompanyName, setSelectedCompanyName] = useState('');
   const { state } = useLocation();
   const navigate = useNavigate();
-
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [searchData, setSearchData] = useState([]);
+  const [isFocused, setIsFocused] = useState(false);
+  const [query, setQuery] = useState('');
 
+  const companyID = is_admin == 2 ? state.id : company_id;
+  const truck_data = query.length !== 0 ? searchData : truckData;
   const handleNextPage = () => {
     setPage((prev) => prev + 1);
   };
@@ -130,9 +135,6 @@ function TruckLists() {
     getTruckData(companyId, companyName);
   };
 
-  const [isFocused, setIsFocused] = useState(false);
-  const [query, setQuery] = useState('');
-
   const handleFocused = () => {
     setIsFocused(true);
   };
@@ -145,6 +147,22 @@ function TruckLists() {
     setQuery('');
     setIsFocused(false);
   };
+
+  const getSearchData = async () => {
+    try {
+      const response = await axios.get(
+        `${BACKEND_URL}/trucktype/search_truck_type/?string=${query}&company_id=${companyID}`,
+      );
+      console.log(response);
+      setSearchData(response.data);
+    } catch (err) {
+      toast(`There is Some error while searching`, { type: 'error' });
+    }
+  };
+
+  useEffect(() => {
+    getSearchData();
+  }, [query]);
 
   const getTruckData = async (companyId, companyName) => {
     setLoading(true);
@@ -259,19 +277,6 @@ function TruckLists() {
                   />
                 )}
               </form>
-              {/* {query.length != 0 && (
-              <div
-                className={`absolute w-full cursor-pointer rounded-lg bg-white p-4 text-[12px] shadow-lg hover:bg-gray-200  ${
-                  errorMsg ? 'text-red-800' : 'text-gray-400'
-                } hover:text-red-800`}
-                onClick={handlePostFilteredOrder}>
-                {!loading ? (
-                  <p className={`text-left`}>{searchBy ? `${searchBy}: ${query}` : `${errorMsg}`}</p>
-                ) : (
-                  <p className="h-full w-full animate-pulse rounded-lg bg-gray-300 text-left">.</p>
-                )}
-              </div>
-            )} */}
             </div>
             <div className="flex justify-end gap-5">
               {is_admin === '2' && (
@@ -303,8 +308,8 @@ function TruckLists() {
                 </tr>
               </thead>
               <tbody>
-                {truckData &&
-                  truckData?.map((data, index) => (
+                {truck_data &&
+                  truck_data?.map((data, index) => (
                     <tr key={data.id} className={`border  bg-white  font-semibold text-gray-500`}>
                       <td className=" border px-4 py-4 text-center">{index + 1}</td>
                       <td className=" border px-4 py-4 text-center">

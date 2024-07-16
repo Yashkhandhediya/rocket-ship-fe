@@ -11,6 +11,9 @@ import { toast } from 'react-toastify';
 import { ACCESS_TOKEN } from '../../common/utils/config';
 import { Loader } from '../../common/components';
 import emptyBox from '../../common/images/empty-box.png';
+import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export let modifyFlag = 0;
 export let modifyId;
@@ -43,6 +46,10 @@ const Allindent = () => {
   const [showOfflineBtn, setShowOfflineBtn] = useState(false);
   const [offlinePrice, setOfflinePrice] = useState(0);
   const [showOfflinePricePrompt, setShowOfflinePricePrompt] = useState(false);
+  const [searchData, setSearchData] = useState([]);
+  const [isFocused, setIsFocused] = useState(false);
+  const [query, setQuery] = useState('');
+  const filtered_info = query.length !== 0 ? searchData : filteredInfo;
 
   console.log('IDFFFFFF', selectedTab);
 
@@ -302,6 +309,19 @@ const Allindent = () => {
     setSelectedReason(e.target.value);
   };
 
+  const handleFocused = () => {
+    setIsFocused(true);
+  };
+
+  const handleSearch = (e) => {
+    setQuery(e.target.value);
+  };
+
+  const clearSearch = () => {
+    setQuery('');
+    setIsFocused(false);
+  };
+
   const handleSubmitReason = (id, status) => {
     if (selectedReason) {
       handleConfirmation(id, status);
@@ -312,6 +332,21 @@ const Allindent = () => {
       alert('Please select a reason.');
     }
   };
+  const getSearchData = async () => {
+    try {
+      const response = await axios.get(
+        `${BACKEND_URL}/indent/search_indent/?string=${query}&user_id=${url_user_id}`,
+      );
+      console.log(response);
+      setSearchData(response.data);
+    } catch (err) {
+      toast(`There is Some error while searching`, { type: 'error' });
+    }
+  };
+
+  useEffect(() => {
+    getSearchData();
+  }, [query]);
 
   // let timeLeft = Math.ceil((new Date() - new Date(info[0].pickupDate) )/(1000 * 60 * 60).toPrecision(1));
   // console.log("diff",timeLeft)
@@ -327,6 +362,26 @@ const Allindent = () => {
           onTabChange={handleTabChange}
         />
       </div>
+      <div className="relative my-4 w-1/4 px-4">
+        <form className=" flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
+          <FontAwesomeIcon icon={faSearch} className=" text-gray-500" />
+          <input
+            type="text"
+            placeholder="Search By Indent"
+            value={query}
+            onChange={(e) => handleSearch(e)}
+            onFocus={handleFocused}
+            className="text-semibold m-0 w-full border-transparent p-0 text-[12px] placeholder-gray-400 focus:border-transparent focus:outline-none focus:ring-0"
+          />
+          {isFocused && (
+            <FontAwesomeIcon
+              icon={faXmark}
+              className="cursor-pointer text-lg text-gray-500"
+              onClick={clearSearch}
+            />
+          )}
+        </form>
+      </div>
       {filteredInfo.length === 0 && (
         <div className="flex h-96 flex-col items-center justify-center">
           <img src={emptyBox} className="h-60" />
@@ -340,7 +395,7 @@ const Allindent = () => {
       {console.log('kkkkkkkkkkkk', info)}
       {dataFetch && (
         <div className="flex flex-wrap">
-          {filteredInfo.map((data, index) => (
+          {filtered_info.map((data, index) => (
             <div className="flex flex-row sm:w-full md:w-1/2 lg:w-1/3" key={index}>
               <div className="mx-3 mt-5 w-full rounded-lg bg-white p-4 shadow">
                 <div className="mb-2 flex w-full flex-row items-end justify-between border-b border-gray-200 pb-2">

@@ -32,11 +32,12 @@ function MaterialTypes() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const companyId = is_admin == 2 ? state.id : company_id;
-
+  const [searchData, setSearchData] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const material_data = query.length !== 0 ? searchData : materialData;
 
   const handleNextPage = () => {
     setPage((prev) => prev + 1);
@@ -188,6 +189,22 @@ function MaterialTypes() {
     }
   };
 
+  const getSearchData = async () => {
+    try {
+      const response = await axios.get(
+        `${BACKEND_URL}/materialtype/search_material_type/?string=${query}&company_id=${companyId}`,
+      );
+      console.log(response);
+      setSearchData(response.data);
+    } catch (err) {
+      toast(`There is Some error while searching`, { type: 'error' });
+    }
+  };
+
+  useEffect(() => {
+    getSearchData();
+  }, [query]);
+
   const handleClose = () => {
     handleSetEdit();
     setShowAddMaterial(false);
@@ -255,19 +272,6 @@ function MaterialTypes() {
                   />
                 )}
               </form>
-              {/* {query.length != 0 && (
-              <div
-                className={`absolute w-full cursor-pointer rounded-lg bg-white p-4 text-[12px] shadow-lg hover:bg-gray-200  ${
-                  errorMsg ? 'text-red-800' : 'text-gray-400'
-                } hover:text-red-800`}
-                onClick={handlePostFilteredOrder}>
-                {!loading ? (
-                  <p className={`text-left`}>{searchBy ? `${searchBy}: ${query}` : `${errorMsg}`}</p>
-                ) : (
-                  <p className="h-full w-full animate-pulse rounded-lg bg-gray-300 text-left">.</p>
-                )}
-              </div>
-            )} */}
             </div>
             <div className="flex justify-end gap-5">
               {is_admin === '2' && (
@@ -295,8 +299,8 @@ function MaterialTypes() {
                 </tr>
               </thead>
               <tbody>
-                {materialData &&
-                  materialData?.map((data, index) => (
+                {material_data &&
+                  material_data?.map((data, index) => (
                     <tr key={data.id} className={`border bg-white font-semibold text-gray-500`}>
                       <td className="border px-4 py-4 text-center">{index + 1}</td>
                       <td className="border px-4 py-4 text-center">
