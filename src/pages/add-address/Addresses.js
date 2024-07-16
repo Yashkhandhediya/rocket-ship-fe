@@ -32,7 +32,8 @@ function Addresses() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const companyId = is_admin == 2 ? state.id : company_id;
-
+  const [searchData, setSearchData] = useState([]);
+  const address_data = query.length !== 0 ? searchData : addressData;
   const [isFocused, setIsFocused] = useState(false);
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
@@ -211,6 +212,22 @@ function Addresses() {
     setShowAddressTable(false);
   };
 
+  const getSearchData = async () => {
+    try {
+      const response = await axios.get(
+        `${BACKEND_URL}/address/address_suggestion/?string=${query}&created_by=${companyId}`,
+      );
+      console.log(response);
+      setSearchData(response.data);
+    } catch (err) {
+      toast(`There is Some error while searching`, { type: 'error' });
+    }
+  };
+
+  useEffect(() => {
+    getSearchData();
+  }, [query]);
+
   return (
     <PageWithSidebar>
       {loading && <Loader />}
@@ -245,7 +262,7 @@ function Addresses() {
                 <FontAwesomeIcon icon={faSearch} className=" text-gray-500" />
                 <input
                   type="text"
-                  placeholder="Search By Area, Pincode, State"
+                  placeholder="Search By Area"
                   value={query}
                   onChange={(e) => handleSearch(e)}
                   onFocus={handleFocused}
@@ -259,19 +276,6 @@ function Addresses() {
                   />
                 )}
               </form>
-              {/* {query.length != 0 && (
-              <div
-                className={`absolute w-full cursor-pointer rounded-lg bg-white p-4 text-[12px] shadow-lg hover:bg-gray-200  ${
-                  errorMsg ? 'text-red-800' : 'text-gray-400'
-                } hover:text-red-800`}
-                onClick={handlePostFilteredOrder}>
-                {!loading ? (
-                  <p className={`text-left`}>{searchBy ? `${searchBy}: ${query}` : `${errorMsg}`}</p>
-                ) : (
-                  <p className="h-full w-full animate-pulse rounded-lg bg-gray-300 text-left">.</p>
-                )}
-              </div>
-            )} */}
             </div>
             <div className="flex justify-end gap-5">
               {is_admin === '2' && (
@@ -303,8 +307,8 @@ function Addresses() {
                 </tr>
               </thead>
               <tbody>
-                {addressData &&
-                  addressData.map((data, index) => {
+                {address_data &&
+                  address_data.map((data, index) => {
                     return (
                       <tr key={data.id} className={`border bg-white font-semibold text-gray-500`}>
                         <td className="border px-4 py-4 text-center">{index + 1}</td>
