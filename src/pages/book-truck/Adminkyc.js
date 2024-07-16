@@ -40,7 +40,7 @@ const Adminkyc = () => {
       .get(BACKEND_URL + `/company/all_company/`)
       .then((res) => {
         console.log('RESSSSSSSSSSSSS', res);
-        const filteredData = res.data.filter((item) => item.kyc_status_id === 1);
+        const filteredData = res.data.filter((item) => item.kyc_status_id === 3 || item.kyc_status_id === 2);
         setUserData(filteredData);
         setFetchData(true);
         setLoading(false);
@@ -120,29 +120,39 @@ const Adminkyc = () => {
               </div>
               <button
                 className="min-w-fit rounded bg-sky-500 px-2 py-1 text-white hover:bg-sky-700"
-                onClick={() => navigate(`/trucks`, { state: row?.original })}>
-                <Tooltip content="Trucks">
+                onClick={() => navigate(`/trucks`, { state: row?.original })}
+                disabled={row?.original?.kyc_status_id === 2}>
+                <Tooltip
+                  content={`${row?.original?.kyc_status_id === 2 ? 'Requires KYC Verification' : 'Trucks'}`}>
                   <img src={truckIcon} className="h-5" />
                 </Tooltip>
               </button>
               <button
                 className="min-w-fit rounded bg-sky-500 px-2 py-1.5 text-white hover:bg-sky-700"
-                onClick={() => navigate(`/materials`, { state: row?.original })}>
-                <Tooltip content="Materials">
+                onClick={() => navigate(`/materials`, { state: row?.original })}
+                disabled={row?.original?.kyc_status_id === 2}>
+                <Tooltip
+                  content={`${
+                    row?.original?.kyc_status_id === 2 ? 'Requires KYC Verification' : 'Materials'
+                  }`}>
                   <img src={materialIcon} className="h-5" />
                 </Tooltip>
               </button>
               <button
                 className="min-w-fit rounded bg-sky-500 px-2 py-1.5 text-white hover:bg-sky-700"
-                onClick={() => navigate(`/address`, { state: row?.original })}>
-                <Tooltip content="Addresses">
+                onClick={() => navigate(`/address`, { state: row?.original })}
+                disabled={row?.original?.kyc_status_id === 2}>
+                <Tooltip
+                  content={`${row?.original?.kyc_status_id === 2 ? 'Requires KYC Verification' : 'Address'}`}>
                   <img src={addressIcon} className="h-5" />
                 </Tooltip>
               </button>
               <button
                 className="min-w-fit rounded bg-sky-500 px-2 py-1.5 text-white hover:bg-sky-700"
-                onClick={() => navigate(`/user/${row?.original?.id}`, { state: row?.original?.name })}>
-                <Tooltip content="Users">
+                onClick={() => navigate(`/user/${row?.original?.id}`, { state: row?.original?.name })}
+                disabled={row?.original?.kyc_status_id === 2}>
+                <Tooltip
+                  content={`${row?.original?.kyc_status_id === 2 ? 'Requires KYC Verification' : 'Users'}`}>
                   <img src={userIcon} className="h-5" />
                 </Tooltip>
               </button>
