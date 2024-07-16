@@ -33,6 +33,36 @@ function MaterialTypes() {
   const navigate = useNavigate();
   const companyId = is_admin == 2 ? state.id : company_id;
 
+  const [isFocused, setIsFocused] = useState(false);
+  const [query, setQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const handleNextPage = () => {
+    setPage((prev) => prev + 1);
+  };
+
+  const handlePrevPage = () => {
+    setPage((prev) => (prev <= 1 ? prev : prev - 1));
+  };
+
+  const handleChange = (event) => {
+    setPageSize(event.target.value);
+  };
+
+  const handleFocused = () => {
+    setIsFocused(true);
+  };
+
+  const handleSearch = (e) => {
+    setQuery(e.target.value);
+  };
+
+  const clearSearch = () => {
+    setQuery('');
+    setIsFocused(false);
+  };
+
   useEffect(() => {
     if (state) {
       getMaterialData(state.id);
@@ -43,7 +73,7 @@ function MaterialTypes() {
     } else {
       getMaterialData(company_id);
     }
-  }, [is_admin, company_id]);
+  }, [is_admin, company_id, page, pageSize]);
 
   const fetchDataFromAPI = async () => {
     try {
@@ -107,22 +137,6 @@ function MaterialTypes() {
     ];
   };
 
-  const [isFocused, setIsFocused] = useState(false);
-  const [query, setQuery] = useState('');
-
-  const handleFocused = () => {
-    setIsFocused(true);
-  };
-
-  const handleSearch = (e) => {
-    setQuery(e.target.value);
-  };
-
-  const clearSearch = () => {
-    setQuery('');
-    setIsFocused(false);
-  };
-
   // const rowSubComponent = (row) => {
   //   return <div>Details for {row.companyName}</div>;
   // };
@@ -135,7 +149,7 @@ function MaterialTypes() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/materialtype/get_material_type/?created_by=${companyId}`,
+        `${BACKEND_URL}/materialtype/get_material_type/?created_by=${companyId}&page=${page}&page_size=${pageSize}`,
       );
       console.log(response);
       setMaterialData(response.data);
@@ -219,7 +233,7 @@ function MaterialTypes() {
       ) : (
         <div>
           <p className="mx-3 mt-3 text-lg font-medium">
-            Materials {`>`} {state ? state?.name : selectedCompanyName ? selectedCompanyName : companyName}
+            Materials {is_admin == 2 && `>`} {state ? state?.name : selectedCompanyName}
           </p>
           <div className="flex items-center justify-between gap-5 px-4">
             <div className="relative w-1/4">
@@ -271,7 +285,7 @@ function MaterialTypes() {
               </button>
             </div>
           </div>
-          <div className="mx-2 mt-3 min-w-full overflow-hidden rounded-lg shadow">
+          <div className="mx-2 mt-3 w-[98%]  overflow-hidden rounded-lg shadow">
             <table className="w-full text-[12px]">
               <thead className="border bg-white">
                 <tr>
@@ -307,27 +321,37 @@ function MaterialTypes() {
                 <p>{`Start by creating a new material using the 'Add Material' button above.`}</p>
               </div>
             )}
-            {materialData.length > 0 && (
-              <div className="flex w-full justify-between bg-white p-2 text-sm">
-                <div className="flex items-center gap-3 text-gray-500">
-                  <p>Showing</p>
-                  <select className="rounded-lg border-gray-300 px-1 py-0">
-                    <option>10</option>
-                    <option>20</option>
-                    <option>30</option>
-                    <option>40</option>
-                  </select>
-                  <p>Entries</p>
-                </div>
-                <div className="flex gap-2">
-                  <button className="rounded border border-gray-300 px-2 py-0 text-lg">{`<`}</button>
-                  <button className="rounded bg-sky-500 px-2 py-0 text-sm text-white">1</button>
-                  <button className="rounded px-2 py-0 text-sm">2</button>
-                  <button className="rounded px-2 py-0 text-sm">3</button>
-                  <button className="rounded border border-gray-300 px-2 py-0 text-center text-lg">{`>`}</button>
-                </div>
+            <div className="flex w-full justify-between bg-white p-2 text-sm">
+              <div className="flex items-center gap-3 text-gray-500">
+                <p>Showing</p>
+                <select
+                  id="select"
+                  value={pageSize}
+                  className="rounded-lg border-gray-300 px-1 py-0"
+                  onChange={handleChange}>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="30">30</option>
+                  <option value="40">40</option>
+                </select>
+                <p>Entries</p>
               </div>
-            )}
+              <div className="flex items-center gap-2">
+                <button
+                  className={`rounded border border-gray-300 px-2 py-0 text-lg ${
+                    page === 1 ? 'cursor-not-allowed' : ''
+                  }`}
+                  onClick={handlePrevPage}
+                  disabled={page === 1}>{`<`}</button>
+                <span className={`rounded px-2 py-0 text-sm ${page === 1 && 'hidden'}`}>{page - 1}</span>
+                <button className="rounded bg-sky-500 px-2 py-1 text-sm text-white">{page}</button>
+                <span className=" rounded px-2 py-0 text-sm">{page + 1}</span>
+                <span className={`rounded px-2 py-0 text-sm ${page !== 1 && 'hidden'}`}>{page + 2}</span>
+                <button
+                  className="rounded border border-gray-300 px-2 py-0 text-center text-lg"
+                  onClick={handleNextPage}>{`>`}</button>
+              </div>
+            </div>
           </div>
         </div>
       )}

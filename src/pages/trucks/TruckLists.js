@@ -37,6 +37,21 @@ function TruckLists() {
   const { state } = useLocation();
   const navigate = useNavigate();
 
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const handleNextPage = () => {
+    setPage((prev) => prev + 1);
+  };
+
+  const handlePrevPage = () => {
+    setPage((prev) => (prev <= 1 ? prev : prev - 1));
+  };
+
+  const handleChange = (event) => {
+    setPageSize(event.target.value);
+  };
+
   useEffect(() => {
     if (state) {
       getTruckData(state.id);
@@ -47,7 +62,7 @@ function TruckLists() {
     } else {
       getTruckData(company_id);
     }
-  }, [is_admin, company_id]);
+  }, [is_admin, company_id, page, pageSize]);
 
   console.log(state);
 
@@ -134,7 +149,9 @@ function TruckLists() {
   const getTruckData = async (companyId, companyName) => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/trucktype/get_truck_types/?created_by=${companyId}`);
+      const response = await axios.get(
+        `${BACKEND_URL}/trucktype/get_truck_types/?created_by=${companyId}&page=${page}&page_size=${pageSize}`,
+      );
       setTruckData(response.data);
       setSelectedCompanyName(companyName);
       setShowTruckTable(true);
@@ -219,7 +236,8 @@ function TruckLists() {
       ) : (
         <div>
           <p className="mx-3 mt-3 text-lg font-medium">
-            Truck Master {`>`} {state ? state?.name : selectedCompanyName ? selectedCompanyName : companyName}
+            Truck Master {is_admin == 2 && `>`}
+            {state ? state?.name : selectedCompanyName}
           </p>
           <div className="flex items-center justify-between gap-5 px-4">
             <div className="relative w-1/4">
@@ -271,7 +289,7 @@ function TruckLists() {
               </button>
             </div>
           </div>
-          <div className="mx-2 mt-3 min-w-full overflow-hidden rounded-lg shadow">
+          <div className="ml-3 mt-3 w-[98%] min-w-[90%] overflow-hidden rounded-lg shadow">
             <table className=" w-full text-[12px]">
               <thead className="border bg-white">
                 <tr>
@@ -327,27 +345,37 @@ function TruckLists() {
                 <p>{`Start by creating a new truck using the 'Add Truck' button above.`}</p>
               </div>
             )}
-            {truckData.length > 0 && (
-              <div className="flex w-full justify-between bg-white p-2 text-sm">
-                <div className="flex items-center gap-3 text-gray-500">
-                  <p>Showing</p>
-                  <select className="rounded-lg border-gray-300 px-1 py-0">
-                    <option>10</option>
-                    <option>20</option>
-                    <option>30</option>
-                    <option>40</option>
-                  </select>
-                  <p>Entries</p>
-                </div>
-                <div className="flex gap-2">
-                  <button className="rounded border  border-gray-300 px-2 py-0 text-lg">{`<`}</button>
-                  <button className="rounded bg-sky-500 px-2 py-0 text-sm text-white">1</button>
-                  <button className="rounded px-2 py-0 text-sm">2</button>
-                  <button className="rounded px-2 py-0 text-sm">3</button>
-                  <button className="rounded border border-gray-300 px-2 py-0 text-center text-lg">{`>`}</button>
-                </div>
+
+            <div className="flex w-full justify-between bg-white p-2 text-sm">
+              <div className="flex items-center gap-3 text-gray-500">
+                <p>Showing</p>
+                <select
+                  id="select"
+                  value={pageSize}
+                  className="rounded-lg border-gray-300 px-1 py-0"
+                  onChange={handleChange}>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="30">30</option>
+                  <option value="40">40</option>
+                </select>
+                <p>Entries</p>
               </div>
-            )}
+              <div className="flex items-center gap-2">
+                <button
+                  className={`rounded border border-gray-300 px-2 py-0 text-lg ${
+                    page === 1 ? 'cursor-not-allowed' : ''
+                  }`}
+                  onClick={handlePrevPage}
+                  disabled={page === 1}>{`<`}</button>
+                <button className="rounded bg-sky-500 px-2 py-1 text-sm text-white">{page}</button>
+                <span className=" rounded px-2 py-0 text-sm">{page + 1}</span>
+                <span className=" rounded px-2 py-0 text-sm">{page + 2}</span>
+                <button
+                  className="rounded border border-gray-300 px-2 py-0 text-center text-lg"
+                  onClick={handleNextPage}>{`>`}</button>
+              </div>
+            </div>
           </div>
         </div>
       )}
