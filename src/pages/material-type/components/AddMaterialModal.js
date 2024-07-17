@@ -10,10 +10,10 @@ function AddMaterialModal({ handleClose, getMaterialData, state, editData, handl
   const company_id = sessionStorage.getItem('company_id');
   const [material_type, setMaterial_type] = useState(editData ? editData.material_type : '');
 
-  console.log(state);
+  // console.log(state);
 
   const is_admin = sessionStorage.getItem('is_admin');
-  const companyId = is_admin == 2 ? state.id : company_id;
+  // const companyId = is_admin == 2 ? state.id : company_id;
 
   const handleAddMaterial = async () => {
     if (material_type === '') {
@@ -25,11 +25,11 @@ function AddMaterialModal({ handleClose, getMaterialData, state, editData, handl
     try {
       const response = await axios.post(`${BACKEND_URL}/materialtype/create_material_type/`, {
         material_type,
-        created_by: companyId,
+        created_by: company_id,
       });
       setMaterial_type('');
       console.log(response);
-      getMaterialData(companyId);
+      getMaterialData(company_id);
       toast('Added Material Sucessfully', { type: 'success' });
     } catch (err) {
       toast('There is some error while Adding Material', { type: 'error' });
@@ -52,7 +52,7 @@ function AddMaterialModal({ handleClose, getMaterialData, state, editData, handl
       setMaterial_type('');
       handleSetEdit();
       console.log(response);
-      getMaterialData(companyId);
+      getMaterialData(company_id);
       toast('Edited Material Sucessfully', { type: 'success' });
     } catch (err) {
       toast('There is some error while Editing Material', { type: 'error' });

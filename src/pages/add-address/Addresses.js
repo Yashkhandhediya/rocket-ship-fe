@@ -31,13 +31,13 @@ function Addresses() {
   const is_admin = sessionStorage.getItem('is_admin');
   const { state } = useLocation();
   const navigate = useNavigate();
-  const companyId = is_admin == 2 ? state.id : company_id;
+  // const companyId = is_admin == 2 ? state.id : company_id;
   const [searchData, setSearchData] = useState([]);
-  const address_data = query.length !== 0 ? searchData : addressData;
   const [isFocused, setIsFocused] = useState(false);
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const address_data = query.length !== 0 ? searchData : addressData;
 
   const handleNextPage = () => {
     setPage((prev) => prev + 1);
@@ -65,15 +65,15 @@ function Addresses() {
   };
 
   useEffect(() => {
-    if (state) {
-      getAddressData(state.id);
-      return;
-    }
-    if (is_admin === '2') {
-      fetchDataFromAPI();
-    } else {
-      getAddressData(company_id);
-    }
+    // if (state) {
+    //   getAddressData(state.id);
+    //   return;
+    // }
+    // if (is_admin === '2') {
+    //   fetchDataFromAPI();
+    // } else {
+    getAddressData(company_id);
+    // }
   }, [is_admin, company_id, page, pageSize]);
 
   const fetchDataFromAPI = async () => {
@@ -185,7 +185,7 @@ function Addresses() {
     setLoading(true);
     try {
       const response = await axios.delete(`${BACKEND_URL}/address/delete_booking_address/?address_id=${id}`);
-      getAddressData(companyId);
+      getAddressData(company_id);
       toast('Delete Successfully', { type: 'success' });
     } catch (err) {
       console.log(err);
@@ -199,7 +199,7 @@ function Addresses() {
     setShowAddAddress(false);
   };
 
-  const handleShowAddressModal = (id) => {
+  const handleShowAddressModal = () => {
     setShowAddAddress((prev) => !prev);
   };
 
@@ -215,7 +215,7 @@ function Addresses() {
   const getSearchData = async () => {
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/address/address_suggestion/?string=${query}&created_by=${companyId}`,
+        `${BACKEND_URL}/address/address_suggestion/?string=${query}&created_by=${company_id}`,
       );
       console.log(response);
       setSearchData(response.data);

@@ -12,8 +12,8 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
   const company_id = sessionStorage.getItem('company_id');
   const [errors, setErrors] = useState(null);
   const is_admin = sessionStorage.getItem('is_admin');
-  const id = is_admin == 2 ? state.id : company_id;
-  console.log(id);
+  // const id = is_admin == 2 ? state.id : company_id;
+  // console.log(id);
   const [truckData, setTruckData] = useState({
     truck_type: editData ? editData?.truck_type : 'Select Type',
     capacity_type: editData ? editData?.capacity_type : 'KG',
@@ -50,7 +50,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
     try {
       const response = await axios.post(`${BACKEND_URL}/trucktype/create_truck_type/`, {
         ...truckData,
-        created_by: id,
+        created_by: company_id,
       });
       setTruckData({
         truck_type: 'Select Type',
@@ -60,7 +60,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
         capacity: '',
       });
       console.log(response);
-      getTruckData(id);
+      getTruckData(company_id);
       toast('Added Truck Sucessfully', { type: 'success' });
     } catch (err) {
       toast('There is some error while Adding Truck', { type: 'error' });
@@ -91,7 +91,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
       });
       handleSetEdit();
       console.log(response);
-      getTruckData(id);
+      getTruckData(company_id);
       toast('Edited Truck Sucessfully', { type: 'success' });
     } catch (err) {
       toast('There is some error while Editing Truck', { type: 'error' });

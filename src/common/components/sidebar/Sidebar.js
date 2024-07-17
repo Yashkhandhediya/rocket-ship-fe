@@ -102,9 +102,9 @@ const Sidebar = () => {
       {/* <hr className="my-4 border-[#c] text-[#0000001a] md:hidden" /> */}
       <div className="mt-4">
         <div className="mx-3.5 mb-3 flex flex-col">
-          {parseInt(is_admin) !== 2 && (
+          {/* {parseInt(is_admin) !== 2 && (
             <p className="mb-3 hidden font-bold text-zinc-500 group-hover/sidebar:block">MAIN HOME</p>
-          )}
+          )} */}
 
           <Link to={parseInt(is_admin) === 2 ? '/adminkyc' : '/book'}>
             <div className={`flex items-center p-2`}>
@@ -114,9 +114,9 @@ const Sidebar = () => {
             </div>
           </Link>
         </div>
-        {parseInt(is_admin) !== 2 && (
+        {/* {parseInt(is_admin) !== 2 && (
           <p className="mx-3.5 mb-3 hidden font-bold text-zinc-500 group-hover/sidebar:block">ALL PAGES</p>
-        )}
+        )} */}
 
         {sidebarLinks.map((nav, i) => {
           if (nav.path) {

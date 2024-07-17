@@ -518,7 +518,7 @@ const Allindent = () => {
                   />
                 </div>
                 <div className="flex flex-row items-center justify-between">
-                  {parseInt(is_admin) ? ( // render based on is_admin value
+                  {is_admin == 2 ? ( // render based on is_admin value
                     <div className="flex flex-row items-end justify-between">
                       <div className="mt-4">
                         <label className="text-xs font-semibold text-purple-400">RCSL PRICE</label>

@@ -59,7 +59,7 @@ function AddAddressModal({ handleClose, getAddressData, stateData, editData, han
   const is_admin = sessionStorage.getItem('is_admin');
 
   const [error, setError] = useState(null);
-  const companyId = is_admin == 2 ? stateData.id : company_id;
+  // const companyId = is_admin == 2 ? stateData.id : company_id;
 
   const handleClear = () => {
     setAddress('');
@@ -88,7 +88,7 @@ function AddAddressModal({ handleClose, getAddressData, stateData, editData, han
     setLoading(true);
     handleClose();
     axios
-      .post(BACKEND_URL + `/address/truck_booking_address/?created_by=${companyId}`, {
+      .post(BACKEND_URL + `/address/truck_booking_address/?created_by=${company_id}`, {
         area: address,
         pincode,
         state,
@@ -98,7 +98,7 @@ function AddAddressModal({ handleClose, getAddressData, stateData, editData, han
       .then((response) => {
         setLoading(false);
         handleClear();
-        getAddressData(companyId);
+        getAddressData(company_id);
         toast('Address Added successfully!', { type: 'success' });
       })
       .catch((err) => {
@@ -124,7 +124,7 @@ function AddAddressModal({ handleClose, getAddressData, stateData, editData, han
         setLoading(false);
         handleClear();
         handleSetEdit();
-        getAddressData(companyId);
+        getAddressData(company_id);
         toast('Address Updated successfully!', { type: 'success' });
       })
       .catch((err) => {

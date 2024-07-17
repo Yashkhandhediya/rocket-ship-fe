@@ -31,7 +31,7 @@ function MaterialTypes() {
   const is_admin = sessionStorage.getItem('is_admin');
   const { state } = useLocation();
   const navigate = useNavigate();
-  const companyId = is_admin == 2 ? state.id : company_id;
+  // const companyId = is_admin == 2 ? state.id : company_id;
   const [searchData, setSearchData] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
   const [query, setQuery] = useState('');
@@ -65,15 +65,15 @@ function MaterialTypes() {
   };
 
   useEffect(() => {
-    if (state) {
-      getMaterialData(state.id);
-      return;
-    }
-    if (is_admin === '2') {
-      fetchDataFromAPI();
-    } else {
-      getMaterialData(company_id);
-    }
+    // if (state) {
+    //   getMaterialData(state.id);
+    //   return;
+    // }
+    // if (is_admin === '2') {
+    //   fetchDataFromAPI();
+    // } else {
+    getMaterialData(company_id);
+    // }
   }, [is_admin, company_id, page, pageSize]);
 
   const fetchDataFromAPI = async () => {
@@ -180,7 +180,7 @@ function MaterialTypes() {
     setLoading(true);
     try {
       await axios.delete(`${BACKEND_URL}/materialtype/delete_material_type/?material_id=${id}`);
-      getMaterialData(companyId, selectedCompanyName);
+      getMaterialData(company_id, selectedCompanyName);
       toast('Delete Sucessfully', { type: 'success' });
     } catch (err) {
       console.log(err);
@@ -192,7 +192,7 @@ function MaterialTypes() {
   const getSearchData = async () => {
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/materialtype/search_material_type/?string=${query}&company_id=${companyId}`,
+        `${BACKEND_URL}/materialtype/search_material_type/?string=${query}&company_id=${company_id}`,
       );
       console.log(response);
       setSearchData(response.data);

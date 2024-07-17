@@ -43,7 +43,7 @@ function TruckLists() {
   const [isFocused, setIsFocused] = useState(false);
   const [query, setQuery] = useState('');
 
-  const companyID = is_admin == 2 ? state.id : company_id;
+  // const companyID = is_admin == 2 ? state.id : company_id;
   const truck_data = query.length !== 0 ? searchData : truckData;
   const handleNextPage = () => {
     setPage((prev) => prev + 1);
@@ -58,15 +58,15 @@ function TruckLists() {
   };
 
   useEffect(() => {
-    if (state) {
-      getTruckData(state.id);
-      return;
-    }
-    if (is_admin === '2') {
-      fetchDataFromAPI();
-    } else {
-      getTruckData(company_id);
-    }
+    // if (state) {
+    //   getTruckData(state.id);
+    //   return;
+    // }
+    // if (is_admin === '2') {
+    //   fetchDataFromAPI();
+    // } else {
+    getTruckData(company_id);
+    // }
   }, [is_admin, company_id, page, pageSize]);
 
   console.log(state);
@@ -151,7 +151,7 @@ function TruckLists() {
   const getSearchData = async () => {
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/trucktype/search_truck_type/?string=${query}&company_id=${companyID}`,
+        `${BACKEND_URL}/trucktype/search_truck_type/?string=${query}&company_id=${company_id}`,
       );
       console.log(response);
       setSearchData(response.data);

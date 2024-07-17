@@ -152,7 +152,7 @@ const Adminkyc = () => {
                   <img src={kycIcon} className="h-5" />
                 </Tooltip>
               </div>
-              <button
+              {/* <button
                 className="min-w-fit rounded bg-sky-500 px-2 py-1 text-white hover:bg-sky-700"
                 onClick={() => navigate(`/trucks`, { state: row?.original })}
                 disabled={row?.original?.kyc_status_id === 2}>
@@ -180,7 +180,7 @@ const Adminkyc = () => {
                   content={`${row?.original?.kyc_status_id === 2 ? 'Requires KYC Verification' : 'Address'}`}>
                   <img src={addressIcon} className="h-5" />
                 </Tooltip>
-              </button>
+              </button> */}
               <button
                 className="min-w-fit rounded bg-sky-500 px-2 py-1.5 text-white hover:bg-sky-700"
                 onClick={() => navigate(`/user/${row?.original?.id}`, { state: row?.original?.name })}
