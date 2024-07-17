@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Loader } from '../../../common/components';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import axios from 'axios';
@@ -57,6 +57,7 @@ function AddAddressModal({ handleClose, getAddressData, stateData, editData, han
   const [country, setCountry] = useState(editData ? editData.country : '');
   const company_id = sessionStorage.getItem('company_id');
   const is_admin = sessionStorage.getItem('is_admin');
+  const [validPincode, setValidPincode] = useState(false);
 
   const [error, setError] = useState(null);
   // const companyId = is_admin == 2 ? stateData.id : company_id;
@@ -69,12 +70,27 @@ function AddAddressModal({ handleClose, getAddressData, stateData, editData, han
     setState('');
   };
 
+  const validatePincode = (pin) => {
+    // Example validation criteria: 6 digits only
+    const pinRegex = /^[0-9]{6}$/;
+    const isValid = pinRegex.test(pin);
+    setValidPincode(isValid);
+  };
+
+  useEffect(() => {
+    validatePincode(pincode);
+  }, [pincode]);
+
   const requiredFields = () => {
     const newErrors = {};
 
     if (address === '') newErrors.address = 'Address is Required';
     if (city === '') newErrors.city = 'City is Required';
-    if (pincode === '') newErrors.pincode = 'Pincode is Required';
+    if (pincode === '') {
+      newErrors.pincode = 'Pincode is Required';
+    } else if (!validPincode) {
+      newErrors.pincode = 'Invalid Pincode';
+    }
     if (state === '') newErrors.state = 'State is Required';
     if (country === '') newErrors.country = 'Country is Required';
     return newErrors;
