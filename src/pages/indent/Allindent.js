@@ -622,9 +622,7 @@ const Allindent = () => {
                   <div className="mt-2 flex flex-row items-center justify-between p-1 ">
                     <div className="mt-2">
                       <label className="text-xs font-semibold text-purple-400">COUNTER PRICE</label>
-                      {data.counter_price == null &&
-                      sessionStorage.getItem('is_company') == 0 &&
-                      sessionStorage.getItem('activeTab') == 2 ? (
+                      {data.counter_price == null && sessionStorage.getItem('activeTab') == 2 ? (
                         <input
                           type="text"
                           value={rcslPrice[data.id] || ''}
@@ -642,7 +640,7 @@ const Allindent = () => {
                       )}
                     </div>
 
-                    {sessionStorage.getItem('is_company') == 0 ? (
+                    {sessionStorage.getItem('activeTab') == 2 ? (
                       showBtn && (
                         <div className="mt-2">
                           {data.trip_status !== 2 &&
