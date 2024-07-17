@@ -150,7 +150,7 @@ const Allindent = () => {
 
   const checkConfirmRejectButtonShowCondition = (data) => {
     console.log('yasah');
-    if (is_company == 1) {
+    if (is_admin == 2) {
       return false;
     } else
       return (
