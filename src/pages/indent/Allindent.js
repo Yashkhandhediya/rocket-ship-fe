@@ -656,32 +656,34 @@ const Allindent = () => {
                         )}
                     </div>
                     {/* )) : ( */}
-                    <div className="mt-4 flex flex-row">
-                      {data.trip_status !== 2 &&
-                        data.trip_status !== 3 &&
-                        data.trip_status !== 0 &&
-                        data.counter_price > 0 && (
-                          <>
-                            {showBtn && (
-                              <button
-                                className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
-                                onClick={() => {
-                                  // handleConfirmation(data.id, 2);
-                                  handleConfirmClick(data.id);
-                                }}>
-                                Confirm
-                              </button>
-                            )}
-                            {showBtn && (
-                              <button
-                                className="rounded-lg bg-red-500 px-3 py-2 text-xs font-semibold text-white hover:bg-red-600"
-                                onClick={() => handleRejectClick(data.id)}>
-                                Reject
-                              </button>
-                            )}
-                          </>
-                        )}
-                    </div>
+                    {is_admin == 2 && (
+                      <div className="mt-4 flex flex-row">
+                        {data.trip_status !== 2 &&
+                          data.trip_status !== 3 &&
+                          data.trip_status !== 0 &&
+                          data.counter_price > 0 && (
+                            <>
+                              {showBtn && (
+                                <button
+                                  className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
+                                  onClick={() => {
+                                    // handleConfirmation(data.id, 2);
+                                    handleConfirmClick(data.id);
+                                  }}>
+                                  Confirm
+                                </button>
+                              )}
+                              {showBtn && (
+                                <button
+                                  className="rounded-lg bg-red-500 px-3 py-2 text-xs font-semibold text-white hover:bg-red-600"
+                                  onClick={() => handleRejectClick(data.id)}>
+                                  Reject
+                                </button>
+                              )}
+                            </>
+                          )}
+                      </div>
+                    )}
                     {/* )} */}
                   </div>
                 )}
