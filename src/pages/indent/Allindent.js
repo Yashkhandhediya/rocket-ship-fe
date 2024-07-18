@@ -639,52 +639,50 @@ const Allindent = () => {
                         />
                       )}
                     </div>
-
-                    {sessionStorage.getItem('activeTab') == 2 ? (
-                      showBtn && (
-                        <div className="mt-2">
-                          {data.trip_status !== 2 &&
-                            data.trip_status !== 3 &&
-                            data.trip_status !== 0 &&
-                            data.counter_price == null && (
+                    {/* {sessionStorage.getItem('activeTab') == 2 ? ( */}
+                    {/* showBtn && ( */}
+                    <div className="mt-2">
+                      {data.trip_status !== 2 &&
+                        data.trip_status !== 3 &&
+                        data.trip_status !== 0 &&
+                        data.counter_price == null && (
+                          <button
+                            className="mt-2 rounded-lg bg-green-500 px-2 py-1 font-semibold text-white hover:bg-green-600"
+                            onClick={() => {
+                              handleRcslPrice(data.id);
+                            }}>
+                            Counter Offer
+                          </button>
+                        )}
+                    </div>
+                    {/* )) : ( */}
+                    <div className="mt-4 flex flex-row">
+                      {data.trip_status !== 2 &&
+                        data.trip_status !== 3 &&
+                        data.trip_status !== 0 &&
+                        data.counter_price > 0 && (
+                          <>
+                            {showBtn && (
                               <button
-                                className="mt-2 rounded-lg bg-green-500 px-2 py-1 font-semibold text-white hover:bg-green-600"
+                                className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
                                 onClick={() => {
-                                  handleRcslPrice(data.id);
+                                  // handleConfirmation(data.id, 2);
+                                  handleConfirmClick(data.id);
                                 }}>
-                                Counter Offer
+                                Confirm
                               </button>
                             )}
-                        </div>
-                      )
-                    ) : (
-                      <div className="mt-4 flex flex-row">
-                        {data.trip_status !== 2 &&
-                          data.trip_status !== 3 &&
-                          data.trip_status !== 0 &&
-                          data.counter_price > 0 && (
-                            <>
-                              {showBtn && (
-                                <button
-                                  className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
-                                  onClick={() => {
-                                    // handleConfirmation(data.id, 2);
-                                    handleConfirmClick(data.id);
-                                  }}>
-                                  Confirm
-                                </button>
-                              )}
-                              {showBtn && (
-                                <button
-                                  className="rounded-lg bg-red-500 px-3 py-2 text-xs font-semibold text-white hover:bg-red-600"
-                                  onClick={() => handleRejectClick(data.id)}>
-                                  Reject
-                                </button>
-                              )}
-                            </>
-                          )}
-                      </div>
-                    )}
+                            {showBtn && (
+                              <button
+                                className="rounded-lg bg-red-500 px-3 py-2 text-xs font-semibold text-white hover:bg-red-600"
+                                onClick={() => handleRejectClick(data.id)}>
+                                Reject
+                              </button>
+                            )}
+                          </>
+                        )}
+                    </div>
+                    {/* )} */}
                   </div>
                 )}
 
