@@ -52,7 +52,7 @@ export const sidebarLinks = [
   parseInt(is_admin) != 2 && parseInt(is_company)
     ? {
         title: 'Create User',
-        path: '/signup-user',
+        path: '/users',
         icon: user,
         hoverIcon: user,
       }

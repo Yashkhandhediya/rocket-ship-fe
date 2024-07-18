@@ -3,6 +3,7 @@ import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithS
 import { cityList } from './cities';
 import { useNavigate, Link } from 'react-router-dom';
 import { Modal } from 'flowbite-react';
+import copyRightIcon from '../../common/images/copyright.png';
 
 const Book = () => {
   const tabs = [1, 2, 3];
@@ -168,12 +169,12 @@ const Book = () => {
             <marquee className="text-white">KYC Verification Is Pending</marquee>
           </div>
         )}
-        <p className="text-6xl font-bold">Best Transport Service In India</p>
+        <p className="text-5xl font-bold">Book Truck from Anywhere to Anywhere</p>
         <p className="mb-3 mt-6 w-[5%] rounded border-[3px] border-sky-500"></p>
         <p className="w-[85%] text-center text-lg text-[#707070]">
-          Welcome to Cargo Cloud truck transport services, your top choice for truck transport throughout
-          India. We have container trucks and open trucks at competitive rates. Our Ahmedabad transport
-          contact number 8925825497, dial for more information.
+          Welcome to BookTruck Online Portal, your preferred partner for any type of road logistics throughout
+          India. Now, get instant and competitive rates for any type of truck. Contact our Central Helpdesk at
+          +91 9327885065 or mail at <a href="mailto:enquiry@vcscl.in">enquiry@vcscl.in</a>for more information
         </p>
         <div className="mt-5 flex w-[88%] flex-row gap-6 p-4">
           {tabs.map((tab, index) => (
@@ -227,6 +228,9 @@ const Book = () => {
             </div>
           ))}
         </div>
+      </div>
+      <div className="mx-2 flex items-center gap-1">
+        <img src={copyRightIcon} className="h-5" /> <p className="italic">Copyrights by Veracity</p>
       </div>
     </PageWithSidebar>
   );

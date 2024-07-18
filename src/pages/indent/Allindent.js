@@ -50,6 +50,7 @@ const Allindent = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [query, setQuery] = useState('');
   const filtered_info = query.length !== 0 ? searchData : filteredInfo;
+  const [actionAlreadyDone, setActionAlreadyDone] = useState(false);
 
   console.log('IDFFFFFF', selectedTab);
 
@@ -264,6 +265,7 @@ const Allindent = () => {
         console.log('111111111', res);
         if (res?.data?.status_code == 401) {
           toast('Action is already done', { type: 'error' });
+          setActionAlreadyDone(true);
           setLoading(false);
           return;
         }
