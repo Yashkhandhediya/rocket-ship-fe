@@ -623,7 +623,7 @@ const Allindent = () => {
                     <div className="mt-2">
                       <label className="text-xs font-semibold text-purple-400">COUNTER PRICE</label>
                       {data.counter_price == null &&
-                      // sessionStorage.getItem('activeTab') == 2 &&
+                      sessionStorage.getItem('activeTab') == 2 &&
                       sessionStorage.getItem('is_admin') != 2 ? (
                         <input
                           type="text"
@@ -641,7 +641,7 @@ const Allindent = () => {
                         />
                       )}
                     </div>
-                    {sessionStorage.getItem('is_admin') != 2 ? (
+                    {sessionStorage.getItem('is_admin') != 2 && sessionStorage.getItem('activeTab') == 2 ? (
                       showBtn && (
                         <div className="mt-2">
                           {data.trip_status !== 2 &&
