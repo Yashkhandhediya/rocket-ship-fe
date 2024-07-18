@@ -241,7 +241,7 @@ const Allindent = () => {
         console.log('RESPONSEEEEEE11', res);
         toast('RCSL Price Successfully Submitted', { type: 'success' });
         setLoading(false);
-        // window.location.reload();
+        window.location.reload();
       })
       .catch((err) => {
         console.log('Errorororor', err);
@@ -273,7 +273,7 @@ const Allindent = () => {
         setLoading(false);
         setShowBtn(false);
         setPopupCardId(null);
-        // window.location.reload();
+        window.location.reload();
       })
       .catch((err) => {
         console.log('222222222', err);
