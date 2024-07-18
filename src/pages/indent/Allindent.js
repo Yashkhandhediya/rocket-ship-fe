@@ -641,8 +641,9 @@ const Allindent = () => {
                         />
                       )}
                     </div>
-                    {sessionStorage.getItem('is_admin') != 2 && sessionStorage.getItem('activeTab') == 2 ? (
-                      showBtn && (
+                    {sessionStorage.getItem('is_admin') != 2 ? (
+                      showBtn &&
+                      sessionStorage.getItem('activeTab') == 2 && (
                         <div className="mt-2">
                           {data.trip_status !== 2 &&
                             data.trip_status !== 3 &&
