@@ -622,7 +622,9 @@ const Allindent = () => {
                   <div className="mt-2 flex flex-row items-center justify-between p-1 ">
                     <div className="mt-2">
                       <label className="text-xs font-semibold text-purple-400">COUNTER PRICE</label>
-                      {data.counter_price == null && sessionStorage.getItem('activeTab') == 2 ? (
+                      {data.counter_price == null &&
+                      // sessionStorage.getItem('activeTab') == 2 &&
+                      sessionStorage.getItem('is_admin') != 2 ? (
                         <input
                           type="text"
                           value={rcslPrice[data.id] || ''}
@@ -639,24 +641,24 @@ const Allindent = () => {
                         />
                       )}
                     </div>
-                    {/* {sessionStorage.getItem('activeTab') == 2 ? ( */}
-                    {/* showBtn && ( */}
-                    <div className="mt-2">
-                      {data.trip_status !== 2 &&
-                        data.trip_status !== 3 &&
-                        data.trip_status !== 0 &&
-                        data.counter_price == null && (
-                          <button
-                            className="mt-2 rounded-lg bg-green-500 px-2 py-1 font-semibold text-white hover:bg-green-600"
-                            onClick={() => {
-                              handleRcslPrice(data.id);
-                            }}>
-                            Counter Offer
-                          </button>
-                        )}
-                    </div>
-                    {/* )) : ( */}
-                    {is_admin == 2 && (
+                    {sessionStorage.getItem('is_admin') != 2 ? (
+                      showBtn && (
+                        <div className="mt-2">
+                          {data.trip_status !== 2 &&
+                            data.trip_status !== 3 &&
+                            data.trip_status !== 0 &&
+                            data.counter_price == null && (
+                              <button
+                                className="mt-2 rounded-lg bg-green-500 px-2 py-1 font-semibold text-white hover:bg-green-600"
+                                onClick={() => {
+                                  handleRcslPrice(data.id);
+                                }}>
+                                Counter Offer
+                              </button>
+                            )}
+                        </div>
+                      )
+                    ) : (
                       <div className="mt-4 flex flex-row">
                         {data.trip_status !== 2 &&
                           data.trip_status !== 3 &&
@@ -684,7 +686,6 @@ const Allindent = () => {
                           )}
                       </div>
                     )}
-                    {/* )} */}
                   </div>
                 )}
 
