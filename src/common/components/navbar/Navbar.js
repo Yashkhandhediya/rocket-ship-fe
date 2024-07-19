@@ -270,8 +270,9 @@ const Navbar = () => {
           </button>
         )}
       </div> */}
+      <p className="flex w-1/2 items-center justify-end text-3xl text-sky-500">Welcome to Book Truck</p>
 
-      <div className=" flex flex-row items-center gap-3">
+      <div className=" flex w-[40%] flex-row items-center  justify-end ">
         {/* <FaRegComments className="rounded-full bg-blue-50 p-2 text-3xl" />
         <IoNotificationsOutline className="rounded-full bg-blue-50 p-2 text-3xl" /> */}
 

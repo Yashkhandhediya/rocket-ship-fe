@@ -157,7 +157,7 @@ const Book = () => {
             style={{ textAlign: 'center' }}>
             <marquee className="font-semibold text-white">
               <Link to={'/seller/kyc'}>
-                Click here to complete your KYC and get non-disrupted shipping and COD remittances
+                Click here to complete your KYC and get non-disrupted Book Truck and COD remittances
               </Link>
             </marquee>
           </div>
