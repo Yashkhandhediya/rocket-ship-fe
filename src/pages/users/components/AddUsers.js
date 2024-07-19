@@ -102,6 +102,7 @@ function AddUsers({ handleClose, getUsersData, editData, handleSetEdit }) {
       });
       handleClear();
       handleSetEdit();
+      getUsersData();
       toast('User Edited Successfully', { type: 'success' });
     } catch (err) {
       console.log('err');
