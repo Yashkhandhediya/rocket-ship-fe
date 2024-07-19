@@ -149,7 +149,7 @@ const OtpPopup = ({
           toast('Login Success', { type: 'success' });
           // navigate('/seller/home');
           // navigate(`/all-indent/${id_user}`);
-          navigate(parseInt(is_admin) === 2 ? "/adminkyc" : "/book");
+          navigate(parseInt(is_admin) === 2 ? '/adminkyc' : '/book');
           window.location.reload();
         } else {
           setMessage(true);
@@ -246,7 +246,7 @@ const OtpPopup = ({
                   <div className="mt-auto">Resend OTP in 00:{formattedSeconds} sec</div>
                 ) : (
                   <button
-                    className="mb-2 cursor-pointer text-[#7973ef]"
+                    className="mb-2 cursor-pointer text-sky-500"
                     onClick={() => {
                       setSeconds(45);
                       handleSendOTP();
@@ -262,14 +262,12 @@ const OtpPopup = ({
                       Verify Account
                     </button>
                     <button
-                      className="mb-2 mt-2 cursor-pointer justify-center text-[#7973ef]"
+                      className="mb-2 mt-2 flex cursor-pointer items-center justify-center  gap-2 text-sky-500"
                       onClick={() => {
                         navigate('/login');
                       }}>
-                      <span className="">
-                        <i className="fa-solid fa-arrow-left"></i>
-                      </span>
-                      Back
+                      <i className="fa-solid fa-arrow-left"></i>
+                      <span>Back</span>
                     </button>
                   </div>
                 </div>

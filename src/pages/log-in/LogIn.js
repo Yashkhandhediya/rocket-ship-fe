@@ -17,6 +17,7 @@ const LogIn = () => {
   const [companyId, setCompanyId] = useState(null);
   const [handlePopup, setHandlePopup] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [loginInput, setLoginInput] = useState({
     username: '',
     password: '',
@@ -30,6 +31,10 @@ const LogIn = () => {
       ...loginInput,
       [id]: value,
     });
+  };
+
+  const handleShowPassword = () => {
+    setShowPassword((prev) => !prev);
   };
 
   const handleForgotPassword = () => {
@@ -63,7 +68,7 @@ const LogIn = () => {
       .post(
         BACKEND_URL + apiURL,
         {
-          username: loginInput.username,
+          username: loginInput.username.toLowerCase(),
           password: loginInput.password,
         },
         { headers },
@@ -92,7 +97,10 @@ const LogIn = () => {
           };
           axios
             .post(
-              BACKEND_URL + `${otpURL}/generate_otp?email_id=${loginInput.username}&${userType === 'user' ? 'user_id' : 'comp_id'}=${user_id}`,
+              BACKEND_URL +
+                `${otpURL}/generate_otp?email_id=${loginInput.username}&${
+                  userType === 'user' ? 'user_id' : 'comp_id'
+                }=${user_id}`,
               otpPayload,
               { headers },
             )

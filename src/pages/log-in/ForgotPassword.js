@@ -45,13 +45,13 @@ const ForgotPassword = () => {
         if (otpResponse.data.status === 'Success') {
           const generateOtpUrl = type_user === 'user' ? `/users/generate_otp` : `/company/generate_otp`;
           let queryParams = `?email_id=${encodeURIComponent(userInput.username)}`;
-  
+
           if (type_user !== 'user') {
             const compId = otpResponse.data.comp_id;
             queryParams += `&comp_id=${encodeURIComponent(compId)}`;
             setCompId(compId);
           }
-  
+
           const fullUrl = BACKEND_URL + generateOtpUrl + queryParams;
           console.log(fullUrl);
           setHandlePopup(true);
@@ -82,7 +82,7 @@ const ForgotPassword = () => {
       {loading && <Loader />}
       {!handlePopup && (
         <div className="mx-auto w-[62%] max-w-lg rounded-md bg-white p-8 shadow-md">
-          <button onClick={() => window.history.back()} className="mb-4 font-semibold text-indigo-600">
+          <button onClick={() => window.history.back()} className="mb-4 font-semibold text-sky-500">
             {'< Back'}
           </button>
           <h2 className="mb-6 text-2xl font-bold">Forgot Your Password</h2>
@@ -103,7 +103,7 @@ const ForgotPassword = () => {
 
           <div>
             <button
-              className={`mb-6 mt-4 flex w-full flex-row items-center justify-center rounded-xl border border-none bg-blue-700 p-4 text-center text-base font-semibold text-white shadow-sm outline-none hover:bg-blue-800 ${
+              className={`mb-6 mt-4 flex w-full flex-row items-center justify-center rounded-xl border border-none bg-sky-500 p-4 text-center text-base font-semibold text-white shadow-sm outline-none hover:bg-blue-800 ${
                 !userInput.username || !isEmailValid(userInput.username)
                   ? 'cursor-not-allowed opacity-50'
                   : ''

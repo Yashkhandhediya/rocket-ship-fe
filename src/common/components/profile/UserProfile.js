@@ -13,6 +13,7 @@ const UserProfile = () => {
   const [editLastName, setEditLastName] = useState(false);
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleFirstNameClick = () => {
     setEditFirstName(true);
@@ -33,6 +34,15 @@ const UserProfile = () => {
   // const handleFirstNameBlur = () => {
   //   setEditFirstName(false);
   // };
+  const requiredFieldErrors = () => {
+    const newErrors = {};
+
+    if (firstName == '') newErrors.first_name = 'First Name is Required';
+    if (lastName == '') newErrors.last_name = 'Last Name is Required';
+    return newErrors;
+  };
+
+  console.log(error);
 
   const handleData = () => {
     setLoading(true);
@@ -60,6 +70,12 @@ const UserProfile = () => {
   };
 
   const handleUpdate = () => {
+    const requiredError = requiredFieldErrors();
+    if (Object.keys(requiredError).length > 0) {
+      setError(requiredError);
+      return;
+    }
+    setError(null);
     setLoading(true);
     console.log('Upadte');
     axios
@@ -98,16 +114,19 @@ const UserProfile = () => {
           <p className="ml-36 w-[12%] text-sm font-semibold">First Name :</p>
           <div className="ml-48 flex flex-row">
             {editFirstName ? (
-              <input
-                type="text"
-                value={firstName}
-                onChange={handleFirstNameChange}
-                // onBlur={handleFirstNameBlur}
-                className="h-7 rounded-md text-gray-600"
-              />
+              <>
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={handleFirstNameChange}
+                  // onBlur={handleFirstNameBlur}
+                  className="h-7 rounded-md text-gray-600"
+                />
+              </>
             ) : (
               <p className="text-sm text-gray-600">{data?.first_name || ''}</p>
             )}
+
             {!editFirstName && (
               <button onClick={handleFirstNameClick} className="ml-4 text-sky-600 hover:text-gray-600">
                 <svg
@@ -119,6 +138,7 @@ const UserProfile = () => {
                 </svg>
               </button>
             )}
+            {error && <p className="w-1/2 text-xs text-red-500">{error?.first_name}</p>}
           </div>
         </div>
         <div className="mt-4 flex flex-row">
@@ -145,6 +165,7 @@ const UserProfile = () => {
                 </svg>
               </button>
             )}
+            {error && <p className="w-1/2 text-xs text-red-500">{error?.last_name}</p>}
           </div>
         </div>
         <div className="mt-4 flex flex-row">
