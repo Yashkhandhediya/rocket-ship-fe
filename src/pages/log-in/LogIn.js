@@ -6,6 +6,7 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import OtpPopup from './OtpPopup';
 import { homelogo, LogoRCSL } from '../../common/images';
 import { Loader } from '../../common/components';
+import deliveryCarLogo from '../../common/images/delivery-car.png';
 // import { GoogleLogin } from 'react-google-login';
 // import {gapi} from 'gapi-script'
 
@@ -140,8 +141,9 @@ const LogIn = () => {
     <>
       {loading && <Loader />}
       <div className="flex-column flex h-full">
-        <div className="flex h-full w-[49%] flex-col items-center justify-center">
-          <img src={homelogo} className="h-full w-[97%] object-cover" alt="Logo"></img>
+        <div className="flex h-full w-1/2 flex-col items-center justify-start">
+          <img src={deliveryCarLogo} className="h-[80%] w-[85%] self-end object-cover" alt="Logo"></img>
+          <p className="my-5 self-end text-4xl font-medium">From Anywhere To Anywhere, Anytime</p>
         </div>
         <div className="mt-8 flex h-full w-[49%] flex-col items-center justify-center">
           <div className="mb-8 text-center text-4xl font-bold">
