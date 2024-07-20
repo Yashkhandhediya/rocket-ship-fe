@@ -100,10 +100,14 @@ function AddUsers({ handleClose, getUsersData, editData, handleSetEdit }) {
         contact_no: signupInput.contact_no,
         email_address: signupInput.email_address,
       });
+      if (response.data.msg == 'The user with the same email already exists') {
+        toast(response.data.msg, { type: 'error' });
+      } else {
+        toast('User Edited Successfully', { type: 'success' });
+      }
       handleClear();
       handleSetEdit();
       getUsersData();
-      toast('User Edited Successfully', { type: 'success' });
     } catch (err) {
       console.log('err');
       toast('There is some error while editing user');

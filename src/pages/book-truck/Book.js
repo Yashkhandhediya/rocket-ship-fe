@@ -174,7 +174,11 @@ const Book = () => {
         <p className="w-[85%] text-center text-lg text-[#707070]">
           Welcome to BookTruck Online Portal, your preferred partner for any type of road logistics throughout
           India. Now, get instant and competitive rates for any type of truck. Contact our Central Helpdesk at
-          +91 9327885065 or mail at <a href="mailto:enquiry@vcscl.in">enquiry@vcscl.in</a>for more information
+          <span className="text-sky-500 underline underline-offset-2"> +91 9327885065</span> or mail at{' '}
+          <a href="mailto:enquiry@vcscl.in" className="text-sky-500 underline underline-offset-2">
+            enquiry@vcscl.in
+          </a>{' '}
+          for more information
         </p>
         <div className="mt-5 flex w-[88%] flex-row gap-6 p-4">
           {tabs.map((tab, index) => (

@@ -189,10 +189,11 @@ function Addresses() {
                       <td className="border px-4 py-4 text-center">{index + 1}</td>
                       <td className="border px-4 py-4 text-center">
                         {data.first_name}
+                        {` `}
                         {data.last_name}
                       </td>
                       <td className="border px-4 py-4 text-center">{data.email_address}</td>
-                      <td className="border px-2 py-4 text-center">{data.contact_no}</td>
+                      <td className="border px-2 py-4 text-center font-bold">{data.contact_no}</td>
                       <td className="border px-4 py-4 text-center">
                         {data.kyc_status_id == 1
                           ? 'Upload Pending'
@@ -218,6 +219,12 @@ function Addresses() {
             <div className="flex h-96 flex-col items-center justify-center bg-white">
               <img src={emptyBox} className="h-60" />
               <p>{`Start by creating a new address using the 'Add Address' button above.`}</p>
+            </div>
+          )}
+          {searchData.length === 0 && (
+            <div className="flex h-96 flex-col items-center justify-center bg-white">
+              <img src={emptyBox} className="h-60" />
+              <p>{`No Results Found.`}</p>
             </div>
           )}
           <div className="flex w-full justify-between bg-white p-2 text-sm">
@@ -257,7 +264,7 @@ function Addresses() {
       {showDelete && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#24292e57]">
           <div className="flex h-36 w-64 flex-col items-center justify-center gap-4 rounded-lg bg-white px-4 text-sm font-medium">
-            <p>Are you sure you want to remove this Address?</p>
+            <p>Are you sure you want to remove this User?</p>
             <div className="flex w-full justify-center gap-4">
               <button
                 className="w-1/2 rounded-lg bg-sky-500 px-4 py-1 text-white"
