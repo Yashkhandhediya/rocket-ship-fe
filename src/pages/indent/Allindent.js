@@ -460,8 +460,24 @@ const Allindent = () => {
                     <p className="ml-1 overflow-hidden overflow-ellipsis whitespace-nowrap text-sm text-gray-500">{`₹${data.customer_price}`}</p>
                   </div>
                   <div className="w-2/10 -ml-14">
-                    <p className="mb-1 ml-1 text-xs font-semibold text-purple-400">TRUCK TYPE & TON</p>
-                    <p className="ml-1 text-sm text-gray-500">{data.truck_type_id}</p>
+                    <p className="mb-1 ml-1 text-xs font-semibold text-purple-400">TRUCK DETAILS</p>
+                    <div className="text-[13px] text-zinc-500">
+                      <p className="font-bold">
+                        Type: <span className="font-normal">{data.truck_type}</span>
+                      </p>
+                      <p className="font-bold">
+                        Number: <span className="font-normal">{data.truck_number}</span>
+                      </p>
+                      <p className="font-bold">
+                        Vehical Capacity:
+                        <span className="font-normal">
+                          {data.capacity} {data.capacity_type}
+                        </span>
+                      </p>
+                      <p className="font-bold">
+                        Dimensions: <span className="font-normal">{data.truck_dimension}</span>
+                      </p>
+                    </div>
                   </div>
                   <div className="w-6/10">
                     <p className=" mb-1 ml-1 w-full text-xs font-semibold text-purple-400">MATERIAL TYPE</p>

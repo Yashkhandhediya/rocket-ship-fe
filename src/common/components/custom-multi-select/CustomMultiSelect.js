@@ -70,7 +70,7 @@ const CustomMultiSelect = ({
   };
 
   const handleSelectChange = (selectedOption, event) => {
-    console.log("OPTIONSSSSSSS",selectedOption)
+    console.log('OPTIONSSSSSSS', selectedOption);
     if (isMulti && withCheckbox) {
       if (selectedOption !== null && selectedOption.length > 0) {
         if (selectedOption[selectedOption.length - 1].value === selectAllOption.value) {
@@ -89,15 +89,15 @@ const CustomMultiSelect = ({
             result = [selectAllOption, ...options];
           }
           return onChange(isMulti ? onChange(result.map((obj) => obj.value)) : onChange(result?.[0].value));
-        }
-        else{
+        } else {
           result = [selectAllOption, ...options];
           return onChange(isMulti ? onChange(result.map((obj) => obj.value)) : onChange(result?.[0].value));
         }
       }
     }
 
-    return isMulti ? onChange(selectedOption.map((obj) => obj.value)) : onChange(selectedOption.value);
+    // return isMulti ? onChange(selectedOption.map((obj) => obj.value)) : onChange(selectedOption.value);
+    return isMulti ? onChange(selectedOption.map((obj) => obj)) : onChange(selectedOption);
   };
 
   const checkboxOptionStyles = (state) => {

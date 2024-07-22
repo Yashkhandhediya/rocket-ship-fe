@@ -13,6 +13,11 @@ import { id_user } from '../log-in/LogIn';
 import { ACCESS_TOKEN } from '../../common/utils/config';
 import Address from './Address';
 import Autosuggest from 'react-autosuggest';
+import truck from '../../common/images/truck.png';
+import lcvTruck from '../../common/images/lcv_truck.png';
+import hyva from '../../common/images/hyva.png';
+import container from '../../common/images/container.png';
+import trailer from '../../common/images/trailer.png';
 
 export let info = [];
 
@@ -114,7 +119,40 @@ const Indent = () => {
   }, []);
 
   const truckTypesData = truckTypes?.map((type) => {
-    return { label: type.truck_type, value: type.truck_type, truck_id: type.id };
+    console.log(type);
+    console.log(truckType);
+    return {
+      label: (
+        <div className="flex gap-4">
+          <div className="rounded-lg bg-zinc-100 p-2 text-center">
+            {type.truck_type === 'Truck' && <img src={truck} className="inline-block h-14" />}
+            {type.truck_type === 'LCV' && <img src={lcvTruck} className="inline-block h-14" />}
+            {type.truck_type === 'Container' && <img src={container} className="inline-block h-14" />}
+            {type.truck_type === 'Trailer' && <img src={trailer} className="inline-block h-14" />}
+            {type.truck_type === 'Hyva' && <img src={hyva} className="inline-block h-14" />}
+          </div>
+          <div>
+            <p className="font-bold">
+              Type: <span className="font-normal">{type.truck_type}</span>
+            </p>
+            <p className="font-bold">
+              Number: <span className="font-normal">{type.truck_number}</span>
+            </p>
+            <p className="font-bold">
+              Vehical Capacity:
+              <span className="font-normal">
+                {type.capacity} {type.capacity_type}
+              </span>
+            </p>
+            <p className="font-bold">
+              Dimensions: <span className="font-normal">{type.truck_dimension}</span>
+            </p>
+          </div>
+        </div>
+      ),
+      value: `${type.truck_type} (Capacity ${type.capacity} ${type.capacity_type} + Dimensions ${type.truck_dimension})`,
+      truck_id: type.id,
+    };
   });
 
   const materialTypesData = materialTypes?.map((type) => {
@@ -243,6 +281,7 @@ const Indent = () => {
 
   useEffect(() => {
     console.log(truckType);
+    console.log(materialType);
   }, [truckType]);
 
   let count = 1;
@@ -328,10 +367,10 @@ const Indent = () => {
           uploading_point_id: null,
           end_customer_id: null,
           customer_user_id: 1,
-          truck_type_id: truckType,
+          truck_type_id: truckType.truck_id,
           weight_type: tons,
           created_by: id_user,
-          material_type_id: materialType,
+          material_type_id: materialType.truck_id,
           customer_price: parseInt(targetPrice),
           trip_status_id: 1,
           origin_id: 10,
@@ -453,10 +492,10 @@ const Indent = () => {
           uploading_point_id: null,
           end_customer_id: null,
           customer_user_id: 1,
-          truck_type_id: truckType,
+          truck_type_id: truckType.truck_id,
           weight_type: tons,
           created_by: id_user,
-          material_type_id: materialType,
+          material_type_id: materialType.truck_id,
           customer_price: parseInt(targetPrice),
           trip_status_id: 1,
           origin_id: 10,
@@ -948,9 +987,9 @@ const Indent = () => {
                   isMulti={false}
                   label={'Truck Type'}
                   options={truckTypesData}
-                  selected={truckType}
+                  selected={truckType.value}
                   closeMenuOnSelect={true}
-                  placeholder={truckType}
+                  placeholder={truckType.value}
                   hideSelectedOptions={false}
                   onChange={(value) => {
                     setTruckType(value);
@@ -987,9 +1026,9 @@ const Indent = () => {
                 isMulti={false}
                 label={'Material Type'}
                 options={materialTypesData}
-                selected={materialType}
+                selected={materialType.value}
                 closeMenuOnSelect={true}
-                placeholder={materialType}
+                placeholder={materialType.value}
                 hideSelectedOptions={false}
                 onChange={(value) => {
                   setMaterialType(value);

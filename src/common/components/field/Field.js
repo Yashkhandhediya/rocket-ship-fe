@@ -29,7 +29,7 @@ const Field = ({
   onIncrease,
   onDecrease,
   tooltip,
-  autoComplete='on',
+  autoComplete = 'on',
   readOnly = false,
 }) => {
   useEffect(() => {
@@ -58,7 +58,8 @@ const Field = ({
         {leftAddOn && (
           <button
             className="z-1 inline-flex flex-shrink-0 items-center rounded-s-md border border-r-0 border-gray-300 bg-[#f3f7fe] px-2.5 py-1.5 text-center text-sm font-medium text-gray-400"
-            type="button" disabled>
+            type="button"
+            disabled>
             {leftAddOn}
           </button>
         )}
@@ -82,7 +83,7 @@ const Field = ({
           className={`block min-h-[36px] w-full rounded-md border 
           ${leftAddOn && 'rounded-l-none rounded-r-md'} ${rightAddOn && 'rounded-l-md rounded-r-none'} ${
             counterField && 'rounded-none text-center'
-          } border-gray-300 px-2.5 text-sm text-gray-900 focus:border-red-500 focus:ring-red-500 disabled:bg-neutral-300 ${inputClassNames} ${
+          } border-gray-300 px-2.5 text-sm text-gray-900 focus:border-sky-500 focus:ring-sky-500 disabled:bg-neutral-300 ${inputClassNames} ${
             type === 'number'
               ? '[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
               : ''
@@ -108,7 +109,8 @@ const Field = ({
         {rightAddOn && (
           <button
             className="z-1 inline-flex flex-shrink-0 items-center rounded-e-md border border-l-0 border-gray-300 bg-[#f3f7fe] px-2.5 py-1.5 text-center text-sm font-medium text-gray-400"
-            type="button" disabled>
+            type="button"
+            disabled>
             {rightAddOn}
           </button>
         )}
