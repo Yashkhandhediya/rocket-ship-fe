@@ -351,6 +351,8 @@ const Indent = () => {
       return;
     }
 
+    console.log(tons);
+
     setIsLoading(true);
     const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
     console.log('Jayyyyyyy', selectedCity, materialType);
@@ -368,7 +370,7 @@ const Indent = () => {
           end_customer_id: null,
           customer_user_id: 1,
           truck_type_id: truckType.truck_id,
-          weight_type: tons,
+          weight_type: tons.value,
           created_by: id_user,
           material_type_id: materialType.value,
           customer_price: parseInt(targetPrice),
