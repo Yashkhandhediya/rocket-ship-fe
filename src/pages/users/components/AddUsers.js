@@ -164,13 +164,14 @@ function AddUsers({ handleClose, getUsersData, editData, handleSetEdit }) {
             {error && <p className="w-1/2 text-xs text-red-500">{error?.email_address}</p>}
 
             <Field
-              type={'tel'}
+              type="number"
               id={'contact_no'}
               label={'Contact No'}
               placeHolder={'Enter Contact No'}
               required={true}
               value={signupInput['contact_no']}
               onChange={handleChangeInput}
+              className="rounded text-[14px]"
             />
             {error && <p className="w-1/2 text-xs text-red-500">{error?.contact_no}</p>}
             {!editData && (
