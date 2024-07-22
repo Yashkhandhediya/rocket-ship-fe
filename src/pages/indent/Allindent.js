@@ -481,7 +481,7 @@ const Allindent = () => {
                   </div>
                   <div className="w-6/10">
                     <p className=" mb-1 ml-1 w-full text-xs font-semibold text-purple-400">MATERIAL TYPE</p>
-                    <p className="ml-1 text-sm text-gray-500">{data.material_type_id}</p>
+                    <p className="ml-1 text-sm text-gray-500">{data.material_details.material_type}</p>
                   </div>
                 </div>
                 <div className="-ml-4 -mr-4 flex items-end justify-between border-t border-gray-200">

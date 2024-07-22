@@ -370,7 +370,7 @@ const Indent = () => {
           truck_type_id: truckType.truck_id,
           weight_type: tons,
           created_by: id_user,
-          material_type_id: materialType.truck_id,
+          material_type_id: materialType.value,
           customer_price: parseInt(targetPrice),
           trip_status_id: 1,
           origin_id: 10,
