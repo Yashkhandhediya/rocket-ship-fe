@@ -4,7 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import OtpPopup from './OtpPopup';
-import { homelogo, LogoRCSL } from '../../common/images';
+import { homelogo, logo, LogoRCSL } from '../../common/images';
 import { Loader } from '../../common/components';
 import deliveryCarLogo from '../../common/images/delivery-car.png';
 // import { GoogleLogin } from 'react-google-login';
@@ -255,8 +255,11 @@ const LogIn = () => {
             />
           )}
           <div className="ml-auto mt-4 flex flex-row items-end justify-between">
-            <h1 className="ml-auto mr-4 text-xl font-bold text-red-700">Powered By</h1>
-            <img src={LogoRCSL} className="h-25 mx-20 ml-auto mt-10 w-32" alt="Powered By Logo"></img>
+            <h1 className="ml-auto mr-4 text-xl font-bold text-sky-500">Powered By</h1>
+            <img
+              src={logo}
+              className="h-25 mx-20 ml-auto mt-10 w-32 mix-blend-multiply"
+              alt="Powered By Logo"></img>
           </div>
         </div>
       </div>

@@ -350,7 +350,6 @@ const Indent = () => {
       toast('Enter Truck Type', { type: 'error' });
       return;
     }
-
     setIsLoading(true);
     const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
     console.log('Jayyyyyyy', selectedCity, materialType);
