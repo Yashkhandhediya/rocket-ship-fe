@@ -123,7 +123,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
               placeholder={truckData.truck_type}
               hideSelectedOptions={false}
               onChange={(value) => {
-                setTruckData({ ...truckData, truck_type: value });
+                setTruckData({ ...truckData, truck_type: value.value });
               }}
             />
             {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_type}</p>}
