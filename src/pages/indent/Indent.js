@@ -156,7 +156,7 @@ const Indent = () => {
   });
 
   const materialTypesData = materialTypes?.map((type) => {
-    return { label: type.material_type, value: type.material_type, truck_id: type.id };
+    return { label: type.material_type, value: type.material_type, material_id: type.id };
   });
 
   const [remarks, setRemarks] = useState(data?.remarks || '');
@@ -372,7 +372,7 @@ const Indent = () => {
           truck_type_id: truckType.truck_id,
           weight_type: tons.value,
           created_by: id_user,
-          material_type_id: materialType.value,
+          material_type_id: materialType.material_id,
           customer_price: parseInt(targetPrice),
           trip_status_id: 1,
           origin_id: 10,
