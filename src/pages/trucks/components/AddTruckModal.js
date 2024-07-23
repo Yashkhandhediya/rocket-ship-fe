@@ -47,6 +47,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
     }
     setLoading(true);
     handleClose();
+
     try {
       const response = await axios.post(`${BACKEND_URL}/trucktype/create_truck_type/`, {
         ...truckData,
@@ -63,7 +64,11 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
       getTruckData(company_id);
       toast('Added Truck Sucessfully', { type: 'success' });
     } catch (err) {
-      toast('There is some error while Adding Truck', { type: 'error' });
+      if (err.response.status === 400) {
+        toast(err.response.data.detail, { type: 'error' });
+      } else {
+        toast('There is some error while Adding Truck', { type: 'error' });
+      }
     } finally {
       setLoading(false);
     }
@@ -94,7 +99,11 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
       getTruckData(company_id);
       toast('Edited Truck Sucessfully', { type: 'success' });
     } catch (err) {
-      toast('There is some error while Editing Truck', { type: 'error' });
+      if (err.response.status === 400) {
+        toast(err.response.data.detail, { type: 'error' });
+      } else {
+        toast('There is some error while Editing Truck', { type: 'error' });
+      }
     } finally {
       setLoading(false);
     }
