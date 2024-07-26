@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { GrEdit } from 'react-icons/gr';
@@ -38,6 +38,11 @@ function MaterialTypes() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const material_data = query.length !== 0 ? searchData : materialData;
+  const formRef = useRef(null);
+
+  const handleBlur = () => {
+    formRef.current.classList.remove('outline', 'outline-primary');
+  };
 
   const handleNextPage = () => {
     setPage((prev) => prev + 1);
@@ -52,6 +57,8 @@ function MaterialTypes() {
   };
 
   const handleFocused = () => {
+    formRef.current.classList.add('outline', 'outline-primary');
+
     setIsFocused(true);
   };
 
@@ -254,7 +261,9 @@ function MaterialTypes() {
           </p>
           <div className="flex items-center justify-between gap-5 px-4">
             <div className="relative w-1/4">
-              <form className="my-4 flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
+              <form
+                ref={formRef}
+                className="my-4 flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
                 <FontAwesomeIcon icon={faSearch} className=" text-gray-500" />
                 <input
                   type="text"
@@ -262,6 +271,7 @@ function MaterialTypes() {
                   value={query}
                   onChange={(e) => handleSearch(e)}
                   onFocus={handleFocused}
+                  onBlur={handleBlur}
                   className="text-semibold m-0 w-full border-transparent p-0 text-[12px] placeholder-gray-400 focus:border-transparent focus:outline-none focus:ring-0"
                 />
                 {isFocused && (
