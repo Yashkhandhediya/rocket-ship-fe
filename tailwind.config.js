@@ -2,7 +2,11 @@
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}', 'node_modules/flowbite-react/lib/esm/**/*.js'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: '#af791f',
+      },
+    },
   },
   plugins: [require('tailwind-scrollbar'), require('flowbite/plugin')],
   darkMode: 'false',

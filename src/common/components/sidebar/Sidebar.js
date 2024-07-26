@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 import { sidebarLinks } from './contants';
 import { useState } from 'react';
-import { logo, logo_main } from '../../images';
 import Modal from './Modal'; // Ensure the Modal component is correctly imported
 import axios from 'axios';
 import { BACKEND_URL } from '../../utils/env.config';
 import { toast } from 'react-toastify';
 import { RiMenuFold3Line2 } from 'react-icons/ri';
 import homeIcon from './icons/home_tbbv.png';
+import { logo } from '../../images';
 
 const Sidebar = () => {
   const [isSideBarOpen, setIsSideBarOpen] = useState(true);

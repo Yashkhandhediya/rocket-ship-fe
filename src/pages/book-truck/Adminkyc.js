@@ -143,7 +143,7 @@ const Adminkyc = () => {
           return (
             <div className="flex gap-2 text-left text-xs">
               <div
-                className="min-w-fit rounded bg-sky-500 px-2 py-1.5 text-white hover:bg-sky-700"
+                className="bg-primary min-w-fit rounded px-2 py-1.5 text-white hover:bg-sky-700"
                 onClick={() => {
                   setIdUser(row?.original?.id);
                   setShowPopup(true);
@@ -153,7 +153,7 @@ const Adminkyc = () => {
                 </Tooltip>
               </div>
               {/* <button
-                className="min-w-fit rounded bg-sky-500 px-2 py-1 text-white hover:bg-sky-700"
+                className="min-w-fit rounded bg-primary px-2 py-1 text-white hover:bg-sky-700"
                 onClick={() => navigate(`/trucks`, { state: row?.original })}
                 disabled={row?.original?.kyc_status_id === 2}>
                 <Tooltip
@@ -162,7 +162,7 @@ const Adminkyc = () => {
                 </Tooltip>
               </button>
               <button
-                className="min-w-fit rounded bg-sky-500 px-2 py-1.5 text-white hover:bg-sky-700"
+                className="min-w-fit rounded bg-primary px-2 py-1.5 text-white hover:bg-sky-700"
                 onClick={() => navigate(`/materials`, { state: row?.original })}
                 disabled={row?.original?.kyc_status_id === 2}>
                 <Tooltip
@@ -173,7 +173,7 @@ const Adminkyc = () => {
                 </Tooltip>
               </button>
               <button
-                className="min-w-fit rounded bg-sky-500 px-2 py-1.5 text-white hover:bg-sky-700"
+                className="min-w-fit rounded bg-primary px-2 py-1.5 text-white hover:bg-sky-700"
                 onClick={() => navigate(`/address`, { state: row?.original })}
                 disabled={row?.original?.kyc_status_id === 2}>
                 <Tooltip
@@ -182,7 +182,7 @@ const Adminkyc = () => {
                 </Tooltip>
               </button> */}
               <button
-                className="min-w-fit rounded bg-sky-500 px-2 py-1.5 text-white hover:bg-sky-700"
+                className="bg-primary min-w-fit rounded px-2 py-1.5 text-white hover:bg-sky-700"
                 onClick={() => navigate(`/user/${row?.original?.id}`, { state: row?.original?.name })}
                 disabled={row?.original?.kyc_status_id === 2}>
                 <Tooltip

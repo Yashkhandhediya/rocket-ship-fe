@@ -235,7 +235,7 @@ function AddAddressModal({ handleClose, getAddressData, stateData, editData, han
               Cancel
             </button>
             <button
-              className="w-1/2 rounded-lg bg-sky-500 px-4 py-2 text-white"
+              className="bg-primary w-1/2 rounded-lg px-4 py-2 text-white"
               onClick={() => {
                 editData ? handleEditLocation() : handleSaveLocation();
               }}>

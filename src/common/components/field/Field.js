@@ -83,7 +83,7 @@ const Field = ({
           className={`block min-h-[36px] w-full rounded-md border 
           ${leftAddOn && 'rounded-l-none rounded-r-md'} ${rightAddOn && 'rounded-l-md rounded-r-none'} ${
             counterField && 'rounded-none text-center'
-          } border-gray-300 px-2.5 text-sm text-gray-900 focus:border-sky-500 focus:ring-sky-500 disabled:bg-neutral-300 ${inputClassNames} ${
+          } focus:border-primary focus:ring-primary border-gray-300 px-2.5 text-sm text-gray-900 disabled:bg-neutral-300 ${inputClassNames} ${
             type === 'number'
               ? '[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
               : ''

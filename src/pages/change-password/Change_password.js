@@ -60,7 +60,7 @@ const Change_password = () => {
       </div>
       <div className="mx-2 w-full bg-[#EDEDED] px-6 pb-16">
         <div className="pb-5 pt-2 font-bold text-[#656565]">
-          <Link to={'/settings'} className="font-semibold text-sky-500">
+          <Link to={'/settings'} className="text-primary font-semibold">
             Settings
           </Link>{' '}
           &gt; Company &gt; Change Password
@@ -100,7 +100,7 @@ const Change_password = () => {
         </div>
         <div className="flex items-center justify-center">
           <button
-            className="flex h-8 w-20 items-center justify-center gap-4 rounded bg-sky-500 text-white"
+            className="bg-primary flex h-8 w-20 items-center justify-center gap-4 rounded text-white"
             onClick={() => {
               handleSumbit();
             }}>

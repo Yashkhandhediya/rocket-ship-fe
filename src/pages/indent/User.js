@@ -215,7 +215,7 @@ const User = () => {
               {
                 <button
                   id={row?.original?.id}
-                  className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
+                  className="bg-primary hover:bg-primary min-w-fit rounded px-4 py-1.5 text-white"
                   onClick={() => handleIndent(row)}>
                   {'Indent'}
                 </button>
@@ -223,7 +223,7 @@ const User = () => {
               {row?.original?.kyc_status_id != 3 && (
                 <button
                   id={row?.original?.id}
-                  className="min-w-fit rounded bg-sky-400 px-4 py-1.5 text-white hover:bg-sky-600"
+                  className="bg-primary hover:bg-primary min-w-fit rounded px-4 py-1.5 text-white"
                   onClick={() => handleKYC(row)}>
                   {'KYC'}
                 </button>
@@ -260,7 +260,7 @@ const User = () => {
           {is_admin === '2' && (
             <Link
               to={`/adminkyc`}
-              className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow">
+              className="bg-primary flex items-center gap-3 rounded px-4 py-1 text-white shadow">
               Back
             </Link>
           )}

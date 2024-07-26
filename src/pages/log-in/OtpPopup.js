@@ -229,7 +229,7 @@ const OtpPopup = ({
                     <div key={index} className="h-12 w-12">
                       <input
                         ref={ref}
-                        className="flex h-full w-full flex-col items-center justify-center rounded-xl border border-gray-200 bg-white px-2 text-center text-lg outline-none ring-blue-700 focus:bg-gray-50 focus:ring-1"
+                        className="ring-primary flex h-full w-full flex-col items-center justify-center rounded-xl border border-gray-200 bg-white px-2 text-center text-lg outline-none focus:bg-gray-50 focus:ring-1"
                         type="text"
                         maxLength="1"
                         name=""
@@ -246,7 +246,7 @@ const OtpPopup = ({
                   <div className="mt-auto">Resend OTP in 00:{formattedSeconds} sec</div>
                 ) : (
                   <button
-                    className="mb-2 cursor-pointer text-sky-500"
+                    className="text-primary mb-2 cursor-pointer"
                     onClick={() => {
                       setSeconds(45);
                       handleSendOTP();
@@ -257,12 +257,12 @@ const OtpPopup = ({
                 <div className="flex flex-col space-y-5">
                   <div className="flex flex-col">
                     <button
-                      className="flex w-full flex-row items-center justify-center rounded-xl border border-none bg-[#2684FC] py-5 text-center text-sm text-white shadow-sm outline-none"
+                      className="bg-primary flex w-full flex-row items-center justify-center rounded-xl border border-none py-5 text-center text-sm text-white shadow-sm outline-none"
                       onClick={!upDatePassWord ? handleSubmitOtp : handleResetPassword}>
                       Verify Account
                     </button>
                     <button
-                      className="mb-2 mt-2 flex cursor-pointer items-center justify-center  gap-2 text-sky-500"
+                      className="text-primary mb-2 mt-2 flex cursor-pointer items-center  justify-center gap-2"
                       onClick={() => {
                         navigate('/login');
                       }}>

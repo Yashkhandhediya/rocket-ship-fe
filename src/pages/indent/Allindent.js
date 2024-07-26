@@ -407,7 +407,7 @@ const Allindent = () => {
               <div className="mx-3 mt-5 w-full rounded-lg bg-white p-4 shadow">
                 <div className="mb-2 flex w-full flex-row items-end justify-between border-b border-gray-200 pb-2">
                   <div className="flex w-full flex-row">
-                    <div className="w-[60%] text-sm font-semibold text-sky-500">
+                    <div className="text-primary w-[60%] text-sm font-semibold">
                       {data.id} | {data?.coordinator_name || ''} | {data?.coordinator_mobile || ''}
                     </div>
                     <button
@@ -416,7 +416,7 @@ const Allindent = () => {
                         handleModify(data.id);
                       }}>
                       <svg
-                        className="h-5 w-5 text-sky-500"
+                        className="text-primary h-5 w-5"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -429,7 +429,7 @@ const Allindent = () => {
                       </svg>
                     </button>
                   </div>
-                  <div className="w-[40%] text-xs text-sky-500">
+                  <div className="text-primary w-[40%] text-xs">
                     {formatTimestamp(data?.created_date)}
                     {/* {Math.ceil((new Date(data.pickupDate) - new Date() )/(1000 * 60 * 60).toPrecision(1))}h */}
                   </div>
@@ -460,7 +460,7 @@ const Allindent = () => {
                     <p className="ml-1 overflow-hidden overflow-ellipsis whitespace-nowrap text-sm text-gray-500">{`₹${data.customer_price}`}</p>
                   </div>
                   <div className="w-2/10 -ml-14">
-                    <p className="mb-1 ml-1 text-xs font-semibold text-purple-400">TRUCK DETAILS</p>
+                    <p className="text-primary mb-1 ml-1 text-xs font-semibold">TRUCK DETAILS</p>
                     <div className="px-2 text-[13px] text-zinc-500">
                       <p className="font-bold">
                         Type: <span className="font-normal">{data.truck_details.truck_type}</span>
@@ -480,7 +480,7 @@ const Allindent = () => {
                     </div>
                   </div>
                   <div className="w-6/10">
-                    <p className=" mb-1 ml-1 w-full text-xs font-semibold text-purple-400">MATERIAL TYPE</p>
+                    <p className=" text-primary mb-1 ml-1 w-full text-xs font-semibold">MATERIAL TYPE</p>
                     <p className="ml-1 text-sm text-gray-500">{data.material_details.material_type}</p>
                   </div>
                 </div>
@@ -550,7 +550,7 @@ const Allindent = () => {
                             type="text"
                             value={price[data.id] || ''}
                             onChange={(e) => handlePriceChange(data.id, e.target.value)}
-                            className="ml-4 mt-2 h-8 w-24 rounded-md border border-gray-300 focus:border-blue-100 focus:outline-none focus:ring"
+                            className="focus:border-primary ml-4 mt-2 h-8 w-24 rounded-md border border-gray-300 focus:outline-none focus:ring"
                           />
                         ) : (
                           <input
@@ -558,7 +558,7 @@ const Allindent = () => {
                             value={`₹${data.actual_price ?? 0}`}
                             disabled
                             onChange={(e) => handlePriceChange(data.id, e.target.value)}
-                            className="ml-4 mt-2 h-8 w-24 rounded-md border border-gray-300 focus:border-blue-100 focus:outline-none focus:ring"
+                            className="focus:border-primary ml-4 mt-2 h-8 w-24 rounded-md border border-gray-300 focus:outline-none focus:ring"
                           />
                         )}
                       </div>
@@ -583,7 +583,7 @@ const Allindent = () => {
                         {data.actual_price != null && (
                           <input
                             type="text"
-                            className="ml-2 mt-2 h-8 w-36 rounded-md border border-gray-300 bg-gray-100 focus:border-blue-100 focus:outline-none focus:ring "
+                            className="focus:border-primary ml-2 mt-2 h-8 w-36 rounded-md border border-gray-300 bg-gray-100 focus:outline-none focus:ring "
                             disabled
                             value={`₹${data.actual_price ?? 0}`}
                           />
@@ -595,7 +595,7 @@ const Allindent = () => {
                     <div className="mt-6 flex flex-row">
                       {checkConfirmRejectButtonShowCondition(data) && (
                         <button
-                          className="mr-2 rounded-lg bg-blue-500 px-3  py-2 text-xs font-semibold text-white hover:bg-blue-600"
+                          className="bg-primary hover:bg-primary mr-2 rounded-lg  px-3 py-2 text-xs font-semibold text-white"
                           onClick={() => {
                             handleConfirmation(data.id, 2);
                           }}>
@@ -621,7 +621,7 @@ const Allindent = () => {
                       <p className="mb-4 text-lg font-semibold"> Do you want to Add offline price?</p>
                       <div className="flex justify-end">
                         <button
-                          className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
+                          className="bg-primary hover:bg-primary mr-2 rounded-lg px-3 py-2 text-xs font-semibold text-white"
                           onClick={() => {
                             setShowOfflineBtn(true);
                             setShowOfflinePricePrompt(false);
@@ -652,7 +652,7 @@ const Allindent = () => {
                           type="text"
                           value={rcslPrice[data.id] || ''}
                           onChange={(e) => handleRcslPriceChange(data.id, e.target.value)}
-                          className="ml-4 mt-2 h-8 w-36 rounded-md border border-gray-300 focus:border-blue-100 focus:outline-none"
+                          className="focus:border-primary ml-4 mt-2 h-8 w-36 rounded-md border border-gray-300 focus:outline-none"
                         />
                       ) : (
                         <input
@@ -660,7 +660,7 @@ const Allindent = () => {
                           value={`₹${data.counter_price ?? 0}`}
                           disabled
                           onChange={(e) => handleRcslPriceChange(data.id, e.target.value)}
-                          className="ml-4 mt-2 h-8 w-36 cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 focus:border-blue-100 focus:outline-none focus:ring"
+                          className="focus:border-primary ml-4 mt-2 h-8 w-36 cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 focus:outline-none focus:ring"
                         />
                       )}
                     </div>
@@ -691,7 +691,7 @@ const Allindent = () => {
                             <>
                               {showBtn && (
                                 <button
-                                  className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
+                                  className="bg-primary hover:bg-primary mr-2 rounded-lg px-3 py-2 text-xs font-semibold text-white"
                                   onClick={() => {
                                     // handleConfirmation(data.id, 2);
                                     handleConfirmClick(data.id);
@@ -725,7 +725,7 @@ const Allindent = () => {
                           type="text"
                           value={offlinePrice || ''}
                           onChange={(e) => setOfflinePrice(e.target.value)}
-                          className="ml-4 mt-2 h-8 w-36 rounded-md border border-gray-300 focus:border-blue-100 focus:outline-none"
+                          className="focus:border-primary ml-4 mt-2 h-8 w-36 rounded-md border border-gray-300 focus:outline-none"
                         />
                       ) : (
                         <input
@@ -733,7 +733,7 @@ const Allindent = () => {
                           value={`₹${data.offline_price ?? 0}`}
                           disabled
                           // onChange={(e) => handleRcslPriceChange(data.id, e.target.value)}
-                          className="ml-4 mt-2 h-8 w-36 cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 focus:border-blue-100 focus:outline-none focus:ring"
+                          className="focus:border-primary ml-4 mt-2 h-8 w-36 cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 focus:outline-none focus:ring"
                         />
                       )}
                     </div>
@@ -747,7 +747,7 @@ const Allindent = () => {
                             <>
                               {
                                 <button
-                                  className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
+                                  className="bg-primary hover:bg-primary mr-2 rounded-lg px-3 py-2 text-xs font-semibold text-white"
                                   onClick={() => {
                                     handleConfirmation(data.id, 2);
                                   }}>
@@ -785,7 +785,7 @@ const Allindent = () => {
                         <option value="Indent Closed">Indent Closed</option>
                       </select>
                       <button
-                        className="ml-2 mr-2 rounded-md border bg-blue-500 p-2 text-sm text-white"
+                        className="bg-primary ml-2 mr-2 rounded-md border p-2 text-sm text-white"
                         onClick={() => handleSubmitReason(data.id, 3)}>
                         Submit
                       </button>

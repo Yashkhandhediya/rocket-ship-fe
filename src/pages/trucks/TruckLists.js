@@ -117,7 +117,7 @@ function TruckLists() {
         cell: ({ row }) => (
           <div className="flex gap-2 text-left text-xs">
             <div
-              className="min-w-fit cursor-pointer rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
+              className="bg-primary min-w-fit cursor-pointer rounded px-4 py-1.5 text-white hover:bg-sky-700"
               onClick={() => handleKYC(row?.original?.id, row?.original?.name)}>
               Show Details
             </div>
@@ -281,13 +281,13 @@ function TruckLists() {
             <div className="flex justify-end gap-5">
               {is_admin === '2' && (
                 <button
-                  className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+                  className="bg-primary flex items-center gap-3 rounded px-4 py-1 text-white shadow"
                   onClick={() => navigate(`/adminkyc`)}>
                   Back
                 </button>
               )}
               <button
-                className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+                className="bg-primary flex items-center gap-3 rounded px-4 py-1 text-white shadow"
                 onClick={handleShowAddTruckModal}>
                 <span className="text-2xl">+</span>
                 Add Truck
@@ -373,7 +373,7 @@ function TruckLists() {
                   }`}
                   onClick={handlePrevPage}
                   disabled={page === 1}>{`<`}</button>
-                <button className="rounded bg-sky-500 px-2 py-1 text-sm text-white">{page}</button>
+                <button className="bg-primary rounded px-2 py-1 text-sm text-white">{page}</button>
                 <span className=" rounded px-2 py-0 text-sm">{page + 1}</span>
                 <span className=" rounded px-2 py-0 text-sm">{page + 2}</span>
                 <button
@@ -390,7 +390,7 @@ function TruckLists() {
             <p>Are you sure you want to remove this truck?</p>
             <div className="flex w-full justify-center gap-4">
               <button
-                className="w-1/2 rounded-lg bg-sky-500 px-4 py-1 text-white"
+                className="bg-primary w-1/2 rounded-lg px-4 py-1 text-white"
                 onClick={() => handleDelete(deleteId)}>
                 Yes
               </button>

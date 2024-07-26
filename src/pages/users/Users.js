@@ -156,13 +156,13 @@ function Addresses() {
           <div className="flex justify-end gap-5">
             {/* {is_admin === '2' && (
               <button
-                className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+                className="flex items-center gap-3 rounded bg-primary px-4 py-1 text-white shadow"
                 >
                 Back
               </button>
             )} */}
             <button
-              className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+              className="bg-primary flex items-center gap-3 rounded px-4 py-1 text-white shadow"
               onClick={handleShowAddUsersModal}>
               <span className="text-2xl">+</span>
               Add User
@@ -250,7 +250,7 @@ function Addresses() {
                 onClick={handlePrevPage}
                 disabled={page === 1}>{`<`}</button>
               <span className={`rounded px-2 py-0 text-sm ${page === 1 && 'hidden'}`}>{page - 1}</span>
-              <button className="rounded bg-sky-500 px-2 py-1 text-sm text-white">{page}</button>
+              <button className="bg-primary rounded px-2 py-1 text-sm text-white">{page}</button>
               <span className=" rounded px-2 py-0 text-sm">{page + 1}</span>
               <span className={`rounded px-2 py-0 text-sm ${page !== 1 && 'hidden'}`}>{page + 2}</span>
               <button
@@ -267,7 +267,7 @@ function Addresses() {
             <p>Are you sure you want to remove this User?</p>
             <div className="flex w-full justify-center gap-4">
               <button
-                className="w-1/2 rounded-lg bg-sky-500 px-4 py-1 text-white"
+                className="bg-primary w-1/2 rounded-lg px-4 py-1 text-white"
                 onClick={() => handleDelete(deleteId)}>
                 Yes
               </button>
