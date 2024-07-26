@@ -153,7 +153,7 @@ const Book = () => {
       <div className="flex h-full w-full flex-col items-center justify-center">
         {sessionStorage.getItem('is_kyc') == 1 && (
           <div
-            className="-mt-16 mb-12 ml-2 mr-4 w-[99%] rounded-lg border bg-[#009FF5] p-2 shadow-md hover:underline"
+            className="bg-primary -mt-16 mb-12 ml-2 mr-4 w-[99%] rounded-lg border p-2 shadow-md hover:underline"
             style={{ textAlign: 'center' }}>
             <marquee className="font-semibold text-white">
               <Link to={'/seller/kyc'}>
@@ -174,8 +174,8 @@ const Book = () => {
         <p className="w-[85%] text-center text-lg text-[#707070]">
           Welcome to BookTruck Online Portal, your preferred partner for any type of road logistics throughout
           India. Now, get instant and competitive rates for any type of truck. Contact our Central Helpdesk at
-          <span className="text-sky-500 underline underline-offset-2"> +91 9327885065</span> or mail at{' '}
-          <a href="mailto:enquiry@vcscl.in" className="text-sky-500 underline underline-offset-2">
+          <span className="text-primary underline underline-offset-2"> +91 9327885065</span> or mail at{' '}
+          <a href="mailto:enquiry@vcscl.in" className="text-primary underline underline-offset-2">
             enquiry@vcscl.in
           </a>{' '}
           for more information

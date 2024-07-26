@@ -127,7 +127,7 @@ function MaterialTypes() {
           return (
             <div className="flex gap-2 text-left text-xs">
               <div
-                className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
+                className="bg-primary min-w-fit rounded px-4 py-1.5 text-white hover:bg-sky-700"
                 onClick={() => handleKYC(row?.original?.id, row?.original?.name)}>
                 {'Show Details'}
               </div>
@@ -276,13 +276,13 @@ function MaterialTypes() {
             <div className="flex justify-end gap-5">
               {is_admin === '2' && (
                 <button
-                  className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+                  className="bg-primary flex items-center gap-3 rounded px-4 py-1 text-white shadow"
                   onClick={() => navigate(`/adminkyc`)}>
                   Back
                 </button>
               )}
               <button
-                className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+                className="bg-primary flex items-center gap-3 rounded px-4 py-1 text-white shadow"
                 onClick={handleShowAddMaterialModal}>
                 <span className="text-2xl">+</span>
                 Add Material
@@ -348,7 +348,7 @@ function MaterialTypes() {
                   onClick={handlePrevPage}
                   disabled={page === 1}>{`<`}</button>
                 <span className={`rounded px-2 py-0 text-sm ${page === 1 && 'hidden'}`}>{page - 1}</span>
-                <button className="rounded bg-sky-500 px-2 py-1 text-sm text-white">{page}</button>
+                <button className="bg-primary rounded px-2 py-1 text-sm text-white">{page}</button>
                 <span className=" rounded px-2 py-0 text-sm">{page + 1}</span>
                 <span className={`rounded px-2 py-0 text-sm ${page !== 1 && 'hidden'}`}>{page + 2}</span>
                 <button
@@ -365,7 +365,7 @@ function MaterialTypes() {
             <p>Are you sure you want to remove this Material?</p>
             <div className="flex w-full justify-center gap-4">
               <button
-                className="w-1/2 rounded-lg bg-sky-500 px-4 py-1 text-white"
+                className="bg-primary w-1/2 rounded-lg px-4 py-1 text-white"
                 onClick={() => handleDelete(deleteId)}>
                 Yes
               </button>

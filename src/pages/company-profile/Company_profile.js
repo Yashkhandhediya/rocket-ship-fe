@@ -176,7 +176,7 @@ const Company_profile = () => {
               onClick={() => {
                 handleSumbit();
               }}>
-              <div className="flex h-8 w-2/5 items-center justify-center rounded-l bg-sky-600">
+              <div className="bg-dark flex h-8 w-2/5 items-center justify-center rounded-l">
                 <FontAwesomeIcon icon={faSave} />
               </div>
               <div>Save</div>

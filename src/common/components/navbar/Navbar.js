@@ -270,7 +270,7 @@ const Navbar = () => {
           </button>
         )}
       </div> */}
-      <p className="flex w-1/2 items-center justify-end text-3xl text-sky-500">Welcome to Book Truck</p>
+      <p className="text-primary flex w-1/2 items-center justify-end text-3xl">Welcome to Book Truck</p>
 
       <div className=" flex w-[40%] flex-row items-center  justify-end ">
         {/* <FaRegComments className="rounded-full bg-blue-50 p-2 text-3xl" />
@@ -323,7 +323,7 @@ const Navbar = () => {
             <FontAwesomeIcon icon={faUserCircle} className="text-3xl" />
             <div className="flex flex-col">
               <h1 className="text-left text-base">{sessionStorage.getItem('user_name')}</h1>
-              <p className="flex items-center gap-1 text-sky-500">
+              <p className="text-primary flex items-center gap-1">
                 <span>Edit Profile</span>{' '}
                 {isDropdownOpen ? (
                   <IoIosArrowUp className="self-center" />

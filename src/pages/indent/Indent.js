@@ -730,7 +730,7 @@ const Indent = () => {
     onChange: (e, { newValue }) => setSourcePin(newValue),
     id: 'sourcePincode',
     className:
-      'block min-h-[36px] w-full rounded-md border border-gray-300 px-2.5 text-sm text-gray-900 focus:border-[#3181e8] focus:ring-[#3181e8] disabled:bg-neutral-300',
+      'block min-h-[36px] w-full rounded-md border border-gray-300 px-2.5 text-sm text-gray-900 focus:border-primary focus:ring-primary disabled:bg-neutral-300',
   };
 
   const inputDestProps = {
@@ -739,7 +739,7 @@ const Indent = () => {
     onChange: (e, { newValue }) => setDestinationPin(newValue),
     id: 'destinationPincode',
     className:
-      'block min-h-[36px] w-full rounded-md border border-gray-300 px-2.5 text-sm text-gray-900 focus:border-[#3181e8] focus:ring-[#3181e8] disabled:bg-neutral-300',
+      'block min-h-[36px] w-full rounded-md border border-gray-300 px-2.5 text-sm text-gray-900 focus:border-primary focus:ring-primary disabled:bg-neutral-300',
   };
 
   const theme = {

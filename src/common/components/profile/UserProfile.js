@@ -221,7 +221,7 @@ const UserProfile = () => {
         {(editFirstName || editLastName) && (
           <div className="ml-60 mt-4">
             <button
-              className="mr-2 rounded-sm bg-blue-600 p-2 text-sm text-white"
+              className="bg-primary mr-2 rounded-sm p-2 text-sm text-white"
               onClick={() => handleUpdate()}>
               Update
             </button>

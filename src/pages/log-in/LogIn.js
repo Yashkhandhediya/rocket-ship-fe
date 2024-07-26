@@ -226,7 +226,7 @@ const LogIn = () => {
                 </div>
                 <button
                   type="button"
-                  className="dark:bg-primary dark:hover:bg-primary dark:focus:ring-primary bg-primary hover:bg-primary focus:ring-primary mb-2 w-full rounded-lg px-5 py-2.5 text-sm font-medium text-white focus:outline-none focus:ring-4"
+                  className="dark:bg-primary dark:hover:bg-primary dark:focus:ring-primary bg-primary hover:bg-dark focus:ring-primary mb-2 w-full rounded-lg px-5 py-2.5 text-sm font-medium text-white focus:outline-none focus:ring-4"
                   onClick={handleSubmit}>
                   Login
                 </button>
