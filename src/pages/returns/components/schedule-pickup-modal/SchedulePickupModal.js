@@ -7,14 +7,19 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
   const [datesToMap, seDatesToMap] = useState([]);
+  const navigate = useNavigate();
   const [scheduleDetails, setScheduleDetails] = useState({
     pickup_time: '',
     pickup_date: '',
   });
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const handleSelectDate = (date) => {
     setScheduleDetails({
       pickup_date: date,
@@ -28,15 +33,20 @@ const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
       .post(`${BACKEND_URL}/return/${pickupDetails?.id}/pickup`, {
         pickup_date: formattedDate,
         pickup_time: scheduleDetails.pickup_time,
-      })
+      },{headers:headers})
       .then((resp) => {
         if (resp.status === 200) {
           toast(`pickup scheduled successfully on date ${formattedDate}`, { type: 'success' });
           onClose();
         }
       })
-      .catch(() => {
-        toast('Unable to schedule pickup', { type: 'error' });
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          toast('Unable to schedule pickup', { type: 'error' });
+      }
       });
   };
 

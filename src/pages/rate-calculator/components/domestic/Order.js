@@ -5,7 +5,8 @@ import { BACKEND_URL } from '../../../../common/utils/env.config';
 import Loader from '../../../../common/loader/Loader';
 import { toast } from 'react-toastify';
 import { infoIcon } from '../../../../common/icons';
-// import { ACCESS_TOKEN } from '../../../../common/utils/config'
+import { ACCESS_TOKEN } from '../../../../common/utils/config'
+import { useNavigate } from 'react-router-dom';
 
 const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
   const [isValidPincode, setIsValidPincode] = useState(true);
@@ -16,6 +17,7 @@ const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
   const [shipmentDetails, setShipmentDetails] = useState({
     type: 'ftl',
   });
+  const navigate = useNavigate();
   const [paymentDetails, setPaymentDetails] = useState({
     payment_type: 'cod',
   });
@@ -27,7 +29,9 @@ const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
   });
   const [shipmentPrice, setShipmentPrice] = useState(null);
   const [actualWeight, setActualWeight] = useState(null);
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [dimention, setDimention] = useState({
     length: 0,
     width: 0,
@@ -104,7 +108,7 @@ const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
   const fetchPincodeDetails = () => {
     try {
       axios
-        .get(`${BACKEND_URL}/pincode/${isPickPinCode}`)
+        .get(`${BACKEND_URL}/pincode/${isPickPinCode}`,{headers:headers})
         .then((resp) => {
           if (resp.status == 200) {
             const cityInfo = {
@@ -121,15 +125,20 @@ const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
           toast(`Unable to get location from this pincode: ${isPickPinCode}`, { type: 'error' });
         });
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
+      if (e.response && e.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        // eslint-disable-next-line no-console
+        console.error(e);
+    }
     }
   };
 
   const fetchDestinationPincodeDetails = () => {
     try {
       axios
-        .get(`${BACKEND_URL}/pincode/${isDeliveryPinCode}`)
+        .get(`${BACKEND_URL}/pincode/${isDeliveryPinCode}`,{headers:headers})
         .then((resp) => {
           if (resp.status == 200) {
             const cityInfo = {
@@ -146,8 +155,13 @@ const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
           toast(`Unable to get location from this pincode: ${isDeliveryPinCode}`, { type: 'error' });
         });
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
+      if (e.response && e.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        // eslint-disable-next-line no-console
+        console.error(e);
+    }
     }
   };
 
@@ -204,7 +218,7 @@ const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
     //   setLoading(false);
     //   return;
     // }
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
     axios
       .post(
         BACKEND_URL + '/order/rate_calculation',
@@ -237,9 +251,14 @@ const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
         setLoading(false);
       })
       .catch((e) => {
-        console.log('Error in rate calculate ', e);
-        toast('Error in Rate Calculation', { type: 'error' });
-        setLoading(false);
+        if (e.response && e.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log('Error in rate calculate ', e);
+          toast('Error in Rate Calculation', { type: 'error' });
+          setLoading(false);
+      }
       });
   };
 

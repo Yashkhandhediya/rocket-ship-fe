@@ -6,7 +6,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../utils/env.config';
 import { toast } from 'react-toastify';
 import RechargeModal from '../../../pages/home/components/rechareModal/RechargeModal';
-
+import { ACCESS_TOKEN } from '../../utils/config';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { MdLockReset } from 'react-icons/md';
@@ -42,11 +42,11 @@ const Navbar = () => {
   };
 
   const handleRecharge = () => {
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
     axios
       .post(
         BACKEND_URL +
-          `/company/request_balance/?user_id=${parseInt(id_user)}&amount=${parseInt(rechargeAmount)}`,
+          `/company/request_balance/?user_id=${parseInt(id_user)}&amount=${parseInt(rechargeAmount)}`,{headers}
       )
       .then((res) => {
         console.log('Recharge Responsee', res);
@@ -56,7 +56,12 @@ const Navbar = () => {
         setRechargeAmount('');
       })
       .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
         console.log('Error In Rechargeee');
+      }
       });
     setShowPopup(false);
     // window.location.reload()

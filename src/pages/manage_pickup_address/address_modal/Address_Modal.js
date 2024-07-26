@@ -6,6 +6,7 @@ import { BACKEND_URL } from '../../../common/utils/env.config';
 import OTP_Modal from '../otp_modal/OTP_Modal';
 import DifferentRTOAddress from '../different_rto_address/Different_RTO_Address';
 import { useNavigate } from 'react-router-dom';
+import { ACCESS_TOKEN } from '../../../common/utils/config';
 
 const Address_Modal = ({ setShow, addressId, addressData, fetchUserAddressList }) => {
   const [showOTP, setShowOTP] = useState(false);
@@ -22,7 +23,9 @@ const Address_Modal = ({ setShow, addressId, addressData, fetchUserAddressList }
   console.log(dataAddress, addressId);
 
   const user_id = is_company == 1 ? id_company : id_user;
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [address, setAddress] = useState({
     nickName: addressId ? dataAddress?.tag : '',
     contactName: addressId ? `${dataAddress?.first_name} ${dataAddress?.last_name}` : '',
@@ -110,7 +113,7 @@ const Address_Modal = ({ setShow, addressId, addressData, fetchUserAddressList }
         pincode: address.pincode,
         city: address.city,
         state: address.state,
-      });
+      },{headers:headers});
       if (response.status === 200) {
         setShow(false);
         toast('Address Added Successfully', { type: 'success' });
@@ -119,7 +122,12 @@ const Address_Modal = ({ setShow, addressId, addressData, fetchUserAddressList }
         toast('There is some error while fetching orders.', { type: 'error' });
       }
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       toast('There is some error while fetching orders.', { type: 'error' });
+    }
     } finally {
       setLoading(false);
     }
@@ -128,7 +136,7 @@ const Address_Modal = ({ setShow, addressId, addressData, fetchUserAddressList }
   const fetchPinCodeDetails = async (pincode, isRTO) => {
     const url = `${BACKEND_URL}/pincode/${pincode}`;
     try {
-      const response = await axios.get(url);
+      const response = await axios.get(url,{headers:headers});
       const { data } = response;
       if (response.status === 200) {
         toast.success('Pincode details fetched successfully');
@@ -140,7 +148,12 @@ const Address_Modal = ({ setShow, addressId, addressData, fetchUserAddressList }
         isRTO ? setIsRTOPincodeValid(true) : setIsPincodeValid(true);
       }
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       toast.error('Error in fetching pincode details');
+    }
     }
   };
 

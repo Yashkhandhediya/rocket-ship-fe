@@ -1,24 +1,28 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../../common/components';
+import { ACCESS_TOKEN } from '../../../common/utils/config';
 import moment from 'moment';
 
 function TrackingInfo() {
+  const navigate = useNavigate();
   const [trackOrderData, setTrackOrderData] = useState([]);
   const [searchParam] = useSearchParams();
   const { orderId } = useParams();
   const [loading, setLoading] = useState(false);
   const flag = searchParam.get('flag');
   const status_name = searchParam.get('status')
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const fetchOrderDetails = async () => {
     setLoading(true);
     const apiURL = flag == 1 ? `/return/${orderId}/track` : `/order/${orderId}/track`;
     try {
-      const response = await axios.get(`${BACKEND_URL}${apiURL}`);
+      const response = await axios.get(`${BACKEND_URL}${apiURL}`,{headers:headers});
       if (response.status === 200) {
         //   const data = resp?.data?.ShipmentData?.[0]?.Shipment;
         setTrackOrderData(response.data);
@@ -26,7 +30,12 @@ function TrackingInfo() {
         toast('There is some error while fetching orders.', { type: 'error' });
       }
     } catch (err) {
-      toast('There is some error while fetching orders.', { type: 'error' });
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        toast('There is some error while fetching orders.', { type: 'error' });
+    }
     } finally {
       setLoading(false);
     }

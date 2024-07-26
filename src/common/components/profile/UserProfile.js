@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import PageWithSidebar from '../page-with-sidebar/PageWithSidebar';
 import axios from 'axios';
 import { BACKEND_URL } from '../../utils/env.config';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Loader } from '../loader';
+import { ACCESS_TOKEN } from '../../utils/config';
 
 const UserProfile = () => {
   const [data, setData] = useState(null);
@@ -14,7 +15,10 @@ const UserProfile = () => {
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
+  const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const handleFirstNameClick = () => {
     setEditFirstName(true);
   };
@@ -47,7 +51,7 @@ const UserProfile = () => {
   const handleData = () => {
     setLoading(true);
     axios
-      .get(BACKEND_URL + `/users/${sessionStorage.getItem('user_id')}`)
+      .get(BACKEND_URL + `/users/${sessionStorage.getItem('user_id')}`,{headers:headers})
       .then((res) => {
         setLoading(false);
         console.log('Response User Data', res.data);
@@ -57,8 +61,13 @@ const UserProfile = () => {
         setLastName(res.data.last_name);
       })
       .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
         setLoading(false);
         console.log('Error In Fetching User Data', err);
+      }
       });
   };
 
@@ -82,7 +91,7 @@ const UserProfile = () => {
       .put(BACKEND_URL + `/users/${sessionStorage.getItem('user_id')}`, {
         first_name: firstName,
         last_name: lastName,
-      })
+      },{headers:headers})
       .then((res) => {
         setLoading(false);
         console.log('Response Update User', res.data);
@@ -93,9 +102,14 @@ const UserProfile = () => {
         handleData();
       })
       .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
         setLoading(false);
         console.log('Error in User Info', err);
         toast('Error In updating user info', { type: 'error' });
+      }
       });
   };
 

@@ -11,6 +11,7 @@ import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import Loader from '../../../../../common/loader/Loader';
+import { ACCESS_TOKEN } from '../../../../../common/utils/config';
 // import { isEdit, order_id } from '../../../../orders/components/new/New'
 import { package_info } from '../order-details/OrderDetails';
 
@@ -25,6 +26,9 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
   const editDetails = useSelector((state) => state?.editOrder?.domestic_order);
   console.log('EDDDDDDDDDDD', editDetails);
   const [validationTriggered, setValidationTriggered] = useState(false);
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [isLoading, setIsLoading] = useState(false);
   const [courierType, setCourierType] = useState('surface');
   const [formDirectField, setFormDirectField] = useState({
@@ -98,7 +102,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
       ...formDirectField,
       order_type: 'domestic',
       date: date,
-    });
+    },{headers:headers});
     if (resp.status == 200) {
       toast('Order Placed Successfully', { type: 'success' });
       dispatch(resetDomesticOrder());
@@ -121,7 +125,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
       ...formDirectField,
       order_type: 'domestic',
       date: date,
-    });
+    },{headers:headers});
     if (resp.status == 200) {
       toast('Order Updated Successfully', { type: 'success' });
       dispatch(resetDomesticOrder());

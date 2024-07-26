@@ -14,6 +14,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { setFilteredOrders } from '../../redux';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 export let resData = [];
 const Orders = () => {
@@ -27,6 +28,9 @@ const Orders = () => {
   const [filteredOrderId, setFilteredOrderId] = useState([]);
   const [searchBy, setSearchBy] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [activeTab, setActiveTab] = useState(JSON.parse(sessionStorage.getItem('activeOrderTab')) || 0);
 
   console.log(filteredOrderId, searchBy, errorMsg);
@@ -58,7 +62,7 @@ const Orders = () => {
   const fetchFilteredOrders = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/order/filter?user_id=${userId}&string=${query}`);
+      const response = await axios.get(`${BACKEND_URL}/order/filter?user_id=${userId}&string=${query}`,{headers:headers});
       console.log(response.data);
       setFilteredOrderId(
         (response.data.awb.order_id.length != 0 && response.data.awb.order_id) ||
@@ -83,7 +87,12 @@ const Orders = () => {
           'No Result Found',
       );
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       setErrorMsg('There is Error while fetching');
+    }
     } finally {
       setLoading(false);
     }
@@ -92,12 +101,17 @@ const Orders = () => {
   const handlePostFilteredOrder = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${BACKEND_URL}/order/filter_orders`, filteredOrderId);
+      const response = await axios.post(`${BACKEND_URL}/order/filter_orders`, filteredOrderId,{headers:headers});
       dispatch(setFilteredOrders(response?.data || []));
       setActiveTab(6);
       clearSearch();
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       toast('There is Error while fetching', { type: 'error' });
+    }
     } finally {
       setLoading(false);
     }
@@ -119,7 +133,7 @@ const Orders = () => {
       return;
     }
     axios
-      .get(BACKEND_URL + `/order/get_filtered_orders?created_by=${cuser_id}`)
+      .get(BACKEND_URL + `/order/get_filtered_orders?created_by=${cuser_id}`,{headers:headers})
       .then(async (resp) => {
         if (resp.status === 200) {
           dispatch(setAllOrders(resp?.data || []));
@@ -131,9 +145,14 @@ const Orders = () => {
           setIsLoading(false);
         }
       })
-      .catch(() => {
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
         toast('There is some error while fetching orders.', { type: 'error' });
         setIsLoading(false);
+      }
       });
   };
 

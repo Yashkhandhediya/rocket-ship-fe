@@ -2,29 +2,38 @@ import React, { useEffect, useState } from 'react';
 import Customer from '../customer-overview/Customer';
 import Address from './components/Address';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 function CustomerAddresses() {
   const { addressId, buyerId } = useParams();
+  const navigate = useNavigate()
   const [addressesData, setAddressesData] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const fetchCustomerAddresses = async () => {
     setLoading(true);
     try {
       const response = await axios.put(
         `${BACKEND_URL}/users/update_customers_address/${addressId}?buyer_id=${buyerId}`,
-        {},
+        {},{headers:headers}
       );
       setAddressesData(response.data.all_addresses);
       setLoading(false);
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       toast('There is Error while fetching', { type: 'error' });
       setLoading(false);
+    }
     }
   };
 

@@ -5,6 +5,7 @@ import { upload } from '../../../../common/icons';
 import axios from 'axios';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
 import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const Document_Upload = ({ setIsKYCCompleted, KYCType = 'user' }) => {
   const user_name = sessionStorage.getItem('user_name');
@@ -18,7 +19,7 @@ const Document_Upload = ({ setIsKYCCompleted, KYCType = 'user' }) => {
   const [disableInput2, setDisableInput2] = useState(true);
   const [disableInput3, setDisableInput3] = useState(true);
   const [disableInput4, setDisableInput4] = useState(true);
-
+  const navigate = useNavigate();
   const [showDocument1Info, setShowDocument1Info] = useState(false);
   const [showDocument2Info, setShowDocument2Info] = useState(false);
   const [showDocument3Info, setShowDocument3Info] = useState(false);
@@ -181,7 +182,12 @@ const Document_Upload = ({ setIsKYCCompleted, KYCType = 'user' }) => {
             toast('Document 1 submitted successfully', { type: 'success' });
           })
           .catch((err) => {
+            if (err.response && err.response.status === 401) {
+              sessionStorage.clear()
+              navigate('/login');
+          } else {
             toast('Error in submitting Document 1', { type: 'error' });
+          }
           });
       } else {
         const headers = { 'Content-Type': 'multipart/form-data', Authorization: ACCESS_TOKEN };
@@ -196,7 +202,12 @@ const Document_Upload = ({ setIsKYCCompleted, KYCType = 'user' }) => {
             toast('Document 1 submitted successfully', { type: 'success' });
           })
           .catch((err) => {
+            if (err.response && err.response.status === 401) {
+              sessionStorage.clear()
+              navigate('/login');
+          } else {
             toast('Error in submitting Document 1', { type: 'error' });
+          }
           });
       }
       setDisableDocument1(true);
@@ -238,7 +249,12 @@ const Document_Upload = ({ setIsKYCCompleted, KYCType = 'user' }) => {
           toast('Document 2 submitted successfully', { type: 'success' });
         })
         .catch((err) => {
+          if (err.response && err.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+        } else {
           toast('Error in submitting Document 2', { type: 'error' });
+        }
         });
       setDisableDocument2(true);
       setDisableDocument3(false);
@@ -271,6 +287,7 @@ const Document_Upload = ({ setIsKYCCompleted, KYCType = 'user' }) => {
           toast('Document 3 submitted successfully', { type: 'success' });
         })
         .catch((err) => {
+    
           toast('Error in submitting Document 3', { type: 'error' });
         });
       setDisableDocument3(true);
@@ -278,7 +295,12 @@ const Document_Upload = ({ setIsKYCCompleted, KYCType = 'user' }) => {
       // toast.success('Document 2 submitted successfully', { type: 'success' })
     } catch (error) {
       // Show error message
+      if (error.response && error.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       toast.error('Please enter a valid Adhaar number', { type: 'error' });
+    }
     }
   };
 
@@ -311,7 +333,12 @@ const Document_Upload = ({ setIsKYCCompleted, KYCType = 'user' }) => {
       // toast.success('Document 2 submitted successfully', { type: 'success' })
     } catch (error) {
       // Show error message
+      if (error.response && error.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       toast.error('Please enter a valid Adhaar number', { type: 'error' });
+    }
     }
   };
 
@@ -376,8 +403,13 @@ const Document_Upload = ({ setIsKYCCompleted, KYCType = 'user' }) => {
           sessionStorage.setItem('is_kyc', 2);
         })
         .catch((err) => {
+          if (err.response && err.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+        } else {
           console.log('ERRRRRR', err);
           toast('Error in KYC verification', { type: 'error' });
+        }
         });
       setIsKYCCompleted(true);
     } else {

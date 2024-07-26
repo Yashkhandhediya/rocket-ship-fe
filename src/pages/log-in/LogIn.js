@@ -7,6 +7,7 @@ import OtpPopup from './OtpPopup';
 import { homelogo, logo, LogoRCSL } from '../../common/images';
 import { Loader } from '../../common/components';
 import deliveryCarLogo from '../../common/images/delivery-car.png';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 // import { GoogleLogin } from 'react-google-login';
 // import {gapi} from 'gapi-script'
 
@@ -59,11 +60,15 @@ const LogIn = () => {
       return;
     }
     sessionStorage.setItem('user_email', loginInput.username);
-    const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+    // const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     console.log('username pass', loginInput.username, loginInput.password);
     console.log('backend url', BACKEND_URL);
     const apiURL = userType === 'user' ? '/login/access-token' : '/company/access-token';
     const otpURL = userType === 'user' ? '/login' : '/company';
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': ACCESS_TOKEN
+    }
     setLoading(true);
     axios
       .post(
@@ -85,7 +90,7 @@ const LogIn = () => {
         sessionStorage.setItem('is_super', response.data.user_type_id);
         sessionStorage.setItem('is_otpVerified', JSON.stringify(false));
         const user_id =
-          userType === 'user' ? sessionStorage.getItem('user_id') : sessionStorage.getItem('company_id');
+          userType === 'user' ? sessionStorage.getItem('user_id') : localStorage.getItem('company_id');
         if (response.data.access_token) {
           setUserId(response.data.user_id);
           setCompanyId(response.data.company_id);
@@ -103,7 +108,7 @@ const LogIn = () => {
                   userType === 'user' ? 'user_id' : 'comp_id'
                 }=${user_id}`,
               otpPayload,
-              { headers },
+              { headers: headers },
             )
             .then((otpResponse) => {
               setLoading(false);

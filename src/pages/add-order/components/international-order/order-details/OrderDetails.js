@@ -9,8 +9,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { cloneDeep, isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import { IGSTTypes,incoTypes } from '../data';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { CustomMultiSelect } from '../../../../../common/components';
+import { ACCESS_TOKEN } from '../../../../../common/utils/config';
 
 export let package_info = {
   length: 0,
@@ -22,6 +23,7 @@ export let package_info = {
 export default function OrderDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
   const location = useLocation()
+  const navigate = useNavigate();
   const data = location?.state?.data || {}
   const id_user = sessionStorage.getItem('user_id')
   const [suggestionData,setSuggestionData] = useState([])
@@ -31,7 +33,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   // const [cashCharge,setCashCharge] = useState(0)
   const [IGSTType, setIGSTType] = useState(data?.IGSTTypes || 'Select IGST Type');
   const [incoType, setIncoType] = useState(data?.incoTypes || 'Select INCO Type');
-
+  const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
   const [commodity,setCommodity] = useState({
     is_3C:'no'
   })
@@ -151,13 +153,18 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     const { id, value } = event.target;
 
     if(id == 'name'){
-      axios.get(BACKEND_URL + '/product/get_product_details/')
+      axios.get(BACKEND_URL + '/product/get_product_details/',{headers:headers})
       .then((res) => {
         console.log("Suggestion Products",res.data)
         setSuggestionProductData(res.data)
         setShowProductSuggestions(true)
       }).catch((err) => {
-        console.log("Error in Products",err)
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log("Error in Products",err)
+      }
       })
     }
     const allFields = [...productFields];
@@ -203,13 +210,18 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
       [id]: value,
     });
     if(formDirectField?.channel != ''){
-      axios.get(BACKEND_URL + '/channel/get_channel_suggestions')
+      axios.get(BACKEND_URL + '/channel/get_channel_suggestions',{headers:headers})
       .then((res) => {
         console.log("Suggestions",res.data)
         setSuggestionData(res.data)
         setShowSuggestions(true)
       }).catch((err) => {
-        console.log("Error in Suggestion",err)
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log("Error in Suggestion",err)
+      }
       })
   }
   };
@@ -314,9 +326,14 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
         }
       })
       .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        toast('Unable to generate order id', { type: 'error' });
+        if (e.response && e.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          // eslint-disable-next-line no-console
+          console.error(e);
+          toast('Unable to generate order id', { type: 'error' });
+      }
       });
   };
 

@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 import { CustomTooltip } from '../../../../common/components';
 import { freezeGuide } from '../../../../common/images';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const FreezeModal = ({ setShow, data, setLoading, type }) => {
     const [weightFreezeData, setWeightFreezeData] = useState({
@@ -26,7 +28,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
             weight_img: null
         }
     })
-
+    const navigate = useNavigate();
     const [images, setImages] = useState({
         img_1: null,
         img_2: null,
@@ -127,14 +129,19 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
     const handleUpload = (name, file) => {
         const formData = new FormData();
         formData.append('file', file);
-        axios.post(`${BACKEND_URL}/image/upload_image?product_id=${data.id}`, { file: file }, { headers: { 'Content-Type': 'multipart/form-data' } })
+        axios.post(`${BACKEND_URL}/image/upload_image?product_id=${data.id}`, { file: file }, { headers: { 'Content-Type': 'multipart/form-data','Authorization': ACCESS_TOKEN } })
             .then((response) => {
                 setWeightFreezeData({ ...weightFreezeData, images: { ...weightFreezeData.images, [name]: response.data.filepath } })
                 setLoading(false);
             }).catch((error) => {
+                if (error.response && error.response.status === 401) {
+                    sessionStorage.clear()
+                    navigate('/login');
+                } else {
                 toast('Something went wrong while uploading image', { type: 'error' })
                 console.log(error); //eslint-disable-line
                 setLoading(false);
+                }
             })
     }
 
@@ -146,7 +153,7 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
         if (weightFreezeData.images.img_1 === null || weightFreezeData.images.img_2 === null || weightFreezeData.images.length_img === null || weightFreezeData.images.width_img === null || weightFreezeData.images.height_img === null || weightFreezeData.images.weight_img === null) {
             return toast('Please upload all the images', { type: 'error' })
         }
-        const headers = { 'Content-Type': 'application/json' };
+        const headers = { 'Content-Type': 'application/json', 'Authorization': ACCESS_TOKEN };
         axios.post(`${BACKEND_URL}/weight_freeze/`, weightFreezeData, { headers })
             .then((response) => {
                 if (response.status === 200) {
@@ -154,9 +161,14 @@ const FreezeModal = ({ setShow, data, setLoading, type }) => {
                     setShow(false);
                 }
             }).catch((error) => {
+                if (error.response && error.response.status === 401) {
+                    sessionStorage.clear()
+                    navigate('/login');
+                } else {
                 toast('Something went wrong', { type: 'error' })
                 setShow(false);
                 console.log(error); //eslint-disable-line
+                }
             })
     }
 

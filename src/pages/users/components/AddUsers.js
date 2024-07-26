@@ -3,10 +3,13 @@ import { Field, Loader } from '../../../common/components';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { ACCESS_TOKEN } from '../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 function AddUsers({ handleClose, getUsersData, editData, handleSetEdit }) {
   console.log(editData);
-
+  const navigate = useNavigate();
+  const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
   const [loading, setLoading] = useState(false);
   const [signupInput, setSignupInput] = useState({
     company_id: sessionStorage.getItem('company_id'),
@@ -57,7 +60,7 @@ function AddUsers({ handleClose, getUsersData, editData, handleSetEdit }) {
     }
     setLoading(true);
     handleClose();
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
     axios
       .post(
         BACKEND_URL + '/users/signup',
@@ -83,9 +86,14 @@ function AddUsers({ handleClose, getUsersData, editData, handleSetEdit }) {
         }
       })
       .catch((err) => {
-        setLoading(false);
-        console.log('Error in Adding User', err);
-        toast('Error in Adding User', { type: 'error' });
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          setLoading(false);
+          console.log('Error in Adding User', err);
+          toast('Error in Adding User', { type: 'error' });
+      }
       });
   };
 
@@ -99,7 +107,7 @@ function AddUsers({ handleClose, getUsersData, editData, handleSetEdit }) {
         password: signupInput.password,
         contact_no: signupInput.contact_no,
         email_address: signupInput.email_address,
-      });
+      },{headers:headers});
       if (response.data.msg == 'The user with the same email already exists') {
         toast(response.data.msg, { type: 'error' });
       } else {
@@ -109,8 +117,13 @@ function AddUsers({ handleClose, getUsersData, editData, handleSetEdit }) {
       handleSetEdit();
       getUsersData();
     } catch (err) {
-      console.log('err');
-      toast('There is some error while editing user');
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        console.log('err');
+        toast('There is some error while editing user');
+    }
     } finally {
       setLoading(false);
     }

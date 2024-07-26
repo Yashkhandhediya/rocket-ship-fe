@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { user } from '../../common/icons/sidebar-icons';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 export let temp_user_id;
 const User = () => {
@@ -25,6 +26,9 @@ const User = () => {
   const [userImg, setUserImg] = useState(null);
   const [kyc_status, setKyc_status] = useState(0);
   const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
 
   //   const fetchUsers = () => {
   //     axios
@@ -48,14 +52,19 @@ const User = () => {
 
   useEffect(() => {
     axios
-      .get(BACKEND_URL + `/company/get_company_users/?companyId=${company_id}`)
+      .get(BACKEND_URL + `/company/get_company_users/?companyId=${company_id}`,{headers:headers})
       .then((res) => {
         console.log('RESSSSSSSSSSSSS', res);
         setUserData(res.data);
         setFetchData(true);
       })
       .catch((err) => {
-        console.log('ERRRRRRRRRR', err);
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log('ERRRRRRRRRR', err);
+      }
       });
   }, []);
 
@@ -81,9 +90,9 @@ const User = () => {
   const handleKYC = (row) => {
     setIdUser(row?.original?.id);
     setShowKyc(true);
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
     axios
-      .get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=user_aadhar`, { responseType: 'blob' })
+      .get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=user_aadhar`, { responseType: 'blob' },{headers})
       .then((res) => {
         console.log('Recharge Responsee', res);
         const imgUrl = URL.createObjectURL(res.data);
@@ -94,11 +103,16 @@ const User = () => {
         // window.location.reload()
       })
       .catch((err) => {
-        console.log('Error In Rechargeee', err);
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log('Error In Rechargeee', err);
+      }
       });
 
     axios
-      .get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=selfie`, { responseType: 'blob' })
+      .get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=selfie`, { responseType: 'blob' },{headers:headers})
       .then((res) => {
         console.log('Recharge Responsee', res);
         const imgUrl = URL.createObjectURL(res.data);
@@ -109,13 +123,18 @@ const User = () => {
         // window.location.reload()
       })
       .catch((err) => {
-        console.log('Error In Rechargeee', err);
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log('Error In Rechargeee', err);
+      }
       });
   };
 
   const handleAcceptKYC = () => {
     setKyc_status(1);
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
     axios
       .post(BACKEND_URL + `/kyc/kyc_status/?client_type=user&status=${3}&id=${idUser}`, { headers })
       .then((res) => {
@@ -124,8 +143,13 @@ const User = () => {
         setShowKyc(false);
       })
       .catch((err) => {
-        console.log('ERRRRRR', err);
-        toast('Error in KYC verification', { type: 'error' });
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log('ERRRRRR', err);
+          toast('Error in KYC verification', { type: 'error' });
+      }
       });
   };
 
@@ -144,13 +168,13 @@ const User = () => {
   // }
 
   const handleRecharge = () => {
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
     axios
       .post(
         BACKEND_URL +
           `/company/update_wallet_balance?companyId=${parseInt(company_id)}&user_id=${parseInt(
             idUser,
-          )}&amount=${parseInt(rechargeAmount)}`,
+          )}&amount=${parseInt(rechargeAmount)}`,{headers}
       )
       .then((res) => {
         console.log('Recharge Responsee', res);
@@ -159,7 +183,7 @@ const User = () => {
         } else {
           toast('Recharge Successfully', { type: 'success' });
           axios
-            .get(BACKEND_URL + `/company/get_company_users/?companyId=${company_id}`)
+            .get(BACKEND_URL + `/company/get_company_users/?companyId=${company_id}`,{headers:headers})
             .then((res) => {
               console.log('RESSSSSSSSSSSSS', res);
               setUserData(res.data);
@@ -174,7 +198,12 @@ const User = () => {
         // window.location.reload()
       })
       .catch((err) => {
-        console.log('Error In Rechargeee');
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log('Error In Rechargeee');
+      }
       });
     setShowPopup(false);
     // toast.success('Recharge successful!');

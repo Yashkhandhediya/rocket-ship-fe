@@ -13,11 +13,13 @@ import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import Loader from '../../../../../common/loader/Loader';
 // import { order_id } from '../../../../orders/components/rto/Rto'
 import { package_info } from '../order-details/OrderDetails';
+import { ACCESS_TOKEN } from '../../../../../common/utils/config';
 
 export default function PackageDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation()
+  const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
   let {isEdit,order_id} = location?.state || {}
   const id_user = sessionStorage.getItem('user_id')
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order);
@@ -95,7 +97,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
       ...formDirectField,
       order_type: 'international',
       date: date,
-    });
+    },{headers:headers});
     if (resp.status == 200) {
       toast('Order Placed Successfully', { type: 'success' });
       dispatch(resetDomesticOrder());
@@ -118,7 +120,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
       ...formDirectField,
       order_type: 'domestic',
       date: date,
-    });
+    },{headers:headers});
     if (resp.status == 200) {
       toast('Order Updated Successfully', { type: 'success' });
       dispatch(resetDomesticOrder());

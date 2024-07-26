@@ -19,6 +19,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Returns';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 export const ReadyToShip = () => {
   const dispatch = useDispatch();
@@ -256,7 +257,7 @@ export const ReadyToShip = () => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)
-    const headers={'Content-Type': 'application/json'};
+    const headers={'Content-Type': 'application/json','Authorization': ACCESS_TOKEN};
 
     let temp_str = splitString(temp_payload['complete_address1'],35)
     let temp1 = splitString(temp_payload['complete_address'],35)
@@ -283,13 +284,18 @@ export const ReadyToShip = () => {
           toast('Invoice Download Successfully',{type:'success'})
         }
       ) .catch((error) => {
-        console.error("Error:", error);
-        toast('Error in Invoice Download',{type:'error'})
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.error("Error:", error);
+          toast('Error in Invoice Download',{type:'error'})
+      }
     });
   }
 
   function cancelOrder(orderDetails) {
-    const headers={'Content-Type': 'application/json'};
+    const headers={'Content-Type': 'application/json','Authorization': ACCESS_TOKEN};
     console.log("ORDER DETAILSSSSSSSS",orderDetails)
     if(orderDetails.partner_id == 1 || orderDetails.partner_id == 2){
       toast("Cancel Functionality Is Not Providing By This Partner",{type:"error"})
@@ -305,8 +311,13 @@ export const ReadyToShip = () => {
           window.location.reload()
         }
       })
-      .catch(() => {
-        toast('Unable to cancel Order', { type: 'error' });
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          toast('Unable to cancel Order', { type: 'error' });
+      }
       });
     }
   }

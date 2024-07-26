@@ -7,19 +7,22 @@ import { BACKEND_URL } from '../../../../common/utils/env.config';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Loader } from '../../../../common/components';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 const ShippingCharges = () => {
   const [data, setData] = useState([]); //eslint-disable-line
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
   const id_user = sessionStorage.getItem('user_id');
   const id_company = sessionStorage.getItem('company_id');
   const is_company = sessionStorage.getItem('is_company');
-
+  const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
   const user_id = is_company == 1 ? id_company : id_user;
 
   const fetchShippingChargesData = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(`${BACKEND_URL}/ordershipping_charges?user_id=${user_id}`);
+      const response = await axios.get(`${BACKEND_URL}/ordershipping_charges?user_id=${user_id}`,{headers:headers});
       if (response.status === 200) {
         setData(response.data);
         setIsLoading(false);
@@ -29,8 +32,13 @@ const ShippingCharges = () => {
       }
       console.log(response);
     } catch (err) {
-      toast(err, { type: 'error' });
-      setIsLoading(false);
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        toast(err, { type: 'error' });
+        setIsLoading(false);
+    }
     }
   };
 

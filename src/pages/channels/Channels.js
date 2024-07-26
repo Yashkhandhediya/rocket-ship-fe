@@ -3,6 +3,7 @@ import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithS
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
 
@@ -25,6 +26,7 @@ const Channels = () => {
   const [activeChannels, setActiveChannels] = useState([]);
   const [loading, setLoading] = useState(false);
   const [apiChannels, setApiChannels] = useState([]);
+  const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
 
   useEffect(() => {
     fetchActiveChannels();
@@ -34,7 +36,7 @@ const Channels = () => {
   const fetchActiveChannels = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/shopchannel/get_active_channel`);
+      const response = await axios.get(`${BACKEND_URL}/shopchannel/get_active_channel`,{headers:headers});
       // Ensure the response data is an array
       if (Array.isArray(response.data)) {
         setActiveChannels(response.data);
@@ -43,8 +45,13 @@ const Channels = () => {
         toast.error('Unexpected response format. Please try again later.');
       }
     } catch (error) {
-      console.error('Error fetching active channels:', error);
-      toast.error('Failed to fetch active channels. Please try again later.');
+      if (error.response && error.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        console.error('Error fetching active channels:', error);
+        toast.error('Failed to fetch active channels. Please try again later.');
+    }
     } finally {
       setLoading(false);
     }
@@ -53,7 +60,7 @@ const Channels = () => {
   const id_user = sessionStorage.getItem('user_id')
   const fetchApiChannels = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/shopchannel/get_store_by_user_id?user_id=${id_user}`);
+      const response = await axios.get(`${BACKEND_URL}/shopchannel/get_store_by_user_id?user_id=${id_user}`,{headers:headers});
       if (Array.isArray(response.data)) {
         setApiChannels(response.data);
       } else {
@@ -61,8 +68,13 @@ const Channels = () => {
         toast.error('Unexpected response format from API. Please try again later.');
       }
     } catch (error) {
-      console.error('Error fetching API channels:', error);
-      toast.error('Failed to fetch channels from API. Please try again later.');
+      if (error.response && error.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        console.error('Error fetching API channels:', error);
+        toast.error('Failed to fetch channels from API. Please try again later.');
+    }
     }
   };
 

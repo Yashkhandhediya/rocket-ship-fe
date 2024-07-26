@@ -8,12 +8,12 @@ import { Field } from '../../common/components';
 import { Tabs } from '../../common/components/tabs';
 import { trip_status_filter } from '../orders/duck';
 import { toast } from 'react-toastify';
-import { ACCESS_TOKEN } from '../../common/utils/config';
 import { Loader } from '../../common/components';
 import emptyBox from '../../common/images/empty-box.png';
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 export let modifyFlag = 0;
 export let modifyId;
@@ -31,6 +31,9 @@ const Allindent = () => {
   } else {
     user_name = 'Shivam Gajjar';
   }
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const navigate = useNavigate();
   const [dataFetch, setDataFetch] = useState(false);
   const [filteredInfo, setFilteredInfo] = useState([]);
@@ -83,7 +86,7 @@ const Allindent = () => {
     info.length = 0;
     setLoading(true);
     try {
-      const response = await axios.get(BACKEND_URL + `/indent/get_indents?created_by=${url_user_id}`);
+      const response = await axios.get(BACKEND_URL + `/indent/get_indents?created_by=${url_user_id}`,{ headers:headers });
       // console.log('RESPONSE', response, response.data.length);
       if (response.data.length > 0 && info.length == 0) {
         console.log('RESPONSE', response, response.data.length);
@@ -107,6 +110,10 @@ const Allindent = () => {
       setDataFetch(true);
     } catch (err) {
       console.log('ERRRRRRRR', err);
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } 
     } finally {
       setLoading(false);
     }
@@ -138,17 +145,22 @@ const Allindent = () => {
     modifyId = id;
     modifyFlag = 1;
     axios
-      .get(BACKEND_URL + `/indent/get_indents_by_id?id=${id}`)
+      .get(BACKEND_URL + `/indent/get_indents_by_id?id=${id}`,{ headers:headers })
       .then((res) => {
         console.log('TTTTTTTTT', res);
         let data = res.data;
         navigate('/indent', { state: { data: data } });
       })
       .catch((err) => {
-        console.log('ERRRRRRRRRRRRR', err);
-      });
-  };
-
+        if (err.response && err.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+          } else {
+            console.log('ERRRRRRRRRRRRR', err);
+          }
+    });
+    };
+        
   const checkConfirmRejectButtonShowCondition = (data) => {
     console.log('yasah');
     if (is_admin == 2) {
@@ -198,7 +210,7 @@ const Allindent = () => {
 
   const handlePrice = (id) => {
     setLoading(true);
-    const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
+    // const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
     console.log('Price', price);
     axios
       .post(
@@ -207,7 +219,7 @@ const Allindent = () => {
           id: id,
           price: parseInt(price[id]),
         },
-        { headers },
+        { headers:headers },
       )
       .then((res) => {
         console.log('RESPONSEEEEEE11', res);
@@ -215,14 +227,20 @@ const Allindent = () => {
         setLoading(false);
         window.location.reload();
       })
-      .catch((err) => {
-        console.log('Errorororor', err);
-      });
-  };
+      .catch((err) =>  {
+        if (err.response && err.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+          } else {
+            console.log('Errorororor', err);
+          }
+    });
+    };
+      
 
   const handleRcslPrice = (id) => {
     setLoading(true);
-    const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
+    // const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
     console.log('Price', rcslPrice);
     axios
       .put(
@@ -231,7 +249,7 @@ const Allindent = () => {
           id: id,
           counter_price: parseInt(rcslPrice[id]),
         },
-        { headers },
+        { headers:headers },
       )
       .then((res) => {
         if (res?.data?.status_code == 500) {
@@ -245,13 +263,18 @@ const Allindent = () => {
         window.location.reload();
       })
       .catch((err) => {
-        console.log('Errorororor', err);
-      });
-  };
+        if (err.response && err.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+          } else {
+            console.log('Errorororor', err);
+          }
+    });
+    };
 
   const handleConfirmation = (id, status) => {
     setLoading(true);
-    const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
+    // const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
     let newObj = {
       id: id,
       status_code: status,
@@ -260,7 +283,7 @@ const Allindent = () => {
       newObj.offline_price = offlinePrice;
     }
     axios
-      .post(BACKEND_URL + '/indent/booking_confirmation', newObj, { headers })
+      .post(BACKEND_URL + '/indent/booking_confirmation', newObj, { headers:headers })
       .then((res) => {
         console.log('111111111', res);
         if (res?.data?.status_code == 401) {
@@ -277,13 +300,18 @@ const Allindent = () => {
         setPopupCardId(null);
         window.location.reload();
       })
-      .catch((err) => {
-        console.log('222222222', err);
-        setLoading(false);
-        setShowBtn(true);
-      });
-  };
-
+      .catch((err) =>  {
+        if (err.response && err.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+          } else {
+            console.log('222222222', err);
+            setLoading(false);
+            setShowBtn(true);
+          }
+    });
+    };
+        
   const handleTabChange = (tabId) => {
     console.log('TAB SELECT', selectedTab);
     setSelectedTab(tabId);
@@ -342,12 +370,16 @@ const Allindent = () => {
   const getSearchData = async () => {
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/indent/search_indent/?string=${query}&user_id=${url_user_id}`,
+        `${BACKEND_URL}/indent/search_indent/?string=${query}&user_id=${url_user_id}`,{ headers:headers }
       );
       console.log(response);
       setSearchData(response.data);
     } catch (err) {
       toast(`There is Some error while searching`, { type: 'error' });
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } 
     }
   };
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -12,6 +12,7 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
 import Customer from './Customer';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 function CustomerOverview() {
   const [viewData, setViewData] = useState([]);
@@ -20,25 +21,32 @@ function CustomerOverview() {
   const id_user = sessionStorage.getItem('user_id');
   const id_company = sessionStorage.getItem('company_id');
   const is_company = sessionStorage.getItem('is_company');
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const user_id = is_company == 1 ? id_company : id_user;
   const queryParams = new URLSearchParams(location.search);
   const isSuccess = queryParams.get('success');
   const [showSuccess, setShowSuccess] = useState(false);
-
+  const navigate = useNavigate();
   const fetchCustomerViewDetails = async () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/users/get_customer_view_details/${buyerId}/detail?user_id=${user_id}`,
+        `${BACKEND_URL}/users/get_customer_view_details/${buyerId}/detail?user_id=${user_id}`,{headers:headers}
       );
       console.log(response);
       setViewData(response.data);
       console.log(response.data);
       setLoading(false);
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       toast('There is Error while fetching', { type: 'error' });
       setLoading(false);
+    }
     }
   };
 

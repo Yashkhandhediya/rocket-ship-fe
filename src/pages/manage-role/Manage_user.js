@@ -7,22 +7,30 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { BACKEND_URL } from "../../common/utils/env.config";
 import UserDataInfo from './UserDataInfo'
+import { ACCESS_TOKEN } from "../../common/utils/config";
 
 
 
 const Manage_user = () => {
   const [data,setData] = useState([])
   const navigate = useNavigate()
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
 
   const handleData = () => {
-    axios.get(BACKEND_URL + `/roleuser/created_user_roles?created_by=${sessionStorage.getItem('company_id')}`)
+    axios.get(BACKEND_URL + `/roleuser/created_user_roles?created_by=${sessionStorage.getItem('company_id')}`,{headers:headers})
     .then((res) => {
       console.log("Response User Data",res.data)
       setData(res.data)
     })
     .catch((err) => {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       console.log("Error in Data Fetch",err)
+    }
     })
   }
 

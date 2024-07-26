@@ -7,7 +7,7 @@ import { CustomDataTable } from '../../common/components'
 import { toast } from 'react-toastify'
 import { noData } from '../../common/images'
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar'
-// import { ACCESS_TOKEN } from '../../common/utils/config'
+import { ACCESS_TOKEN } from '../../common/utils/config'
 
 const CompanyList = () => {
     const navigate = useNavigate()
@@ -24,6 +24,9 @@ const CompanyList = () => {
     const [reload,setReload] = useState(false)
     const [pageNo,setPageNo] = useState(1)
     const [totalPage,setTotalPage] = useState(1)
+    const headers = {             
+      'Content-Type': 'application/json',
+      'Authorization': ACCESS_TOKEN};
 
     const paginate = (page_item) => {
       if(page_item > 0){
@@ -35,7 +38,7 @@ const CompanyList = () => {
     };
 
     const handleCompany = () => {
-        axios.get(BACKEND_URL + '/company/get_all_companies/')
+        axios.get(BACKEND_URL + '/company/get_all_companies/',{ headers:headers})
         .then((res) => {
             console.log("All Company List",res)
             setCompanyData(res.data)
@@ -43,7 +46,12 @@ const CompanyList = () => {
             setTotalPage(total)
             setCurrentItems(res.data.slice(itemsPerPage-10, itemsPerPage));
         }).catch((err) => {
+          if (err.response && err.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+        } else {
             console.log("Error In Company API",err)
+        }
         })
     }
 
@@ -63,54 +71,79 @@ const CompanyList = () => {
     const handleCompanyKYC = (row) => {
       setShowPopup(true)
       setIdUser(row?.id)
-      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_pan`,{ responseType: 'blob' }).
+      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_pan`,{ responseType: 'blob' },{ headers:headers}).
       then((res) => {
           console.log("Recharge Responsee",res)
           const imgUrl = URL.createObjectURL(res.data)
           setCompanyPan(imgUrl)
       }).catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
           console.log("Error In Rechargeee",err)
+      }
       })
 
-      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_logo`,{ responseType: 'blob' }).
+      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_logo`,{ responseType: 'blob' },{ headers:headers}).
       then((res) => {
           console.log("Recharge Responsee",res)
           const imgUrl = URL.createObjectURL(res.data)
           setCompanyLogo(imgUrl)
       }).catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
           console.log("Error In Rechargeee",err)
+      }
       })
 
-      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_gst`,{ responseType: 'blob' }).
+      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_gst`,{ responseType: 'blob' },{ headers:headers}).
       then((res) => {
           console.log("Recharge Responsee",res)
           const imgUrl = URL.createObjectURL(res.data)
           setCompanyGst(imgUrl)
       }).catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
           console.log("Error In Rechargeee",err)
+      }
       })
 
-      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_stamp`,{ responseType: 'blob' }).
+      axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=company_stamp`,{ responseType: 'blob' },{ headers:headers}).
       then((res) => {
           console.log("Recharge Responsee",res)
           const imgUrl = URL.createObjectURL(res.data)
           setCompanyStamp(imgUrl)
       }).catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
           console.log("Error In Rechargeee",err)
+      }
       })
 
     }
 
     const handleAcceptKYC = () => {
       const headers={'Content-Type': 'application/json'};
-      axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=company&status=${3}&id=${idUser}`,{headers})
+      axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=company&status=${3}&id=${idUser}`,{ headers:headers})
       .then((res) => {
         console.log("Response ",res)
         toast("KYC Verification Successfully",{type:'success'})
         setShowPopup(false);
       }).catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
         console.log("ERRRRRR",err)
         toast("Error in KYC verification",{type:'error'})
+      }
       })
     }
 

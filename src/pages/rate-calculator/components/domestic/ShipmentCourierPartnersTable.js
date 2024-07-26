@@ -9,13 +9,18 @@ import './ShipmentCourierPartnersTable.css';
 import { SchedulePickupModal } from '../../../orders/components/schedule-pickup-modal';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Button } from 'flowbite-react';
+import { useNavigate } from 'react-router-dom';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentDrawer }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [scheduleModal, setScheduleModal] = useState({ isOpen: false, pickupDetails: {} });
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const handleShipOrder = (data) => {
     let requestData;
     if (data?.partner_name === 'Delhivery') {
@@ -52,7 +57,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
     if (orderId) {
       console.log("JTTTTTTTTTT",requestData)
       axios
-        .post(`${BACKEND_URL}/order/${orderId}/shipment`, requestData)
+        .post(`${BACKEND_URL}/order/${orderId}/shipment`, requestData,{headers:headers})
         .then((resp) => {
           if (resp?.status === 200) {
             setIsLoading(false);
@@ -80,10 +85,15 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           }
         })
         .catch((e) => {
-          // eslint-disable-next-line no-console
-          console.error(e);
-          setIsLoading(false);
-          toast('Unable to ship order', { type: 'error' });
+          if (e.response && e.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+        } else {
+            // eslint-disable-next-line no-console
+            console.error(e);
+            setIsLoading(false);
+            toast('Unable to ship order', { type: 'error' });
+        }
         });
     }
   };

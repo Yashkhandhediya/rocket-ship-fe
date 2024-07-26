@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import PageWithSidebar from '../../../common/components/page-with-sidebar/PageWithSidebar';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Pagination from '../pagination/Pagination';
 import { noData } from '../../../common/images';
 import axios from 'axios';
+import { ACCESS_TOKEN } from '../../../common/utils/config';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import { toast } from 'react-toastify';
 
@@ -19,8 +20,10 @@ function CourierLog() {
       ];
     const [data, setData] = useState(tempdata);
     const [totalData, setTotalData] = useState([]);
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
     const [per_page, setPerPage] = useState(15);
     const [page, setPage] = useState(1);
+    const navigate = useNavigate();
     const handlePageChange = (page) => {
         setPage(page);
       }
@@ -32,14 +35,19 @@ function CourierLog() {
       const currentPageData = data.slice((page - 1) * per_page, page * per_page);
 
       const handleLogData = () => {
-        axios.get(BACKEND_URL + `/userpartner/update_status_history?user_id=${sessionStorage.getItem('user_id')}&page=${page}&page_size=${per_page}`)
+        axios.get(BACKEND_URL + `/userpartner/update_status_history?user_id=${sessionStorage.getItem('user_id')}&page=${page}&page_size=${per_page}`,{headers:headers})
         .then((res) => {
           console.log("Log Data",res.data)
           setData(res.data);
         })
         .catch((err) => {
-          console.log(err);
-          toast("Error In Fetching Log Data",{type:'error'})
+          if (err.response && err.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+        } else {
+            console.log(err);
+            toast("Error In Fetching Log Data",{type:'error'})
+        }
         })
       }
 

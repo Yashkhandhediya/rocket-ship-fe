@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { freezeGuide } from '../../../../common/images';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
 import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
   const [weightDiscrepancyData, setWeightDiscrepancyData] = useState({
@@ -16,7 +17,7 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
     weight_img: null,
     with_label_img: null,
   })
-
+  const navigate = useNavigate();
   const [images, setImages] = useState({
     length_img: null,
     width_img: null,
@@ -72,8 +73,13 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
       .then((response) => {
         setWeightDiscrepancyData({ ...weightDiscrepancyData, [name]: response.data.filepath })
       }).catch((error) => {
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
         toast('Something went wrong while uploading image', { type: 'error' })
         console.log(error); //eslint-disable-line
+      }
       })
     setLoading(false);
   }
@@ -88,14 +94,19 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
   ];
 
   const handleImageData = (imageType, key) => {
-    axios.get(BACKEND_URL + `/weight_discrepancy/get_weight_discrepancy_courier_image?weight_discrepancy_id=${data?.weight_discrepancy?.id}&image_type=${imageType}`,{ responseType: 'blob' })
+    axios.get(BACKEND_URL + `/weight_discrepancy/get_weight_discrepancy_courier_image?weight_discrepancy_id=${data?.weight_discrepancy?.id}&image_type=${imageType}`,{ responseType: 'blob' },{ headers: { 'Content-Type': 'multipart/form-data','Authorization':ACCESS_TOKEN } })
     .then((res) => {
       console.log("Imgeeeeeeee",res.data)
       const imgUrl = URL.createObjectURL(res.data)
       setImages(prevImages => ({ ...prevImages, [key]: imgUrl }));
     })
     .catch((err) => {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       console.log("ERRRRRRRRRRR",err)
+    }
     })
   }
 
@@ -124,9 +135,14 @@ const DiscrepancyModal = ({ setShow, data, setLoading, type }) => {
           setShow(false);
         }
       }).catch((error) => {
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
         toast('Something went wrong', { type: 'error' })
         setShow(false);
         console.log(error); //eslint-disable-line
+      }
       })
 
     console.log(weightDiscrepancyData); //eslint-disable-line

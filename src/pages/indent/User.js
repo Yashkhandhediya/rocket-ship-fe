@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom';
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const User = () => {
   const [userData, setUserData] = useState([]);
@@ -29,6 +30,9 @@ const User = () => {
   const [searchData, setSearchData] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
   const [query, setQuery] = useState('');
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const user_data = query.length !== 0 ? searchData : userData;
 
   const { state } = useLocation();
@@ -38,7 +42,7 @@ const User = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(BACKEND_URL + `/indent/get_users?company_id=${company_id}`)
+      .get(BACKEND_URL + `/indent/get_users?company_id=${company_id}`,{headers:headers})
       .then((res) => {
         setLoading(false);
         console.log('RESSSSSSSSSSSSS', res);
@@ -46,8 +50,13 @@ const User = () => {
         setFetchData(true);
       })
       .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
         setLoading(false);
         console.log('ERRRRRRRRRR', err);
+      }
       });
   }, []);
 
@@ -75,7 +84,7 @@ const User = () => {
     const headers = { 'Content-Type': 'application/json' };
     setLoading(true);
     axios
-      .get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=user_aadhar`, { responseType: 'blob' })
+      .get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=user_aadhar`, { responseType: 'blob' },{headers:headers})
       .then((res) => {
         setLoading(false);
         console.log('Recharge Responsee', res);
@@ -87,12 +96,17 @@ const User = () => {
         // window.location.reload()
       })
       .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
         setLoading(false);
         console.log('Error In Rechargeee', err);
+      }
       });
 
     axios
-      .get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=selfie`, { responseType: 'blob' })
+      .get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=selfie`, { responseType: 'blob' },{headers:headers})
       .then((res) => {
         setLoading(false);
         console.log('Recharge Responsee', res);
@@ -104,14 +118,19 @@ const User = () => {
         // window.location.reload()
       })
       .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
         setLoading(false);
         console.log('Error In Rechargeee', err);
+      }
       });
   };
 
   const handleAcceptKYC = () => {
     setKyc_status(1);
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
     setLoading(true);
     axios
       .post(BACKEND_URL + `/kyc/kyc_status/?client_type=user&status=${3}&id=${idUser}`, { headers })
@@ -125,21 +144,31 @@ const User = () => {
         // window.location.reload()
       })
       .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
         setLoading(false);
         console.log('ERRRRRR', err);
         toast('Error in KYC verification', { type: 'error' });
+      }
       });
   };
 
   const getSearchData = async () => {
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/users/search_user/?string=${query}&company_id=${company_id}`,
+        `${BACKEND_URL}/users/search_user/?string=${query}&company_id=${company_id}`,{headers:headers}
       );
       console.log(response);
       setSearchData(response.data);
     } catch (err) {
-      toast(`There is Some error while searching`, { type: 'error' });
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        toast(`There is Some error while searching`, { type: 'error' });
+    }
     }
   };
 

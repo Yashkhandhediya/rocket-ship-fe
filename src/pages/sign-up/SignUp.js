@@ -4,6 +4,7 @@ import { Field, Loader } from '../../common/components';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ const SignUp = () => {
       setGstError('');
     }
     setLoading(true);
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
     axios
       .post(
         BACKEND_URL + '/company/signup',
@@ -67,9 +68,14 @@ const SignUp = () => {
         }
       })
       .catch((err) => {
-        setLoading(false);
-        console.log('Error in signup', err);
-        toast('Some Error in Sign Up', { type: 'error' });
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          setLoading(false);
+          console.log('Error in signup', err);
+          toast('Some Error in Sign Up', { type: 'error' });
+      }
       });
   };
 

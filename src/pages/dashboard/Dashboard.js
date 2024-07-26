@@ -9,11 +9,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Card, DonutChart } from './components';
 import ShipmentDetailCard from './components/shipment-card/ShipmentDetailCard';
 import { ShipmentOverview } from './components/shipment-overview';
-
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const id_user = sessionStorage.getItem('user_id');
   const company_id = sessionStorage.getItem('company_id');
   const oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().slice(0, 10);
@@ -115,7 +118,7 @@ const Dashboard = () => {
     axios
       .post(
         BACKEND_URL +
-          `/dashboard/user_order_analysis/?user_id=${id_user}&start_date=${fromDate}&end_date=${toDate}`,
+          `/dashboard/user_order_analysis/?user_id=${id_user}&start_date=${fromDate}&end_date=${toDate}`,{headers:headers}
       )
       .then((res) => {
         setTodayOrder(res.data.todays_order_count);
@@ -143,7 +146,12 @@ const Dashboard = () => {
         setLoading(false);
       })
       .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
         console.log('ERRRRRR', err);
+      }
       });
   };
 

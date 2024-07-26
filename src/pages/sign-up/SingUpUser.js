@@ -50,7 +50,7 @@ const SignUpUser = () => {
     }
     setFlag(1);
     setLoading(true);
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
     if (sessionStorage.getItem('access_token') != null) {
       axios
         .post(
@@ -78,9 +78,14 @@ const SignUpUser = () => {
           }
         })
         .catch((err) => {
-          setLoading(false);
-          console.log('Error in signup', err);
-          toast('Some Error in Sign Up', { type: 'error' });
+          if (err.response && err.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+        } else {
+            setLoading(false);
+            console.log('Error in signup', err);
+            toast('Some Error in Sign Up', { type: 'error' });
+        }
         });
     } else {
       axios
@@ -109,9 +114,14 @@ const SignUpUser = () => {
           }
         })
         .catch((err) => {
-          setLoading(false);
-          console.log('Error in signup', err);
-          toast('Some Error in Sign Up', { type: 'error' });
+          if (err.response && err.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+        } else {
+            setLoading(false);
+            console.log('Error in signup', err);
+            toast('Some Error in Sign Up', { type: 'error' });
+        }
         });
     }
   };

@@ -7,6 +7,8 @@ import { noData } from '../../../../common/images';
 import { CustomTooltip, Loader } from '../../../../common/components';
 import axios from 'axios';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { useNavigate } from 'react-router-dom';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 const Passbook = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -20,7 +22,11 @@ const Passbook = () => {
   const [holdAmount, setHoldAmount] = useState(0);
   const [currentPage, setCurrentPage] = useState(2);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const navigate = useNavigate();
   const [currentItems, setCurrentItems] = useState([]);
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const id_user = sessionStorage.getItem('user_id');
   const id_company = sessionStorage.getItem('company_id');
   const is_company = sessionStorage.getItem('is_company');
@@ -79,7 +85,7 @@ const Passbook = () => {
     try {
       const response = await axios.post(
         `${BACKEND_URL}/account_transaction/account_report?page_number=1&page_size=${itemsPerPage}`,
-        { date_from: fromDate, date_to: toDate, user_id: temp_id },
+        { date_from: fromDate, date_to: toDate, user_id: temp_id },{headers:headers}
       );
       setData(response.data.report);
       setHoldAmount(response.data.report[0].balance);
@@ -89,9 +95,14 @@ const Passbook = () => {
       getUsableAmount();
       setIsLoading(false);
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       toast.error('Something went wrong while fetching passbook data');
       console.error('Error while fetching passbook data', error); //eslint-disable-line
       setIsLoading(false);
+    }
     }
   };
 

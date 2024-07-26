@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import PageWithSidebar from '../../../common/components/page-with-sidebar/PageWithSidebar';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../common/utils/config';
 import { FaSearch } from 'react-icons/fa';
 import { CustomMultiSelect } from '../../../common/components';
 import { modes, regions, sorts } from '../constants';
@@ -18,20 +19,26 @@ function Courier_Selection() {
   const [sort, setSort] = useState('');
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-
+  const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
   const tabs = ['Activated', 'Deactivated', 'All'];
+  const navigate = useNavigate();
 
   const handleData = () => {
     axios
-      .get(BACKEND_URL + `/userpartner/get_user_partner?user_id=${sessionStorage.getItem('user_id')}`)
+      .get(BACKEND_URL + `/userpartner/get_user_partner?user_id=${sessionStorage.getItem('user_id')}`,{headers:headers})
       .then((res) => {
         console.log('Courier Data', res.data);
         setData(res.data);
         filterData(res.data, activeTab);
       })
       .catch((err) => {
-        console.log('Error in Data', err);
-        toast('Error In Fetching Data', { type: 'error' });
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log('Error in Data', err);
+          toast('Error In Fetching Data', { type: 'error' });
+      }
       });
   };
 
@@ -60,15 +67,20 @@ function Courier_Selection() {
   const handleActive = (id, status) => {
     const newStatus = status === 1 ? 0 : 1;
     axios
-      .put(BACKEND_URL + `/userpartner/update_status?id=${id}&status=${newStatus}`)
+      .put(BACKEND_URL + `/userpartner/update_status?id=${id}&status=${newStatus}`,{headers:headers})
       .then((res) => {
         console.log('Response Data', res.data);
         toast('Status Updated Successfully', { type: 'success' });
         handleData();
       })
       .catch((err) => {
-        console.log('Error in Response', err);
-        toast('Error In Updating Status', { type: 'error' });
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log('Error in Response', err);
+          toast('Error In Updating Status', { type: 'error' });
+      }
       });
   };
 

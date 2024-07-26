@@ -6,9 +6,10 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
-// import { ACCESS_TOKEN } from '../../common/utils/config';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 import { noData } from '../../common/images';
 import { Button } from 'flowbite-react';
+import { useNavigate } from 'react-router-dom';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
@@ -18,6 +19,10 @@ const Catalogue = () => {
   const [selectedFile, setSelectedFile] = useState('');
   const [downloadPopup, setDownloadPopup] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const user_email = sessionStorage.getItem('user_email');
   const [itemsPerPage, setItemsPerPage] = useState(15);
   // const [currentItems, setCurrentItems] = useState([]);
@@ -98,7 +103,7 @@ const Catalogue = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${BACKEND_URL}/product/get_product_details/?page=${page}&page_size=${itemsPerPage}`,
+        `${BACKEND_URL}/product/get_product_details/?page=${page}&page_size=${itemsPerPage}`,{headers:headers}
       );
       if (response.status === 200) {
         setData(response.data);
@@ -109,9 +114,14 @@ const Catalogue = () => {
       }
       setLoading(false);
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       setLoading(false);
       setIncrementDisable(false);
       toast(`There is some error while fetching orders`, { type: 'error' });
+    }
     }
   };
 
@@ -170,7 +180,7 @@ const Catalogue = () => {
       const response = await axios.post(BACKEND_URL + '/product/add_product_catalogue', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          // "Authorization":ACCESS_TOKEN
+          "Authorization":ACCESS_TOKEN
         },
       });
 
@@ -184,13 +194,18 @@ const Catalogue = () => {
         toast('Failed to upload file:', { type: 'error' });
       }
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       console.error('Error uploading file:', error);
       toast('Error uploading file:', { type: 'error' });
+    }
     }
   };
 
   const handleSampleFile = () => {
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json',"Authorization":ACCESS_TOKEN };
     axios
       .get(
         BACKEND_URL + '/product/get_sample_file/',
@@ -214,7 +229,12 @@ const Catalogue = () => {
         document.body.removeChild(link);
       })
       .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
         console.log('Error in File', err);
+      }
       });
   };
 
@@ -222,7 +242,7 @@ const Catalogue = () => {
     setLoading(true);
     const headers = {
       'Content-Type': 'application/json',
-      // "Authorization":ACCESS_TOKEN
+      "Authorization":ACCESS_TOKEN
     };
     axios
       .get(BACKEND_URL + '/product/send_product_mail/', { headers })
@@ -231,8 +251,13 @@ const Catalogue = () => {
         setDownloadPopup(true);
       })
       .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
         console.log('Error in File', err);
         setLoading(false);
+      }
       });
   };
 

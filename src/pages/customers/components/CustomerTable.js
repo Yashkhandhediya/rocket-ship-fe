@@ -8,6 +8,7 @@ import { Loader } from '../../../common/components';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from 'flowbite-react';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { ACCESS_TOKEN } from '../../../common/utils/config';
 
 function CustomerTable() {
   const [searchText, setSearchText] = useState('');
@@ -16,6 +17,9 @@ function CustomerTable() {
   const [itemsPerPage, setItemsPerPage] = useState(15);
   const [page, setPage] = useState(1);
   const [incrementDisabled, setIncrementDisable] = useState(false);
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
 
   const id_user = sessionStorage.getItem('user_id');
   const id_company = sessionStorage.getItem('company_id');
@@ -44,7 +48,7 @@ function CustomerTable() {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        `${BACKEND_URL}/users/get_customer_details?user_id=${user_id}&page=${page}&page_size=${itemsPerPage}`,
+        `${BACKEND_URL}/users/get_customer_details?user_id=${user_id}&page=${page}&page_size=${itemsPerPage}`,{headers:headers}
       );
       if (response.status === 200 && Array.isArray(response.data)) {
         setCustomersData(response.data);
@@ -55,9 +59,14 @@ function CustomerTable() {
       }
       setIsLoading(false);
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       setIsLoading(false);
       setIncrementDisable(false);
       toast(`There is some error while fetching orders`, { type: 'error' });
+    }
     }
   };
 

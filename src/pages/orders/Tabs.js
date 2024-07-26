@@ -11,6 +11,8 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { temp_user_id } from './User';
 import { useSelector } from 'react-redux';
+import { ACCESS_TOKEN } from '../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const Tabs = ({ tabs, tabClassNames, activeTab, setActiveTab, onTabChange = () => {} }) => {
   console.log('Activeeeeeeee', activeTab);
@@ -18,12 +20,14 @@ const Tabs = ({ tabs, tabClassNames, activeTab, setActiveTab, onTabChange = () =
   const id_user = sessionStorage.getItem('user_id');
   const id_company = sessionStorage.getItem('company_id');
   const is_company = sessionStorage.getItem('is_company');
-
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [itemsPerPage, setItemsPerPage] = useState(15);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const tabID = tabs.find((_, i) => i === activeTab);
   console.log('lllllllllllkl', tabID);
 
@@ -48,13 +52,18 @@ const Tabs = ({ tabs, tabClassNames, activeTab, setActiveTab, onTabChange = () =
       const response = await axios.get(
         `${BACKEND_URL}/order/get_filtered_orders?created_by=${show_user_id}&${
           tid.id !== 'all' && `status=${tid.id}`
-        }&page=${page}&page_size=${itemsPerPage}`,
+        }&page=${page}&page_size=${itemsPerPage}`,{headers:headers}
       );
       setData(response.data);
       setLoading(false);
     } catch (err) {
-      setLoading(false);
-      toast('There is some error while fetching orders.', { type: 'error' });
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        setLoading(false);
+        toast('There is some error while fetching orders.', { type: 'error' });
+    }
     }
   };
 

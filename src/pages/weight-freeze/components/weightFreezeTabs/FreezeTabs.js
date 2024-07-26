@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { CustomTooltip } from '../../../../common/components';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTotalData }) => { // eslint-disable-line
   const [searchParams, setSearchParams] = useSearchParams();
@@ -12,9 +13,12 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
   const [fromDate, setFromDate] = useState(oneMonthAgo);
   const [toDate, setToDate] = useState(todayDate);
   const [enableDate, setEnableDate] = useState(true);
+  const navigate = useNavigate();
   const [showToggleButton, setShowToggleButton] = useState(false);
   const [SRSuggested, setSRSuggested] = useState(true);
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const freezeStatus = searchParams.get('freeze_status');
   const fromDateURL = searchParams.get('from');
   const toDateURL = searchParams.get('to') || null;
@@ -29,7 +33,7 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
 
       : `${BACKEND_URL}/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&status_name=${freezeStatus}&user_id=${sessionStorage.getItem('user_id')}`;
 
-    axios.get(url, {})
+    axios.get(url, {headers:headers})
       .then((response) => {
         console.log("asdkjfhsdkjfgbdasfjhyg", response.data); //eslint-disable-line
         setData(response.data.data);
@@ -37,12 +41,17 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
         setLoading(false);
       })
       .catch((error) => {
-        console.log(error); //eslint-disable-line
-        setLoading(false);
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log(error); //eslint-disable-line
+          setLoading(false);
+      }
       })
 
     //get status count
-    axios.get(`${BACKEND_URL}/weight_freeze/get_status_counts`, {})
+    axios.get(`${BACKEND_URL}/weight_freeze/get_status_counts`, {headers:headers})
       .then((res) => {
         console.log(res.data); //eslint-disable-line
         const newTabs = [...tabs];
@@ -55,7 +64,12 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
         setTabs(newTabs);
       })
       .catch((err) => {
-        console.log(err); //eslint-disable-line
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log(err); //eslint-disable-line
+      }
       })
   };
 

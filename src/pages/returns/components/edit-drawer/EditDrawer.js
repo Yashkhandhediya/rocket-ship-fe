@@ -8,9 +8,12 @@ import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const EditDrawer = ({ isOpen, onClose, fieldNames = [], data }) => {
   const [validationTriggered, setValidationTriggered] = useState(false);
+  const navigate = useNavigate();
   const [addressList, setAddressList] = useState([]);
   const id_user = sessionStorage.getItem('user_id');
   const id_company = sessionStorage.getItem('company_id');
@@ -21,22 +24,29 @@ const EditDrawer = ({ isOpen, onClose, fieldNames = [], data }) => {
     domesticReturnFormValues?.pickup_address?.id,
     domesticReturnFormValues.return_reason,
   );
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const hasFetched = useRef(false);
 
   const fetchUserAddressList = () => {
     const custom_id = is_company == 1 ? id_company : id_user;
     axios
-      .get(BACKEND_URL + `/address/?user_id=${custom_id}`, )
+      .get(BACKEND_URL + `/address/?user_id=${custom_id}`,{headers:headers} )
       .then((resp) => {
         if (resp.status == 200) {
           setAddressList(resp?.data || []);
         }
       })
       .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        toast('Unable to fetch address', { type: 'error' });
+        if (e.response && e.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          // eslint-disable-next-line no-console
+          console.error(e);
+          toast('Unable to fetch address', { type: 'error' });
+      }
       });
   };
 
@@ -343,12 +353,17 @@ const EditDrawer = ({ isOpen, onClose, fieldNames = [], data }) => {
           width: formDirectField.width,
           height: formDirectField.height,
           drop_address_id: domesticReturnFormValues?.pickup_address?.id,
-        },
+        },{headers:headers}
       );
       toast('Edited', { type: 'success' });
       console.log(response);
     } catch (err) {
-      console.log(err);
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        console.log(err);
+    }
     }
   };
 

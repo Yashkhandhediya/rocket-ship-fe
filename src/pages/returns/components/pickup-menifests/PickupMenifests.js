@@ -21,6 +21,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { BACKEND_URL, MENIFEST_URL } from "../../../../common/utils/env.config";
 import { resData } from "../../Returns"
+import { ACCESS_TOKEN } from "../../../../common/utils/config";
 
 
 const PickupMenifests = () => {
@@ -209,7 +210,7 @@ const getColumns = () => {
 
 const handleMenifest = (id) => {
   let temp_payload = flattenObject(resData,id)
-  const headers={'Content-Type': 'application/json'};
+  const headers={'Content-Type': 'application/json','Authorization': ACCESS_TOKEN};
 
   temp_payload['client_name']="cloud_cargo"
   temp_payload['file_name']="manifest"
@@ -225,8 +226,13 @@ const handleMenifest = (id) => {
         window.location.reload();
       }
     ) .catch((error) => {
-      console.error("Error:", error);
-      toast('Error in Menifest Download',{type:'error'})
+      if (error.response && error.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        console.error("Error:", error);
+        toast('Error in Menifest Download',{type:'error'})
+    }
   });
 }
 
@@ -271,7 +277,7 @@ function flattenObject(obj, id) {
 const handleInvoice = (id) => {
   let temp_payload = flattenObject(resData,id)
   console.log("kkkkkkkkkk",temp_payload)
-  const headers={'Content-Type': 'application/json'};
+  const headers={'Content-Type': 'application/json','Authorization': ACCESS_TOKEN};
   // console.log("jtttttttttt",temp_payload['complete_address1'],temp_payload['complete_address1'].length)
   let temp_str = splitString(temp_payload['complete_address1'],35)
   let temp1 = splitString(temp_payload['complete_address'],35)
@@ -297,8 +303,13 @@ const handleInvoice = (id) => {
         toast('Invoice Download Successfully',{type:'success'})
       }
     ) .catch((error) => {
-      console.error("Error:", error);
-      toast('Error in Invoice Download',{type:'error'})
+      if (error.response && error.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        console.error("Error:", error);
+        toast('Error in Invoice Download',{type:'error'})
+    }
   });
 }
 
@@ -310,7 +321,7 @@ function cloneOrder(orderDetails) {
 }
 
 function cancelOrder(orderDetails) {
-  const headers={'Content-Type': 'application/json'};
+  const headers={'Content-Type': 'application/json','Authorization': ACCESS_TOKEN};
   console.log("ORDER DETAILSSSSSSSS",orderDetails)
   if(orderDetails.partner_id == 1 || orderDetails.partner_id == 2){
     toast("Cancel Functionality Is Not Providing By This Partner",{type:"error"})
@@ -326,8 +337,13 @@ function cancelOrder(orderDetails) {
         window.location.reload()
       }
     })
-    .catch(() => {
-      toast('Unable to cancel Order', { type: 'error' });
+    .catch((error) => {
+      if (error.response && error.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        toast('Unable to cancel Order', { type: 'error' });
+    }
     });
   }
 }

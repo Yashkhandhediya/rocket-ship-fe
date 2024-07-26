@@ -33,7 +33,7 @@ import { Button } from 'flowbite-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-// import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 const InTransit = ({ data, isLoading }) => {
   const id_user = sessionStorage.getItem('user_id');
@@ -41,7 +41,9 @@ const InTransit = ({ data, isLoading }) => {
   const is_company = sessionStorage.getItem('is_company');
 
   const user_id = is_company == 1 ? id_company : id_user;
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   // const [itemsPerPage, setItemsPerPage] = useState(15);
   // const [page, setPage] = useState(1);
   // const [loading, setLoading] = useState(false);
@@ -101,7 +103,7 @@ const InTransit = ({ data, isLoading }) => {
   const handleMenifest = (id) => {
     let temp_payload = flattenObject(resData, id);
     console.log('kkkkkkkkkk', temp_payload);
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
 
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'manifest';
@@ -116,8 +118,13 @@ const InTransit = ({ data, isLoading }) => {
         toast('Menifest Download Successfully', { type: 'success' });
       })
       .catch((error) => {
-        console.error('Error:', error);
-        toast('Error in Menifest Download', { type: 'error' });
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.error('Error:', error);
+          toast('Error in Menifest Download', { type: 'error' });
+      }
       });
   };
 
@@ -154,7 +161,7 @@ const InTransit = ({ data, isLoading }) => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData, id);
     console.log('kkkkkkkkkk', temp_payload);
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
 
     let temp_str = splitString(temp_payload['complete_address1'], 35);
     let temp1 = splitString(temp_payload['complete_address'], 35);
@@ -180,8 +187,13 @@ const InTransit = ({ data, isLoading }) => {
         toast('Invoice Download Successfully', { type: 'success' });
       })
       .catch((error) => {
-        console.error('Error:', error);
-        toast('Error in Invoice Download', { type: 'error' });
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.error('Error:', error);
+          toast('Error in Invoice Download', { type: 'error' });
+      }
       });
   };
 
@@ -369,15 +381,20 @@ const InTransit = ({ data, isLoading }) => {
       .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}`, {
         ...orderDetails,
         status: 'cancelled',
-      })
+      },{headers:headers})
       .then((resp) => {
         if (resp?.status === 200) {
           dispatch(setAllOrders(null));
           toast('Order cancelled successfully', { type: 'success' });
         }
       })
-      .catch(() => {
-        toast('Unable to cancel Order', { type: 'error' });
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          toast('Unable to cancel Order', { type: 'error' });
+      }
       });
   }
 

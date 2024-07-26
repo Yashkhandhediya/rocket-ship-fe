@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../../common/utils/env.config";
 import { toast } from "react-toastify";
+import { ACCESS_TOKEN } from "../../common/utils/config";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -15,8 +16,8 @@ const Home = () => {
     const [showRechargeModal, setShowRechargeModal] = useState(false);
 
     const handleRecharge = () => {
-      const headers={'Content-Type': 'application/json'};
-      axios.post(BACKEND_URL + `/company/request_balance/?user_id=${parseInt(id_user)}&amount=${parseInt(rechargeAmount)}`).
+      const headers={'Content-Type': 'application/json','Authorization': ACCESS_TOKEN};
+      axios.post(BACKEND_URL + `/company/request_balance/?user_id=${parseInt(id_user)}&amount=${parseInt(rechargeAmount)}`,{headers}).
       then((res) => {
           console.log("Recharge Responsee",res)
           // let newVal = sessionStorage.getItem('balance') - rechargeAmount
@@ -24,7 +25,12 @@ const Home = () => {
           toast.success('Request Recharge successful!');
           setRechargeAmount('')
       }).catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
           console.log("Error In Rechargeee")
+      }
       })
       setShowPopup(false);
       // window.location.reload()

@@ -1,10 +1,11 @@
 import { Field, Loader } from '../../common/components';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import OtpPopup from './OtpPopup';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { type_user } from './LogIn';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const ForgotPassword = () => {
   const location = useLocation();
@@ -15,7 +16,7 @@ const ForgotPassword = () => {
   const [handlePopup, setHandlePopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const handleChangeInput = (e) => {
     const { id, value } = e.target;
     setUserInput({
@@ -31,7 +32,7 @@ const ForgotPassword = () => {
 
   const handleSubmit = () => {
     setErrorMessage('');
-    const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+    const headers = { 'Content-Type': 'application/x-www-form-urlencoded','Authorization': ACCESS_TOKEN };
     const otpURL =
       type_user === 'user'
         ? `/users/generate_otp?email_id=${userInput.username}`
@@ -72,8 +73,13 @@ const ForgotPassword = () => {
         }
       })
       .catch((otpError) => {
-        setLoading(false);
-        console.error('Error fetching OTP:', otpError);
+        if (otpError.response && otpError.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          setLoading(false);
+          console.error('Error fetching OTP:', otpError);
+      }
       });
   };
 

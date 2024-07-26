@@ -6,10 +6,16 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import Loader from '../../../../common/loader/Loader';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
+  const navigate = useNavigate();
   const [shipmentsDetails, setShipmentDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true)
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const tabsData = [
     {
       title: 'All',
@@ -63,7 +69,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
   ];
   const fetchShipmentDetails = () => {
     axios
-      .get(`${BACKEND_URL}/return/${orderDetails?.id}/estimate?user_id=${sessionStorage.getItem('user_id')}`)
+      .get(`${BACKEND_URL}/return/${orderDetails?.id}/estimate?user_id=${sessionStorage.getItem('user_id')}`,{headers:headers})
       .then((resp) => {
         if (resp.status === 200) {
           setShipmentDetails(resp?.data);
@@ -71,10 +77,15 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
         }
       })
       .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        toast('Unable to fetch shipment details', { type: 'error' });
-        setIsLoading(false);
+        if (e.response && e.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          // eslint-disable-next-line no-console
+          console.error(e);
+          toast('Unable to fetch shipment details', { type: 'error' });
+          setIsLoading(false);
+      }
       });
   };
 

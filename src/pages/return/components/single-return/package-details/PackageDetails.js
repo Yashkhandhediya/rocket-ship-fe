@@ -10,6 +10,7 @@ import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import { setSingleReturn } from '../../../../../redux/actions/addReturnAction';
+import { ACCESS_TOKEN } from '../../../../../common/utils/config';
 
 export default function PackageDetails({ currentStep, handleChangeStep }) {
     const dispatch = useDispatch();
@@ -24,6 +25,9 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
         applicable_weight: '',
         volumatric_weight: '',
     });
+    const headers = {             
+        'Content-Type': 'application/json',
+        'Authorization': ACCESS_TOKEN};
     const volumatricWeight =
         useMemo(
             () =>
@@ -70,7 +74,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
             ...domesticReturnFormValues,
             ...formDirectField,
             date: date,
-        });
+        },{headers:headers});
         if (resp.status == 200) {
             toast('Return Placed Successfully', { type: 'success' });
             dispatch(resetDomesticOrder());

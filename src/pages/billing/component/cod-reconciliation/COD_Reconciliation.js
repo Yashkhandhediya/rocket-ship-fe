@@ -3,18 +3,27 @@ import { CustomTooltip } from "../../../../common/components";
 import { remitance } from "../../../../common/images";
 import { BACKEND_URL } from "../../../../common/utils/env.config";
 import { toast } from "react-toastify";
+import { ACCESS_TOKEN } from "../../../../common/utils/config";
+import { useNavigate } from "react-router-dom";
 
 const COD_Reconciliation = ({ charges, data }) => {
+    const navigate = useNavigate();
+    const headers={'Content-Type': 'application/json','Authorization': ACCESS_TOKEN};
     console.log("COncil",data)
     const updateStatus = (id,status_name) => {
-        axios.put(BACKEND_URL + `/order/cod_remittance_update_status/${id}?status_name=${status_name}`)
+        axios.put(BACKEND_URL + `/order/cod_remittance_update_status/${id}?status_name=${status_name}`,{headers})
         .then((res) => {
             console.log("Response Of Update Status",res.data)
             toast(`status updated to ${status_name}`,{type:'success'})
             window.location.reload()
         }).catch((err) => {
+            if (err.response && err.response.status === 401) {
+                sessionStorage.clear()
+                navigate('/login');
+            } else {
             console.log("Error in updating status",err)
             toast(`Error in updating status`,{type:'error'})
+            }
         })
     }
     return (

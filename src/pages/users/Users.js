@@ -10,7 +10,9 @@ import emptyBox from '../../common/images/empty-box.png';
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 import AddUsers from './components/AddUsers';
+import { useNavigate } from 'react-router-dom';
 
 function Addresses() {
   const [showDelete, setShowDelete] = useState(false);
@@ -24,6 +26,8 @@ function Addresses() {
   const [isFocused, setIsFocused] = useState(false);
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
+  const navigate = useNavigate();
+  const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
   const [pageSize, setPageSize] = useState(10);
   const users_data = query.length !== 0 ? searchData : usersData;
 
@@ -56,13 +60,18 @@ function Addresses() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/indent/get_users?company_id=${company_id}&page=${page}&page_size=${pageSize}`,
+        `${BACKEND_URL}/indent/get_users?company_id=${company_id}&page=${page}&page_size=${pageSize}`,{headers:headers}
       );
       console.log(response);
       setUsersData(response.data);
     } catch (err) {
-      console.log(err);
-      toast('There is some error while fetching data', { type: 'error' });
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        console.log(err);
+        toast('There is some error while fetching data', { type: 'error' });
+    }
     } finally {
       setLoading(false);
     }
@@ -83,11 +92,16 @@ function Addresses() {
     setShowDelete(false);
     setLoading(true);
     try {
-      const response = await axios.delete(`${BACKEND_URL}/users/${id}`);
+      const response = await axios.delete(`${BACKEND_URL}/users/${id}`,{headers:headers});
       getUsersData();
       toast('Delete Successfully', { type: 'success' });
     } catch (err) {
-      console.log(err);
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        console.log(err);
+    }
     } finally {
       setLoading(false);
     }
@@ -110,12 +124,17 @@ function Addresses() {
   const getSearchData = async () => {
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/users/search_user/?string=${query}&company_id=${company_id}`,
+        `${BACKEND_URL}/users/search_user/?string=${query}&company_id=${company_id}`,{headers:headers}
       );
       console.log(response);
       setSearchData(response.data);
     } catch (err) {
-      toast(`There is Some error while searching`, { type: 'error' });
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        toast(`There is Some error while searching`, { type: 'error' });
+    }
     }
   };
 

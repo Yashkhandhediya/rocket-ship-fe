@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const ResetPassword = () => {
     const location = useLocation()
@@ -13,6 +14,7 @@ const ResetPassword = () => {
         newPassword:'',
         confirmPassword:''
     })
+
 
     const userType = location.state.userType
 
@@ -25,7 +27,7 @@ const ResetPassword = () => {
       };
 
       const handleSubmit = async (e) => {
-        const headers={'Content-Type': 'application/json'};
+        const headers={'Content-Type': 'application/json','Authorization': ACCESS_TOKEN};
         e.preventDefault();
         const passwordURL = userType === "user" ? '/users' : '/company'
         
@@ -46,8 +48,13 @@ const ResetPassword = () => {
                 toast("Error resetting password.",{type:'error'});
             })
         } catch (error) {
+          if (error.response && error.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+        } else {
             console.error("Error reset password:", error);
             toast("Error resetting password. Please try again later.",{type:'error'});
+        }
         }
     };
 

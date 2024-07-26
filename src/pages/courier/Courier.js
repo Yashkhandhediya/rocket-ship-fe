@@ -4,11 +4,11 @@ import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithS
 import { Dtdc, Express, cheap, custom, rated, recommand, truck } from '../../common/icons';
 import { toast } from 'react-toastify';
 import Card from './Card/Card';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { Ecom, Delivery, kerry } from '../../common/icons';
-
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 function Courier() {
     const [card, setCard] = useState([
@@ -68,7 +68,11 @@ function Courier() {
             img_name:Dtdc
           },
       ]);
-    
+      const navigate = useNavigate()
+      const headers = {             
+        'Content-Type': 'application/json',
+        'Authorization': ACCESS_TOKEN};
+
       const initialCards = [
         {
           id:'1',
@@ -110,17 +114,22 @@ function Courier() {
       };
 
     const hanldePriority = () => {
-        axios.put(BACKEND_URL + `/userpartner/update_courier_priority?user_id=${sessionStorage.getItem('user_id')}&courier_priority_id=${activeCard}`,card.map(c => c.id))
+        axios.put(BACKEND_URL + `/userpartner/update_courier_priority?user_id=${sessionStorage.getItem('user_id')}&courier_priority_id=${activeCard}`,card.map(c => c.id),{headers:headers})
         .then((res) => {
             toast("Courier Priority Has Been SetUp",{type:'success'})
         })
         .catch((err) => {
+          if (err.response && err.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+        } else {
             toast("Error Occured in Priority Setup",{type:'error'})
+        }
         })
     }
 
     const handleCourierPriority = () => {
-        axios.get(BACKEND_URL + `/userpartner/courier_priority?user_id=${sessionStorage.getItem('user_id')}`)
+        axios.get(BACKEND_URL + `/userpartner/courier_priority?user_id=${sessionStorage.getItem('user_id')}`,{headers:headers})
         .then((res) => {
             console.log("RESPONSEEEEEEE",res.data)
            if(res.data.courier_priority_type  == "recommended by cargo"){
@@ -135,7 +144,12 @@ function Courier() {
             setActiveCard(5);
            }
         }).catch((err) => {
+          if (err.response && err.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+        } else {
             console.log("Error In Resposne ",err)
+        }
         })
     }
 

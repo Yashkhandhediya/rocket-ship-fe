@@ -3,13 +3,18 @@ import axios from "axios"
 import { BACKEND_URL } from "../../../../common/utils/env.config";
 import { toast } from "react-toastify";
 import { logo_main } from "../../../../common/images";
+import { useNavigate } from "react-router-dom";
+import { ACCESS_TOKEN } from "../../../../common/utils/config";
 
 const RechargeModal = ({ setShowRechargeModal }) => {
   const [amount, setAmount] = useState(500);
   const [couponCode, setCouponCode] = useState(''); // eslint-disable-line
   const [couponCodeAmount, setCouponCodeAmount] = useState(0); // eslint-disable-line
   const balance = sessionStorage.getItem('balance') == 0 ? "0.00" : sessionStorage.getItem('balance')
-
+  const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const formData = new FormData();
   formData.append('amount', amount * 100);
 
@@ -19,14 +24,19 @@ const RechargeModal = ({ setShowRechargeModal }) => {
     formData.append("razorpay_order_id", response.razorpay_order_id);
     formData.append("razorpay_signature", response.razorpay_signature);
     try {
-      const data = await axios.post(`${BACKEND_URL}/payment/verify-payment`, formData);
+      const data = await axios.post(`${BACKEND_URL}/payment/verify-payment`, formData,{headers:headers});
       if (data.data.status === "Payment Verified") {
         toast("Payment Successful", { type: "success" });
         setShowRechargeModal(false);
       }
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       console.log(error); // eslint-disable-line
       toast("Payment Failed", { type: "error" });
+    }
     }
   };
 
@@ -44,7 +54,7 @@ const RechargeModal = ({ setShowRechargeModal }) => {
     // formData.append("user_id",id_user)
     formData.append("company_id",id_company)
     try {
-      const response = await axios.post(`${BACKEND_URL}/payment/razorpay`, formData);
+      const response = await axios.post(`${BACKEND_URL}/payment/razorpay`, formData,{headers:headers});
       const options = {
         key: process.env.RAZORPAY_API_KEY,
         amount: amount,
@@ -65,8 +75,13 @@ const RechargeModal = ({ setShowRechargeModal }) => {
 
       rzp1.open();
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       console.log(error); // eslint-disable-line
       toast("Payment Failed", { type: "error" });
+    }
     }
   }
 

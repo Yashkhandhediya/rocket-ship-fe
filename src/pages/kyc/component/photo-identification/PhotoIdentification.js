@@ -3,10 +3,13 @@ import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const navigate = useNavigate()
   const [videoInitialized, setVideoInitialized] = useState(false);
   const [canvasInitialized, setCanvasInitialized] = useState(false);
   const [selfieText, setSelfieText] = useState('Take Selfie');
@@ -82,7 +85,7 @@ const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
           setCapturedImage(imageDataURL);
           const formData = new FormData();
           formData.append('file', blob, 'selfie.png');
-          const headers = { 'Content-Type': 'multipart/form-data' };
+          const headers = { 'Content-Type': 'multipart/form-data','Authorization': ACCESS_TOKEN };
           axios
             .post(
               BACKEND_URL + `/kyc/upload_selfie?image_id=${id_user}&type=selfie&user_name=${user_name}`,
@@ -94,8 +97,13 @@ const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
               toast('Your selfie has been successfully verified', { type: 'success' });
             })
             .catch((err) => {
+              if (err.response && err.response.status === 401) {
+                sessionStorage.clear()
+                navigate('/login');
+            } else {
               console.log('Error in KYC', err);
               toast('Error while verifying selfie', { type: 'error' });
+            }
             });
         }, 'image/png');
 

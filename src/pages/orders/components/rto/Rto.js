@@ -29,8 +29,7 @@ import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Orders';
-
-// import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 // export let isEditRTO = false;
 // export let order_id;
@@ -103,7 +102,7 @@ const Rto = ({ data, isLoading }) => {
   const handleMenifest = (id) => {
     let temp_payload = flattenObject(resData, id);
     console.log('kkkkkkkkkk', temp_payload);
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
 
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'manifest';
@@ -118,8 +117,13 @@ const Rto = ({ data, isLoading }) => {
         toast('Menifest Download Successfully', { type: 'success' });
       })
       .catch((error) => {
-        console.error('Error:', error);
-        toast('Error in Menifest Download', { type: 'error' });
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.error('Error:', error);
+          toast('Error in Menifest Download', { type: 'error' });
+      }
       });
   };
 
@@ -156,7 +160,7 @@ const Rto = ({ data, isLoading }) => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData, id);
     console.log('kkkkkkkkkk', temp_payload);
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
 
     let temp_str = splitString(temp_payload['complete_address1'], 35);
     let temp1 = splitString(temp_payload['complete_address'], 35);
@@ -182,12 +186,18 @@ const Rto = ({ data, isLoading }) => {
         toast('Invoice Download Successfully', { type: 'success' });
       })
       .catch((error) => {
-        console.error('Error:', error);
-        toast('Error in Invoice Download', { type: 'error' });
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.error('Error:', error);
+          toast('Error in Invoice Download', { type: 'error' });
+      }
       });
   };
 
   function editOrder(orderDetails) {
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
     // let isEdit = true
     // let order_id = orderDetails?.id
     let data = {
@@ -195,7 +205,7 @@ const Rto = ({ data, isLoading }) => {
       order_id: orderDetails?.id,
     };
     axios
-      .get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails?.id}`)
+      .get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails?.id}`,{headers})
       .then((res) => {
         console.log('Response Of Get Order While Edit ', res);
         const editedOrder = getEditOrderFields(res.data);
@@ -204,7 +214,12 @@ const Rto = ({ data, isLoading }) => {
         dispatch(setDomesticOrder(editedOrder));
       })
       .catch((err) => {
-        console.log('Error While Edit Order ', err);
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log('Error While Edit Order ', err);
+      }
       });
     navigate('/add-order', { state: data });
   }
@@ -390,19 +405,25 @@ const Rto = ({ data, isLoading }) => {
   };
 
   function cancelOrder(orderDetails) {
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
     axios
       .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}`, {
         ...orderDetails,
         status: 'cancelled',
-      })
+      },{headers})
       .then((resp) => {
         if (resp?.status === 200) {
           dispatch(setAllOrders(null));
           toast('Order cancelled successfully', { type: 'success' });
         }
       })
-      .catch(() => {
-        toast('Unable to cancel Order', { type: 'error' });
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          toast('Unable to cancel Order', { type: 'error' });
+      }
       });
   }
 

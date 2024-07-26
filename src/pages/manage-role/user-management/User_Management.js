@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { Loader } from '../../../common/components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { ACCESS_TOKEN } from '../../../common/utils/config';
 
 const User_Management = () => {
   const navigate = useNavigate();
@@ -26,6 +27,9 @@ const User_Management = () => {
     full_name: '',
     email_address: '',
   });
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [modulesId, setModulesId] = useState([]);
   const [settingModulesId, setSettingModulesId] = useState([]);
 
@@ -126,7 +130,7 @@ const User_Management = () => {
             "show_info": showPersonalInfo == "Yes" ? 1 : 0,
             "modules_id": modulesId,
             "setting_modules_id":settingModulesId
-        })
+        },{headers:headers})
         .then((res) => {
             if(res.data == "user already exist"){
                 setIsLoading(false)
@@ -139,9 +143,14 @@ const User_Management = () => {
             navigate('/manage-user')
         })
         .catch((err) => {
+          if (err.response && err.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+        } else {
             console.log("Error Add User",err)
             toast('Error Adding User',{type:'error'})
             setIsLoading(false);
+        }
         })
     }
 
@@ -156,7 +165,7 @@ const User_Management = () => {
             "show_info": showPersonalInfo == "Yes" ? 1 : 0,
             "modules_id": modulesId,
             "setting_modules_id":settingModulesId
-        })
+        },{headers:headers})
         .then((res) => {
             console.log("Resposne Add User",res.data)
             setIsLoading(false);
@@ -164,9 +173,14 @@ const User_Management = () => {
             navigate('/manage-user')
         })
         .catch((err) => {
+          if (err.response && err.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+        } else {
             console.log("Error Add User",err)
             setIsLoading(false);
             toast('Error Updating User',{type:'error'})
+        }
         })
     }
   

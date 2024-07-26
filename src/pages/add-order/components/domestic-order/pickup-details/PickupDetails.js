@@ -9,8 +9,9 @@ import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { setEditOrder } from '../../../../../redux';
+import { ACCESS_TOKEN } from '../../../../../common/utils/config';
 
 export default function PickupDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
@@ -19,29 +20,36 @@ export default function PickupDetails({ currentStep, handleChangeStep }) {
   const id_user = sessionStorage.getItem('user_id')
   const domesticOrderPickupAddress =
     useSelector((state) => state?.addOrder?.domestic_order?.pickup_address) || {};
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [addAddressDrawerOpen, setAddAddressDrawerOpen] = useState(false);
   const [editAddressDrawerOpen, setEditAddressDrawerOpen] = useState(false);
   const [searchAddress, setSearchAddress] = useState('');
   const [addressList, setAddressList] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(addressList.length ? addressList[0] : null);
-
+  const navigate = useNavigate();
   const fetchUserAddressList = () => {
     axios
       .get(BACKEND_URL+'/address', {
         params: {
           user_id: id_user,
         },
-      })
+      },{headers:headers})
       .then((resp) => {
         if (resp.status == 200) {
           setAddressList(resp?.data || []);
         }
       })
       .catch((e) => {
+        if (e.response && e.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
         // eslint-disable-next-line no-console
         console.error(e);
         toast('Unable to fetch address', { type: 'error' });
+      }
       });
   };
 

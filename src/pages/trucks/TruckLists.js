@@ -20,6 +20,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { debounce } from 'lodash';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 function TruckLists() {
   const [showDelete, setShowDelete] = useState(false);
@@ -31,6 +32,9 @@ function TruckLists() {
   const [deleteId, setDeleteId] = useState(null);
   const [editData, setEditData] = useState(null);
   const [userData, setUserData] = useState([]);
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [fetchData, setFetchData] = useState(false);
   const [showTruckTable, setShowTruckTable] = useState(false);
   const is_admin = sessionStorage.getItem('is_admin');
@@ -74,12 +78,17 @@ function TruckLists() {
   const fetchDataFromAPI = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${BACKEND_URL}/company/all_company/`);
+      const res = await axios.get(`${BACKEND_URL}/company/all_company/`,{ headers:headers });
       const filteredData = res.data.filter((item) => item.kyc_status_id === 1);
       setUserData(filteredData);
       setFetchData(true);
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       console.log('Error fetching company data', err);
+    }
     } finally {
       setLoading(false);
     }
@@ -151,12 +160,17 @@ function TruckLists() {
   const getSearchData = async () => {
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/trucktype/search_truck_type/?string=${query}&company_id=${company_id}`,
+        `${BACKEND_URL}/trucktype/search_truck_type/?string=${query}&company_id=${company_id}`,{ headers:headers }
       );
       console.log(response);
       setSearchData(response.data);
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       toast(`There is Some error while searching`, { type: 'error' });
+    }
     }
   };
 
@@ -168,14 +182,19 @@ function TruckLists() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/trucktype/get_truck_types/?created_by=${companyId}&page=${page}&page_size=${pageSize}`,
+        `${BACKEND_URL}/trucktype/get_truck_types/?created_by=${companyId}&page=${page}&page_size=${pageSize}`,{ headers:headers }
       );
       setTruckData(response.data);
       setSelectedCompanyName(companyName);
       setShowTruckTable(true);
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       console.log('Error fetching truck data', err);
       toast('There is some error while fetching data', { type: 'error' });
+    }
     } finally {
       setLoading(false);
     }
@@ -192,7 +211,7 @@ function TruckLists() {
     setShowDelete(false);
     setLoading(true);
     try {
-      await axios.delete(`${BACKEND_URL}/trucktype/delete_truck_type/?truck_type_id=${id}`);
+      await axios.delete(`${BACKEND_URL}/trucktype/delete_truck_type/?truck_type_id=${id}`,{ headers:headers });
       if (state) {
         getTruckData(state.id, state.name);
       } else {
@@ -200,7 +219,12 @@ function TruckLists() {
       }
       toast('Delete Successfully', { type: 'success' });
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       console.log('Error deleting truck data', err);
+    }
     } finally {
       setLoading(false);
     }

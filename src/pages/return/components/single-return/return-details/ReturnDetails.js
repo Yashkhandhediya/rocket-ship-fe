@@ -11,10 +11,12 @@ import { CustomMultiSelect, Field, FieldAccordion, FieldTextArea } from '../../.
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import { setSingleReturn } from '../../../../../redux/actions/addReturnAction';
 import { deleteIcon } from '../../../../../common/icons';
+import { ACCESS_TOKEN } from '../../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const ReturnDetails = ({ currentStep, handleChangeStep }) => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const domesticReturnFormValues = useSelector((state) => state?.addReturn?.single_return) || {};
 
   const defaultProductField = {
@@ -26,7 +28,9 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
     sku: '',
     discount: 0,
   };
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [productValidation, setProductValidation] = useState(false);
   const [isOrderIdValid, setIsOrderIdValid] = useState(true);
 
@@ -170,7 +174,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
   const fetchReturnId = () => {
     const id = sessionStorage.getItem('is_company') == 1 ? sessionStorage.getItem('company_id') : sessionStorage.getItem('user_id')
     axios
-      .get(BACKEND_URL + `/return/get_return_id?user_id=${id}`)
+      .get(BACKEND_URL + `/return/get_return_id?user_id=${id}`,{headers:headers})
       .then((resp) => {
         if (resp?.status == 200 && resp?.data?.return_id) {
           setFormDirectField({
@@ -180,9 +184,14 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
         }
       })
       .catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        toast('Unable to generate Return ID', { type: 'error' });
+        if (e.response && e.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          // eslint-disable-next-line no-console
+          console.error(e);
+          toast('Unable to generate Return ID', { type: 'error' });
+      }
       });
   };
 

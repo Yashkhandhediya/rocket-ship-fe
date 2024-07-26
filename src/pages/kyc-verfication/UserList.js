@@ -1,12 +1,12 @@
 import React, {useState,useEffect} from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { BACKEND_URL } from '../../common/utils/env.config'
 import axios from 'axios'
 import { createColumnHelper } from '@tanstack/react-table'
 import { toast } from 'react-toastify'
 import { CustomDataTable } from '../../common/components'
 import { noData } from '../../common/images'
-// import { ACCESS_TOKEN } from '../../common/utils/config'
+import { ACCESS_TOKEN } from '../../common/utils/config'
 
 const UserList = () => {
   const [userData,setUserData] = useState([])
@@ -17,12 +17,15 @@ const UserList = () => {
   const [idUser,setIdUser] = useState(null)
   const [kyc_status,setKyc_status] = useState(0)
   const location = useLocation()
+  const navigate = useNavigate()
   const id = location?.state?.data
   const [itemsPerPage,setItemsPerPage] = useState(10);
   const [currentItems, setCurrentItems] = useState([]);
   const [pageNo,setPageNo] = useState(1)
   const [totalPage,setTotalPage] = useState(1)
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const paginate = (page_item) => {
     if(page_item > 0){
         console.log("kdkl",page_item)
@@ -34,14 +37,19 @@ const UserList = () => {
 
 
   const handleUser = () => {
-        axios.get(BACKEND_URL + `/company/get_company_users/?companyId=${id}`).then((res)=> {
+        axios.get(BACKEND_URL + `/company/get_company_users/?companyId=${id}`,{ headers:headers}).then((res)=> {
           console.log("RESSSSSSSSSSSSS",res)
           setUserData(res.data)
           let total = Math.ceil(res.data.length / 10)
           setTotalPage(total)
           setFetchData(true)
       }).catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
           console.log("ERRRRRRRRRR",err)
+      }
       })
   }
   useEffect(() => {
@@ -58,8 +66,8 @@ const UserList = () => {
   const handleKYC = (row) => {
     setIdUser(row?.id)
     setShowKyc(true)
-    const headers={'Content-Type': 'application/json'};
-    axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=user_aadhar`,{ responseType: 'blob' }).
+    // const headers={'Content-Type': 'application/json'};
+    axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=user_aadhar`,{ responseType: 'blob' },{ headers:headers}).
     then((res) => {
         console.log("Recharge Responsee",res)
         const imgUrl = URL.createObjectURL(res.data)
@@ -69,10 +77,15 @@ const UserList = () => {
         // sessionStorage.setItem('balance',newVal)
         // window.location.reload()
     }).catch((err) => {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
         console.log("Error In Rechargeee",err)
+    }
     })
 
-    axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=selfie`,{ responseType: 'blob' }).
+    axios.get(BACKEND_URL + `/kyc/?id=${row?.id}&type=selfie`,{ responseType: 'blob' },{ headers:headers}).
     then((res) => {
         console.log("Recharge Responsee",res)
         const imgUrl = URL.createObjectURL(res.data)
@@ -82,22 +95,32 @@ const UserList = () => {
         // sessionStorage.setItem('balance',newVal)
         // window.location.reload()
     }).catch((err) => {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
         console.log("Error In Rechargeee",err)
+    }
     })
   }
 
   const handleAcceptKYC = () => {
     setKyc_status(1)
-    const headers={'Content-Type': 'application/json'};
-    axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=user&status=${3}&id=${idUser}`,{headers})
+    // const headers={'Content-Type': 'application/json'};
+    axios.post(BACKEND_URL + `/kyc/kyc_status/?client_type=user&status=${3}&id=${idUser}`,{ headers:headers})
     .then((res) => {
       console.log("Response ",res)
       toast("KYC Verification Successfully",{type:'success'})
       setShowKyc(false);
       window.location.reload()
     }).catch((err) => {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       console.log("ERRRRRR",err)
       toast("Error in KYC verification",{type:'error'})
+    }
     })
  }
 

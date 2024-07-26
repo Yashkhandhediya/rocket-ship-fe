@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -6,6 +6,7 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
 import { Address_Modal } from './address_modal';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const Manage_pickup_add = () => {
   const [pickupAddress, setPickupAddress] = useState([]); //eslint-disable-line
@@ -19,7 +20,10 @@ const Manage_pickup_add = () => {
   const id_company = sessionStorage.getItem('company_id');
   const is_company = sessionStorage.getItem('is_company');
   const [addressId, setAddressId] = useState(null);
-
+  const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   console.log(addressId, pickupAddress);
 
   const user_id = is_company == 1 ? id_company : id_user;
@@ -27,7 +31,7 @@ const Manage_pickup_add = () => {
   const fetchUserAddressList = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/address/?user_id=${user_id}`);
+      const response = await axios.get(`${BACKEND_URL}/address/?user_id=${user_id}`,{headers:headers});
       if (response.status === 200) {
         const sortedAddresses = response.data.sort((a, b) => b.is_primary - a.is_primary);
         setPickupAddress(sortedAddresses);
@@ -35,7 +39,12 @@ const Manage_pickup_add = () => {
         toast('There is some error while fetching orders.', { type: 'error' });
       }
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       toast('There is some error while fetching orders.', { type: 'error' });
+    }
     } finally {
       setLoading(false);
     }
@@ -44,7 +53,7 @@ const Manage_pickup_add = () => {
   const handleSetPrimary = async (id) => {
     setLoading(true);
     try {
-      const response = await axios.put(`${BACKEND_URL}/address/${user_id}?address_id=${id}`);
+      const response = await axios.put(`${BACKEND_URL}/address/${user_id}?address_id=${id}`,{headers:headers});
       if (response.status === 200) {
         toast(response.data.msg, { type: 'success' });
         fetchUserAddressList();
@@ -52,7 +61,12 @@ const Manage_pickup_add = () => {
         toast('There is some error while fetching orders.', { type: 'error' });
       }
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       toast('There is some error while fetching orders.', { type: 'error' });
+    }
     } finally {
       setLoading(false);
     }

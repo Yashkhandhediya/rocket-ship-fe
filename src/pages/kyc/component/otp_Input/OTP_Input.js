@@ -2,13 +2,17 @@ import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const OTP_Input = ({ handleSendOTP, timer, setIsKYCCompleted, id = null }) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [seconds, setSeconds] = useState(timer);
   const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null), useRef(null), useRef(null)];
   const isOtpEntered = otp.every((digit) => digit !== '');
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const handleInputChange = (index, value) => {
     if (isNaN(value)) return; // Allow only numeric input
 
@@ -22,7 +26,7 @@ const OTP_Input = ({ handleSendOTP, timer, setIsKYCCompleted, id = null }) => {
       inputRefs[index + 1].current.focus();
     }
   };
-
+  const navigate = useNavigate();
   const handleKeyDown = (index, e) => {
     // Handle backspace to clear the current box and move back
     if (e.key === 'Backspace' && index > 0 && otp[index] === '') {
@@ -38,13 +42,18 @@ const OTP_Input = ({ handleSendOTP, timer, setIsKYCCompleted, id = null }) => {
       // API call to verify OTP
       let temp_otp = otp.join('');
       axios
-        .post(BACKEND_URL + `/kyc/adhaar_submit_otp?reference_id=${id}&otp=${temp_otp}`)
+        .post(BACKEND_URL + `/kyc/adhaar_submit_otp?reference_id=${id}&otp=${temp_otp}`,{headers:headers})
         .then((res) => {
           toast.success('KYC completed successfully', { type: 'success' });
           setIsKYCCompleted(true);
         })
         .catch((err) => {
+          if (err.response && err.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+        } else {
           toast('Mismatch OTP', { type: 'error' });
+        }
         });
     } else {
       // Show error message

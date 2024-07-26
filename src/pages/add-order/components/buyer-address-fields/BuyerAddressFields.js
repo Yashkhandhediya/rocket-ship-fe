@@ -3,6 +3,8 @@ import { Field } from '../../../../common/components';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const BuyerAdressFields = ({
   heading,
@@ -19,12 +21,15 @@ const BuyerAdressFields = ({
   const [isValidState, setIsValidState] = useState(true);
   const [isValidCountry, setIsValidCountry] = useState(true);
   const [isResponseOk,setIsResponseOk] = useState(false)
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
+  const navigate = useNavigate();
   const fetchPincodeDetails = () => {
     setIsResponseOk(true)
     try {
       axios
-        .get(`${BACKEND_URL}/pincode/${values?.pincode}`)
+        .get(`${BACKEND_URL}/pincode/${values?.pincode}`,{headers:headers})
         .then((resp) => {
           if (resp.status == 200 && onPincodeVeify) {
             onPincodeVeify({
@@ -38,9 +43,14 @@ const BuyerAdressFields = ({
             setIsResponseOk(false)
           }
         })
-        .catch(() => {
+        .catch((error) => {
+          if (error.response && error.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+        } else {
           toast(`Unable to get location from this pincode: ${values.pincode}`, { type: 'error' });
           setIsResponseOk(false)
+        }
         });
     } catch (e) {
       // eslint-disable-next-line no-console

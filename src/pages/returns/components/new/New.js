@@ -21,6 +21,7 @@ import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Returns';
 import { getEditReturnFields } from '../../../../common/utils/ordersUtils';
 import EditDrawer from '../edit-drawer/EditDrawer';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 export const New = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,9 @@ export const New = () => {
     isOpen: false,
     orderDetails: {},
   });
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   const [openEditDrawer, setOpenEditDrawer] = useState(false);
 
@@ -228,7 +232,7 @@ export const New = () => {
     //   order_id:orderDetails?.id
     // }
     axios
-      .get(BACKEND_URL + `/return/get_return_detail?id=${orderDetails?.id}`)
+      .get(BACKEND_URL + `/return/get_return_detail?id=${orderDetails?.id}`,{headers:headers})
       .then((res) => {
         console.log('Response Of Get Order While Edit ', res);
         const editedOrder = getEditReturnFields(res.data);
@@ -237,7 +241,12 @@ export const New = () => {
         dispatch(setSingleReturn(editedOrder));
       })
       .catch((err) => {
-        console.log('Error While Edit Order ', err);
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log('Error While Edit Order ', err);
+      }
       });
     // navigate('/add-return',{state:data});
   }
@@ -283,7 +292,7 @@ export const New = () => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData, id);
     console.log('kkkkkkkkkk', temp_payload);
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
 
     let temp_str = splitString(temp_payload['complete_address1'], 35);
     let temp1 = splitString(temp_payload['complete_address'], 35);
@@ -310,8 +319,13 @@ export const New = () => {
         toast('Invoice Download Successfully', { type: 'success' });
       })
       .catch((error) => {
-        console.error('Error:', error);
-        toast('Error in Invoice Download', { type: 'error' });
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.error('Error:', error);
+          toast('Error in Invoice Download', { type: 'error' });
+      }
       });
   };
 
@@ -321,15 +335,20 @@ export const New = () => {
         ...orderDetails,
         status: 'cancelled',
         status_name: 'cancelled',
-      })
+      },{headers:headers})
       .then((resp) => {
         if (resp?.status === 200) {
           dispatch(setAllReturns(null));
           toast('Return cancelled successfully', { type: 'success' });
         }
       })
-      .catch(() => {
-        toast('Unable to cancel Return', { type: 'error' });
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          toast('Unable to cancel Return', { type: 'error' });
+      }
       });
     window.location.reload();
   }

@@ -28,7 +28,7 @@ import { CommonBadge } from '../../../../common/components/common-badge';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Orders';
 import Loader from '../../../../common/loader/Loader';
-// import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 import { infoIcon } from '../../../../common/icons';
 import { Button } from 'flowbite-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -43,7 +43,9 @@ export const New = ({ data, isLoading }) => {
   const id_user = sessionStorage.getItem('user_id');
   const id_company = sessionStorage.getItem('company_id');
   const is_company = sessionStorage.getItem('is_company');
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   // const user_id = is_company == 1 ? id_company : id_user;
 
   // const [itemsPerPage, setItemsPerPage] = useState(15);
@@ -155,7 +157,7 @@ export const New = ({ data, isLoading }) => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData, id);
     console.log('kkkkkkkkkk', temp_payload);
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
 
     let temp_str = splitString(temp_payload['complete_address1'], 35);
     let temp1 = splitString(temp_payload['complete_address'], 35);
@@ -182,13 +184,18 @@ export const New = ({ data, isLoading }) => {
         toast('Invoice Download Successfully', { type: 'success' });
       })
       .catch((error) => {
-        console.error('Error:', error);
-        toast('Error in Invoice Download', { type: 'error' });
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.error('Error:', error);
+          toast('Error in Invoice Download', { type: 'error' });
+      }
       });
   };
 
   const handleBulkOrder = () => {
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
     let temp_list = [];
     for (let i = 0; i < bulkOrder.length; i++) {
       console.log(typeof bulkOrder[i].id);
@@ -209,9 +216,14 @@ export const New = ({ data, isLoading }) => {
         setLoading(false);
       })
       .catch((err) => {
-        console.log('Error In bulk order ', err);
-        toast('Error In Bulk Shipment', { type: 'error' });
-        setLoading(false);
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log('Error In bulk order ', err);
+          toast('Error In Bulk Shipment', { type: 'error' });
+          setLoading(false);
+      }
       });
 
     console.log('PAYLOADDDDDDDDD', temp_list);
@@ -518,7 +530,7 @@ export const New = ({ data, isLoading }) => {
         ...orderDetails,
         status: 'cancelled',
         status_name: 'cancelled',
-      })
+      },{headers:headers})
       .then((resp) => {
         if (resp?.status === 200) {
           dispatch(setAllOrders(null));
@@ -526,8 +538,13 @@ export const New = ({ data, isLoading }) => {
           window.location.reload();
         }
       })
-      .catch(() => {
-        toast('Unable to cancel Order', { type: 'error' });
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          toast('Unable to cancel Order', { type: 'error' });
+      }
       });
     window.location.reload();
   }
@@ -547,7 +564,7 @@ export const New = ({ data, isLoading }) => {
       order_id: orderDetails?.id,
     };
     axios
-      .get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails?.id}`)
+      .get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails?.id}`,{headers:headers})
       .then((res) => {
         console.log('Response Of Get Order While Edit ', res);
         const editedOrder = getEditOrderFields(res.data);
@@ -556,7 +573,12 @@ export const New = ({ data, isLoading }) => {
         dispatch(setDomesticOrder(editedOrder));
       })
       .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
         console.log('Error While Edit Order ', err);
+      }
       });
     navigate('/add-order', { state: data });
   }

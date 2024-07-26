@@ -14,6 +14,7 @@ import { DiscrepancyTable } from './components';
 import { DiscrepancyModal } from './components';
 import { Field } from '../../common/components';
 import { upload } from '../../common/icons';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const WeightDiscrepancy = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -34,6 +35,9 @@ const WeightDiscrepancy = () => {
   const [loading, setLoading] = useState(false);
   const userId = is_company == 1 ? company_id : id_user;
   const [filteredWDId, setFilteredWDId] = useState([]);
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [searchBy, setSearchBy] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [filteredWD, setFilteredWD] = useState(null);
@@ -97,7 +101,7 @@ const WeightDiscrepancy = () => {
   const fetchWeightDiscrepancies = () => {
     axios
       .get(
-        BACKEND_URL + `/weight_discrepancy/get_weight_discrepancy?user_id=${sessionStorage.getItem('user_id')}`,
+        BACKEND_URL + `/weight_discrepancy/get_weight_discrepancy?user_id=${sessionStorage.getItem('user_id')}`,{headers:headers}
       )
       .then(async (resp) => {
         if (resp.status === 200) {
@@ -117,9 +121,14 @@ const WeightDiscrepancy = () => {
           setIsLoading(false);
         }
       })
-      .catch(() => {
-        toast('There is some error while fetching weight discrepancies.', { type: 'error' });
-        setIsLoading(false);
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          toast('There is some error while fetching weight discrepancies.', { type: 'error' });
+          setIsLoading(false);
+      }
       });
   };
 
@@ -170,7 +179,7 @@ const WeightDiscrepancy = () => {
     const formData = new FormData();
     formData.append('file', e.target.files[0]);
     setSelectedFile(formData);
-    const headers = { 'Content-Type': 'multipart/form-data' };
+    const headers = { 'Content-Type': 'multipart/form-data','Authorization': ACCESS_TOKEN };
     try {
       const response = await axios.post(
         `${BACKEND_URL}/weight_discrepancy/import/?user_id=${sessionStorage.getItem('user_id')}`,
@@ -184,8 +193,13 @@ const WeightDiscrepancy = () => {
       toast('File uploaded successfully', { type: 'success' });
       setSelectedFile(null);
     } catch (error) {
-      toast('Something went wrong while uploading the file. Please try again.', { type: 'error' });
-      setSelectedFile(null);
+      if (error.response && error.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        toast('Something went wrong while uploading the file. Please try again.', { type: 'error' });
+        setSelectedFile(null);
+    }
     }
   };
 
@@ -212,7 +226,7 @@ const WeightDiscrepancy = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/weight_discrepancy/filter?user_id=${userId}&string=${query}`,
+        `${BACKEND_URL}/weight_discrepancy/filter?user_id=${userId}&string=${query}`,{headers:headers}
       );
       console.log(response.data);
       setFilteredWDId(
@@ -233,7 +247,12 @@ const WeightDiscrepancy = () => {
           'No Result Found',
       );
     } catch (err) {
-      setErrorMsg('There is Error while fetching');
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        setErrorMsg('There is Error while fetching');
+    }
     } finally {
       setLoading(false);
     }
@@ -248,12 +267,17 @@ const WeightDiscrepancy = () => {
     try {
       const response = await axios.post(
         `${BACKEND_URL}/weight_discrepancy/filter_weight_discrepancy?user_id=${userId}`,
-        filteredWDId,
+        filteredWDId,{headers:headers}
       );
       setFilteredWD(response.data);
       clearSearch();
     } catch (err) {
-      toast('There is Error while fetching', { type: 'error' });
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        toast('There is Error while fetching', { type: 'error' });
+    }
     } finally {
       setLoading(false);
     }
@@ -268,7 +292,7 @@ const WeightDiscrepancy = () => {
         order_id: parseInt(weightInfo?.order_id),
       };
 
-      const headers = { 'Content-Type': 'application/json' };
+      const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
 
       try {
         const response = await axios.post(
@@ -281,7 +305,7 @@ const WeightDiscrepancy = () => {
         const formData = new FormData();
         formData.append('file', img);
 
-        const imageUploadHeaders = { 'Content-Type': 'multipart/form-data' };
+        const imageUploadHeaders = { 'Content-Type': 'multipart/form-data','Authorization': ACCESS_TOKEN };
 
         const imageResponse = await axios.post(
           `${BACKEND_URL}/weight_discrepancy/add_image?weight_discrepancy_id=${discrepancyId}`,

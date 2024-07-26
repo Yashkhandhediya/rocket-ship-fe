@@ -20,10 +20,14 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL,MENIFEST_URL } from '../../../../common/utils/env.config';
 import {resData} from "../../Returns"
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 const InTransit = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const flattened = {};
   const allOrdersList = useSelector((state) => state?.returnsList);
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
@@ -256,7 +260,7 @@ const InTransit = () => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData,id)
     console.log("kkkkkkkkkk",temp_payload)
-    const headers={'Content-Type': 'application/json'};
+    const headers={'Content-Type': 'application/json','Authorization': ACCESS_TOKEN};
 
     let temp_str = splitString(temp_payload['complete_address1'],35)
     let temp1 = splitString(temp_payload['complete_address'],35)
@@ -283,8 +287,13 @@ const InTransit = () => {
           toast('Invoice Download Successfully',{type:'success'})
         }
       ) .catch((error) => {
-        console.error("Error:", error);
-        toast('Error in Invoice Download',{type:'error'})
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.error("Error:", error);
+          toast('Error in Invoice Download',{type:'error'})
+      }
     });
   }
 
@@ -300,15 +309,20 @@ const InTransit = () => {
       .put(`${BACKEND_URL}/return/?id=${orderDetails?.id}`, {
         ...orderDetails,
         status: 'cancelled',
-      })
+      },{headers:headers})
       .then((resp) => {
         if (resp?.status === 200) {
           dispatch(setAllReturns(null));
           toast('Order cancelled successfully', { type: 'success' });
         }
       })
-      .catch(() => {
-        toast('Unable to cancel Order', { type: 'error' });
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          toast('Unable to cancel Order', { type: 'error' });
+      }
       });
   }
 

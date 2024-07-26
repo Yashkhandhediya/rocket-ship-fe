@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 function CustomerAddressEdit() {
   const { buyerId, addressId } = useParams();
@@ -14,6 +15,9 @@ function CustomerAddressEdit() {
   const is_company = sessionStorage.getItem('is_company');
   const user_id = is_company == 1 ? id_company : id_user;
   const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
 
   const [addressInfo, setAddressInfo] = useState({
     addressLine1: '',
@@ -36,7 +40,7 @@ function CustomerAddressEdit() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/users/get_customer_view_details/${buyerId}/detail?user_id=${user_id}`,
+        `${BACKEND_URL}/users/get_customer_view_details/${buyerId}/detail?user_id=${user_id}`,{headers:headers}
       );
       setAddressInfo({
         addressLine1: response.data?.buyer_info?.address,
@@ -48,8 +52,13 @@ function CustomerAddressEdit() {
       });
       setLoading(false);
     } catch (err) {
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
       toast('There is Error while fetching', { type: 'error' });
       setLoading(false);
+    }
     }
   };
 
@@ -76,7 +85,7 @@ function CustomerAddressEdit() {
             country: addressInfo.country,
             state: addressInfo.state,
             pincode: addressInfo.pincode,
-          },
+          },{headers:headers}
         );
 
         console.log(response);
@@ -92,8 +101,13 @@ function CustomerAddressEdit() {
         setLoading(false);
       } catch (err) {
         // Handle any errors from the API request
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
         toast('There is Error while fetching', { type: 'error' });
         setLoading(false);
+      }
       }
     } else {
       // If any required field is missing, display an error message

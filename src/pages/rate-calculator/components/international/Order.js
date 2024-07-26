@@ -4,7 +4,8 @@ import { purpose } from '../../common/data'
 import { CustomMultiSelect } from '../../../../common/components'
 import axios from 'axios'
 import { BACKEND_URL } from '../../../../common/utils/env.config'
-// import { ACCESS_TOKEN } from '../../../../common/utils/config'
+import { ACCESS_TOKEN } from '../../../../common/utils/config'
+import { useNavigate } from 'react-router-dom'
 
 
 const Order = () => {
@@ -16,6 +17,7 @@ const Order = () => {
         width:0,
         height:0
     })
+    const navigate = useNavigate();
     const [actualWeight,setActualWeight] = useState(null)
 
     const handleDimention = (event) => {
@@ -27,7 +29,7 @@ const Order = () => {
     };
 
     const handleCalculate = () => {
-        const headers = {'Content-Type': 'application/json'}
+        const headers = {'Content-Type': 'application/json','Authorization': ACCESS_TOKEN}
         axios.post(BACKEND_URL + '/order/rate_calculation',{
             pickup_pincode:isPickPinCode,
             delivery_pincode:country,
@@ -40,7 +42,12 @@ const Order = () => {
         },{headers}).then((res) => {
             console.log("Response ",res)
         }).catch((e) => {
+          if (e.response && e.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+        } else {
             console.log("Error in rate calculate ",e)
+        }
         })
     }
 

@@ -33,7 +33,7 @@ import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
 import { resData } from '../../Orders';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
-// import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import { ACCESS_TOKEN } from '../../../../common/utils/config';
 import { Button } from 'flowbite-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -140,7 +140,7 @@ export const ReadyToShip = ({ data, isLoading }) => {
   const handleInvoice = (id) => {
     let temp_payload = flattenObject(resData, id);
     console.log('kkkkkkkkkk', temp_payload);
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
 
     let temp_str = splitString(temp_payload['complete_address1'], 35);
     let temp1 = splitString(temp_payload['complete_address'], 35);
@@ -166,8 +166,13 @@ export const ReadyToShip = ({ data, isLoading }) => {
         toast('Invoice Download Successfully', { type: 'success' });
       })
       .catch((error) => {
-        console.error('Error:', error);
-        toast('Error in Invoice Download', { type: 'error' });
+        if (error.response && error.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.error('Error:', error);
+          toast('Error in Invoice Download', { type: 'error' });
+      }
       });
   };
 
@@ -386,7 +391,7 @@ export const ReadyToShip = ({ data, isLoading }) => {
   };
 
   function cancelOrder(orderDetails) {
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
     console.log('ORDER DETAILSSSSSSSS', orderDetails);
     if (orderDetails.partner_id == 1 || orderDetails.partner_id == 2) {
       toast('Cancel Functionality Is Not Providing By This Partner', { type: 'error' });
@@ -406,8 +411,13 @@ export const ReadyToShip = ({ data, isLoading }) => {
             window.location.reload();
           }
         })
-        .catch(() => {
-          toast('Unable to cancel Order', { type: 'error' });
+        .catch((error) => {
+          if (error.response && error.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+        } else {
+            toast('Unable to cancel Order', { type: 'error' });
+        }
         });
     }
   }
