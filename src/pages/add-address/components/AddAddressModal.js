@@ -22,7 +22,7 @@ const Field = ({ id, label, type, value, onChange, onBlur, isValid, errorMessage
             onChange={onChange}
             onBlur={onBlur}
             placeholder={placeholder}
-            className={` h-[36px] w-full flex-grow rounded-r-md border border-gray-300 p-2 text-xs ${
+            className={` focus:border-primary h-[36px] w-full flex-grow rounded-r-md border border-gray-300 p-2 text-xs focus:ring-primary${
               !isValid ? 'border-red-500' : ''
             }`}
           />
@@ -36,7 +36,7 @@ const Field = ({ id, label, type, value, onChange, onBlur, isValid, errorMessage
           onChange={onChange}
           onBlur={onBlur}
           placeholder={placeholder}
-          className={`h-[36px] w-full rounded-md border border-gray-300 p-2 text-xs ${
+          className={`focus:border-primary focus:ring-primary h-[36px] w-full rounded-md border border-gray-300 p-2 text-xs ${
             !isValid ? 'border-red-500' : ''
           }`}
         />

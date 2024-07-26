@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { info } from './Indent';
 import axios from 'axios';
@@ -51,6 +51,11 @@ const Allindent = () => {
   const [query, setQuery] = useState('');
   const filtered_info = query.length !== 0 ? searchData : filteredInfo;
   const [actionAlreadyDone, setActionAlreadyDone] = useState(false);
+  const formRef = useRef(null);
+
+  const handleBlur = () => {
+    formRef.current.classList.remove('outline', 'outline-primary');
+  };
 
   console.log('IDFFFFFF', selectedTab);
 
@@ -317,6 +322,7 @@ const Allindent = () => {
   };
 
   const handleFocused = () => {
+    formRef.current.classList.add('outline', 'outline-primary');
     setIsFocused(true);
   };
 
@@ -370,7 +376,9 @@ const Allindent = () => {
         />
       </div>
       <div className="relative my-4 w-1/4 px-4">
-        <form className=" flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
+        <form
+          ref={formRef}
+          className=" flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
           <FontAwesomeIcon icon={faSearch} className=" text-gray-500" />
           <input
             type="text"
@@ -378,6 +386,7 @@ const Allindent = () => {
             value={query}
             onChange={(e) => handleSearch(e)}
             onFocus={handleFocused}
+            onBlur={handleBlur}
             className="text-semibold m-0 w-full border-transparent p-0 text-[12px] placeholder-gray-400 focus:border-transparent focus:outline-none focus:ring-0"
           />
           {isFocused && (
@@ -595,7 +604,7 @@ const Allindent = () => {
                     <div className="mt-6 flex flex-row">
                       {checkConfirmRejectButtonShowCondition(data) && (
                         <button
-                          className="bg-primary hover:bg-primary mr-2 rounded-lg  px-3 py-2 text-xs font-semibold text-white"
+                          className="mr-2 rounded-lg bg-sky-500 px-3  py-2 text-xs font-semibold text-white hover:bg-sky-600"
                           onClick={() => {
                             handleConfirmation(data.id, 2);
                           }}>
@@ -691,7 +700,7 @@ const Allindent = () => {
                             <>
                               {showBtn && (
                                 <button
-                                  className="bg-primary hover:bg-primary mr-2 rounded-lg px-3 py-2 text-xs font-semibold text-white"
+                                  className="mr-2 rounded-lg bg-sky-500 px-3 py-2 text-xs font-semibold text-white hover:bg-sky-600"
                                   onClick={() => {
                                     // handleConfirmation(data.id, 2);
                                     handleConfirmClick(data.id);
@@ -747,7 +756,7 @@ const Allindent = () => {
                             <>
                               {
                                 <button
-                                  className="bg-primary hover:bg-primary mr-2 rounded-lg px-3 py-2 text-xs font-semibold text-white"
+                                  className="mr-2 rounded-lg bg-sky-500 px-3 py-2 text-xs font-semibold text-white hover:bg-sky-500"
                                   onClick={() => {
                                     handleConfirmation(data.id, 2);
                                   }}>

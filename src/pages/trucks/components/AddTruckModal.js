@@ -146,7 +146,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
               <input
                 type="text"
                 id="truck_capacity"
-                className="block w-2/3 rounded-sm border-none px-2.5 py-1 text-[12px] shadow-sm outline-none focus:border-zinc-50 focus:outline-none"
+                className="focus:border-primary focus:ring-primary block w-2/3 rounded-sm border-none px-2.5 py-1 text-[12px] shadow-sm focus:outline-none"
                 value={truckData.capacity}
                 onChange={(e) => setTruckData({ ...truckData, capacity: e.target.value })}
               />
@@ -171,7 +171,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
             <input
               type="text"
               id="truck_number"
-              className="mt-1 block w-full rounded-sm border border-gray-200 px-2.5 py-1 text-[12px] shadow-sm focus:border-blue-50 focus:outline-none"
+              className="focus:border-primary focus:ring-primary mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:outline-none sm:text-sm"
               value={truckData.truck_number}
               onChange={(e) => setTruckData({ ...truckData, truck_number: e.target.value })}
             />
@@ -184,7 +184,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
             <input
               type="text"
               id="truck_dimension"
-              className="mt-1 block w-full rounded-sm border border-gray-200 px-2.5 py-1 text-[12px] shadow-sm focus:border-blue-50 focus:outline-none"
+              className="focus:border-primary focus:ring-primary mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:outline-none sm:text-sm"
               value={truckData.truck_dimension}
               onChange={(e) => setTruckData({ ...truckData, truck_dimension: e.target.value })}
             />
