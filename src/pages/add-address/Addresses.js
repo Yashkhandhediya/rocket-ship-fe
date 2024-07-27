@@ -14,6 +14,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 function Addresses() {
   const [showDelete, setShowDelete] = useState(false);
@@ -26,6 +27,9 @@ function Addresses() {
   const [editData, setEditData] = useState(null);
   const [userData, setUserData] = useState([]);
   const [fetchData, setFetchData] = useState(false);
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [showAddressTable, setShowAddressTable] = useState(false);
   const [selectedCompanyName, setSelectedCompanyName] = useState('');
   const is_admin = sessionStorage.getItem('is_admin');
@@ -78,7 +82,7 @@ function Addresses() {
 
   const fetchDataFromAPI = async () => {
     axios
-      .get(BACKEND_URL + `/company/all_company/`)
+      .get(BACKEND_URL + `/company/all_company/`,{headers:headers})
       .then((res) => {
         console.log('RESSSSSSSSSSSSS', res);
         const filteredData = res.data.filter((item) => item.kyc_status_id === 1);
@@ -86,7 +90,12 @@ function Addresses() {
         setFetchData(true);
       })
       .catch((err) => {
-        console.log('ERRRRRRRRRR', err);
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log('ERRRRRRRRRR', err);
+      }
       });
   };
 
@@ -151,15 +160,20 @@ function Addresses() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/address/get_address/?company_id=${companyId}&page=${page}&page_size=${pageSize}`,
+        `${BACKEND_URL}/address/get_address/?company_id=${companyId}&page=${page}&page_size=${pageSize}`,{headers:headers}
       );
       console.log(response);
       setAddressData(response.data);
       setSelectedCompanyName(companyName); // Update the company name
       setShowAddressTable(true);
     } catch (err) {
-      console.log(err);
-      toast('There is some error while fetching data', { type: 'error' });
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        console.log(err);
+        toast('There is some error while fetching data', { type: 'error' });
+    }
     } finally {
       setLoading(false);
     }
@@ -184,11 +198,16 @@ function Addresses() {
     setShowDelete(false);
     setLoading(true);
     try {
-      const response = await axios.delete(`${BACKEND_URL}/address/delete_booking_address/?address_id=${id}`);
+      const response = await axios.delete(`${BACKEND_URL}/address/delete_booking_address/?address_id=${id}`,{headers:headers});
       getAddressData(company_id);
       toast('Delete Successfully', { type: 'success' });
     } catch (err) {
-      console.log(err);
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        console.log(err);
+    }
     } finally {
       setLoading(false);
     }
@@ -215,12 +234,17 @@ function Addresses() {
   const getSearchData = async () => {
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/address/address_suggestion/?string=${query}&created_by=${company_id}`,
+        `${BACKEND_URL}/address/address_suggestion/?string=${query}&created_by=${company_id}`,{headers:headers}
       );
       console.log(response);
       setSearchData(response.data);
     } catch (err) {
-      toast(`There is Some error while searching`, { type: 'error' });
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        toast(`There is Some error while searching`, { type: 'error' });
+    }
     }
   };
 

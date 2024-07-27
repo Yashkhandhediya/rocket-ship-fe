@@ -3,6 +3,8 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
+import { ACCESS_TOKEN } from '../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const Address = ({ isVisible, onClose }) => {
   const [address, setAddress] = useState({
@@ -13,7 +15,7 @@ const Address = ({ isVisible, onClose }) => {
     country: '',
   });
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setAddress((prevAddress) => ({
@@ -21,7 +23,7 @@ const Address = ({ isVisible, onClose }) => {
       [name]: value,
     }));
   };
-
+  const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
   const checkField = () => {
     if (
       address.area === '' ||
@@ -41,7 +43,7 @@ const Address = ({ isVisible, onClose }) => {
     axios
       .post(
         BACKEND_URL + `/address/truck_booking_address/?created_by=${sessionStorage.getItem('company_id')}`,
-        address,
+        address,{headers:headers}
       )
       .then((res) => {
         setLoading(false);
@@ -51,9 +53,14 @@ const Address = ({ isVisible, onClose }) => {
         onClose();
       })
       .catch((err) => {
-        setLoading(false);
-        console.log('Error In saving', err);
-        toast('Error In saving Address', { type: 'error' });
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          setLoading(false);
+          console.log('Error In saving', err);
+          toast('Error In saving Address', { type: 'error' });
+      }
       });
   };
 

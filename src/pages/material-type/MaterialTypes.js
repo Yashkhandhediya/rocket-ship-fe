@@ -14,6 +14,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 function MaterialTypes() {
   const [showDelete, setShowDelete] = useState(false);
@@ -36,6 +37,9 @@ function MaterialTypes() {
   const [isFocused, setIsFocused] = useState(false);
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const [pageSize, setPageSize] = useState(10);
   const material_data = query.length !== 0 ? searchData : materialData;
 
@@ -78,13 +82,18 @@ function MaterialTypes() {
 
   const fetchDataFromAPI = async () => {
     try {
-      const res = await axios.get(`${BACKEND_URL}/company/all_company/`);
+      const res = await axios.get(`${BACKEND_URL}/company/all_company/`,{headers:headers});
       console.log('RESSSSSSSSSSSSS', res);
       const filteredData = res.data.filter((item) => item.kyc_status_id === 1);
       setUserData(filteredData);
       setFetchData(true);
     } catch (err) {
-      console.log('ERRRRRRRRRR', err);
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        console.log('ERRRRRRRRRR', err);
+    }
     }
   };
 
@@ -150,15 +159,20 @@ function MaterialTypes() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/materialtype/get_material_type/?created_by=${companyId}&page=${page}&page_size=${pageSize}`,
+        `${BACKEND_URL}/materialtype/get_material_type/?created_by=${companyId}&page=${page}&page_size=${pageSize}`,{headers:headers}
       );
       console.log(response);
       setMaterialData(response.data);
       setSelectedCompanyName(companyName);
       setShowMaterialTable(true);
     } catch (err) {
-      console.log(err);
-      toast('There is some error while fetching data', { type: 'error' });
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        console.log(err);
+        toast('There is some error while fetching data', { type: 'error' });
+    }
     } finally {
       setLoading(false);
     }
@@ -179,11 +193,16 @@ function MaterialTypes() {
     setShowDelete(false);
     setLoading(true);
     try {
-      await axios.delete(`${BACKEND_URL}/materialtype/delete_material_type/?material_id=${id}`);
+      await axios.delete(`${BACKEND_URL}/materialtype/delete_material_type/?material_id=${id}`,{headers:headers});
       getMaterialData(company_id, selectedCompanyName);
       toast('Delete Sucessfully', { type: 'success' });
     } catch (err) {
-      console.log(err);
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        console.log(err);
+    }
     } finally {
       setLoading(false);
     }
@@ -192,12 +211,17 @@ function MaterialTypes() {
   const getSearchData = async () => {
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/materialtype/search_material_type/?string=${query}&company_id=${company_id}`,
+        `${BACKEND_URL}/materialtype/search_material_type/?string=${query}&company_id=${company_id}`,{headers:headers}
       );
       console.log(response);
       setSearchData(response.data);
     } catch (err) {
-      toast(`There is Some error while searching`, { type: 'error' });
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        toast(`There is Some error while searching`, { type: 'error' });
+    }
     }
   };
 

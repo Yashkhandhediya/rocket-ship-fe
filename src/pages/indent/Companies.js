@@ -5,6 +5,7 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Link, useNavigate } from 'react-router-dom';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const Companies = () => {
   const [userData, setUserData] = useState([]);
@@ -12,6 +13,9 @@ const Companies = () => {
   const [showKyc, setShowKyc] = useState(false);
   const [aadharImg, setAadharImg] = useState('');
   const [userImg, setUserImg] = useState('');
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,14 +24,19 @@ const Companies = () => {
 
   const fetchDataFromAPI = async () => {
     axios
-      .get(BACKEND_URL + `/company/all_company/`)
+      .get(BACKEND_URL + `/company/all_company/`,{headers:headers})
       .then((res) => {
         console.log('RESSSSSSSSSSSSS', res);
         setUserData(res.data);
         setFetchData(true);
       })
       .catch((err) => {
-        console.log('ERRRRRRRRRR', err);
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log('ERRRRRRRRRR', err);
+      }
       });
   };
 

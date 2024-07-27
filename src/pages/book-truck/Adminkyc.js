@@ -16,6 +16,7 @@ import { Tooltip } from 'flowbite-react';
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const Adminkyc = () => {
   const [userData, setUserData] = useState([]);
@@ -32,6 +33,7 @@ const Adminkyc = () => {
   const [searchData, setSearchData] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
   const [query, setQuery] = useState('');
+  const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
   const user_data = query.length !== 0 ? searchData : userData;
   const [loading, setLoading] = useState(false);
 
@@ -44,7 +46,7 @@ const Adminkyc = () => {
   const fetchDataFromAPI = async () => {
     setLoading(true);
     axios
-      .get(BACKEND_URL + `/company/all_company/`)
+      .get(BACKEND_URL + `/company/all_company/`,{headers:headers})
       .then((res) => {
         console.log('RESSSSSSSSSSSSS', res);
         const filteredData = res.data.filter((item) => item.kyc_status_id === 3 || item.kyc_status_id === 2);
@@ -53,13 +55,18 @@ const Adminkyc = () => {
         setLoading(false);
       })
       .catch((err) => {
-        setLoading(false);
-        console.log('ERRRRRRRRRR', err);
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          setLoading(false);
+          console.log('ERRRRRRRRRR', err);
+      }
       });
   };
 
   const handleAcceptKYC = () => {
-    const headers = { 'Content-Type': 'application/json' };
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
     axios
       .post(BACKEND_URL + `/kyc/kyc_status/?client_type=company&status=${3}&id=${idUser}`, { headers })
       .then((res) => {
@@ -71,18 +78,28 @@ const Adminkyc = () => {
         }, 2000);
       })
       .catch((err) => {
-        console.log('ERRRRRR', err);
-        toast('Error in KYC verification', { type: 'error' });
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log('ERRRRRR', err);
+          toast('Error in KYC verification', { type: 'error' });
+      }
       });
   };
 
   const getSearchData = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/company/search_company/?string=${query}`);
+      const response = await axios.get(`${BACKEND_URL}/company/search_company/?string=${query}`,{headers:headers});
       console.log(response);
       setSearchData(response.data);
     } catch (err) {
-      toast(`There is Some error while searching`, { type: 'error' });
+      if (err.response && err.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        toast(`There is Some error while searching`, { type: 'error' });
+    }
     }
   };
 

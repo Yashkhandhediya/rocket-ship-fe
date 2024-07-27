@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { useEffect, useState } from 'react';
 import { faSave } from '@fortawesome/free-solid-svg-icons';
@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { Loader } from '../../common/components';
+import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const Company_profile = () => {
   const [data, setData] = useState(null);
@@ -19,6 +20,8 @@ const Company_profile = () => {
     email: '',
     logo: '',
   });
+  const navigate = useNavigate();
+  const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
   const [loading, setLoading] = useState(false);
   // This function is used to handle the file change and show the image in place of the input
   const handleFileChange = (e) => {
@@ -47,7 +50,7 @@ const Company_profile = () => {
         BACKEND_URL +
           `/company/update_company?company_id=${
             companyDetails?.companyId
-          }&company_name=${companyDetails?.companyName.toString()}`,
+          }&company_name=${companyDetails?.companyName.toString()}`,{headers:headers}
       )
       .then((res) => {
         setLoading(false);
@@ -56,8 +59,13 @@ const Company_profile = () => {
         window.location.reload()
       })
       .catch((err) => {
-        setLoading(false);
-        toast('Error in Saving Info', { type: 'error' });
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          setLoading(false);
+          toast('Error in Saving Info', { type: 'error' });
+      }
       });
   };
 
@@ -68,7 +76,7 @@ const Company_profile = () => {
     // }
     setLoading(true);
     axios
-      .get(BACKEND_URL + `/company/${sessionStorage.getItem('company_id')}`)
+      .get(BACKEND_URL + `/company/${sessionStorage.getItem('company_id')}`, {headers:headers})
       .then((res) => {
         setLoading(false);
 
@@ -84,9 +92,14 @@ const Company_profile = () => {
         sessionStorage.setItem('user_name', res.data.name);
       })
       .catch((err) => {
-        setLoading(false);
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          setLoading(false);
 
-        toast('error in fetching data', { type: 'error' });
+          toast('error in fetching data', { type: 'error' });
+      }
       });
   };
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 // import { FreezeModal } from '../weightFreezeModal';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { DiscrepancyModal } from '../weightDiscrepancyModal';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
 import { ACCESS_TOKEN } from '../../../../common/utils/config';
@@ -15,6 +15,10 @@ const DiscrepancyTable = ({ data, setLoading }) => {
   const [searchParams, setSearchParams] = useSearchParams(); // eslint-disable-line
   const freezeStatus = searchParams.get('freeze_status');
   const [images, setImages] = useState([]);
+  const navigate = useNavigate();
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -23,13 +27,18 @@ const DiscrepancyTable = ({ data, setLoading }) => {
           const response = await axios.get(
             BACKEND_URL +
               `/weight_discrepancy/get_weight_discrepancy_courier_image?weight_discrepancy_id=${item.weight_discrepancy.id}`,
-            { responseType: 'blob' },
+            { responseType: 'blob' },{headers:headers}
           );
           const imgUrl = URL.createObjectURL(response.data);
           return { id: item.weight_discrepancy.id, image: imgUrl };
         } catch (error) {
-          console.log('Image Fetch Error', error);
+          if (error.response && error.response.status === 401) {
+            sessionStorage.clear()
+            navigate('/login');
+        } else {
+              console.log('Image Fetch Error', error);
           return { id: item.weight_discrepancy.id, image: null };
+        }
         }
       });
 
@@ -74,8 +83,13 @@ const DiscrepancyTable = ({ data, setLoading }) => {
         console.log(res); // eslint-disable-line
       })
       .catch((err) => {
-        toast('Something went wrong', { type: 'error' });
-        console.log(err); // eslint-disable-line
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          toast('Something went wrong', { type: 'error' });
+          console.log(err); // eslint-disable-line
+      }
       });
   };
 

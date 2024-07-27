@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { BACKEND_URL } from '../../../common/utils/env.config';
+import { ACCESS_TOKEN } from '../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const Card = ({cards,setCards,initialCards,onCardsUpdate}) => {
-
+  const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
   const [data,setData] = useState([])
-
+  const navigate = useNavigate();
   const handleData = () => {
-    axios.get(BACKEND_URL + `/userpartner/custom_courier_priority?user_id=${sessionStorage.getItem('user_id')}`)
+    axios.get(BACKEND_URL + `/userpartner/custom_courier_priority?user_id=${sessionStorage.getItem('user_id')}`,{headers:headers})
     .then((res) => {
       console.log("Data Courier",res.data)
       const responseNames = res.data; 
