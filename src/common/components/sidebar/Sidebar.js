@@ -6,8 +6,8 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../utils/env.config';
 import { toast } from 'react-toastify';
 import { RiMenuFold3Line2 } from 'react-icons/ri';
-import homeIcon from './icons/home_tbbv.png';
 import { logo } from '../../images';
+import homeIcon from '../../images/home (6).png';
 
 const Sidebar = () => {
   const [isSideBarOpen, setIsSideBarOpen] = useState(true);
@@ -111,10 +111,18 @@ const Sidebar = () => {
           )} */}
 
           <Link to={parseInt(is_admin) === 2 ? '/adminkyc' : '/book'}>
-            <div className={`flex items-center p-2`}>
-              <img src={homeIcon} className={`h-6 w-6 ${isSideBarOpen ? 'hidden' : ''}`} />
-              <img src={homeIcon} className={` h-6 w-6 ${isSideBarOpen ? 'block' : 'hidden'}`} />
-              <span className={`ml-3 truncate text-sm font-medium `}>HOME</span>
+            <div className={`flex items-center p-1`}>
+              <div className="h-9 w-9">
+                <img src={homeIcon} className={`h-full w-full object-cover group-hover/sidebar:hidden`} />
+                <img
+                  src={homeIcon}
+                  className={` hidden h-full  w-full object-cover group-hover/sidebar:block`}
+                />
+              </div>
+              <span
+                className={`ml-2 hidden truncate text-sm  font-bold font-medium group-hover/sidebar:block`}>
+                HOME
+              </span>
             </div>
           </Link>
         </div>

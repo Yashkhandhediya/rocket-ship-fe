@@ -472,25 +472,25 @@ const Allindent = () => {
                     <p className="text-primary mb-1 ml-1 text-xs font-semibold">TRUCK DETAILS</p>
                     <div className="px-2 text-[13px] text-zinc-500">
                       <p className="font-bold">
-                        Type: <span className="font-normal">{data.truck_details.truck_type}</span>
+                        Type: <span className="font-normal">{data?.truck_details.truck_type}</span>
                       </p>
                       <p className="font-bold">
-                        Number: <span className="font-normal">{data.truck_details.truck_number}</span>
+                        Number: <span className="font-normal">{data?.truck_details.truck_number}</span>
                       </p>
                       <p className="font-bold">
                         Vehical Capacity:
                         <span className="font-normal">
-                          {data.truck_details.capacity} {data.truck_details.capacity_type}
+                          {data.truck_details.capacity} {data?.truck_details.capacity_type}
                         </span>
                       </p>
                       <p className="font-bold">
-                        Dimensions: <span className="font-normal">{data.truck_details.truck_dimension}</span>
+                        Dimensions: <span className="font-normal">{data?.truck_details.truck_dimension}</span>
                       </p>
                     </div>
                   </div>
                   <div className="w-6/10">
                     <p className=" text-primary mb-1 ml-1 w-full text-xs font-semibold">MATERIAL TYPE</p>
-                    <p className="ml-1 text-sm text-gray-500">{data.material_details.material_type}</p>
+                    <p className="ml-1 text-sm text-gray-500">{data?.material_details.material_type}</p>
                   </div>
                 </div>
                 <div className="-ml-4 -mr-4 flex items-end justify-between border-t border-gray-200">

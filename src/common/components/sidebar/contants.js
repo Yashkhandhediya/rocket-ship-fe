@@ -18,8 +18,8 @@ import {
 import truckSize from '../../icons/sidebar-icons/truckSize.svg';
 import { logout } from './utils';
 import { modules } from '../../../pages/manage-role/user-management/constants';
-import createIndentIcon from './icons/create_indent.png';
-import AllIndentIcon from './icons/all_tbbv.png';
+import createIndentIcon from '../../images/add.png';
+import AllIndentIcon from '../../images/grid.png';
 import { RiPagesLine } from 'react-icons/ri';
 
 const is_admin = sessionStorage.getItem('is_admin');
