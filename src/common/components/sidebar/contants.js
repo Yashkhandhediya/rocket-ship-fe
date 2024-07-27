@@ -23,6 +23,7 @@ import AllIndentIcon from '../../images/grid.png';
 import { RiPagesLine } from 'react-icons/ri';
 import userBookingIcon from '../../images/delivery-truck.png';
 import userIcon from '../../images/user-avatar.png';
+import masterIcon from '../../images/kg.png';
 
 const is_admin = sessionStorage.getItem('is_admin');
 const user_id = sessionStorage.getItem('user_id');
@@ -62,8 +63,8 @@ export const sidebarLinks = [
 
   parseInt(is_admin) == 2 && {
     title: 'Masters',
-    icon: weight,
-    hoverIcon: weight,
+    icon: masterIcon,
+    hoverIcon: masterIcon,
     subMenuOptions: [
       {
         title: 'Address',
