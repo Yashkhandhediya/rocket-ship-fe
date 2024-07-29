@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { NavLink } from 'react-router-dom';
 import { Datepicker } from 'flowbite-react';
+import RangeDatePicker from './components/RangeDatePicker';
 
 function ReportsTab({ children }) {
   const [type, setType] = useState('select');
@@ -23,7 +24,7 @@ function ReportsTab({ children }) {
             Scheduled Report
           </NavLink>
         </div>
-        <div className="mx-4 flex w-1/2">
+        <div className="mx-4 flex w-1/2 items-center gap-4">
           <select
             id="select"
             value={type}
@@ -41,6 +42,9 @@ function ReportsTab({ children }) {
             <option value="B2b Orders">B2b Orders</option>
             <option value="QC Downloads">QC Downloads</option>
           </select>
+          <div className="w-1/2">
+            <RangeDatePicker />
+          </div>
         </div>
         {children}
       </div>
