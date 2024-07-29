@@ -182,10 +182,11 @@ const Navbar = () => {
   };
 
   const getUser = async () => {
+    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
     const apiURL =
       is_company == 0 ? `${BACKEND_URL}/users/${id_user}` : `${BACKEND_URL}/company/${id_company}`;
     try {
-      const response = await axios.get(apiURL);
+      const response = await axios.get(apiURL,{headers});
       setUserData(response.data);
       console.log('Hallllllllllllll', userData, response.data);
       if (response.data.wallet_balance == null || response.data.wallet_balance <= 0) {
@@ -203,7 +204,12 @@ const Navbar = () => {
         sessionStorage.setItem('balance', response.data.wallet_balance);
       }
     } catch (error) {
-      console.log(error); //eslint-disable-line
+      if (error.response && error.response.status === 401) {
+        sessionStorage.clear()
+        navigate('/login');
+    } else {
+        console.log(error); //eslint-disable-line
+    }
     }
   };
 
