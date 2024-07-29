@@ -59,6 +59,9 @@ import { BillingAddress } from '../pages/billing-address';
 import { ShiprocketBankDetails } from '../pages/shiprocket-bank-details';
 import { RefundSetting, ReturnSettings } from '../pages/return-settings';
 import { GstinInvoicing } from '../pages/gstin-invoicing';
+import { Reports } from '../pages/reports';
+import ScheduleReports from '../pages/reports/ScheduledReports';
+import ScheduledReports from '../pages/reports/ScheduledReports';
 
 const routes = createBrowserRouter([
   {
@@ -325,6 +328,15 @@ const routes = createBrowserRouter([
   {
     path: '/gstin-invoicing',
     element: <PrivateRoute component={<GstinInvoicing />} />,
+  },
+  {
+    path: '/reports',
+    element: <PrivateRoute component={<Reports />} />,
+  },
+  // ScheduleReports
+  {
+    path: '/scheduled-reports',
+    element: <PrivateRoute component={<ScheduledReports />} />,
   },
 ]);
 
