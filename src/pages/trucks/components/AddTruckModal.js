@@ -4,14 +4,19 @@ import { BACKEND_URL } from '../../../common/utils/env.config';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { truckTypes } from './constants';
+import { ACCESS_TOKEN } from '../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEdit }) {
   console.log(editData, state);
-
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const company_id = sessionStorage.getItem('company_id');
   const [errors, setErrors] = useState(null);
   const is_admin = sessionStorage.getItem('is_admin');
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   // const id = is_admin == 2 ? state.id : company_id;
   // console.log(id);
   const [truckData, setTruckData] = useState({
@@ -51,7 +56,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
     try {
       const response = await axios.post(`${BACKEND_URL}/trucktype/create_truck_type/`, {
         ...truckData,
-        created_by: company_id,
+        created_by: company_id,headers:headers
       });
       setTruckData({
         truck_type: 'Select Type',
@@ -63,9 +68,12 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
       console.log(response);
       getTruckData(company_id);
       toast('Added Truck Sucessfully', { type: 'success' });
-    } catch (err) {
+    } catch (err){
       if (err.response.status === 400) {
         toast(err.response.data.detail, { type: 'error' });
+      } else if (err.response.status === 401) {
+        sessionStorage.clear();
+        navigate('/login');
       } else {
         toast('There is some error while Adding Truck', { type: 'error' });
       }
@@ -86,7 +94,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
     try {
       const response = await axios.put(`${BACKEND_URL}/trucktype/update_truck_type/?id=${editData.id}`, {
         ...truckData,
-      });
+      },{headers:headers});
       setTruckData({
         truck_type: 'Select Type',
         capacity_type: '',
@@ -98,9 +106,12 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
       console.log(response);
       getTruckData(company_id);
       toast('Edited Truck Sucessfully', { type: 'success' });
-    } catch (err) {
+    } catch (err)  {
       if (err.response.status === 400) {
         toast(err.response.data.detail, { type: 'error' });
+      } else if (err.response.status === 401) {
+        sessionStorage.clear();
+        navigate('/login');
       } else {
         toast('There is some error while Editing Truck', { type: 'error' });
       }

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { sidebarLinks } from './contants';
 import { useState } from 'react';
 import { logo, logo_main } from '../../images';
@@ -8,16 +8,20 @@ import { BACKEND_URL } from '../../utils/env.config';
 import { toast } from 'react-toastify';
 import { RiMenuFold3Line2 } from 'react-icons/ri';
 import homeIcon from './icons/home_tbbv.png';
+import { ACCESS_TOKEN } from '../../utils/config';
 
 const Sidebar = () => {
   const [isSideBarOpen, setIsSideBarOpen] = useState(true);
   const [openAccordion, setOpenAccordion] = useState(0);
+  const navigate = useNavigate();
   const [isTruckSizeModalOpen, setTruckSizeModalOpen] = useState(false);
   const [isMaterialTypeModalOpen, setMaterialTypeModalOpen] = useState(false);
   const [truckSize, setTruckSize] = useState(null);
   const [materialType, setMaterialType] = useState(null);
   const is_admin = sessionStorage.getItem('is_admin');
-
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   const handleAccordionToggle = (index) => {
     setOpenAccordion((prev) => (prev === index ? 0 : index));
   };
@@ -50,15 +54,20 @@ const Sidebar = () => {
         BACKEND_URL +
           `/trucktype/create_truck_type/?created_by=${sessionStorage.getItem(
             'company_id',
-          )}&truck_type=${truckSize}`,
+          )}&truck_type=${truckSize}`,{headers:headers}
       )
       .then((response) => {
         console.log('Truck Size created:', response.data);
         toast('Truck Size Created', { type: 'success' });
       })
       .catch((err) => {
-        console.log('Error while creating Truck Size:', err);
-        toast('Error while creating Truck Size', { type: 'error' });
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log('Error while creating Truck Size:', err);
+          toast('Error while creating Truck Size', { type: 'error' });
+      }
       });
   };
 
@@ -76,15 +85,20 @@ const Sidebar = () => {
         BACKEND_URL +
           `/materialtype/create_material_type/?created_by=${sessionStorage.getItem(
             'company_id',
-          )}&material_type=${materialType}`,
+          )}&material_type=${materialType}`,{headers:headers}
       )
       .then((response) => {
         console.log('Material Type created:', response.data);
         toast('Material Type Created', { type: 'success' });
       })
       .catch((err) => {
-        console.log('Error while creating Material Type:', err);
-        toast('Error while creating Material Type', { type: 'error' });
+        if (err.response && err.response.status === 401) {
+          sessionStorage.clear()
+          navigate('/login');
+      } else {
+          console.log('Error while creating Material Type:', err);
+          toast('Error while creating Material Type', { type: 'error' });
+      }
       });
   };
 
