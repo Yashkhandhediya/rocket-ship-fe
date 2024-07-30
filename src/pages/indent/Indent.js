@@ -127,7 +127,10 @@ const Indent = () => {
       label: (
         <div className="flex gap-4">
           <div className="rounded-lg bg-zinc-100 p-2 text-center">
-            {type.truck_type === 'Truck' && <img src={truck} className="inline-block h-14" />}
+            {type.truck_type !== 'LCV' &&
+              type.truck_type !== 'Container' &&
+              type.truck_type !== 'Trailer' &&
+              type.truck_type !== 'Hyva' && <img src={truck} className="inline-block h-14" />}
             {type.truck_type === 'LCV' && <img src={lcvTruck} className="inline-block h-14" />}
             {type.truck_type === 'Container' && <img src={container} className="inline-block h-14" />}
             {type.truck_type === 'Trailer' && <img src={trailer} className="inline-block h-14" />}
