@@ -3,7 +3,7 @@ import { CustomMultiSelect, Loader } from '../../../common/components';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { truckTypes } from './constants';
+import { truckTypes, typeTrucks } from './constants';
 
 function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEdit }) {
   console.log(editData, state);
@@ -12,16 +12,18 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
   const company_id = sessionStorage.getItem('company_id');
   const [errors, setErrors] = useState(null);
   const is_admin = sessionStorage.getItem('is_admin');
+  const [typeTruck, setTypeTruck] = useState('Select Truck Type');
   // const id = is_admin == 2 ? state.id : company_id;
   // console.log(id);
   const [truckData, setTruckData] = useState({
     truck_type: editData ? editData?.truck_type : 'Select Type',
     capacity_type: editData ? editData?.capacity_type : 'KG',
-    // truck_number: editData ? editData.truck_number : '',
+    truck_number: editData ? editData.truck_number : '0',
     truck_dimension: editData ? editData.truck_dimension : '',
     capacity: editData ? editData.capacity : '',
   });
 
+  console.log(typeTruck);
   const requiredFields = () => {
     const newErrors = {};
 
@@ -52,6 +54,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
       const response = await axios.post(`${BACKEND_URL}/trucktype/create_truck_type/`, {
         ...truckData,
         created_by: company_id,
+        truck_type: truckData.truck_type === 'Truck' ? typeTruck : truckData.truck_type,
       });
       setTruckData({
         truck_type: 'Select Type',
@@ -86,11 +89,12 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
     try {
       const response = await axios.put(`${BACKEND_URL}/trucktype/update_truck_type/?id=${editData.id}`, {
         ...truckData,
+        truck_type: truckData.truck_type === 'Truck' ? typeTruck : truckData.truck_type,
       });
       setTruckData({
         truck_type: 'Select Type',
         capacity_type: '',
-        // truck_number: '',
+        truck_number: '',
         truck_dimension: '',
         capacity: '',
       });
@@ -137,6 +141,25 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
             />
             {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_type}</p>}
           </div>
+          {truckData.truck_type === 'Truck' && (
+            <div className="mb-2 ">
+              <label htmlFor="" className="block text-[12px] font-semibold">
+                Type <span className="text-red-500">*</span>
+              </label>
+              <CustomMultiSelect
+                isMulti={false}
+                options={typeTrucks}
+                selected={typeTruck}
+                closeMenuOnSelect={true}
+                placeholder={typeTruck}
+                hideSelectedOptions={false}
+                onChange={(value) => {
+                  setTypeTruck(value);
+                }}
+              />
+              {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_type}</p>}
+            </div>
+          )}
 
           <div className="mb-2 ">
             <label htmlFor="truck_capacity" className="block text-[12px] font-medium">

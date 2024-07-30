@@ -324,7 +324,10 @@ function TruckLists() {
                         {data.truck_type ? data.truck_type : '-'}
                       </td>
                       <td className=" border px-4 py-4 text-center">
-                        {data.truck_type === 'Truck' && <img src={truck} className="inline-block h-10" />}
+                        {data.truck_type !== 'LCV' &&
+                          data.truck_type !== 'Container' &&
+                          data.truck_type !== 'Trailer' &&
+                          data.truck_type !== 'Hyva' && <img src={truck} className="inline-block h-10" />}
                         {data.truck_type === 'LCV' && <img src={lcvTruck} className="inline-block h-10" />}
                         {data.truck_type === 'Container' && (
                           <img src={container} className="inline-block h-10" />
