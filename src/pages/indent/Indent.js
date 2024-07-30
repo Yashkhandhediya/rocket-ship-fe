@@ -287,7 +287,7 @@ const Indent = () => {
   }, [truckType]);
 
   useEffect(() => {
-    setTargetWeight(0);
+    setTargetWeight('Select Weight');
   }, [tons]);
 
   let count = 1;
