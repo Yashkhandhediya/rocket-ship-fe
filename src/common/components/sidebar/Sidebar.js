@@ -96,11 +96,11 @@ const Sidebar = () => {
       onMouseLeave={handleMouseLeave}>
       <div className="z-100 h-18 flex w-full items-center justify-between border-b bg-white px-2 pb-4 pt-2">
         <div className="relative h-14 w-full overflow-hidden">
-          <img src={logo} className="pt-3 group-hover/sidebar:hidden" />
+          {/* <img src={logo} className="pt-3 group-hover/sidebar:hidden" />
           <img
             src={logo}
             className="absolute inset-0 hidden h-full w-full object-cover group-hover/sidebar:inline-block"
-          />
+          /> */}
         </div>
       </div>
       {/* <hr className="my-4 border-[#c] text-[#0000001a] md:hidden" /> */}

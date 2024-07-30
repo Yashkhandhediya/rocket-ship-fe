@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useMemo } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { cityList } from '../book-truck/cities';
 import { CustomMultiSelect, Field, Loader } from '../../common/components';
-import { materialTypes, truckTypes, weights, weightTypes } from './data';
+import { kgWeights, materialTypes, tonWeights, truckTypes, weights, weightTypes } from './data';
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -67,7 +67,7 @@ const Indent = () => {
   const [materialType, setMaterialType] = useState(data?.material_type_id || 'Select Material Type');
   const [tons, setTons] = useState(data?.weight_type || 'Select Weight Type');
   const [targetPrice, setTargetPrice] = useState(data?.customer_price || null);
-  const [targetWeight, setTargetWeight] = useState(data?.weight || null);
+  const [targetWeight, setTargetWeight] = useState(data?.weight || 'Select Weight');
   const [pkgs, setPkgs] = useState(data?.pkgs || null);
   const [isLoading, setIsLoading] = useState(false);
   const [pickUpDate, setPickUpDate] = useState({
@@ -79,6 +79,8 @@ const Indent = () => {
   const [shipmentDetails, setShipmentDetails] = useState({
     type: 'ftl',
   });
+
+  console.log(targetWeight);
 
   const [truckDimention, setTruckDimention] = useState({
     length: 0,
@@ -135,9 +137,9 @@ const Indent = () => {
             <p className="font-bold">
               Type: <span className="font-normal">{type.truck_type}</span>
             </p>
-            <p className="font-bold">
+            {/* <p className="font-bold">
               Number: <span className="font-normal">{type.truck_number}</span>
-            </p>
+            </p> */}
             <p className="font-bold">
               Vehical Capacity:
               <span className="font-normal">
@@ -145,7 +147,7 @@ const Indent = () => {
               </span>
             </p>
             <p className="font-bold">
-              Dimensions: <span className="font-normal">{type.truck_dimension}</span>
+              Tyres: <span className="font-normal">{type.truck_dimension}</span>
             </p>
           </div>
         </div>
@@ -283,6 +285,10 @@ const Indent = () => {
     console.log(truckType);
     console.log(materialType);
   }, [truckType]);
+
+  useEffect(() => {
+    setTargetWeight(0);
+  }, [tons]);
 
   let count = 1;
   useEffect(() => {
@@ -746,7 +752,7 @@ const Indent = () => {
     container: 'relative w-full',
     input: 'w-full p-2 text-lg',
     suggestionsContainer: `absolute z-20 ${
-      bgColor ? 'bg-yellow-200' : 'bg-white'
+      bgColor ? 'bg-green-200' : 'bg-white'
     } max-h-52 overflow-y-auto w-full shadow-md`,
     suggestionsList: 'list-none  m-0 p-0',
     suggestion: 'p-2 cursor-pointer',
@@ -1036,7 +1042,7 @@ const Indent = () => {
             </div>
             <div className="w-[49%]">
               <div className="flex w-full">
-                <div className="flex-grow pr-2">
+                <div className="w-1/2 pr-2">
                   <CustomMultiSelect
                     isMulti={false}
                     label={'Weight'}
@@ -1050,13 +1056,29 @@ const Indent = () => {
                     }}
                   />
                 </div>
-                <div className="mt-6 flex-grow pr-4">
-                  <Field
-                    value={targetWeight}
-                    type="number"
-                    placeholder="Enter Weight"
-                    onChange={(e) => setTargetWeight(e.target.value)}
-                  />
+                <div className="mt-4 flex w-1/2 items-center pr-2">
+                  <div className="mt-1 w-1/2">
+                    <Field
+                      value={targetWeight}
+                      type="number"
+                      placeholder="Enter Weight"
+                      onChange={(e) => setTargetWeight(e.target.value)}
+                    />
+                  </div>
+                  <div className="w-1/2">
+                    <CustomMultiSelect
+                      isMulti={false}
+                      // label={tons == 'Ton' ? 'Ton Weight' : 'Kg Weight'}
+                      options={tons == 'Ton' ? tonWeights : kgWeights}
+                      // selected={targetWeight}
+                      closeMenuOnSelect={true}
+                      placeholder={targetWeight}
+                      hideSelectedOptions={false}
+                      onChange={(value) => {
+                        setTargetWeight(value);
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -1157,7 +1179,7 @@ const Indent = () => {
           </div> */}
           </div>
           <button
-            className="bg-primary hover:bg-primary bottom-4 ml-10 rounded-full p-2 text-lg font-semibold text-white md:w-1/2"
+            className="bottom-4 ml-10 rounded-full bg-primary p-2 text-lg font-semibold text-white hover:bg-primary md:w-1/2"
             onClick={() => {
               // let upDateId = id + 1;
               // setId(upDateId);

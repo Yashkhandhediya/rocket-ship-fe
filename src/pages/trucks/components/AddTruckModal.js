@@ -17,7 +17,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
   const [truckData, setTruckData] = useState({
     truck_type: editData ? editData?.truck_type : 'Select Type',
     capacity_type: editData ? editData?.capacity_type : 'KG',
-    truck_number: editData ? editData.truck_number : '',
+    // truck_number: editData ? editData.truck_number : '',
     truck_dimension: editData ? editData.truck_dimension : '',
     capacity: editData ? editData.capacity : '',
   });
@@ -27,7 +27,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
 
     if (truckData.truck_type === 'Select Type') newErrors.truck_type = 'Truck type is Required';
     if (truckData.truck_dimension === '') newErrors.truck_dimension = 'Truck Dimension is Required';
-    if (truckData.truck_number === '') newErrors.truck_number = 'Truck Number is Required';
+    // if (truckData.truck_number === '') newErrors.truck_number = 'Truck Number is Required';
     if (truckData.capacity === '') newErrors.capacity = 'Truck Capacity is Required';
     return newErrors;
   };
@@ -90,7 +90,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
       setTruckData({
         truck_type: 'Select Type',
         capacity_type: '',
-        truck_number: '',
+        // truck_number: '',
         truck_dimension: '',
         capacity: '',
       });
@@ -146,7 +146,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
               <input
                 type="text"
                 id="truck_capacity"
-                className="focus:border-primary focus:ring-primary block w-2/3 rounded-sm border-none px-2.5 py-1 text-[12px] shadow-sm focus:outline-none"
+                className="block w-2/3 rounded-sm border-none px-2.5 py-1 text-[12px] shadow-sm focus:border-primary focus:outline-none focus:ring-primary"
                 value={truckData.capacity}
                 onChange={(e) => setTruckData({ ...truckData, capacity: e.target.value })}
               />
@@ -164,7 +164,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
             </div>
             {errors && <p className="w-1/2 text-xs text-red-500">{errors?.capacity}</p>}
           </div>
-          <div className="mb-2 ">
+          {/* <div className="mb-2 ">
             <label htmlFor="truck_number" className="block text-[12px] font-medium ">
               Truck Number <span className="text-red-500">*</span>
             </label>
@@ -176,15 +176,15 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
               onChange={(e) => setTruckData({ ...truckData, truck_number: e.target.value })}
             />
             {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_number}</p>}
-          </div>
+          </div> */}
           <div className="mb-4">
             <label htmlFor="truck_dimension" className="block text-[12px] font-medium ">
-              Truck Dimensions <span className="text-red-500">*</span>
+              Truck Tyres <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               id="truck_dimension"
-              className="focus:border-primary focus:ring-primary mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:outline-none sm:text-sm"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
               value={truckData.truck_dimension}
               onChange={(e) => setTruckData({ ...truckData, truck_dimension: e.target.value })}
             />
@@ -199,7 +199,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
               Cancel
             </button>
             <button
-              className="bg-primary w-1/2 rounded-lg px-4 py-2 text-white"
+              className="w-1/2 rounded-lg bg-primary px-4 py-2 text-white"
               onClick={() => {
                 editData ? handleEditTruck() : handleAddTruck();
               }}>

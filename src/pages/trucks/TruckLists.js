@@ -121,7 +121,7 @@ function TruckLists() {
         cell: ({ row }) => (
           <div className="flex gap-2 text-left text-xs">
             <div
-              className="bg-primary min-w-fit cursor-pointer rounded px-4 py-1.5 text-white hover:bg-sky-700"
+              className="min-w-fit cursor-pointer rounded bg-primary px-4 py-1.5 text-white hover:bg-sky-700"
               onClick={() => handleKYC(row?.original?.id, row?.original?.name)}>
               Show Details
             </div>
@@ -289,13 +289,13 @@ function TruckLists() {
             <div className="flex justify-end gap-5">
               {is_admin === '2' && (
                 <button
-                  className="bg-primary flex items-center gap-3 rounded px-4 py-1 text-white shadow"
+                  className="flex items-center gap-3 rounded bg-primary px-4 py-1 text-white shadow"
                   onClick={() => navigate(`/adminkyc`)}>
                   Back
                 </button>
               )}
               <button
-                className="bg-primary flex items-center gap-3 rounded px-4 py-1 text-white shadow"
+                className="flex items-center gap-3 rounded bg-primary px-4 py-1 text-white shadow"
                 onClick={handleShowAddTruckModal}>
                 <span className="text-2xl">+</span>
                 Add Truck
@@ -306,12 +306,12 @@ function TruckLists() {
             <table className=" w-full text-[12px]">
               <thead className="border bg-white">
                 <tr>
-                  <th className="w-16 border px-4 py-2 text-center">Sr. No</th>{' '}
-                  <th className="w-20 border px-4 py-2 text-center">Truck Type</th>{' '}
+                  <th className="w-16 border px-4 py-2 text-center">Sr. No</th>
+                  <th className="w-20 border px-4 py-2 text-center">Truck Type</th>
                   <th className="w-20 border  px-4 py-2 text-center">Truck Image</th>
                   <th className="w-24  border px-4 py-2 text-center">Vehical Capacity</th>
-                  <th className="w-28 border  px-4 py-2 text-center">Truck Number</th>
-                  <th className="w-28 border  px-4 py-2 text-center">Truck Dimensions</th>
+                  {/* <th className="w-28 border  px-4 py-2 text-center">Truck Number</th> */}
+                  <th className="w-28 border  px-4 py-2 text-center">Truck Tyres</th>
                   <th className="w-24 border  px-4 py-2 text-center">Actions</th>
                 </tr>
               </thead>
@@ -335,9 +335,9 @@ function TruckLists() {
                       <td className=" border px-2 py-4 text-center">
                         {data.capacity ? data.capacity : '-'} {data.capacity_type ? data.capacity_type : ''}
                       </td>
-                      <td className=" border px-4 py-4 text-center">
+                      {/* <td className=" border px-4 py-4 text-center">
                         {data.truck_number ? data.truck_number : '-'}
-                      </td>
+                      </td> */}
                       <td className=" border px-4 py-4 text-center">{data.truck_dimension}</td>
                       <td className=" border px-4 py-4 text-center">
                         <div className="flex items-center justify-center gap-4 text-2xl">
@@ -381,7 +381,7 @@ function TruckLists() {
                   }`}
                   onClick={handlePrevPage}
                   disabled={page === 1}>{`<`}</button>
-                <button className="bg-primary rounded px-2 py-1 text-sm text-white">{page}</button>
+                <button className="rounded bg-primary px-2 py-1 text-sm text-white">{page}</button>
                 <span className=" rounded px-2 py-0 text-sm">{page + 1}</span>
                 <span className=" rounded px-2 py-0 text-sm">{page + 2}</span>
                 <button
@@ -398,7 +398,7 @@ function TruckLists() {
             <p>Are you sure you want to remove this truck?</p>
             <div className="flex w-full justify-center gap-4">
               <button
-                className="bg-primary w-1/2 rounded-lg px-4 py-1 text-white"
+                className="w-1/2 rounded-lg bg-primary px-4 py-1 text-white"
                 onClick={() => handleDelete(deleteId)}>
                 Yes
               </button>
