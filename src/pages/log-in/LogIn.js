@@ -63,7 +63,7 @@ const LogIn = () => {
     // const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     console.log('username pass', loginInput.username, loginInput.password);
     console.log('backend url', BACKEND_URL);
-    const apiURL = userType === 'user' ? '/login/access-token' : '/company/access-token';
+    const apiURL = userType === 'user' ? '/login/access-token' : '/login/access-token';
     const otpURL = userType === 'user' ? '/login' : '/company';
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
