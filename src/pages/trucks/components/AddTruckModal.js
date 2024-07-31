@@ -54,7 +54,6 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
       const response = await axios.post(`${BACKEND_URL}/trucktype/create_truck_type/`, {
         ...truckData,
         created_by: company_id,
-        truck_type: truckData.truck_type === 'Truck' ? typeTruck : truckData.truck_type,
       });
       setTruckData({
         truck_type: 'Select Type',
@@ -89,7 +88,6 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
     try {
       const response = await axios.put(`${BACKEND_URL}/trucktype/update_truck_type/?id=${editData.id}`, {
         ...truckData,
-        truck_type: truckData.truck_type === 'Truck' ? typeTruck : truckData.truck_type,
       });
       setTruckData({
         truck_type: 'Select Type',
@@ -144,7 +142,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
           {truckData.truck_type === 'Truck' && (
             <div className="mb-2 ">
               <label htmlFor="" className="block text-[12px] font-semibold">
-                Type <span className="text-red-500">*</span>
+                Truck Tyres <span className="text-red-500">*</span>
               </label>
               <CustomMultiSelect
                 isMulti={false}
@@ -155,6 +153,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
                 hideSelectedOptions={false}
                 onChange={(value) => {
                   setTypeTruck(value);
+                  setTruckData({ ...truckData, truck_dimension: value });
                 }}
               />
               {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_type}</p>}
@@ -200,19 +199,21 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
             />
             {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_number}</p>}
           </div> */}
-          <div className="mb-4">
-            <label htmlFor="truck_dimension" className="block text-[12px] font-medium ">
-              Truck Tyres <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              id="truck_dimension"
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
-              value={truckData.truck_dimension}
-              onChange={(e) => setTruckData({ ...truckData, truck_dimension: e.target.value })}
-            />
-            {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_dimension}</p>}
-          </div>
+          {truckData.truck_type !== 'Truck' && (
+            <div className="mb-4">
+              <label htmlFor="truck_dimension" className="block text-[12px] font-medium ">
+                Truck Tyres <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="truck_dimension"
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
+                value={truckData.truck_dimension}
+                onChange={(e) => setTruckData({ ...truckData, truck_dimension: e.target.value })}
+              />
+              {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_dimension}</p>}
+            </div>
+          )}
           <div className="flex w-full justify-center gap-4">
             <button
               className="w-1/2 rounded-lg bg-zinc-200 px-4 py-2"
