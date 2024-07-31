@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -59,28 +60,30 @@ const LogIn = () => {
       toast('Email and Password both are required', { type: 'error' });
       return;
     }
+  
     sessionStorage.setItem('user_email', loginInput.username);
-    // const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-    console.log('username pass', loginInput.username, loginInput.password);
-    console.log('backend url', BACKEND_URL);
-    const apiURL = userType === 'user' ? '/login/access-token' : '/login/access-token';
+  
+    const apiURL = '/login/access-token';
     const otpURL = userType === 'user' ? '/login' : '/company';
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': ACCESS_TOKEN
-    }
+      'Authorization': ACCESS_TOKEN,
+    };
+  
     setLoading(true);
-    axios
-      .post(
-        BACKEND_URL + apiURL,
-        {
-          username: loginInput.username.toLowerCase(),
-          password: loginInput.password,
-        },
-        { headers },
-      )
-      .then((response) => {
-        setLoading(false);
+  
+    axios.post(
+      BACKEND_URL + apiURL,
+      {
+        username: loginInput.username.toLowerCase(),
+        password: loginInput.password,
+      },
+      { headers },
+    )
+    .then((response) => {
+      setLoading(false);
+  
+      if (response.data.access_token) {
         sessionStorage.setItem('user_id', response.data.user_id);
         sessionStorage.setItem('company_id', response.data.company_id);
         sessionStorage.setItem('is_company', response.data.is_company);
@@ -89,49 +92,46 @@ const LogIn = () => {
         sessionStorage.setItem('is_kyc', response.data.kyc_status_id);
         sessionStorage.setItem('is_super', response.data.user_type_id);
         sessionStorage.setItem('is_otpVerified', JSON.stringify(false));
-        const user_id =
-          userType === 'user' ? sessionStorage.getItem('user_id') : localStorage.getItem('company_id');
-        if (response.data.access_token) {
-          setUserId(response.data.user_id);
-          setCompanyId(response.data.company_id);
-          sessionStorage.setItem('access_token', response.data.access_token);
-          sessionStorage.setItem('user_name', response.data?.user_name?.split(' ')[0]);
-          setLoading(true);
-          const otpPayload = {
-            email_id: String(loginInput.username),
-            [userType === 'user' ? 'user_id' : 'comp_id']: String(user_id),
-          };
-          axios
-            .post(
-              BACKEND_URL +
-                `${otpURL}/generate_otp?email_id=${loginInput.username}&${
-                  userType === 'user' ? 'user_id' : 'comp_id'
-                }=${user_id}`,
-              otpPayload,
-              { headers: headers },
-            )
-            .then((otpResponse) => {
-              setLoading(false);
-              setHandlePopup(true);
-              console.log(otpResponse);
-            })
-            .catch((otpError) => {
-              setLoading(false);
-              console.error('Error fetching OTP:', otpError);
-              toast('Error generating OTP', { type: 'error' });
-            });
-          // toast('Login Success',{type:'success'})
-          // navigate('/')
-        } else if (response.data.msg) {
-          toast(response.data.msg, { type: 'error' });
-        }
-      })
-      .catch((error) => {
-        setLoading(false);
-        console.error('Login error:', error);
-        toast('An error occurred during login', { type: 'error' });
-      });
+        sessionStorage.setItem('access_token', response.data.access_token);
+        sessionStorage.setItem('user_name', response.data?.user_name?.split(' ')[0]);
+  
+        const user_id = userType === 'user' ? sessionStorage.getItem('user_id') : sessionStorage.getItem('company_id');
+        setUserId(response.data.user_id);
+        setCompanyId(response.data.company_id);
+  
+        const otpPayload = {
+          email_id: String(loginInput.username),
+          [userType === 'user' ? 'user_id' : 'comp_id']: String(user_id),
+        };
+  
+        axios.post(
+          BACKEND_URL +
+            `${otpURL}/generate_otp?email_id=${loginInput.username}&${
+              userType === 'user' ? 'user_id' : 'comp_id'
+            }=${user_id}`,
+          otpPayload,
+          { headers: headers },
+        )
+        .then((otpResponse) => {
+          setHandlePopup(true);
+          console.log(otpResponse);
+        })
+        .catch((otpError) => {
+          setLoading(false);
+          console.error('Error fetching OTP:', otpError);
+          toast('Error generating OTP', { type: 'error' });
+        });
+      } else if (response.data.msg) {
+        toast(response.data.msg, { type: 'error' });
+      }
+    })
+    .catch((error) => {
+      setLoading(false);
+      console.error('Login error:', error);
+      toast('An error occurred during login', { type: 'error' });
+    });
   };
+  
   // const onSuccess = (response) => {
   //   console.log('Login Success:', response);
   //   // Handle the response here, e.g., send it to your backend for authentication
