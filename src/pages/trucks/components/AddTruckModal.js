@@ -3,6 +3,8 @@ import { CustomMultiSelect, Loader } from '../../../common/components';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { ACCESS_TOKEN } from '../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEdit }) {
   console.log(editData, state);
@@ -11,23 +13,25 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
   const company_id = sessionStorage.getItem('company_id');
   const [errors, setErrors] = useState(null);
   const is_admin = sessionStorage.getItem('is_admin');
+  const headers = {             
+    'Content-Type': 'application/json',
+    'Authorization': ACCESS_TOKEN};
   // const id = is_admin == 2 ? state.id : company_id;
   // console.log(id);
   const [truckData, setTruckData] = useState({
     truck_type: editData ? editData?.truck_type : 'Select Type',
     capacity_type: editData ? editData?.capacity_type : 'KG',
-    truck_number: editData ? editData.truck_number : '0',
+    truck_number: editData ? editData.truck_number : '',
     truck_dimension: editData ? editData.truck_dimension : '',
     capacity: editData ? editData.capacity : '',
   });
 
-  console.log(typeTruck);
   const requiredFields = () => {
     const newErrors = {};
 
     if (truckData.truck_type === 'Select Type') newErrors.truck_type = 'Truck type is Required';
     if (truckData.truck_dimension === '') newErrors.truck_dimension = 'Truck Dimension is Required';
-    // if (truckData.truck_number === '') newErrors.truck_number = 'Truck Number is Required';
+    if (truckData.truck_number === '') newErrors.truck_number = 'Truck Number is Required';
     if (truckData.capacity === '') newErrors.capacity = 'Truck Capacity is Required';
     return newErrors;
   };
@@ -143,26 +147,6 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
             />
             {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_type}</p>}
           </div>
-          {truckData.truck_type === 'Truck' && (
-            <div className="mb-2 ">
-              <label htmlFor="" className="block text-[12px] font-semibold">
-                Truck Tyres <span className="text-red-500">*</span>
-              </label>
-              <CustomMultiSelect
-                isMulti={false}
-                options={typeTrucks}
-                selected={typeTruck}
-                closeMenuOnSelect={true}
-                placeholder={typeTruck}
-                hideSelectedOptions={false}
-                onChange={(value) => {
-                  setTypeTruck(value);
-                  setTruckData({ ...truckData, truck_dimension: value });
-                }}
-              />
-              {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_type}</p>}
-            </div>
-          )}
 
           <div className="mb-2 ">
             <label htmlFor="truck_capacity" className="block text-[12px] font-medium">
@@ -172,7 +156,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
               <input
                 type="text"
                 id="truck_capacity"
-                className="block w-2/3 rounded-sm border-none px-2.5 py-1 text-[12px] shadow-sm focus:border-primary focus:outline-none focus:ring-primary"
+                className="block w-2/3 rounded-sm border-none px-2.5 py-1 text-[12px] shadow-sm outline-none focus:border-zinc-50 focus:outline-none"
                 value={truckData.capacity}
                 onChange={(e) => setTruckData({ ...truckData, capacity: e.target.value })}
               />
@@ -190,34 +174,32 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
             </div>
             {errors && <p className="w-1/2 text-xs text-red-500">{errors?.capacity}</p>}
           </div>
-          {/* <div className="mb-2 ">
+          <div className="mb-2 ">
             <label htmlFor="truck_number" className="block text-[12px] font-medium ">
               Truck Number <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               id="truck_number"
-              className="focus:border-primary focus:ring-primary mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:outline-none sm:text-sm"
+              className="mt-1 block w-full rounded-sm border border-gray-200 px-2.5 py-1 text-[12px] shadow-sm focus:border-blue-50 focus:outline-none"
               value={truckData.truck_number}
               onChange={(e) => setTruckData({ ...truckData, truck_number: e.target.value })}
             />
             {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_number}</p>}
-          </div> */}
-          {truckData.truck_type !== 'Truck' && (
-            <div className="mb-4">
-              <label htmlFor="truck_dimension" className="block text-[12px] font-medium ">
-                Truck Tyres <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="truck_dimension"
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
-                value={truckData.truck_dimension}
-                onChange={(e) => setTruckData({ ...truckData, truck_dimension: e.target.value })}
-              />
-              {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_dimension}</p>}
-            </div>
-          )}
+          </div>
+          <div className="mb-4">
+            <label htmlFor="truck_dimension" className="block text-[12px] font-medium ">
+              Truck Dimensions <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="truck_dimension"
+              className="mt-1 block w-full rounded-sm border border-gray-200 px-2.5 py-1 text-[12px] shadow-sm focus:border-blue-50 focus:outline-none"
+              value={truckData.truck_dimension}
+              onChange={(e) => setTruckData({ ...truckData, truck_dimension: e.target.value })}
+            />
+            {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_dimension}</p>}
+          </div>
           <div className="flex w-full justify-center gap-4">
             <button
               className="w-1/2 rounded-lg bg-zinc-200 px-4 py-2"
@@ -227,7 +209,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
               Cancel
             </button>
             <button
-              className="w-1/2 rounded-lg bg-primary px-4 py-2 text-white"
+              className="w-1/2 rounded-lg bg-sky-500 px-4 py-2 text-white"
               onClick={() => {
                 editData ? handleEditTruck() : handleAddTruck();
               }}>
