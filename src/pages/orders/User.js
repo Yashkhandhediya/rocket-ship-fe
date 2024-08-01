@@ -71,6 +71,7 @@ const User = () => {
   const handleOrder = (row) => {
     const id = row?.original?.id;
     temp_user_id = row?.original?.id;
+    localStorage.setItem('temp_user_id', temp_user_id);
     const data = {
       id: id,
       flag: true,

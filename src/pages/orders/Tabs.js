@@ -25,7 +25,7 @@ const Tabs = ({ tabs, tabClassNames, activeOrderTab, setOrderActiveTab, onTabCha
   const [loading, setLoading] = useState(false);
 
   const tabID = tabs.find((_, i) => i === activeOrderTab);
-  console.log('lllllllllllkl', tabID);
+  console.log('lllllllllllkl', tabID, data);
 
   // Handler function to update the state when the selected value changes
   const handleChange = (event) => {
@@ -40,9 +40,15 @@ const Tabs = ({ tabs, tabClassNames, activeOrderTab, setOrderActiveTab, onTabCha
     setPage((prev) => (prev <= 1 ? prev : prev - 1));
   };
 
+  const id = JSON.parse(localStorage.getItem('temp_user_id'));
+
   const fetchOrdersData = async (tid) => {
     const user_id = is_company == 1 ? id_company : id_user;
-    const show_user_id = temp_user_id != undefined ? temp_user_id : user_id;
+    // const show_user_id = temp_user_id != undefined ? temp_user_id : user_id;
+    const show_user_id = id != undefined ? id : user_id;
+
+    console.log(temp_user_id, show_user_id, user_id);
+
     try {
       setLoading(true);
       const response = await axios.get(

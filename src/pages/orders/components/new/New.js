@@ -43,7 +43,7 @@ export const New = ({ data, isLoading }) => {
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
-
+  console.log('data', data);
   // const user_id = is_company == 1 ? id_company : id_user;
 
   // const [itemsPerPage, setItemsPerPage] = useState(15);
@@ -249,7 +249,9 @@ export const New = ({ data, isLoading }) => {
             <div className="flex flex-col gap-2 text-left text-xs">
               <div className="pb-0.5">
                 <Link
-                  to={generatePath(`/track-order/:orderId`, { orderId: row?.original?.id || 1 }) + `?status=new` }
+                  to={
+                    generatePath(`/track-order/:orderId`, { orderId: row?.original?.id || 1 }) + `?status=new`
+                  }
                   className="border-b-2 border-b-orange-600 text-orange-600">
                   {row?.original?.id}
                 </Link>
