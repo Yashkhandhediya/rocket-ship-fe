@@ -55,7 +55,8 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
     try {
       const response = await axios.post(`${BACKEND_URL}/trucktype/create_truck_type/`, {
         ...truckData,
-        created_by: company_id,headers:headers
+        created_by: company_id,
+        truck_type: truckData.truck_type === 'Truck' ? typeTruck : truckData.truck_type,
       });
       setTruckData({
         truck_type: 'Select Type',
@@ -93,7 +94,8 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
     try {
       const response = await axios.put(`${BACKEND_URL}/trucktype/update_truck_type/?id=${editData.id}`, {
         ...truckData,
-      },{headers:headers});
+        truck_type: truckData.truck_type === 'Truck' ? typeTruck : truckData.truck_type,
+      });
       setTruckData({
         truck_type: 'Select Type',
         capacity_type: '',
@@ -147,6 +149,25 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
             />
             {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_type}</p>}
           </div>
+          {truckData.truck_type === 'Truck' && (
+            <div className="mb-2 ">
+              <label htmlFor="" className="block text-[12px] font-semibold">
+                Type <span className="text-red-500">*</span>
+              </label>
+              <CustomMultiSelect
+                isMulti={false}
+                options={typeTrucks}
+                selected={typeTruck}
+                closeMenuOnSelect={true}
+                placeholder={typeTruck}
+                hideSelectedOptions={false}
+                onChange={(value) => {
+                  setTypeTruck(value);
+                }}
+              />
+              {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_type}</p>}
+            </div>
+          )}
 
           <div className="mb-2 ">
             <label htmlFor="truck_capacity" className="block text-[12px] font-medium">
@@ -186,15 +207,15 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
               onChange={(e) => setTruckData({ ...truckData, truck_number: e.target.value })}
             />
             {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_number}</p>}
-          </div>
+          </div> */}
           <div className="mb-4">
             <label htmlFor="truck_dimension" className="block text-[12px] font-medium ">
-              Truck Dimensions <span className="text-red-500">*</span>
+              Truck Tyres <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               id="truck_dimension"
-              className="mt-1 block w-full rounded-sm border border-gray-200 px-2.5 py-1 text-[12px] shadow-sm focus:border-blue-50 focus:outline-none"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
               value={truckData.truck_dimension}
               onChange={(e) => setTruckData({ ...truckData, truck_dimension: e.target.value })}
             />
