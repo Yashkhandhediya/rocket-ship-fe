@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CustomDataTable, Loader } from '../../common/components';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
@@ -36,7 +36,11 @@ const Adminkyc = () => {
   const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
   const user_data = query.length !== 0 ? searchData : userData;
   const [loading, setLoading] = useState(false);
+  const formRef = useRef(null);
 
+  const handleBlur = () => {
+    formRef.current.classList.remove('outline', 'outline-primary');
+  };
   useEffect(() => {
     fetchDataFromAPI();
   }, []);
@@ -104,6 +108,8 @@ const Adminkyc = () => {
   };
 
   const handleFocused = () => {
+    formRef.current.classList.add('outline', 'outline-primary');
+
     setIsFocused(true);
   };
 
@@ -160,7 +166,7 @@ const Adminkyc = () => {
           return (
             <div className="flex gap-2 text-left text-xs">
               <div
-                className="min-w-fit rounded bg-sky-500 px-2 py-1.5 text-white hover:bg-sky-700"
+                className="bg-primary hover:bg-primary min-w-fit rounded px-2 py-1.5 text-white"
                 onClick={() => {
                   setIdUser(row?.original?.id);
                   setShowPopup(true);
@@ -170,7 +176,7 @@ const Adminkyc = () => {
                 </Tooltip>
               </div>
               {/* <button
-                className="min-w-fit rounded bg-sky-500 px-2 py-1 text-white hover:bg-sky-700"
+                className="min-w-fit rounded bg-primary px-2 py-1 text-white hover:bg-primary"
                 onClick={() => navigate(`/trucks`, { state: row?.original })}
                 disabled={row?.original?.kyc_status_id === 2}>
                 <Tooltip
@@ -179,7 +185,7 @@ const Adminkyc = () => {
                 </Tooltip>
               </button>
               <button
-                className="min-w-fit rounded bg-sky-500 px-2 py-1.5 text-white hover:bg-sky-700"
+                className="min-w-fit rounded bg-primary px-2 py-1.5 text-white hover:bg-primary"
                 onClick={() => navigate(`/materials`, { state: row?.original })}
                 disabled={row?.original?.kyc_status_id === 2}>
                 <Tooltip
@@ -190,7 +196,7 @@ const Adminkyc = () => {
                 </Tooltip>
               </button>
               <button
-                className="min-w-fit rounded bg-sky-500 px-2 py-1.5 text-white hover:bg-sky-700"
+                className="min-w-fit rounded bg-primary px-2 py-1.5 text-white hover:bg-primary"
                 onClick={() => navigate(`/address`, { state: row?.original })}
                 disabled={row?.original?.kyc_status_id === 2}>
                 <Tooltip
@@ -199,7 +205,7 @@ const Adminkyc = () => {
                 </Tooltip>
               </button> */}
               <button
-                className="min-w-fit rounded bg-sky-500 px-2 py-1.5 text-white hover:bg-sky-700"
+                className="bg-primary hover:bg-primary min-w-fit rounded px-2 py-1.5 text-white"
                 onClick={() => navigate(`/user/${row?.original?.id}`, { state: row?.original?.name })}
                 disabled={row?.original?.kyc_status_id === 2}>
                 <Tooltip
@@ -222,7 +228,9 @@ const Adminkyc = () => {
     <>
       <PageWithSidebar>
         <div className="relative my-4 w-1/4 px-4">
-          <form className=" flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
+          <form
+            ref={formRef}
+            className=" flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
             <FontAwesomeIcon icon={faSearch} className=" text-gray-500" />
             <input
               type="text"
@@ -230,6 +238,7 @@ const Adminkyc = () => {
               value={query}
               onChange={(e) => handleSearch(e)}
               onFocus={handleFocused}
+              onBlur={handleBlur}
               className="text-semibold m-0 w-full border-transparent p-0 text-[12px] placeholder-gray-400 focus:border-transparent focus:outline-none focus:ring-0"
             />
             {isFocused && (

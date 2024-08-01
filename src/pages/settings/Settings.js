@@ -468,7 +468,7 @@ const Settings = () => {
                   <Link
                     key={index}
                     to={item.link}
-                    className="ml-[14%] flex w-4/5 flex-row items-center justify-between text-[12px] text-sky-500">
+                    className="text-primary ml-[14%] flex w-4/5 flex-row items-center justify-between text-[12px]">
                     {item.title}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

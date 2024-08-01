@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { info } from './Indent';
 import axios from 'axios';
@@ -54,6 +54,11 @@ const Allindent = () => {
   const [query, setQuery] = useState('');
   const filtered_info = query.length !== 0 ? searchData : filteredInfo;
   const [actionAlreadyDone, setActionAlreadyDone] = useState(false);
+  const formRef = useRef(null);
+
+  const handleBlur = () => {
+    formRef.current.classList.remove('outline', 'outline-primary');
+  };
 
   console.log('IDFFFFFF', selectedTab);
 
@@ -345,6 +350,7 @@ const Allindent = () => {
   };
 
   const handleFocused = () => {
+    formRef.current.classList.add('outline', 'outline-primary');
     setIsFocused(true);
   };
 
@@ -402,7 +408,9 @@ const Allindent = () => {
         />
       </div>
       <div className="relative my-4 w-1/4 px-4">
-        <form className=" flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
+        <form
+          ref={formRef}
+          className=" flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
           <FontAwesomeIcon icon={faSearch} className=" text-gray-500" />
           <input
             type="text"
@@ -410,6 +418,7 @@ const Allindent = () => {
             value={query}
             onChange={(e) => handleSearch(e)}
             onFocus={handleFocused}
+            onBlur={handleBlur}
             className="text-semibold m-0 w-full border-transparent p-0 text-[12px] placeholder-gray-400 focus:border-transparent focus:outline-none focus:ring-0"
           />
           {isFocused && (
@@ -439,7 +448,7 @@ const Allindent = () => {
               <div className="mx-3 mt-5 w-full rounded-lg bg-white p-4 shadow">
                 <div className="mb-2 flex w-full flex-row items-end justify-between border-b border-gray-200 pb-2">
                   <div className="flex w-full flex-row">
-                    <div className="w-[60%] text-sm font-semibold text-sky-500">
+                    <div className="w-[60%] text-sm font-semibold text-primary">
                       {data.id} | {data?.coordinator_name || ''} | {data?.coordinator_mobile || ''}
                     </div>
                     <button
@@ -448,7 +457,7 @@ const Allindent = () => {
                         handleModify(data.id);
                       }}>
                       <svg
-                        className="h-5 w-5 text-sky-500"
+                        className="h-5 w-5 text-primary"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -461,7 +470,7 @@ const Allindent = () => {
                       </svg>
                     </button>
                   </div>
-                  <div className="w-[40%] text-xs text-sky-500">
+                  <div className="w-[40%] text-xs text-primary">
                     {formatTimestamp(data?.created_date)}
                     {/* {Math.ceil((new Date(data.pickupDate) - new Date() )/(1000 * 60 * 60).toPrecision(1))}h */}
                   </div>
@@ -486,34 +495,34 @@ const Allindent = () => {
                 </div>
                 <div className="grid grid-cols-3 divide-x-2">
                   <div className="w-2/10 -ml-2 md:w-24">
-                    <p className="mb-1 ml-1 w-full text-xs font-semibold text-purple-400 md:w-1/3 lg:text-xs">
+                    <p className="mb-1 ml-1 w-full text-xs font-semibold text-primary md:w-1/3 lg:text-xs">
                       TARGET PRICE
                     </p>
                     <p className="ml-1 overflow-hidden overflow-ellipsis whitespace-nowrap text-sm text-gray-500">{`₹${data.customer_price}`}</p>
                   </div>
                   <div className="w-2/10 -ml-14">
-                    <p className="mb-1 ml-1 text-xs font-semibold text-purple-400">TRUCK DETAILS</p>
+                    <p className="mb-1 ml-1 text-xs font-semibold text-primary">TRUCK DETAILS</p>
                     <div className="px-2 text-[13px] text-zinc-500">
                       <p className="font-bold">
-                        Type: <span className="font-normal">{data.truck_details.truck_type}</span>
+                        Type: <span className="font-normal">{data?.truck_details.truck_type}</span>
                       </p>
-                      <p className="font-bold">
-                        Number: <span className="font-normal">{data.truck_details.truck_number}</span>
-                      </p>
+                      {/* <p className="font-bold">
+                        Number: <span className="font-normal">{data?.truck_details.truck_number}</span>
+                      </p> */}
                       <p className="font-bold">
                         Vehical Capacity:
                         <span className="font-normal">
-                          {data.truck_details.capacity} {data.truck_details.capacity_type}
+                          {data.truck_details.capacity} {data?.truck_details.capacity_type}
                         </span>
                       </p>
                       <p className="font-bold">
-                        Dimensions: <span className="font-normal">{data.truck_details.truck_dimension}</span>
+                        Tyres: <span className="font-normal">{data?.truck_details.truck_dimension}</span>
                       </p>
                     </div>
                   </div>
                   <div className="w-6/10">
-                    <p className=" mb-1 ml-1 w-full text-xs font-semibold text-purple-400">MATERIAL TYPE</p>
-                    <p className="ml-1 text-sm text-gray-500">{data.material_details.material_type}</p>
+                    <p className=" mb-1 ml-1 w-full text-xs font-semibold text-primary">MATERIAL TYPE</p>
+                    <p className="ml-1 text-sm text-gray-500">{data?.material_details.material_type}</p>
                   </div>
                 </div>
                 <div className="-ml-4 -mr-4 flex items-end justify-between border-t border-gray-200">
@@ -582,7 +591,7 @@ const Allindent = () => {
                             type="text"
                             value={price[data.id] || ''}
                             onChange={(e) => handlePriceChange(data.id, e.target.value)}
-                            className="ml-4 mt-2 h-8 w-24 rounded-md border border-gray-300 focus:border-blue-100 focus:outline-none focus:ring"
+                            className="ml-4 mt-2 h-8 w-24 rounded-md border border-gray-300 focus:border-primary focus:outline-none focus:ring"
                           />
                         ) : (
                           <input
@@ -590,7 +599,7 @@ const Allindent = () => {
                             value={`₹${data.actual_price ?? 0}`}
                             disabled
                             onChange={(e) => handlePriceChange(data.id, e.target.value)}
-                            className="ml-4 mt-2 h-8 w-24 rounded-md border border-gray-300 focus:border-blue-100 focus:outline-none focus:ring"
+                            className="ml-4 mt-2 h-8 w-24 rounded-md border border-gray-300 focus:border-primary focus:outline-none focus:ring"
                           />
                         )}
                       </div>
@@ -615,7 +624,7 @@ const Allindent = () => {
                         {data.actual_price != null && (
                           <input
                             type="text"
-                            className="ml-2 mt-2 h-8 w-36 rounded-md border border-gray-300 bg-gray-100 focus:border-blue-100 focus:outline-none focus:ring "
+                            className="ml-2 mt-2 h-8 w-36 rounded-md border border-gray-300 bg-gray-100 focus:border-primary focus:outline-none focus:ring "
                             disabled
                             value={`₹${data.actual_price ?? 0}`}
                           />
@@ -627,7 +636,7 @@ const Allindent = () => {
                     <div className="mt-6 flex flex-row">
                       {checkConfirmRejectButtonShowCondition(data) && (
                         <button
-                          className="mr-2 rounded-lg bg-blue-500 px-3  py-2 text-xs font-semibold text-white hover:bg-blue-600"
+                          className="mr-2 rounded-lg bg-sky-500 px-3  py-2 text-xs font-semibold text-white hover:bg-sky-600"
                           onClick={() => {
                             handleConfirmation(data.id, 2);
                           }}>
@@ -653,7 +662,7 @@ const Allindent = () => {
                       <p className="mb-4 text-lg font-semibold"> Do you want to Add offline price?</p>
                       <div className="flex justify-end">
                         <button
-                          className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
+                          className="mr-2 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-white hover:bg-primary"
                           onClick={() => {
                             setShowOfflineBtn(true);
                             setShowOfflinePricePrompt(false);
@@ -684,7 +693,7 @@ const Allindent = () => {
                           type="text"
                           value={rcslPrice[data.id] || ''}
                           onChange={(e) => handleRcslPriceChange(data.id, e.target.value)}
-                          className="ml-4 mt-2 h-8 w-36 rounded-md border border-gray-300 focus:border-blue-100 focus:outline-none"
+                          className="ml-4 mt-2 h-8 w-36 rounded-md border border-gray-300 focus:border-primary focus:outline-none"
                         />
                       ) : (
                         <input
@@ -692,7 +701,7 @@ const Allindent = () => {
                           value={`₹${data.counter_price ?? 0}`}
                           disabled
                           onChange={(e) => handleRcslPriceChange(data.id, e.target.value)}
-                          className="ml-4 mt-2 h-8 w-36 cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 focus:border-blue-100 focus:outline-none focus:ring"
+                          className="ml-4 mt-2 h-8 w-36 cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 focus:border-primary focus:outline-none focus:ring"
                         />
                       )}
                     </div>
@@ -723,7 +732,7 @@ const Allindent = () => {
                             <>
                               {showBtn && (
                                 <button
-                                  className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
+                                  className="mr-2 rounded-lg bg-sky-500 px-3 py-2 text-xs font-semibold text-white hover:bg-sky-600"
                                   onClick={() => {
                                     // handleConfirmation(data.id, 2);
                                     handleConfirmClick(data.id);
@@ -757,7 +766,7 @@ const Allindent = () => {
                           type="text"
                           value={offlinePrice || ''}
                           onChange={(e) => setOfflinePrice(e.target.value)}
-                          className="ml-4 mt-2 h-8 w-36 rounded-md border border-gray-300 focus:border-blue-100 focus:outline-none"
+                          className="ml-4 mt-2 h-8 w-36 rounded-md border border-gray-300 focus:border-primary focus:outline-none"
                         />
                       ) : (
                         <input
@@ -765,7 +774,7 @@ const Allindent = () => {
                           value={`₹${data.offline_price ?? 0}`}
                           disabled
                           // onChange={(e) => handleRcslPriceChange(data.id, e.target.value)}
-                          className="ml-4 mt-2 h-8 w-36 cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 focus:border-blue-100 focus:outline-none focus:ring"
+                          className="ml-4 mt-2 h-8 w-36 cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 focus:border-primary focus:outline-none focus:ring"
                         />
                       )}
                     </div>
@@ -779,7 +788,7 @@ const Allindent = () => {
                             <>
                               {
                                 <button
-                                  className="mr-2 rounded-lg bg-blue-500 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-600"
+                                  className="mr-2 rounded-lg bg-sky-500 px-3 py-2 text-xs font-semibold text-white hover:bg-sky-500"
                                   onClick={() => {
                                     handleConfirmation(data.id, 2);
                                   }}>
@@ -817,7 +826,7 @@ const Allindent = () => {
                         <option value="Indent Closed">Indent Closed</option>
                       </select>
                       <button
-                        className="ml-2 mr-2 rounded-md border bg-blue-500 p-2 text-sm text-white"
+                        className="ml-2 mr-2 rounded-md border bg-primary p-2 text-sm text-white"
                         onClick={() => handleSubmitReason(data.id, 3)}>
                         Submit
                       </button>

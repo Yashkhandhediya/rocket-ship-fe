@@ -102,7 +102,7 @@ const Companies = () => {
                 {'Show Users'}
               </Link> */}
               <button
-                className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
+                className="bg-primary hover:bg-primary min-w-fit rounded px-4 py-1.5 text-white"
                 onClick={() => navigate(`/user/${row?.original?.id}`, { state: row?.original?.name })}>
                 {'Show Users'}
               </button>

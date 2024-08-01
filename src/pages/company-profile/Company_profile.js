@@ -56,7 +56,7 @@ const Company_profile = () => {
         setLoading(false);
         console.log('Info', res.data);
         toast('Company Info Saved', { type: 'success' });
-        window.location.reload()
+        window.location.reload();
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
@@ -116,7 +116,7 @@ const Company_profile = () => {
       </div>
       <div className="mx-2 w-full bg-[#EDEDED] px-6 pb-16">
         <div className="pb-5 pt-2 font-bold text-[#656565]">
-          <Link to={'/settings'} className="font-semibold text-sky-500">
+          <Link to={'/settings'} className="text-primary font-semibold">
             Settings
           </Link>{' '}
           &gt; Company &gt; Company Profile
@@ -145,7 +145,7 @@ const Company_profile = () => {
                 type="text"
                 id="company_name"
                 name="company_name"
-                className="h-7 w-full rounded-sm border border-[#b3b3b3] bg-white p-2 text-[12px] font-normal focus:border-sky-400 focus:ring-0"
+                className="focus:border-primary h-7 w-full rounded-sm border border-[#b3b3b3] bg-white p-2 text-[12px] font-normal focus:ring-0"
                 value={companyDetails.companyName}
                 onChange={(e) => {
                   setCompanyDetails({ ...companyDetails, companyName: e.target.value });
@@ -159,7 +159,7 @@ const Company_profile = () => {
                 placeholder="https://www.example.com"
                 id="website"
                 name="website"
-                className="h-7 w-full rounded-sm border border-[#b3b3b3] bg-white p-2 text-[12px] font-normal focus:border-sky-400 focus:ring-0"
+                className="focus:border-primary h-7 w-full rounded-sm border border-[#b3b3b3] bg-white p-2 text-[12px] font-normal focus:ring-0"
                 value={companyDetails.website}
                 onChange={(e) => {
                   setCompanyDetails({ ...companyDetails, website: e.target.value });
@@ -185,11 +185,11 @@ const Company_profile = () => {
           </div>
           <div>
             <button
-              className="flex h-8 w-28 items-center gap-4 rounded bg-sky-500 text-white"
+              className="bg-primary flex h-8 w-28 items-center gap-4 rounded text-white"
               onClick={() => {
                 handleSumbit();
               }}>
-              <div className="flex h-8 w-2/5 items-center justify-center rounded-l bg-sky-600">
+              <div className="bg-dark flex h-8 w-2/5 items-center justify-center rounded-l">
                 <FontAwesomeIcon icon={faSave} />
               </div>
               <div>Save</div>

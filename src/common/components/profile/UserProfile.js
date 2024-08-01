@@ -142,7 +142,7 @@ const UserProfile = () => {
             )}
 
             {!editFirstName && (
-              <button onClick={handleFirstNameClick} className="ml-4 text-sky-600 hover:text-gray-600">
+              <button onClick={handleFirstNameClick} className="text-primary ml-4 hover:text-gray-600">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4"
@@ -169,7 +169,7 @@ const UserProfile = () => {
               <p className="text-sm text-gray-600">{data?.last_name || ''}</p>
             )}
             {!editLastName && (
-              <button onClick={handleLastNameClick} className="ml-4 text-sky-600 hover:text-gray-600">
+              <button onClick={handleLastNameClick} className="text-primary ml-4 hover:text-gray-600">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4"
@@ -201,7 +201,7 @@ const UserProfile = () => {
         <div className="mt-4 flex flex-row">
           <p className="ml-36 w-[12%] text-sm font-semibold">Plan :</p>
           <p className="ml-48 text-sm text-gray-600">Lite Plan </p>
-          <Link className="ml-4 text-sm text-sky-600">(Change Plan?)</Link>
+          <Link className="text-primary ml-4 text-sm">(Change Plan?)</Link>
         </div>
         <div className="mt-4 flex flex-row">
           <p className="ml-36 w-[12%] text-sm font-semibold">Subscription Status :</p>
@@ -235,7 +235,7 @@ const UserProfile = () => {
         {(editFirstName || editLastName) && (
           <div className="ml-60 mt-4">
             <button
-              className="mr-2 rounded-sm bg-blue-600 p-2 text-sm text-white"
+              className="bg-primary mr-2 rounded-sm p-2 text-sm text-white"
               onClick={() => handleUpdate()}>
               Update
             </button>

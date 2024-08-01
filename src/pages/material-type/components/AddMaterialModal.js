@@ -96,7 +96,7 @@ function AddMaterialModal({ handleClose, getMaterialData, state, editData, handl
               type="text"
               id="truck_number"
               placeholder="Enter Material Name"
-              className="mt-1 block w-full rounded-sm border border-gray-200 px-2.5 py-1 text-[12px] shadow-sm focus:border-blue-50 focus:outline-none"
+              className="focus:border-primary focus:ring-primary mt-1 block w-full rounded-sm border border-gray-200 px-2.5 py-1 text-[12px] shadow-sm focus:outline-none"
               value={material_type}
               onChange={(e) => setMaterial_type(e.target.value)}
             />
@@ -111,7 +111,7 @@ function AddMaterialModal({ handleClose, getMaterialData, state, editData, handl
               Cancel
             </button>
             <button
-              className="w-1/2 rounded-lg bg-sky-500 px-4 py-2 text-white"
+              className="bg-primary w-1/2 rounded-lg px-4 py-2 text-white"
               onClick={() => {
                 editData ? handleEditMaterial() : handleAddMaterial();
               }}>

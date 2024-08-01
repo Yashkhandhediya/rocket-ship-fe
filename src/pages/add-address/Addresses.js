@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { GrEdit } from 'react-icons/gr';
@@ -42,6 +42,11 @@ function Addresses() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const address_data = query.length !== 0 ? searchData : addressData;
+  const formRef = useRef(null);
+
+  const handleBlur = () => {
+    formRef.current.classList.remove('outline', 'outline-primary');
+  };
 
   const handleNextPage = () => {
     setPage((prev) => prev + 1);
@@ -56,6 +61,7 @@ function Addresses() {
   };
 
   const handleFocused = () => {
+    formRef.current.classList.add('outline', 'outline-primary');
     setIsFocused(true);
   };
 
@@ -139,7 +145,7 @@ function Addresses() {
           return (
             <div className="flex gap-2 text-left text-xs">
               <div
-                className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
+                className="bg-primary min-w-fit rounded px-4 py-1.5 text-white hover:bg-sky-700"
                 onClick={() => {
                   handleKYC(row?.original?.id, row?.original?.name);
                 }}>
@@ -282,7 +288,9 @@ function Addresses() {
           </p>
           <div className="flex items-center justify-between px-4">
             <div className="relative w-1/4">
-              <form className="my-4 flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
+              <form
+                ref={formRef}
+                className="my-4 flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
                 <FontAwesomeIcon icon={faSearch} className=" text-gray-500" />
                 <input
                   type="text"
@@ -290,6 +298,7 @@ function Addresses() {
                   value={query}
                   onChange={(e) => handleSearch(e)}
                   onFocus={handleFocused}
+                  onBlur={handleBlur}
                   className="text-semibold m-0 w-full border-transparent p-0 text-[12px] placeholder-gray-400 focus:border-transparent focus:outline-none focus:ring-0"
                 />
                 {isFocused && (
@@ -304,13 +313,13 @@ function Addresses() {
             <div className="flex justify-end gap-5">
               {is_admin === '2' && (
                 <button
-                  className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+                  className="bg-primary flex items-center gap-3 rounded px-4 py-1 text-white shadow"
                   onClick={() => navigate(`/adminkyc`)}>
                   Back
                 </button>
               )}
               <button
-                className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+                className="bg-primary flex items-center gap-3 rounded px-4 py-1 text-white shadow"
                 onClick={handleShowAddressModal}>
                 <span className="text-2xl">+</span>
                 Add Address
@@ -384,7 +393,7 @@ function Addresses() {
                   onClick={handlePrevPage}
                   disabled={page === 1}>{`<`}</button>
                 <span className={`rounded px-2 py-0 text-sm ${page === 1 && 'hidden'}`}>{page - 1}</span>
-                <button className="rounded bg-sky-500 px-2 py-1 text-sm text-white">{page}</button>
+                <button className="bg-primary rounded px-2 py-1 text-sm text-white">{page}</button>
                 <span className=" rounded px-2 py-0 text-sm">{page + 1}</span>
                 <span className={`rounded px-2 py-0 text-sm ${page !== 1 && 'hidden'}`}>{page + 2}</span>
                 <button
@@ -401,7 +410,7 @@ function Addresses() {
             <p>Are you sure you want to remove this Address?</p>
             <div className="flex w-full justify-center gap-4">
               <button
-                className="w-1/2 rounded-lg bg-sky-500 px-4 py-1 text-white"
+                className="bg-primary w-1/2 rounded-lg px-4 py-1 text-white"
                 onClick={() => handleDelete(deleteId)}>
                 Yes
               </button>

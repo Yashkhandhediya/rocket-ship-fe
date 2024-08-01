@@ -6,7 +6,6 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../utils/env.config';
 import { toast } from 'react-toastify';
 import RechargeModal from '../../../pages/home/components/rechareModal/RechargeModal';
-import { ACCESS_TOKEN } from '../../utils/config';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { MdLockReset } from 'react-icons/md';
@@ -281,7 +280,12 @@ const Navbar = () => {
           </button>
         )}
       </div> */}
-      <p className="flex w-1/2 items-center justify-end text-3xl text-sky-500">Welcome to Book Truck</p>
+      <div className=" flex w-1/2 items-center justify-end">
+        {/* <div className="relative h-14 w-full overflow-hidden"> */}
+        <img src={logo} className=" block w-40" />
+        {/* </div> */}
+        <p className=" text-3xl text-primary">Welcome to Book Truck</p>
+      </div>
 
       <div className=" flex w-[40%] flex-row items-center  justify-end ">
         {/* <FaRegComments className="rounded-full bg-blue-50 p-2 text-3xl" />
@@ -334,7 +338,7 @@ const Navbar = () => {
             <FontAwesomeIcon icon={faUserCircle} className="text-3xl" />
             <div className="flex flex-col">
               <h1 className="text-left text-base">{sessionStorage.getItem('user_name')}</h1>
-              <p className="flex items-center gap-1 text-sky-500">
+              <p className="flex items-center gap-1 text-primary">
                 <span>Edit Profile</span>{' '}
                 {isDropdownOpen ? (
                   <IoIosArrowUp className="self-center" />

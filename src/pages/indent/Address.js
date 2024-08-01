@@ -85,7 +85,7 @@ const Address = ({ isVisible, onClose }) => {
                 type="text"
                 id="area"
                 name="area"
-                className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-1"
                 placeholder="Enter your area"
                 value={address.area}
                 onChange={handleChange}
@@ -99,7 +99,7 @@ const Address = ({ isVisible, onClose }) => {
                 type="text"
                 id="pincode"
                 name="pincode"
-                className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-1"
                 placeholder="Enter your pincode"
                 value={address.pincode}
                 onChange={handleChange}
@@ -113,7 +113,7 @@ const Address = ({ isVisible, onClose }) => {
                 type="text"
                 id="city"
                 name="city"
-                className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-1"
                 placeholder="Enter your city"
                 value={address.city}
                 onChange={handleChange}
@@ -127,7 +127,7 @@ const Address = ({ isVisible, onClose }) => {
                 type="text"
                 id="state"
                 name="state"
-                className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-1"
                 placeholder="Enter your state"
                 value={address.state}
                 onChange={handleChange}
@@ -141,7 +141,7 @@ const Address = ({ isVisible, onClose }) => {
                 type="text"
                 id="country"
                 name="country"
-                className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-1"
                 placeholder="Enter your country"
                 value={address.country}
                 onChange={handleChange}
@@ -155,7 +155,7 @@ const Address = ({ isVisible, onClose }) => {
               </button>
               <button
                 onClick={handleSubmit}
-                className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+                className="bg-primary hover:bg-primary rounded-md px-4 py-2 text-sm font-medium text-white">
                 Save
               </button>
             </div>

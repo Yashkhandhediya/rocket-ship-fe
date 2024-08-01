@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React from 'react';
+import React, { useRef } from 'react';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useState, useEffect } from 'react';
@@ -34,6 +34,11 @@ const User = () => {
     'Content-Type': 'application/json',
     'Authorization': ACCESS_TOKEN};
   const user_data = query.length !== 0 ? searchData : userData;
+  const formRef = useRef(null);
+
+  const handleBlur = () => {
+    formRef.current.classList.remove('outline', 'outline-primary');
+  };
 
   const { state } = useLocation();
 
@@ -66,6 +71,7 @@ const User = () => {
   };
 
   const handleFocused = () => {
+    formRef.current.classList.add('outline', 'outline-primary');
     setIsFocused(true);
   };
 
@@ -244,7 +250,7 @@ const User = () => {
               {
                 <button
                   id={row?.original?.id}
-                  className="min-w-fit rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
+                  className="bg-primary hover:bg-primary min-w-fit rounded px-4 py-1.5 text-white"
                   onClick={() => handleIndent(row)}>
                   {'Indent'}
                 </button>
@@ -252,7 +258,7 @@ const User = () => {
               {row?.original?.kyc_status_id != 3 && (
                 <button
                   id={row?.original?.id}
-                  className="min-w-fit rounded bg-sky-400 px-4 py-1.5 text-white hover:bg-sky-600"
+                  className="bg-primary hover:bg-primary min-w-fit rounded px-4 py-1.5 text-white"
                   onClick={() => handleKYC(row)}>
                   {'KYC'}
                 </button>
@@ -289,13 +295,15 @@ const User = () => {
           {is_admin === '2' && (
             <Link
               to={`/adminkyc`}
-              className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow">
+              className="bg-primary flex items-center gap-3 rounded px-4 py-1 text-white shadow">
               Back
             </Link>
           )}
         </div>
         <div className="relative my-4 w-1/4 px-4">
-          <form className=" flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
+          <form
+            ref={formRef}
+            className=" flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
             <FontAwesomeIcon icon={faSearch} className=" text-gray-500" />
             <input
               type="text"
@@ -303,6 +311,7 @@ const User = () => {
               value={query}
               onChange={(e) => handleSearch(e)}
               onFocus={handleFocused}
+              onBlur={handleBlur}
               className="text-semibold m-0 w-full border-transparent p-0 text-[12px] placeholder-gray-400 focus:border-transparent focus:outline-none focus:ring-0"
             />
             {isFocused && (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { GrEdit } from 'react-icons/gr';
@@ -46,7 +46,11 @@ function TruckLists() {
   const [searchData, setSearchData] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
   const [query, setQuery] = useState('');
+  const formRef = useRef(null);
 
+  const handleBlur = () => {
+    formRef.current.classList.remove('outline', 'outline-primary');
+  };
   // const companyID = is_admin == 2 ? state.id : company_id;
   const truck_data = query.length !== 0 ? searchData : truckData;
   const handleNextPage = () => {
@@ -126,7 +130,7 @@ function TruckLists() {
         cell: ({ row }) => (
           <div className="flex gap-2 text-left text-xs">
             <div
-              className="min-w-fit cursor-pointer rounded bg-sky-500 px-4 py-1.5 text-white hover:bg-sky-700"
+              className="min-w-fit cursor-pointer rounded bg-primary px-4 py-1.5 text-white hover:bg-sky-700"
               onClick={() => handleKYC(row?.original?.id, row?.original?.name)}>
               Show Details
             </div>
@@ -145,6 +149,7 @@ function TruckLists() {
   };
 
   const handleFocused = () => {
+    formRef.current.classList.add('outline', 'outline-primary');
     setIsFocused(true);
   };
 
@@ -283,7 +288,9 @@ function TruckLists() {
           </p>
           <div className="flex items-center justify-between gap-5 px-4">
             <div className="relative w-1/4">
-              <form className="my-4 flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
+              <form
+                ref={formRef}
+                className="my-4 flex items-center gap-2 rounded-lg border bg-white px-3 py-1 text-[12px]">
                 <FontAwesomeIcon icon={faSearch} className=" text-gray-500" />
                 <input
                   type="text"
@@ -291,6 +298,7 @@ function TruckLists() {
                   value={query}
                   onChange={(e) => handleSearch(e)}
                   onFocus={handleFocused}
+                  onBlur={handleBlur}
                   className="text-semibold m-0 w-full border-transparent p-0 text-[12px] placeholder-gray-400 focus:border-transparent focus:outline-none focus:ring-0"
                 />
                 {isFocused && (
@@ -305,13 +313,13 @@ function TruckLists() {
             <div className="flex justify-end gap-5">
               {is_admin === '2' && (
                 <button
-                  className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+                  className="flex items-center gap-3 rounded bg-primary px-4 py-1 text-white shadow"
                   onClick={() => navigate(`/adminkyc`)}>
                   Back
                 </button>
               )}
               <button
-                className="flex items-center gap-3 rounded bg-sky-500 px-4 py-1 text-white shadow"
+                className="flex items-center gap-3 rounded bg-primary px-4 py-1 text-white shadow"
                 onClick={handleShowAddTruckModal}>
                 <span className="text-2xl">+</span>
                 Add Truck
@@ -322,12 +330,12 @@ function TruckLists() {
             <table className=" w-full text-[12px]">
               <thead className="border bg-white">
                 <tr>
-                  <th className="w-16 border px-4 py-2 text-center">Sr. No</th>{' '}
-                  <th className="w-20 border px-4 py-2 text-center">Truck Type</th>{' '}
+                  <th className="w-16 border px-4 py-2 text-center">Sr. No</th>
+                  <th className="w-20 border px-4 py-2 text-center">Truck Type</th>
                   <th className="w-20 border  px-4 py-2 text-center">Truck Image</th>
                   <th className="w-24  border px-4 py-2 text-center">Vehical Capacity</th>
-                  <th className="w-28 border  px-4 py-2 text-center">Truck Number</th>
-                  <th className="w-28 border  px-4 py-2 text-center">Truck Dimensions</th>
+                  {/* <th className="w-28 border  px-4 py-2 text-center">Truck Number</th> */}
+                  <th className="w-28 border  px-4 py-2 text-center">Truck Tyres</th>
                   <th className="w-24 border  px-4 py-2 text-center">Actions</th>
                 </tr>
               </thead>
@@ -340,7 +348,10 @@ function TruckLists() {
                         {data.truck_type ? data.truck_type : '-'}
                       </td>
                       <td className=" border px-4 py-4 text-center">
-                        {data.truck_type === 'Truck' && <img src={truck} className="inline-block h-10" />}
+                        {data.truck_type !== 'LCV' &&
+                          data.truck_type !== 'Container' &&
+                          data.truck_type !== 'Trailer' &&
+                          data.truck_type !== 'Hyva' && <img src={truck} className="inline-block h-10" />}
                         {data.truck_type === 'LCV' && <img src={lcvTruck} className="inline-block h-10" />}
                         {data.truck_type === 'Container' && (
                           <img src={container} className="inline-block h-10" />
@@ -351,9 +362,9 @@ function TruckLists() {
                       <td className=" border px-2 py-4 text-center">
                         {data.capacity ? data.capacity : '-'} {data.capacity_type ? data.capacity_type : ''}
                       </td>
-                      <td className=" border px-4 py-4 text-center">
+                      {/* <td className=" border px-4 py-4 text-center">
                         {data.truck_number ? data.truck_number : '-'}
-                      </td>
+                      </td> */}
                       <td className=" border px-4 py-4 text-center">{data.truck_dimension}</td>
                       <td className=" border px-4 py-4 text-center">
                         <div className="flex items-center justify-center gap-4 text-2xl">
@@ -397,7 +408,7 @@ function TruckLists() {
                   }`}
                   onClick={handlePrevPage}
                   disabled={page === 1}>{`<`}</button>
-                <button className="rounded bg-sky-500 px-2 py-1 text-sm text-white">{page}</button>
+                <button className="rounded bg-primary px-2 py-1 text-sm text-white">{page}</button>
                 <span className=" rounded px-2 py-0 text-sm">{page + 1}</span>
                 <span className=" rounded px-2 py-0 text-sm">{page + 2}</span>
                 <button
@@ -414,7 +425,7 @@ function TruckLists() {
             <p>Are you sure you want to remove this truck?</p>
             <div className="flex w-full justify-center gap-4">
               <button
-                className="w-1/2 rounded-lg bg-sky-500 px-4 py-1 text-white"
+                className="w-1/2 rounded-lg bg-primary px-4 py-1 text-white"
                 onClick={() => handleDelete(deleteId)}>
                 Yes
               </button>

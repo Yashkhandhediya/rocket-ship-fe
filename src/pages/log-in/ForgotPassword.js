@@ -88,7 +88,7 @@ const ForgotPassword = () => {
       {loading && <Loader />}
       {!handlePopup && (
         <div className="mx-auto w-[62%] max-w-lg rounded-md bg-white p-8 shadow-md">
-          <button onClick={() => window.history.back()} className="mb-4 font-semibold text-sky-500">
+          <button onClick={() => window.history.back()} className="text-primary mb-4 font-semibold">
             {'< Back'}
           </button>
           <h2 className="mb-6 text-2xl font-bold">Forgot Your Password</h2>
@@ -109,7 +109,7 @@ const ForgotPassword = () => {
 
           <div>
             <button
-              className={`mb-6 mt-4 flex w-full flex-row items-center justify-center rounded-xl border border-none bg-sky-500 p-4 text-center text-base font-semibold text-white shadow-sm outline-none hover:bg-blue-800 ${
+              className={`bg-primary hover:bg-dark mb-6 mt-4 flex w-full flex-row items-center justify-center rounded-xl border border-none p-4 text-center text-base font-semibold text-white shadow-sm outline-none ${
                 !userInput.username || !isEmailValid(userInput.username)
                   ? 'cursor-not-allowed opacity-50'
                   : ''
@@ -122,7 +122,7 @@ const ForgotPassword = () => {
           <div className="text-center">
             <p className="text-sm">
               Remember the password?{' '}
-              <Link to={'/login'} className="text-decoration-none text-red-700">
+              <Link to={'/login'} className="text-decoration-none text-primary">
                 Login
               </Link>
             </p>

@@ -1,14 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { sidebarLinks } from './contants';
 import { useState } from 'react';
-import { logo, logo_main } from '../../images';
 import Modal from './Modal'; // Ensure the Modal component is correctly imported
 import axios from 'axios';
 import { BACKEND_URL } from '../../utils/env.config';
 import { toast } from 'react-toastify';
 import { RiMenuFold3Line2 } from 'react-icons/ri';
-import homeIcon from './icons/home_tbbv.png';
-import { ACCESS_TOKEN } from '../../utils/config';
 
 const Sidebar = () => {
   const [isSideBarOpen, setIsSideBarOpen] = useState(true);
@@ -23,7 +20,8 @@ const Sidebar = () => {
     'Content-Type': 'application/json',
     'Authorization': ACCESS_TOKEN};
   const handleAccordionToggle = (index) => {
-    setOpenAccordion((prev) => (prev === index ? 0 : index));
+    console.log('clicked toggle', index);
+    setOpenAccordion((prev) => (prev === index ? 1 : index));
   };
 
   const handleMouseLeave = () => {
@@ -108,9 +106,12 @@ const Sidebar = () => {
       className="group/sidebar hover:z-100 fixed left-0 top-0 z-50 h-full w-[70px] overflow-x-hidden overflow-y-hidden bg-white shadow transition-all duration-500 hover:w-[218px] hover:overflow-y-auto [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar]:w-1"
       onMouseLeave={handleMouseLeave}>
       <div className="z-100 h-18 flex w-full items-center justify-between border-b bg-white px-2 pb-4 pt-2">
-        <div className="h-14">
-          <img src={logo} className="h-14 pt-7 group-hover/sidebar:hidden" />
-          <img src={logo} className="hidden h-14 group-hover/sidebar:block" />
+        <div className="relative h-14 w-full overflow-hidden">
+          {/* <img src={logo} className="pt-3 group-hover/sidebar:hidden" />
+          <img
+            src={logo}
+            className="absolute inset-0 hidden h-full w-full object-cover group-hover/sidebar:inline-block"
+          /> */}
         </div>
       </div>
       {/* <hr className="my-4 border-[#c] text-[#0000001a] md:hidden" /> */}
@@ -121,10 +122,18 @@ const Sidebar = () => {
           )} */}
 
           <Link to={parseInt(is_admin) === 2 ? '/adminkyc' : '/book'}>
-            <div className={`flex items-center p-2`}>
-              <img src={homeIcon} className={`h-6 w-6 ${isSideBarOpen ? 'hidden' : ''}`} />
-              <img src={homeIcon} className={` h-6 w-6 ${isSideBarOpen ? 'block' : 'hidden'}`} />
-              <span className={`ml-3 truncate text-sm font-medium `}>HOME</span>
+            <div className={`flex items-center p-1`}>
+              <div className="h-9 w-9">
+                <img src={homeIcon} className={`h-full w-full object-cover group-hover/sidebar:hidden`} />
+                <img
+                  src={homeIcon}
+                  className={` hidden h-full  w-full object-cover group-hover/sidebar:block`}
+                />
+              </div>
+              <span
+                className={`ml-2 hidden truncate text-sm  font-bold font-medium group-hover/sidebar:block`}>
+                HOME
+              </span>
             </div>
           </Link>
         </div>

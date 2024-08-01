@@ -110,6 +110,7 @@ const CustomMultiSelect = ({
     if (state.isFocused) {
       return {
         background: '#B2D4FF',
+        // outline: '#af791f',
         color: 'inherit',
         ':active': {
           background: 'inherit',
@@ -150,6 +151,7 @@ const CustomMultiSelect = ({
         value={selected}
         hideSelectedOptions={hideSelectedOptions}
         menuPlacement={menuPlacement}
+        className="focus:outline-primary focus:ring-primary"
         onChange={handleSelectChange}
         // onChange={(select) => (isMulti ? onChange(select.map((obj) => obj.value)) : onChange(select.value))}
         components={{
