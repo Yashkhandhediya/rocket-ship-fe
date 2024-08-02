@@ -3,17 +3,19 @@ import React, { useState, useEffect } from 'react';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
 import { ACCESS_TOKEN } from '../../../../common/utils/config';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Completed_KYC = () => {
   const [userImg, setUserImg] = useState(null);
   const id_user = sessionStorage.getItem('user_id');
-  const headers = {             
+  const headers = {
     'Content-Type': 'application/json',
-    'Authorization': ACCESS_TOKEN};
-  const navigate = useNavigate();   
+    Authorization: ACCESS_TOKEN,
+  };
+  const navigate = useNavigate();
   const handleImage = () => {
     axios
-      .get(BACKEND_URL + `/kyc/?id=${id_user}&type=selfie`, { responseType: 'blob' },{headers:headers})
+      .get(BACKEND_URL + `/kyc/?id=${id_user}&type=selfie`, { responseType: 'blob' }, { headers: headers })
       .then((res) => {
         console.log('Recharge Responsee', res);
         const imgUrl = URL.createObjectURL(res.data);
@@ -25,11 +27,12 @@ const Completed_KYC = () => {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-          sessionStorage.clear()
+          toast.error('Session expired. Please login again.');
+          sessionStorage.clear();
           navigate('/login');
-      } else {
-        console.log('Error In Rechargeee', err);
-      }
+        } else {
+          console.log('Error In Rechargeee', err);
+        }
       });
   };
 

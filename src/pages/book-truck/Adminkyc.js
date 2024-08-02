@@ -33,7 +33,7 @@ const Adminkyc = () => {
   const [searchData, setSearchData] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
   const [query, setQuery] = useState('');
-  const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
+  const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
   const user_data = query.length !== 0 ? searchData : userData;
   const [loading, setLoading] = useState(false);
   const formRef = useRef(null);
@@ -50,7 +50,7 @@ const Adminkyc = () => {
   const fetchDataFromAPI = async () => {
     setLoading(true);
     axios
-      .get(BACKEND_URL + `/company/all_company/`,{headers:headers})
+      .get(BACKEND_URL + `/company/all_company/`, { headers: headers })
       .then((res) => {
         console.log('RESSSSSSSSSSSSS', res);
         const filteredData = res.data.filter((item) => item.kyc_status_id === 3 || item.kyc_status_id === 2);
@@ -60,17 +60,18 @@ const Adminkyc = () => {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-          sessionStorage.clear()
+          toast.error('Session expired. Please login again.');
+          sessionStorage.clear();
           navigate('/login');
-      } else {
+        } else {
           setLoading(false);
           console.log('ERRRRRRRRRR', err);
-      }
+        }
       });
   };
 
   const handleAcceptKYC = () => {
-    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
+    const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
     axios
       .post(BACKEND_URL + `/kyc/kyc_status/?client_type=company&status=${3}&id=${idUser}`, { headers })
       .then((res) => {
@@ -83,27 +84,31 @@ const Adminkyc = () => {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-          sessionStorage.clear()
+          toast.error('Session expired. Please login again.');
+          sessionStorage.clear();
           navigate('/login');
-      } else {
+        } else {
           console.log('ERRRRRR', err);
           toast('Error in KYC verification', { type: 'error' });
-      }
+        }
       });
   };
 
   const getSearchData = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/company/search_company/?string=${query}`,{headers:headers});
+      const response = await axios.get(`${BACKEND_URL}/company/search_company/?string=${query}`, {
+        headers: headers,
+      });
       console.log(response);
       setSearchData(response.data);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        toast.error('Session expired. Please login again.');
+        sessionStorage.clear();
         navigate('/login');
-    } else {
+      } else {
         toast(`There is Some error while searching`, { type: 'error' });
-    }
+      }
     }
   };
 
@@ -166,7 +171,7 @@ const Adminkyc = () => {
           return (
             <div className="flex gap-2 text-left text-xs">
               <div
-                className="bg-primary hover:bg-primary min-w-fit rounded px-2 py-1.5 text-white"
+                className="min-w-fit rounded bg-primary px-2 py-1.5 text-white hover:bg-primary"
                 onClick={() => {
                   setIdUser(row?.original?.id);
                   setShowPopup(true);
@@ -205,7 +210,7 @@ const Adminkyc = () => {
                 </Tooltip>
               </button> */}
               <button
-                className="bg-primary hover:bg-primary min-w-fit rounded px-2 py-1.5 text-white"
+                className="min-w-fit rounded bg-primary px-2 py-1.5 text-white hover:bg-primary"
                 onClick={() => navigate(`/user/${row?.original?.id}`, { state: row?.original?.name })}
                 disabled={row?.original?.kyc_status_id === 2}>
                 <Tooltip

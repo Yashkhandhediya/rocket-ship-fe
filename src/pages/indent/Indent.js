@@ -41,9 +41,10 @@ const Indent = () => {
   const inputRef = useRef(null);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
-  const headers = {             
+  const headers = {
     'Content-Type': 'application/json',
-    'Authorization': ACCESS_TOKEN};
+    Authorization: ACCESS_TOKEN,
+  };
   // const [id,setId] = useState(1)
   const [isValidPinCode, setIsValidPincode] = useState(true);
   const [values, setValues] = useState({ pincode: '', destinationPincode: '' });
@@ -94,15 +95,18 @@ const Indent = () => {
   const getTruckType = async () => {
     setLoading(true);
     try {
-      const resposne = await axios.get(`${BACKEND_URL}/trucktype/get_truck_types/?created_by=${company_id}`,{ headers:headers });
+      const resposne = await axios.get(`${BACKEND_URL}/trucktype/get_truck_types/?created_by=${company_id}`, {
+        headers: headers,
+      });
       setTruckTypes(resposne.data);
       console.log(resposne.data);
     } catch (err) {
       toast(`There is error while fetching data`, { type: 'error' });
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        toast('Session Expired', { type: 'error' });
+        sessionStorage.clear();
         navigate('/login');
-    } 
+      }
     } finally {
       setLoading(false);
     }
@@ -112,15 +116,17 @@ const Indent = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/materialtype/get_material_type/?created_by=${company_id}`,{ headers:headers }
+        `${BACKEND_URL}/materialtype/get_material_type/?created_by=${company_id}`,
+        { headers: headers },
       );
       setMaterialTypes(response.data);
     } catch (err) {
       toast(`There is error while fetching data`, { type: 'error' });
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        toast('Session Expired', { type: 'error' });
+        sessionStorage.clear();
         navigate('/login');
-    } 
+      }
     } finally {
       setLoading(false);
     }
@@ -233,7 +239,7 @@ const Indent = () => {
 
   const handleKilometer = () => {
     axios
-      .get(BACKEND_URL + `/pincode/?pincode1=${sourcePin}&pincode2=${destinationPin}`,{ headers:headers })
+      .get(BACKEND_URL + `/pincode/?pincode1=${sourcePin}&pincode2=${destinationPin}`, { headers: headers })
       .then((res) => {
         const { distance } = res.data;
         console.log('Total Km', res.data);
@@ -242,9 +248,10 @@ const Indent = () => {
       .catch((err) => {
         console.log('Error In fetching Distance', err);
         if (err.response && err.response.status === 401) {
-          sessionStorage.clear()
+          toast('Session Expired', { type: 'error' });
+          sessionStorage.clear();
           navigate('/login');
-      } 
+        }
       });
   };
 
@@ -423,7 +430,7 @@ const Indent = () => {
           ...(personInfo?.coordinate_number && { coordinator_mobile: personInfo.coordinate_number }),
           ...(remarks && { remarks: remarks }),
         },
-        { headers:headers },
+        { headers: headers },
       )
       .then((response) => {
         setIsLoading(false);
@@ -443,17 +450,19 @@ const Indent = () => {
         //     console.log("ERRRRRRRR",err)
         //   })
       })
-      .catch((error) =>  {
+      .catch((error) => {
         if (error.response && error.response.status === 401) {
-            sessionStorage.clear()
-            navigate('/login');
-          } else {
-            console.error('Error:', error);
-            setLoading(false);
-            toast('Error in Create Indent', { type: 'error' });
-          }
-    });
-    };
+          toast.error('Session expired. Please login again.');
+
+          sessionStorage.clear();
+          navigate('/login');
+        } else {
+          console.error('Error:', error);
+          setLoading(false);
+          toast('Error in Create Indent', { type: 'error' });
+        }
+      });
+  };
 
   const handleModify = () => {
     console.log('Handling Modify Indent API Here', selectedCity.source);
@@ -551,7 +560,7 @@ const Indent = () => {
           ...(personInfo?.coordinate_number && { coordinator_mobile: personInfo.coordinate_number }),
           ...(remarks && { remarks: remarks }),
         },
-        { headers:headers },
+        { headers: headers },
       )
       .then((response) => {
         setIsLoading(false);
@@ -573,17 +582,18 @@ const Indent = () => {
             console.log('ERRRRRRRR', err);
           });
       })
-      .catch((error) =>  {
+      .catch((error) => {
         if (error.response && error.response.status === 401) {
-            sessionStorage.clear()
-            navigate('/login');
-          } else {
-            console.error('Error:', error);
-            toast('Error in Update Indent', { type: 'error' });
-          }
-    });
-    };
-      
+          sessionStorage.clear();
+          toast.error('Session expired. Please login again.');
+
+          navigate('/login');
+        } else {
+          console.error('Error:', error);
+          toast('Error in Update Indent', { type: 'error' });
+        }
+      });
+  };
 
   const fetchPincodeDetails = (pincode, type) => {
     // try {
@@ -610,7 +620,7 @@ const Indent = () => {
 
     try {
       axios
-        .get(`${BACKEND_URL}/pincode/${pincode}`,{ headers:headers })
+        .get(`${BACKEND_URL}/pincode/${pincode}`, { headers: headers })
         .then((resp) => {
           if (resp.status === 200) {
             setSuggestions(resp.data);
@@ -618,15 +628,19 @@ const Indent = () => {
             toast(`City/State not found for this pincode: ${pincode}`, { type: 'error' });
           }
         })
-        .catch(() => {
-          toast(`Unable to get location from this pincode: ${pincode}`, { type: 'error' });
+        .catch((error) => {
+          if (error.response && error.response.status === 401) {
+            toast.error('Session expired. Please login again.');
+            sessionStorage.clear();
+            navigate('/login');
+          } else toast(`Unable to get location from this pincode: ${pincode}`, { type: 'error' });
         });
     } catch (e) {
       console.error(e);
       if (e.response && e.response.status === 401) {
-        sessionStorage.clear()
+        sessionStorage.clear();
         navigate('/login');
-    } 
+      }
     }
 
     // let temp_url = `/address/address_suggestion/`
@@ -703,7 +717,8 @@ const Indent = () => {
       axios
         .get(
           BACKEND_URL +
-            `${temp_url}?string=${String(value)}&created_by=${sessionStorage.getItem('company_id')}`,{ headers:headers }
+            `${temp_url}?string=${String(value)}&created_by=${sessionStorage.getItem('company_id')}`,
+          { headers: headers },
         )
         .then((resp) => {
           if (resp.status === 200) {
@@ -723,9 +738,10 @@ const Indent = () => {
     } catch (e) {
       console.error(e);
       if (e.response && e.response.status === 401) {
-        sessionStorage.clear()
+        toast.error('Session expired. Please login again.');
+        sessionStorage.clear();
         navigate('/login');
-    } 
+      }
     }
 
     // try {

@@ -10,9 +10,10 @@ const OTP_Input = ({ handleSendOTP, timer, setIsKYCCompleted, id = null }) => {
   const [seconds, setSeconds] = useState(timer);
   const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null), useRef(null), useRef(null)];
   const isOtpEntered = otp.every((digit) => digit !== '');
-  const headers = {             
+  const headers = {
     'Content-Type': 'application/json',
-    'Authorization': ACCESS_TOKEN};
+    Authorization: ACCESS_TOKEN,
+  };
   const handleInputChange = (index, value) => {
     if (isNaN(value)) return; // Allow only numeric input
 
@@ -42,18 +43,19 @@ const OTP_Input = ({ handleSendOTP, timer, setIsKYCCompleted, id = null }) => {
       // API call to verify OTP
       let temp_otp = otp.join('');
       axios
-        .post(BACKEND_URL + `/kyc/adhaar_submit_otp?reference_id=${id}&otp=${temp_otp}`,{headers:headers})
+        .post(BACKEND_URL + `/kyc/adhaar_submit_otp?reference_id=${id}&otp=${temp_otp}`, { headers: headers })
         .then((res) => {
           toast.success('KYC completed successfully', { type: 'success' });
           setIsKYCCompleted(true);
         })
         .catch((err) => {
           if (err.response && err.response.status === 401) {
-            sessionStorage.clear()
+            toast.error('Session expired. Please login again.');
+            sessionStorage.clear();
             navigate('/login');
-        } else {
-          toast('Mismatch OTP', { type: 'error' });
-        }
+          } else {
+            toast('Mismatch OTP', { type: 'error' });
+          }
         });
     } else {
       // Show error message

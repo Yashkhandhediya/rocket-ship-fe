@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [videoInitialized, setVideoInitialized] = useState(false);
   const [canvasInitialized, setCanvasInitialized] = useState(false);
   const [selfieText, setSelfieText] = useState('Take Selfie');
@@ -85,7 +85,7 @@ const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
           setCapturedImage(imageDataURL);
           const formData = new FormData();
           formData.append('file', blob, 'selfie.png');
-          const headers = { 'Content-Type': 'multipart/form-data','Authorization': ACCESS_TOKEN };
+          const headers = { 'Content-Type': 'multipart/form-data', Authorization: ACCESS_TOKEN };
           axios
             .post(
               BACKEND_URL + `/kyc/upload_selfie?image_id=${id_user}&type=selfie&user_name=${user_name}`,
@@ -98,12 +98,13 @@ const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
             })
             .catch((err) => {
               if (err.response && err.response.status === 401) {
-                sessionStorage.clear()
+                toast.error('Session expired. Please login again.');
+                sessionStorage.clear();
                 navigate('/login');
-            } else {
-              console.log('Error in KYC', err);
-              toast('Error while verifying selfie', { type: 'error' });
-            }
+              } else {
+                console.log('Error in KYC', err);
+                toast('Error while verifying selfie', { type: 'error' });
+              }
             });
         }, 'image/png');
 

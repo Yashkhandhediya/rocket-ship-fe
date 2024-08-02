@@ -27,9 +27,10 @@ function Addresses() {
   const [editData, setEditData] = useState(null);
   const [userData, setUserData] = useState([]);
   const [fetchData, setFetchData] = useState(false);
-  const headers = {             
+  const headers = {
     'Content-Type': 'application/json',
-    'Authorization': ACCESS_TOKEN};
+    Authorization: ACCESS_TOKEN,
+  };
   const [showAddressTable, setShowAddressTable] = useState(false);
   const [selectedCompanyName, setSelectedCompanyName] = useState('');
   const is_admin = sessionStorage.getItem('is_admin');
@@ -88,7 +89,7 @@ function Addresses() {
 
   const fetchDataFromAPI = async () => {
     axios
-      .get(BACKEND_URL + `/company/all_company/`,{headers:headers})
+      .get(BACKEND_URL + `/company/all_company/`, { headers: headers })
       .then((res) => {
         console.log('RESSSSSSSSSSSSS', res);
         const filteredData = res.data.filter((item) => item.kyc_status_id === 1);
@@ -97,11 +98,12 @@ function Addresses() {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-          sessionStorage.clear()
+          toast.error('Session expired. Please login again.');
+          sessionStorage.clear();
           navigate('/login');
-      } else {
+        } else {
           console.log('ERRRRRRRRRR', err);
-      }
+        }
       });
   };
 
@@ -145,7 +147,7 @@ function Addresses() {
           return (
             <div className="flex gap-2 text-left text-xs">
               <div
-                className="bg-primary min-w-fit rounded px-4 py-1.5 text-white hover:bg-sky-700"
+                className="min-w-fit rounded bg-primary px-4 py-1.5 text-white hover:bg-sky-700"
                 onClick={() => {
                   handleKYC(row?.original?.id, row?.original?.name);
                 }}>
@@ -166,7 +168,8 @@ function Addresses() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/address/get_address/?company_id=${companyId}&page=${page}&page_size=${pageSize}`,{headers:headers}
+        `${BACKEND_URL}/address/get_address/?company_id=${companyId}&page=${page}&page_size=${pageSize}`,
+        { headers: headers },
       );
       console.log(response);
       setAddressData(response.data);
@@ -174,12 +177,13 @@ function Addresses() {
       setShowAddressTable(true);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        toast.error('Session expired. Please login again.');
+        sessionStorage.clear();
         navigate('/login');
-    } else {
+      } else {
         console.log(err);
         toast('There is some error while fetching data', { type: 'error' });
-    }
+      }
     } finally {
       setLoading(false);
     }
@@ -204,16 +208,19 @@ function Addresses() {
     setShowDelete(false);
     setLoading(true);
     try {
-      const response = await axios.delete(`${BACKEND_URL}/address/delete_booking_address/?address_id=${id}`,{headers:headers});
+      const response = await axios.delete(`${BACKEND_URL}/address/delete_booking_address/?address_id=${id}`, {
+        headers: headers,
+      });
       getAddressData(company_id);
       toast('Delete Successfully', { type: 'success' });
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        toast.error('Session expired. Please login again.');
+        sessionStorage.clear();
         navigate('/login');
-    } else {
+      } else {
         console.log(err);
-    }
+      }
     } finally {
       setLoading(false);
     }
@@ -240,17 +247,19 @@ function Addresses() {
   const getSearchData = async () => {
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/address/address_suggestion/?string=${query}&created_by=${company_id}`,{headers:headers}
+        `${BACKEND_URL}/address/address_suggestion/?string=${query}&created_by=${company_id}`,
+        { headers: headers },
       );
       console.log(response);
       setSearchData(response.data);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        toast.error('Session expired. Please login again.');
+        sessionStorage.clear();
         navigate('/login');
-    } else {
+      } else {
         toast(`There is Some error while searching`, { type: 'error' });
-    }
+      }
     }
   };
 
@@ -313,13 +322,13 @@ function Addresses() {
             <div className="flex justify-end gap-5">
               {is_admin === '2' && (
                 <button
-                  className="bg-primary flex items-center gap-3 rounded px-4 py-1 text-white shadow"
+                  className="flex items-center gap-3 rounded bg-primary px-4 py-1 text-white shadow"
                   onClick={() => navigate(`/adminkyc`)}>
                   Back
                 </button>
               )}
               <button
-                className="bg-primary flex items-center gap-3 rounded px-4 py-1 text-white shadow"
+                className="flex items-center gap-3 rounded bg-primary px-4 py-1 text-white shadow"
                 onClick={handleShowAddressModal}>
                 <span className="text-2xl">+</span>
                 Add Address
@@ -393,7 +402,7 @@ function Addresses() {
                   onClick={handlePrevPage}
                   disabled={page === 1}>{`<`}</button>
                 <span className={`rounded px-2 py-0 text-sm ${page === 1 && 'hidden'}`}>{page - 1}</span>
-                <button className="bg-primary rounded px-2 py-1 text-sm text-white">{page}</button>
+                <button className="rounded bg-primary px-2 py-1 text-sm text-white">{page}</button>
                 <span className=" rounded px-2 py-0 text-sm">{page + 1}</span>
                 <span className={`rounded px-2 py-0 text-sm ${page !== 1 && 'hidden'}`}>{page + 2}</span>
                 <button
@@ -410,7 +419,7 @@ function Addresses() {
             <p>Are you sure you want to remove this Address?</p>
             <div className="flex w-full justify-center gap-4">
               <button
-                className="bg-primary w-1/2 rounded-lg px-4 py-1 text-white"
+                className="w-1/2 rounded-lg bg-primary px-4 py-1 text-white"
                 onClick={() => handleDelete(deleteId)}>
                 Yes
               </button>

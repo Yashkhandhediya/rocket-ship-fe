@@ -14,9 +14,10 @@ const Change_password = () => {
     newPassword: '',
     confirmPassword: '',
   });
-  const headers = {             
+  const headers = {
     'Content-Type': 'application/json',
-    'Authorization': ACCESS_TOKEN};
+    Authorization: ACCESS_TOKEN,
+  };
   const id_user = sessionStorage.getItem('user_id');
   const id_company = sessionStorage.getItem('company_id');
   const is_company = sessionStorage.getItem('is_company');
@@ -36,7 +37,7 @@ const Change_password = () => {
         : `${BACKEND_URL}/login/password_change?old_password=${password.currentPassword}&company_id=${user_id}&new_password=${password.newPassword}`;
     setLoading(true);
     try {
-      const response = await axios.get(`${temp_url}`,{headers:headers});
+      const response = await axios.get(`${temp_url}`, { headers: headers });
       if (response.data.massage === 'entered password is incorrect') {
         toast(response.data.massage, { type: 'error' });
       } else {
@@ -49,11 +50,12 @@ const Change_password = () => {
       });
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        toast.error('Session expired. Please login again.');
+        sessionStorage.clear();
         navigate('/login');
-    } else {
-      console.log(err);
-    }
+      } else {
+        console.log(err);
+      }
     } finally {
       setLoading(false);
     }
@@ -68,7 +70,7 @@ const Change_password = () => {
       </div>
       <div className="mx-2 w-full bg-[#EDEDED] px-6 pb-16">
         <div className="pb-5 pt-2 font-bold text-[#656565]">
-          <Link to={'/settings'} className="text-primary font-semibold">
+          <Link to={'/settings'} className="font-semibold text-primary">
             Settings
           </Link>{' '}
           &gt; Company &gt; Change Password
@@ -108,7 +110,7 @@ const Change_password = () => {
         </div>
         <div className="flex items-center justify-center">
           <button
-            className="bg-primary flex h-8 w-20 items-center justify-center gap-4 rounded text-white"
+            className="flex h-8 w-20 items-center justify-center gap-4 rounded bg-primary text-white"
             onClick={() => {
               handleSumbit();
             }}>

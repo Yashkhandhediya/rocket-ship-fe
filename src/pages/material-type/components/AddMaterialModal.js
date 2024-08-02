@@ -11,10 +11,11 @@ function AddMaterialModal({ handleClose, getMaterialData, state, editData, handl
   const [error, setError] = useState(null);
   const company_id = sessionStorage.getItem('company_id');
   const [material_type, setMaterial_type] = useState(editData ? editData.material_type : '');
-  const headers = {             
+  const headers = {
     'Content-Type': 'application/json',
-    'Authorization': ACCESS_TOKEN};
-  const navigate = useNavigate();  
+    Authorization: ACCESS_TOKEN,
+  };
+  const navigate = useNavigate();
   // console.log(state);
 
   const is_admin = sessionStorage.getItem('is_admin');
@@ -31,7 +32,7 @@ function AddMaterialModal({ handleClose, getMaterialData, state, editData, handl
       const response = await axios.post(`${BACKEND_URL}/materialtype/create_material_type/`, {
         material_type,
         created_by: company_id,
-        headers:headers
+        headers: headers,
       });
       setMaterial_type('');
       console.log(response);
@@ -41,6 +42,7 @@ function AddMaterialModal({ handleClose, getMaterialData, state, editData, handl
       if (err.response.status === 400) {
         toast(err.response.data.detail, { type: 'error' });
       } else if (err.response.status === 401) {
+        toast.error('Session expired. Please login again.');
         sessionStorage.clear();
         navigate('/login');
       } else {
@@ -58,7 +60,8 @@ function AddMaterialModal({ handleClose, getMaterialData, state, editData, handl
       const response = await axios.put(
         `${BACKEND_URL}/materialtype/update_material_type/?id=${editData.id}`,
         {
-          material_type,headers:headers
+          material_type,
+          headers: headers,
         },
       );
       setMaterial_type('');
@@ -70,6 +73,7 @@ function AddMaterialModal({ handleClose, getMaterialData, state, editData, handl
       if (err.response.status === 400) {
         toast(err.response.data.detail, { type: 'error' });
       } else if (err.response.status === 401) {
+        toast.error('Session expired. Please login again.');
         sessionStorage.clear();
         navigate('/login');
       } else {
@@ -96,7 +100,7 @@ function AddMaterialModal({ handleClose, getMaterialData, state, editData, handl
               type="text"
               id="truck_number"
               placeholder="Enter Material Name"
-              className="focus:border-primary focus:ring-primary mt-1 block w-full rounded-sm border border-gray-200 px-2.5 py-1 text-[12px] shadow-sm focus:outline-none"
+              className="mt-1 block w-full rounded-sm border border-gray-200 px-2.5 py-1 text-[12px] shadow-sm focus:border-primary focus:outline-none focus:ring-primary"
               value={material_type}
               onChange={(e) => setMaterial_type(e.target.value)}
             />
@@ -111,7 +115,7 @@ function AddMaterialModal({ handleClose, getMaterialData, state, editData, handl
               Cancel
             </button>
             <button
-              className="bg-primary w-1/2 rounded-lg px-4 py-2 text-white"
+              className="w-1/2 rounded-lg bg-primary px-4 py-2 text-white"
               onClick={() => {
                 editData ? handleEditMaterial() : handleAddMaterial();
               }}>

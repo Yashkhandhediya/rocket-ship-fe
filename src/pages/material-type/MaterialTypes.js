@@ -37,9 +37,10 @@ function MaterialTypes() {
   const [isFocused, setIsFocused] = useState(false);
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
-  const headers = {             
+  const headers = {
     'Content-Type': 'application/json',
-    'Authorization': ACCESS_TOKEN};
+    Authorization: ACCESS_TOKEN,
+  };
   const [pageSize, setPageSize] = useState(10);
   const material_data = query.length !== 0 ? searchData : materialData;
   const formRef = useRef(null);
@@ -89,18 +90,19 @@ function MaterialTypes() {
 
   const fetchDataFromAPI = async () => {
     try {
-      const res = await axios.get(`${BACKEND_URL}/company/all_company/`,{headers:headers});
+      const res = await axios.get(`${BACKEND_URL}/company/all_company/`, { headers: headers });
       console.log('RESSSSSSSSSSSSS', res);
       const filteredData = res.data.filter((item) => item.kyc_status_id === 1);
       setUserData(filteredData);
       setFetchData(true);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        toast.error('Session expired. Please login again.');
+        sessionStorage.clear();
         navigate('/login');
-    } else {
+      } else {
         console.log('ERRRRRRRRRR', err);
-    }
+      }
     }
   };
 
@@ -143,7 +145,7 @@ function MaterialTypes() {
           return (
             <div className="flex gap-2 text-left text-xs">
               <div
-                className="bg-primary min-w-fit rounded px-4 py-1.5 text-white hover:bg-sky-700"
+                className="min-w-fit rounded bg-primary px-4 py-1.5 text-white hover:bg-sky-700"
                 onClick={() => handleKYC(row?.original?.id, row?.original?.name)}>
                 {'Show Details'}
               </div>
@@ -166,7 +168,8 @@ function MaterialTypes() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/materialtype/get_material_type/?created_by=${companyId}&page=${page}&page_size=${pageSize}`,{headers:headers}
+        `${BACKEND_URL}/materialtype/get_material_type/?created_by=${companyId}&page=${page}&page_size=${pageSize}`,
+        { headers: headers },
       );
       console.log(response);
       setMaterialData(response.data);
@@ -174,12 +177,12 @@ function MaterialTypes() {
       setShowMaterialTable(true);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        sessionStorage.clear();
         navigate('/login');
-    } else {
+      } else {
         console.log(err);
         toast('There is some error while fetching data', { type: 'error' });
-    }
+      }
     } finally {
       setLoading(false);
     }
@@ -200,16 +203,19 @@ function MaterialTypes() {
     setShowDelete(false);
     setLoading(true);
     try {
-      await axios.delete(`${BACKEND_URL}/materialtype/delete_material_type/?material_id=${id}`,{headers:headers});
+      await axios.delete(`${BACKEND_URL}/materialtype/delete_material_type/?material_id=${id}`, {
+        headers: headers,
+      });
       getMaterialData(company_id, selectedCompanyName);
       toast('Delete Sucessfully', { type: 'success' });
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        toast.error('Session expired. Please login again.');
+        sessionStorage.clear();
         navigate('/login');
-    } else {
+      } else {
         console.log(err);
-    }
+      }
     } finally {
       setLoading(false);
     }
@@ -218,17 +224,19 @@ function MaterialTypes() {
   const getSearchData = async () => {
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/materialtype/search_material_type/?string=${query}&company_id=${company_id}`,{headers:headers}
+        `${BACKEND_URL}/materialtype/search_material_type/?string=${query}&company_id=${company_id}`,
+        { headers: headers },
       );
       console.log(response);
       setSearchData(response.data);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        toast.error('Session expired. Please login again.');
+        sessionStorage.clear();
         navigate('/login');
-    } else {
+      } else {
         toast(`There is Some error while searching`, { type: 'error' });
-    }
+      }
     }
   };
 
@@ -310,13 +318,13 @@ function MaterialTypes() {
             <div className="flex justify-end gap-5">
               {is_admin === '2' && (
                 <button
-                  className="bg-primary flex items-center gap-3 rounded px-4 py-1 text-white shadow"
+                  className="flex items-center gap-3 rounded bg-primary px-4 py-1 text-white shadow"
                   onClick={() => navigate(`/adminkyc`)}>
                   Back
                 </button>
               )}
               <button
-                className="bg-primary flex items-center gap-3 rounded px-4 py-1 text-white shadow"
+                className="flex items-center gap-3 rounded bg-primary px-4 py-1 text-white shadow"
                 onClick={handleShowAddMaterialModal}>
                 <span className="text-2xl">+</span>
                 Add Material
@@ -382,7 +390,7 @@ function MaterialTypes() {
                   onClick={handlePrevPage}
                   disabled={page === 1}>{`<`}</button>
                 <span className={`rounded px-2 py-0 text-sm ${page === 1 && 'hidden'}`}>{page - 1}</span>
-                <button className="bg-primary rounded px-2 py-1 text-sm text-white">{page}</button>
+                <button className="rounded bg-primary px-2 py-1 text-sm text-white">{page}</button>
                 <span className=" rounded px-2 py-0 text-sm">{page + 1}</span>
                 <span className={`rounded px-2 py-0 text-sm ${page !== 1 && 'hidden'}`}>{page + 2}</span>
                 <button
@@ -399,7 +407,7 @@ function MaterialTypes() {
             <p>Are you sure you want to remove this Material?</p>
             <div className="flex w-full justify-center gap-4">
               <button
-                className="bg-primary w-1/2 rounded-lg px-4 py-1 text-white"
+                className="w-1/2 rounded-lg bg-primary px-4 py-1 text-white"
                 onClick={() => handleDelete(deleteId)}>
                 Yes
               </button>

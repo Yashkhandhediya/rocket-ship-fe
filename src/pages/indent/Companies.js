@@ -6,6 +6,7 @@ import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithS
 import { createColumnHelper } from '@tanstack/react-table';
 import { Link, useNavigate } from 'react-router-dom';
 import { ACCESS_TOKEN } from '../../common/utils/config';
+import { toast } from 'react-toastify';
 
 const Companies = () => {
   const [userData, setUserData] = useState([]);
@@ -13,9 +14,10 @@ const Companies = () => {
   const [showKyc, setShowKyc] = useState(false);
   const [aadharImg, setAadharImg] = useState('');
   const [userImg, setUserImg] = useState('');
-  const headers = {             
+  const headers = {
     'Content-Type': 'application/json',
-    'Authorization': ACCESS_TOKEN};
+    Authorization: ACCESS_TOKEN,
+  };
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,7 +26,7 @@ const Companies = () => {
 
   const fetchDataFromAPI = async () => {
     axios
-      .get(BACKEND_URL + `/company/all_company/`,{headers:headers})
+      .get(BACKEND_URL + `/company/all_company/`, { headers: headers })
       .then((res) => {
         console.log('RESSSSSSSSSSSSS', res);
         setUserData(res.data);
@@ -32,11 +34,13 @@ const Companies = () => {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-          sessionStorage.clear()
+          toast.error('Session expired. Please login again.');
+
+          sessionStorage.clear();
           navigate('/login');
-      } else {
+        } else {
           console.log('ERRRRRRRRRR', err);
-      }
+        }
       });
   };
 
@@ -102,7 +106,7 @@ const Companies = () => {
                 {'Show Users'}
               </Link> */}
               <button
-                className="bg-primary hover:bg-primary min-w-fit rounded px-4 py-1.5 text-white"
+                className="min-w-fit rounded bg-primary px-4 py-1.5 text-white hover:bg-primary"
                 onClick={() => navigate(`/user/${row?.original?.id}`, { state: row?.original?.name })}>
                 {'Show Users'}
               </button>

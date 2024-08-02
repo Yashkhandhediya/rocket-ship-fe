@@ -17,9 +17,10 @@ const OtpPopup = ({
 }) => {
   console.log('DATAAAAAAAAA', userType);
   const is_super = sessionStorage.getItem('is_super');
-  const headers = {             
+  const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
-    'Authorization': ACCESS_TOKEN};
+    Authorization: ACCESS_TOKEN,
+  };
   const id_user = sessionStorage.getItem('user_id');
   const is_admin = sessionStorage.getItem('is_admin');
   const [seconds, setSeconds] = useState(45);
@@ -31,7 +32,6 @@ const OtpPopup = ({
   const inputRefs = Array(6)
     .fill(0)
     .map((_, index) => useRef(null));
-    
 
   // Function to handle input change and move focus to the next input
   const handleInputChange = (e, index) => {
@@ -64,37 +64,37 @@ const OtpPopup = ({
     // const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     if (upDatePassWord) {
       axios
-        .post(BACKEND_URL + `/users/generate_otp?email_id=${username}`,  { headers:headers })
+        .post(BACKEND_URL + `/users/generate_otp?email_id=${username}`, { headers: headers })
         .then((otpResponse) => {
           console.log(otpResponse);
         })
         .catch((otpError) => {
           if (otpError.response && otpError.response.status === 401) {
-            sessionStorage.clear()
+            sessionStorage.clear();
             toast.error('Session expired. Please login again.');
             navigate('/login');
-        } else {
-          console.error('Error fetching OTP:', otpError);
-        }
+          } else {
+            console.error('Error fetching OTP:', otpError);
+          }
         });
     } else {
       axios
         .post(
           BACKEND_URL + `/login/generate_otp?email_id=${username}`,
-          { email_id: String(username) ,
-           headers:headers },
+          { email_id: String(username) },
+          { headers: headers },
         )
         .then((otpResponse) => {
           console.log(otpResponse);
         })
         .catch((otpError) => {
           if (otpError.response && otpError.response.status === 401) {
-            sessionStorage.clear()
+            sessionStorage.clear();
             toast.error('Session expired. Please login again.');
             navigate('/login');
-        } else {
-          console.error('Error fetching OTP:', otpError);
-        }
+          } else {
+            console.error('Error fetching OTP:', otpError);
+          }
         });
     }
   };
@@ -143,14 +143,14 @@ const OtpPopup = ({
       return;
     }
     setLoading(true);
-    const headers = { 'Content-Type': 'application/x-www-form-urlencoded','Authorization': ACCESS_TOKEN };
+    const headers = { 'Content-Type': 'application/x-www-form-urlencoded', Authorization: ACCESS_TOKEN };
     const tempId = userType === 'user' ? userId : companyId;
     const otpURL =
       userType === 'user'
         ? `/login/verify_otp/?otp=${joinOTP}&user_id=${tempId}`
         : `/company/verify_otp/?otp=${joinOTP}&id=${tempId}`;
     axios
-      .get(BACKEND_URL + otpURL, { otp: OTP , headers:headers })
+      .get(BACKEND_URL + otpURL, { otp: OTP, headers: headers })
       .then((response) => {
         setLoading(false);
         sessionStorage.setItem('is_otpVerified', JSON.stringify(true));
@@ -181,14 +181,13 @@ const OtpPopup = ({
         setLoading(false);
         console.log(error);
         if (error.response && error.response.status === 401) {
-          sessionStorage.clear()
+          sessionStorage.clear();
           toast.error('Session expired. Please login again.');
           navigate('/login');
-      } 
+        }
       });
     // navigate('/login')
   };
-
 
   const handleResetPassword = (e) => {
     e.preventDefault();
@@ -201,9 +200,10 @@ const OtpPopup = ({
     setLoading(true);
     const tempId = userType === 'user' ? userId : companyId;
     // const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-    const headers = {        
+    const headers = {
       'Content-Type': 'application/json',
-      'Authorization': ACCESS_TOKEN};
+      Authorization: ACCESS_TOKEN,
+    };
     const verifyURL =
       userType === 'user'
         ? `/users/verify_forgot_pass_otp/?otp=${joinOTP}&user_id=${tempId}`
@@ -229,10 +229,10 @@ const OtpPopup = ({
         setLoading(false);
         console.log(error);
         if (error.response && error.response.status === 401) {
-          sessionStorage.clear()
+          sessionStorage.clear();
           toast.error('Session expired. Please login again.');
           navigate('/login');
-      } 
+        }
       });
     // navigate('/login')
   };
@@ -259,7 +259,7 @@ const OtpPopup = ({
                     <div key={index} className="h-12 w-12">
                       <input
                         ref={ref}
-                        className="ring-primary flex h-full w-full flex-col items-center justify-center rounded-xl border border-gray-200 bg-white px-2 text-center text-lg outline-none focus:bg-gray-50 focus:ring-1"
+                        className="flex h-full w-full flex-col items-center justify-center rounded-xl border border-gray-200 bg-white px-2 text-center text-lg outline-none ring-primary focus:bg-gray-50 focus:ring-1"
                         type="text"
                         maxLength="1"
                         name=""
@@ -276,7 +276,7 @@ const OtpPopup = ({
                   <div className="mt-auto">Resend OTP in 00:{formattedSeconds} sec</div>
                 ) : (
                   <button
-                    className="text-primary mb-2 cursor-pointer"
+                    className="mb-2 cursor-pointer text-primary"
                     onClick={() => {
                       setSeconds(45);
                       handleSendOTP();
@@ -287,12 +287,12 @@ const OtpPopup = ({
                 <div className="flex flex-col space-y-5">
                   <div className="flex flex-col">
                     <button
-                      className="bg-primary flex w-full flex-row items-center justify-center rounded-xl border border-none py-5 text-center text-sm text-white shadow-sm outline-none"
+                      className="flex w-full flex-row items-center justify-center rounded-xl border border-none bg-primary py-5 text-center text-sm text-white shadow-sm outline-none"
                       onClick={!upDatePassWord ? handleSubmitOtp : handleResetPassword}>
                       Verify Account
                     </button>
                     <button
-                      className="text-primary mb-2 mt-2 flex cursor-pointer items-center  justify-center gap-2"
+                      className="mb-2 mt-2 flex cursor-pointer items-center justify-center  gap-2 text-primary"
                       onClick={() => {
                         navigate('/login');
                       }}>

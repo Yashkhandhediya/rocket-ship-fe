@@ -89,6 +89,7 @@ function TruckLists() {
       setFetchData(true);
     } catch (err) {
       if (err.response && err.response.status === 401) {
+        toast.error('Session expired. Please login again.');
         sessionStorage.clear();
         navigate('/login');
       } else {
@@ -173,6 +174,7 @@ function TruckLists() {
       setSearchData(response.data);
     } catch (err) {
       if (err.response && err.response.status === 401) {
+        toast.error('Session expired. Please login again.');
         sessionStorage.clear();
         navigate('/login');
       } else {
@@ -197,7 +199,7 @@ function TruckLists() {
       setShowTruckTable(true);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        toast(err.response.data.msg, { type: 'error' });
+        toast.error('Session expired. Please login again.');
         sessionStorage.clear();
         navigate('/login');
       } else {
@@ -231,6 +233,7 @@ function TruckLists() {
       toast('Delete Successfully', { type: 'success' });
     } catch (err) {
       if (err.response && err.response.status === 401) {
+        toast.error('Session expired. Please login again.');
         sessionStorage.clear();
         navigate('/login');
       } else {

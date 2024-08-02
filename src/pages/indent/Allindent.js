@@ -31,9 +31,10 @@ const Allindent = () => {
   } else {
     user_name = 'Shivam Gajjar';
   }
-  const headers = {             
+  const headers = {
     'Content-Type': 'application/json',
-    'Authorization': ACCESS_TOKEN};
+    Authorization: ACCESS_TOKEN,
+  };
   const navigate = useNavigate();
   const [dataFetch, setDataFetch] = useState(false);
   const [filteredInfo, setFilteredInfo] = useState([]);
@@ -91,7 +92,9 @@ const Allindent = () => {
     info.length = 0;
     setLoading(true);
     try {
-      const response = await axios.get(BACKEND_URL + `/indent/get_indents?created_by=${url_user_id}`,{ headers:headers });
+      const response = await axios.get(BACKEND_URL + `/indent/get_indents?created_by=${url_user_id}`, {
+        headers: headers,
+      });
       // console.log('RESPONSE', response, response.data.length);
       if (response.data.length > 0 && info.length == 0) {
         console.log('RESPONSE', response, response.data.length);
@@ -116,9 +119,11 @@ const Allindent = () => {
     } catch (err) {
       console.log('ERRRRRRRR', err);
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        sessionStorage.clear();
+        toast.error('Session expired. Please login again.');
+
         navigate('/login');
-    } 
+      }
     } finally {
       setLoading(false);
     }
@@ -150,7 +155,7 @@ const Allindent = () => {
     modifyId = id;
     modifyFlag = 1;
     axios
-      .get(BACKEND_URL + `/indent/get_indents_by_id?id=${id}`,{ headers:headers })
+      .get(BACKEND_URL + `/indent/get_indents_by_id?id=${id}`, { headers: headers })
       .then((res) => {
         console.log('TTTTTTTTT', res);
         let data = res.data;
@@ -158,14 +163,16 @@ const Allindent = () => {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-            sessionStorage.clear()
-            navigate('/login');
-          } else {
-            console.log('ERRRRRRRRRRRRR', err);
-          }
-    });
-    };
-        
+          toast.error('Session expired. Please login again.');
+
+          sessionStorage.clear();
+          navigate('/login');
+        } else {
+          console.log('ERRRRRRRRRRRRR', err);
+        }
+      });
+  };
+
   const checkConfirmRejectButtonShowCondition = (data) => {
     console.log('yasah');
     if (is_admin == 2) {
@@ -224,7 +231,7 @@ const Allindent = () => {
           id: id,
           price: parseInt(price[id]),
         },
-        { headers:headers },
+        { headers: headers },
       )
       .then((res) => {
         console.log('RESPONSEEEEEE11', res);
@@ -232,16 +239,17 @@ const Allindent = () => {
         setLoading(false);
         window.location.reload();
       })
-      .catch((err) =>  {
+      .catch((err) => {
         if (err.response && err.response.status === 401) {
-            sessionStorage.clear()
-            navigate('/login');
-          } else {
-            console.log('Errorororor', err);
-          }
-    });
-    };
-      
+          toast.error('Session expired. Please login again.');
+
+          sessionStorage.clear();
+          navigate('/login');
+        } else {
+          console.log('Errorororor', err);
+        }
+      });
+  };
 
   const handleRcslPrice = (id) => {
     setLoading(true);
@@ -254,7 +262,7 @@ const Allindent = () => {
           id: id,
           counter_price: parseInt(rcslPrice[id]),
         },
-        { headers:headers },
+        { headers: headers },
       )
       .then((res) => {
         if (res?.data?.status_code == 500) {
@@ -269,13 +277,15 @@ const Allindent = () => {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-            sessionStorage.clear()
-            navigate('/login');
-          } else {
-            console.log('Errorororor', err);
-          }
-    });
-    };
+          toast.error('Session expired. Please login again.');
+
+          sessionStorage.clear();
+          navigate('/login');
+        } else {
+          console.log('Errorororor', err);
+        }
+      });
+  };
 
   const handleConfirmation = (id, status) => {
     setLoading(true);
@@ -288,7 +298,7 @@ const Allindent = () => {
       newObj.offline_price = offlinePrice;
     }
     axios
-      .post(BACKEND_URL + '/indent/booking_confirmation', newObj, { headers:headers })
+      .post(BACKEND_URL + '/indent/booking_confirmation', newObj, { headers: headers })
       .then((res) => {
         console.log('111111111', res);
         if (res?.data?.status_code == 401) {
@@ -305,18 +315,20 @@ const Allindent = () => {
         setPopupCardId(null);
         window.location.reload();
       })
-      .catch((err) =>  {
+      .catch((err) => {
         if (err.response && err.response.status === 401) {
-            sessionStorage.clear()
-            navigate('/login');
-          } else {
-            console.log('222222222', err);
-            setLoading(false);
-            setShowBtn(true);
-          }
-    });
-    };
-        
+          toast.error('Session expired. Please login again.');
+
+          sessionStorage.clear();
+          navigate('/login');
+        } else {
+          console.log('222222222', err);
+          setLoading(false);
+          setShowBtn(true);
+        }
+      });
+  };
+
   const handleTabChange = (tabId) => {
     console.log('TAB SELECT', selectedTab);
     setSelectedTab(tabId);
@@ -376,16 +388,19 @@ const Allindent = () => {
   const getSearchData = async () => {
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/indent/search_indent/?string=${query}&user_id=${url_user_id}`,{ headers:headers }
+        `${BACKEND_URL}/indent/search_indent/?string=${query}&user_id=${url_user_id}`,
+        { headers: headers },
       );
       console.log(response);
       setSearchData(response.data);
     } catch (err) {
       toast(`There is Some error while searching`, { type: 'error' });
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        toast.error('Session expired. Please login again.');
+
+        sessionStorage.clear();
         navigate('/login');
-    } 
+      }
     }
   };
 

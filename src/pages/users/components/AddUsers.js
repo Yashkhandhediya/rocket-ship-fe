@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 function AddUsers({ handleClose, getUsersData, editData, handleSetEdit }) {
   console.log(editData);
   const navigate = useNavigate();
-  const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
+  const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
   const [loading, setLoading] = useState(false);
   const [signupInput, setSignupInput] = useState({
     company_id: sessionStorage.getItem('company_id'),
@@ -60,7 +60,7 @@ function AddUsers({ handleClose, getUsersData, editData, handleSetEdit }) {
     }
     setLoading(true);
     handleClose();
-    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
+    const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
     axios
       .post(
         BACKEND_URL + '/users/signup',
@@ -87,13 +87,14 @@ function AddUsers({ handleClose, getUsersData, editData, handleSetEdit }) {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-          sessionStorage.clear()
+          toast.error('Session expired. Please login again.');
+          sessionStorage.clear();
           navigate('/login');
-      } else {
+        } else {
           setLoading(false);
           console.log('Error in Adding User', err);
           toast('Error in Adding User', { type: 'error' });
-      }
+        }
       });
   };
 
@@ -101,13 +102,17 @@ function AddUsers({ handleClose, getUsersData, editData, handleSetEdit }) {
     setLoading(true);
     handleClose();
     try {
-      const response = await axios.put(`${BACKEND_URL}/users/${editData.id}`, {
-        first_name: signupInput.first_name,
-        last_name: signupInput.last_name,
-        password: signupInput.password,
-        contact_no: signupInput.contact_no,
-        email_address: signupInput.email_address,
-      },{headers:headers});
+      const response = await axios.put(
+        `${BACKEND_URL}/users/${editData.id}`,
+        {
+          first_name: signupInput.first_name,
+          last_name: signupInput.last_name,
+          password: signupInput.password,
+          contact_no: signupInput.contact_no,
+          email_address: signupInput.email_address,
+        },
+        { headers: headers },
+      );
       if (response.data.msg == 'The user with the same email already exists') {
         toast(response.data.msg, { type: 'error' });
       } else {
@@ -118,12 +123,13 @@ function AddUsers({ handleClose, getUsersData, editData, handleSetEdit }) {
       getUsersData();
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        toast.error('Session expired. Please login again.');
+        sessionStorage.clear();
         navigate('/login');
-    } else {
+      } else {
         console.log('err');
         toast('There is some error while editing user');
-    }
+      }
     } finally {
       setLoading(false);
     }
@@ -210,7 +216,7 @@ function AddUsers({ handleClose, getUsersData, editData, handleSetEdit }) {
               Cancel
             </button>
             <button
-              className="bg-primary w-1/2 rounded-lg px-4 py-2 text-white"
+              className="w-1/2 rounded-lg bg-primary px-4 py-2 text-white"
               onClick={() => {
                 editData ? handleEdit() : handleSubmit();
               }}>

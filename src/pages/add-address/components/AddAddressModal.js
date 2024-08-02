@@ -4,6 +4,7 @@ import { BACKEND_URL } from '../../../common/utils/env.config';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { ACCESS_TOKEN } from '../../../common/utils/config';
+import { useNavigate } from 'react-router-dom';
 
 const Field = ({ id, label, type, value, onChange, onBlur, isValid, errorMessage, placeholder }) => (
   <div className="flex flex-col">
@@ -59,6 +60,8 @@ function AddAddressModal({ handleClose, getAddressData, stateData, editData, han
   const company_id = sessionStorage.getItem('company_id');
   const is_admin = sessionStorage.getItem('is_admin');
   const [validPincode, setValidPincode] = useState(false);
+  const navigate = useNavigate();
+
   const headers = {
     'Content-Type': 'application/json',
     Authorization: ACCESS_TOKEN,
@@ -127,8 +130,15 @@ function AddAddressModal({ handleClose, getAddressData, stateData, editData, han
       })
       .catch((err) => {
         setLoading(false);
-        toast('Error adding location', { type: 'error' });
-        console.error(err);
+        if (err.response && err.response.status === 401) {
+          toast.error('Session expired. Please login again.');
+          sessionStorage.clear();
+          navigate('/login');
+        } else {
+          setLoading(false);
+          toast('Error Adding Address', { type: 'error' });
+          console.error(err);
+        }
       });
   };
 
@@ -157,8 +167,15 @@ function AddAddressModal({ handleClose, getAddressData, stateData, editData, han
       })
       .catch((err) => {
         setLoading(false);
-        toast('Error Updating Address', { type: 'error' });
-        console.error(err);
+        if (err.response && err.response.status === 401) {
+          toast.error('Session expired. Please login again.');
+          sessionStorage.clear();
+          navigate('/login');
+        } else {
+          setLoading(false);
+          toast('Error Updating Address', { type: 'error' });
+          console.error(err);
+        }
       });
   };
 

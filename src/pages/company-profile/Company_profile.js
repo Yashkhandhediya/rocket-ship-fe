@@ -21,7 +21,7 @@ const Company_profile = () => {
     logo: '',
   });
   const navigate = useNavigate();
-  const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
+  const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
   const [loading, setLoading] = useState(false);
   // This function is used to handle the file change and show the image in place of the input
   const handleFileChange = (e) => {
@@ -50,7 +50,8 @@ const Company_profile = () => {
         BACKEND_URL +
           `/company/update_company?company_id=${
             companyDetails?.companyId
-          }&company_name=${companyDetails?.companyName.toString()}`,{headers:headers}
+          }&company_name=${companyDetails?.companyName.toString()}`,
+        { headers: headers },
       )
       .then((res) => {
         setLoading(false);
@@ -60,12 +61,13 @@ const Company_profile = () => {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-          sessionStorage.clear()
+          toast.error('Session expired. Please login again.');
+          sessionStorage.clear();
           navigate('/login');
-      } else {
+        } else {
           setLoading(false);
           toast('Error in Saving Info', { type: 'error' });
-      }
+        }
       });
   };
 
@@ -76,7 +78,7 @@ const Company_profile = () => {
     // }
     setLoading(true);
     axios
-      .get(BACKEND_URL + `/company/${sessionStorage.getItem('company_id')}`, {headers:headers})
+      .get(BACKEND_URL + `/company/${sessionStorage.getItem('company_id')}`, { headers: headers })
       .then((res) => {
         setLoading(false);
 
@@ -93,13 +95,14 @@ const Company_profile = () => {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-          sessionStorage.clear()
+          toast.error('Session expired. Please login again.');
+          sessionStorage.clear();
           navigate('/login');
-      } else {
+        } else {
           setLoading(false);
 
           toast('error in fetching data', { type: 'error' });
-      }
+        }
       });
   };
 
@@ -116,7 +119,7 @@ const Company_profile = () => {
       </div>
       <div className="mx-2 w-full bg-[#EDEDED] px-6 pb-16">
         <div className="pb-5 pt-2 font-bold text-[#656565]">
-          <Link to={'/settings'} className="text-primary font-semibold">
+          <Link to={'/settings'} className="font-semibold text-primary">
             Settings
           </Link>{' '}
           &gt; Company &gt; Company Profile
@@ -145,7 +148,7 @@ const Company_profile = () => {
                 type="text"
                 id="company_name"
                 name="company_name"
-                className="focus:border-primary h-7 w-full rounded-sm border border-[#b3b3b3] bg-white p-2 text-[12px] font-normal focus:ring-0"
+                className="h-7 w-full rounded-sm border border-[#b3b3b3] bg-white p-2 text-[12px] font-normal focus:border-primary focus:ring-0"
                 value={companyDetails.companyName}
                 onChange={(e) => {
                   setCompanyDetails({ ...companyDetails, companyName: e.target.value });
@@ -159,7 +162,7 @@ const Company_profile = () => {
                 placeholder="https://www.example.com"
                 id="website"
                 name="website"
-                className="focus:border-primary h-7 w-full rounded-sm border border-[#b3b3b3] bg-white p-2 text-[12px] font-normal focus:ring-0"
+                className="h-7 w-full rounded-sm border border-[#b3b3b3] bg-white p-2 text-[12px] font-normal focus:border-primary focus:ring-0"
                 value={companyDetails.website}
                 onChange={(e) => {
                   setCompanyDetails({ ...companyDetails, website: e.target.value });
@@ -185,11 +188,11 @@ const Company_profile = () => {
           </div>
           <div>
             <button
-              className="bg-primary flex h-8 w-28 items-center gap-4 rounded text-white"
+              className="flex h-8 w-28 items-center gap-4 rounded bg-primary text-white"
               onClick={() => {
                 handleSumbit();
               }}>
-              <div className="bg-dark flex h-8 w-2/5 items-center justify-center rounded-l">
+              <div className="flex h-8 w-2/5 items-center justify-center rounded-l bg-dark">
                 <FontAwesomeIcon icon={faSave} />
               </div>
               <div>Save</div>

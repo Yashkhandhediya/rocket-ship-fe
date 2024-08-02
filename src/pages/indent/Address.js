@@ -23,7 +23,7 @@ const Address = ({ isVisible, onClose }) => {
       [name]: value,
     }));
   };
-  const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
+  const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
   const checkField = () => {
     if (
       address.area === '' ||
@@ -43,7 +43,8 @@ const Address = ({ isVisible, onClose }) => {
     axios
       .post(
         BACKEND_URL + `/address/truck_booking_address/?created_by=${sessionStorage.getItem('company_id')}`,
-        address,{headers:headers}
+        address,
+        { headers: headers },
       )
       .then((res) => {
         setLoading(false);
@@ -54,13 +55,14 @@ const Address = ({ isVisible, onClose }) => {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-          sessionStorage.clear()
+          toast.error('Session expired. Please login again.');
+          sessionStorage.clear();
           navigate('/login');
-      } else {
+        } else {
           setLoading(false);
           console.log('Error In saving', err);
           toast('Error In saving Address', { type: 'error' });
-      }
+        }
       });
   };
 
@@ -85,7 +87,7 @@ const Address = ({ isVisible, onClose }) => {
                 type="text"
                 id="area"
                 name="area"
-                className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-1"
+                className="w-full rounded-md border border-gray-300 p-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 placeholder="Enter your area"
                 value={address.area}
                 onChange={handleChange}
@@ -99,7 +101,7 @@ const Address = ({ isVisible, onClose }) => {
                 type="text"
                 id="pincode"
                 name="pincode"
-                className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-1"
+                className="w-full rounded-md border border-gray-300 p-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 placeholder="Enter your pincode"
                 value={address.pincode}
                 onChange={handleChange}
@@ -113,7 +115,7 @@ const Address = ({ isVisible, onClose }) => {
                 type="text"
                 id="city"
                 name="city"
-                className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-1"
+                className="w-full rounded-md border border-gray-300 p-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 placeholder="Enter your city"
                 value={address.city}
                 onChange={handleChange}
@@ -127,7 +129,7 @@ const Address = ({ isVisible, onClose }) => {
                 type="text"
                 id="state"
                 name="state"
-                className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-1"
+                className="w-full rounded-md border border-gray-300 p-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 placeholder="Enter your state"
                 value={address.state}
                 onChange={handleChange}
@@ -141,7 +143,7 @@ const Address = ({ isVisible, onClose }) => {
                 type="text"
                 id="country"
                 name="country"
-                className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-1"
+                className="w-full rounded-md border border-gray-300 p-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 placeholder="Enter your country"
                 value={address.country}
                 onChange={handleChange}
@@ -155,7 +157,7 @@ const Address = ({ isVisible, onClose }) => {
               </button>
               <button
                 onClick={handleSubmit}
-                className="bg-primary hover:bg-primary rounded-md px-4 py-2 text-sm font-medium text-white">
+                className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary">
                 Save
               </button>
             </div>

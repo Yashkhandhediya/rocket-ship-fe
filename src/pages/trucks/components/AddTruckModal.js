@@ -80,6 +80,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
       if (err.response.status === 400) {
         toast(err.response.data.detail, { type: 'error' });
       } else if (err.response.status === 401) {
+        toast.error('Session expired. Please login again.');
         sessionStorage.clear();
         navigate('/login');
       } else {
@@ -122,6 +123,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
       if (err.response.status === 400) {
         toast(err.response.data.detail, { type: 'error' });
       } else if (err.response.status === 401) {
+        toast.error('Session expired. Please login again.');
         sessionStorage.clear();
         navigate('/login');
       } else {

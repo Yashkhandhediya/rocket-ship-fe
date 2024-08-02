@@ -14,9 +14,10 @@ const Adhaar_Document = ({ triggerValidation, setTriggerValidations, setIsKYCCom
   const [id, setId] = useState(null);
   const [disableInput, setDisableInput] = useState(false);
   const navigate = useNavigate();
-  const headers = {             
+  const headers = {
     'Content-Type': 'application/json',
-    'Authorization': ACCESS_TOKEN};
+    Authorization: ACCESS_TOKEN,
+  };
   const handleSetAdhaarNumber = (event) => {
     const inputAdhaarNumber = event.target.value;
     // Remove non-digit characters
@@ -40,19 +41,22 @@ const Adhaar_Document = ({ triggerValidation, setTriggerValidations, setIsKYCCom
       setDisableInput(true);
       // API call to send OTP
       let temp_number = adhaarNumber.replace(/-/g, '');
-      axios.post(BACKEND_URL + `/kyc/adhaar_generate_otp?id_number=${temp_number}`,{headers:headers}).then((res) => {
-        console.log('Response OTP', res.data);
-        setId(res.data.reference_id);
-        toast.success('otp send successfully');
-      });
+      axios
+        .post(BACKEND_URL + `/kyc/adhaar_generate_otp?id_number=${temp_number}`, { headers: headers })
+        .then((res) => {
+          console.log('Response OTP', res.data);
+          setId(res.data.reference_id);
+          toast.success('otp send successfully');
+        });
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        sessionStorage.clear()
+        toast.error('Session expired. Please login again.');
+        sessionStorage.clear();
         navigate('/login');
-    } else {
-      // Show error message
+      } else {
+        // Show error message
         toast.error('Please enter a valid Adhaar number', { type: 'error' });
-    }
+      }
     }
   };
 

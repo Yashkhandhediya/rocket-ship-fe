@@ -30,9 +30,10 @@ const User = () => {
   const [searchData, setSearchData] = useState([]);
   const [isFocused, setIsFocused] = useState(false);
   const [query, setQuery] = useState('');
-  const headers = {             
+  const headers = {
     'Content-Type': 'application/json',
-    'Authorization': ACCESS_TOKEN};
+    Authorization: ACCESS_TOKEN,
+  };
   const user_data = query.length !== 0 ? searchData : userData;
   const formRef = useRef(null);
 
@@ -47,7 +48,7 @@ const User = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(BACKEND_URL + `/indent/get_users?company_id=${company_id}`,{headers:headers})
+      .get(BACKEND_URL + `/indent/get_users?company_id=${company_id}`, { headers: headers })
       .then((res) => {
         setLoading(false);
         console.log('RESSSSSSSSSSSSS', res);
@@ -56,12 +57,13 @@ const User = () => {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-          sessionStorage.clear()
+          toast.error('Session expired. Please login again.');
+          sessionStorage.clear();
           navigate('/login');
-      } else {
-        setLoading(false);
-        console.log('ERRRRRRRRRR', err);
-      }
+        } else {
+          setLoading(false);
+          console.log('ERRRRRRRRRR', err);
+        }
       });
   }, []);
 
@@ -90,7 +92,11 @@ const User = () => {
     const headers = { 'Content-Type': 'application/json' };
     setLoading(true);
     axios
-      .get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=user_aadhar`, { responseType: 'blob' },{headers:headers})
+      .get(
+        BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=user_aadhar`,
+        { responseType: 'blob' },
+        { headers: headers },
+      )
       .then((res) => {
         setLoading(false);
         console.log('Recharge Responsee', res);
@@ -103,16 +109,21 @@ const User = () => {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-          sessionStorage.clear()
+          toast.error('Session expired. Please login again.');
+          sessionStorage.clear();
           navigate('/login');
-      } else {
-        setLoading(false);
-        console.log('Error In Rechargeee', err);
-      }
+        } else {
+          setLoading(false);
+          console.log('Error In Rechargeee', err);
+        }
       });
 
     axios
-      .get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=selfie`, { responseType: 'blob' },{headers:headers})
+      .get(
+        BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=selfie`,
+        { responseType: 'blob' },
+        { headers: headers },
+      )
       .then((res) => {
         setLoading(false);
         console.log('Recharge Responsee', res);
@@ -125,18 +136,20 @@ const User = () => {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-          sessionStorage.clear()
+          toast.error('Session expired. Please login again.');
+
+          sessionStorage.clear();
           navigate('/login');
-      } else {
-        setLoading(false);
-        console.log('Error In Rechargeee', err);
-      }
+        } else {
+          setLoading(false);
+          console.log('Error In Rechargeee', err);
+        }
       });
   };
 
   const handleAcceptKYC = () => {
     setKyc_status(1);
-    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
+    const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
     setLoading(true);
     axios
       .post(BACKEND_URL + `/kyc/kyc_status/?client_type=user&status=${3}&id=${idUser}`, { headers })
@@ -151,30 +164,33 @@ const User = () => {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-          sessionStorage.clear()
+          toast.error('Session expired. Please login again.');
+          sessionStorage.clear();
           navigate('/login');
-      } else {
-        setLoading(false);
-        console.log('ERRRRRR', err);
-        toast('Error in KYC verification', { type: 'error' });
-      }
+        } else {
+          setLoading(false);
+          console.log('ERRRRRR', err);
+          toast('Error in KYC verification', { type: 'error' });
+        }
       });
   };
 
   const getSearchData = async () => {
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/users/search_user/?string=${query}&company_id=${company_id}`,{headers:headers}
+        `${BACKEND_URL}/users/search_user/?string=${query}&company_id=${company_id}`,
+        { headers: headers },
       );
       console.log(response);
       setSearchData(response.data);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        toast.error('Session expired. Please login again.');
+        sessionStorage.clear();
         navigate('/login');
-    } else {
+      } else {
         toast(`There is Some error while searching`, { type: 'error' });
-    }
+      }
     }
   };
 
@@ -250,7 +266,7 @@ const User = () => {
               {
                 <button
                   id={row?.original?.id}
-                  className="bg-primary hover:bg-primary min-w-fit rounded px-4 py-1.5 text-white"
+                  className="min-w-fit rounded bg-primary px-4 py-1.5 text-white hover:bg-primary"
                   onClick={() => handleIndent(row)}>
                   {'Indent'}
                 </button>
@@ -258,7 +274,7 @@ const User = () => {
               {row?.original?.kyc_status_id != 3 && (
                 <button
                   id={row?.original?.id}
-                  className="bg-primary hover:bg-primary min-w-fit rounded px-4 py-1.5 text-white"
+                  className="min-w-fit rounded bg-primary px-4 py-1.5 text-white hover:bg-primary"
                   onClick={() => handleKYC(row)}>
                   {'KYC'}
                 </button>
@@ -295,7 +311,7 @@ const User = () => {
           {is_admin === '2' && (
             <Link
               to={`/adminkyc`}
-              className="bg-primary flex items-center gap-3 rounded px-4 py-1 text-white shadow">
+              className="flex items-center gap-3 rounded bg-primary px-4 py-1 text-white shadow">
               Back
             </Link>
           )}

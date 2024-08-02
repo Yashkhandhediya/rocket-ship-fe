@@ -27,7 +27,7 @@ function Addresses() {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
-  const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
+  const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
   const [pageSize, setPageSize] = useState(10);
   const users_data = query.length !== 0 ? searchData : usersData;
 
@@ -60,18 +60,20 @@ function Addresses() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/indent/get_users?company_id=${company_id}&page=${page}&page_size=${pageSize}`,{headers:headers}
+        `${BACKEND_URL}/indent/get_users?company_id=${company_id}&page=${page}&page_size=${pageSize}`,
+        { headers: headers },
       );
       console.log(response);
       setUsersData(response.data);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        sessionStorage.clear();
+        toast.error('Session expired. Please login again.');
         navigate('/login');
-    } else {
+      } else {
         console.log(err);
         toast('There is some error while fetching data', { type: 'error' });
-    }
+      }
     } finally {
       setLoading(false);
     }
@@ -92,16 +94,17 @@ function Addresses() {
     setShowDelete(false);
     setLoading(true);
     try {
-      const response = await axios.delete(`${BACKEND_URL}/users/${id}`,{headers:headers});
+      const response = await axios.delete(`${BACKEND_URL}/users/${id}`, { headers: headers });
       getUsersData();
       toast('Delete Successfully', { type: 'success' });
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        toast.error('Session expired. Please login again.');
+        sessionStorage.clear();
         navigate('/login');
-    } else {
+      } else {
         console.log(err);
-    }
+      }
     } finally {
       setLoading(false);
     }
@@ -124,17 +127,19 @@ function Addresses() {
   const getSearchData = async () => {
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/users/search_user/?string=${query}&company_id=${company_id}`,{headers:headers}
+        `${BACKEND_URL}/users/search_user/?string=${query}&company_id=${company_id}`,
+        { headers: headers },
       );
       console.log(response);
       setSearchData(response.data);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        sessionStorage.clear();
+        toast.error('Session expired. Please login again.');
         navigate('/login');
-    } else {
+      } else {
         toast(`There is Some error while searching`, { type: 'error' });
-    }
+      }
     }
   };
 
@@ -181,7 +186,7 @@ function Addresses() {
               </button>
             )} */}
             <button
-              className="bg-primary flex items-center gap-3 rounded px-4 py-1 text-white shadow"
+              className="flex items-center gap-3 rounded bg-primary px-4 py-1 text-white shadow"
               onClick={handleShowAddUsersModal}>
               <span className="text-2xl">+</span>
               Add User
@@ -269,7 +274,7 @@ function Addresses() {
                 onClick={handlePrevPage}
                 disabled={page === 1}>{`<`}</button>
               <span className={`rounded px-2 py-0 text-sm ${page === 1 && 'hidden'}`}>{page - 1}</span>
-              <button className="bg-primary rounded px-2 py-1 text-sm text-white">{page}</button>
+              <button className="rounded bg-primary px-2 py-1 text-sm text-white">{page}</button>
               <span className=" rounded px-2 py-0 text-sm">{page + 1}</span>
               <span className={`rounded px-2 py-0 text-sm ${page !== 1 && 'hidden'}`}>{page + 2}</span>
               <button
@@ -286,7 +291,7 @@ function Addresses() {
             <p>Are you sure you want to remove this User?</p>
             <div className="flex w-full justify-center gap-4">
               <button
-                className="bg-primary w-1/2 rounded-lg px-4 py-1 text-white"
+                className="w-1/2 rounded-lg bg-primary px-4 py-1 text-white"
                 onClick={() => handleDelete(deleteId)}>
                 Yes
               </button>

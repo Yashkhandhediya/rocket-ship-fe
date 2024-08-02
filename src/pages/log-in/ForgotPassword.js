@@ -6,6 +6,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { type_user } from './LogIn';
 import { ACCESS_TOKEN } from '../../common/utils/config';
+import { toast } from 'react-toastify';
 
 const ForgotPassword = () => {
   const location = useLocation();
@@ -32,7 +33,7 @@ const ForgotPassword = () => {
 
   const handleSubmit = () => {
     setErrorMessage('');
-    const headers = { 'Content-Type': 'application/x-www-form-urlencoded','Authorization': ACCESS_TOKEN };
+    const headers = { 'Content-Type': 'application/x-www-form-urlencoded', Authorization: ACCESS_TOKEN };
     const otpURL =
       type_user === 'user'
         ? `/users/generate_otp?email_id=${userInput.username}`
@@ -74,12 +75,13 @@ const ForgotPassword = () => {
       })
       .catch((otpError) => {
         if (otpError.response && otpError.response.status === 401) {
-          sessionStorage.clear()
+          toast.error('Session expired. Please login again.');
+          sessionStorage.clear();
           navigate('/login');
-      } else {
+        } else {
           setLoading(false);
           console.error('Error fetching OTP:', otpError);
-      }
+        }
       });
   };
 
@@ -88,7 +90,7 @@ const ForgotPassword = () => {
       {loading && <Loader />}
       {!handlePopup && (
         <div className="mx-auto w-[62%] max-w-lg rounded-md bg-white p-8 shadow-md">
-          <button onClick={() => window.history.back()} className="text-primary mb-4 font-semibold">
+          <button onClick={() => window.history.back()} className="mb-4 font-semibold text-primary">
             {'< Back'}
           </button>
           <h2 className="mb-6 text-2xl font-bold">Forgot Your Password</h2>
@@ -109,7 +111,7 @@ const ForgotPassword = () => {
 
           <div>
             <button
-              className={`bg-primary hover:bg-dark mb-6 mt-4 flex w-full flex-row items-center justify-center rounded-xl border border-none p-4 text-center text-base font-semibold text-white shadow-sm outline-none ${
+              className={`mb-6 mt-4 flex w-full flex-row items-center justify-center rounded-xl border border-none bg-primary p-4 text-center text-base font-semibold text-white shadow-sm outline-none hover:bg-dark ${
                 !userInput.username || !isEmailValid(userInput.username)
                   ? 'cursor-not-allowed opacity-50'
                   : ''

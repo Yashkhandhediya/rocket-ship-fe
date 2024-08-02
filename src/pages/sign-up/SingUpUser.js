@@ -50,7 +50,7 @@ const SignUpUser = () => {
     }
     setFlag(1);
     setLoading(true);
-    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
+    const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
     if (sessionStorage.getItem('access_token') != null) {
       axios
         .post(
@@ -79,13 +79,14 @@ const SignUpUser = () => {
         })
         .catch((err) => {
           if (err.response && err.response.status === 401) {
-            sessionStorage.clear()
+            toast.error('Session expired. Please login again.');
+            sessionStorage.clear();
             navigate('/login');
-        } else {
+          } else {
             setLoading(false);
             console.log('Error in signup', err);
             toast('Some Error in Sign Up', { type: 'error' });
-        }
+          }
         });
     } else {
       axios
@@ -115,13 +116,14 @@ const SignUpUser = () => {
         })
         .catch((err) => {
           if (err.response && err.response.status === 401) {
-            sessionStorage.clear()
+            toast.error('Session expired. Please login again.');
+            sessionStorage.clear();
             navigate('/login');
-        } else {
+          } else {
             setLoading(false);
             console.log('Error in signup', err);
             toast('Some Error in Sign Up', { type: 'error' });
-        }
+          }
         });
     }
   };
@@ -227,7 +229,7 @@ const SignUpUser = () => {
             </div> */}
             <button
               type="button"
-              className=" dark:bg-primary dark:hover:bg-primary dark:focus:ring-primary bg-primary hover:bg-primary focus:ring-primary mb-2 mt-4 w-full rounded-lg px-5 py-2.5 text-sm font-medium text-white focus:outline-none focus:ring-4"
+              className=" dark:bg-primary dark:hover:bg-primary dark:focus:ring-primary mb-2 mt-4 w-full rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-primary focus:outline-none focus:ring-4 focus:ring-primary"
               onClick={() => {
                 if (flag == 0) {
                   handleSubmit();

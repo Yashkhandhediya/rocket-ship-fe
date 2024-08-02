@@ -16,9 +16,10 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const headers = {             
+  const headers = {
     'Content-Type': 'application/json',
-    'Authorization': ACCESS_TOKEN};
+    Authorization: ACCESS_TOKEN,
+  };
   const handleFirstNameClick = () => {
     setEditFirstName(true);
   };
@@ -51,7 +52,7 @@ const UserProfile = () => {
   const handleData = () => {
     setLoading(true);
     axios
-      .get(BACKEND_URL + `/users/${sessionStorage.getItem('user_id')}`,{headers:headers})
+      .get(BACKEND_URL + `/users/${sessionStorage.getItem('user_id')}`, { headers: headers })
       .then((res) => {
         setLoading(false);
         console.log('Response User Data', res.data);
@@ -62,12 +63,13 @@ const UserProfile = () => {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-          sessionStorage.clear()
+          toast.error('Session expired. Please login again.');
+          sessionStorage.clear();
           navigate('/login');
-      } else {
-        setLoading(false);
-        console.log('Error In Fetching User Data', err);
-      }
+        } else {
+          setLoading(false);
+          console.log('Error In Fetching User Data', err);
+        }
       });
   };
 
@@ -88,10 +90,14 @@ const UserProfile = () => {
     setLoading(true);
     console.log('Upadte');
     axios
-      .put(BACKEND_URL + `/users/${sessionStorage.getItem('user_id')}`, {
-        first_name: firstName,
-        last_name: lastName,
-      },{headers:headers})
+      .put(
+        BACKEND_URL + `/users/${sessionStorage.getItem('user_id')}`,
+        {
+          first_name: firstName,
+          last_name: lastName,
+        },
+        { headers: headers },
+      )
       .then((res) => {
         setLoading(false);
         console.log('Response Update User', res.data);
@@ -103,13 +109,14 @@ const UserProfile = () => {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-          sessionStorage.clear()
+          toast.error('Session expired. Please login again.');
+          sessionStorage.clear();
           navigate('/login');
-      } else {
-        setLoading(false);
-        console.log('Error in User Info', err);
-        toast('Error In updating user info', { type: 'error' });
-      }
+        } else {
+          setLoading(false);
+          console.log('Error in User Info', err);
+          toast('Error In updating user info', { type: 'error' });
+        }
       });
   };
 
@@ -142,7 +149,7 @@ const UserProfile = () => {
             )}
 
             {!editFirstName && (
-              <button onClick={handleFirstNameClick} className="text-primary ml-4 hover:text-gray-600">
+              <button onClick={handleFirstNameClick} className="ml-4 text-primary hover:text-gray-600">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4"
@@ -169,7 +176,7 @@ const UserProfile = () => {
               <p className="text-sm text-gray-600">{data?.last_name || ''}</p>
             )}
             {!editLastName && (
-              <button onClick={handleLastNameClick} className="text-primary ml-4 hover:text-gray-600">
+              <button onClick={handleLastNameClick} className="ml-4 text-primary hover:text-gray-600">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4"
@@ -201,7 +208,7 @@ const UserProfile = () => {
         <div className="mt-4 flex flex-row">
           <p className="ml-36 w-[12%] text-sm font-semibold">Plan :</p>
           <p className="ml-48 text-sm text-gray-600">Lite Plan </p>
-          <Link className="text-primary ml-4 text-sm">(Change Plan?)</Link>
+          <Link className="ml-4 text-sm text-primary">(Change Plan?)</Link>
         </div>
         <div className="mt-4 flex flex-row">
           <p className="ml-36 w-[12%] text-sm font-semibold">Subscription Status :</p>
@@ -235,7 +242,7 @@ const UserProfile = () => {
         {(editFirstName || editLastName) && (
           <div className="ml-60 mt-4">
             <button
-              className="bg-primary mr-2 rounded-sm p-2 text-sm text-white"
+              className="mr-2 rounded-sm bg-primary p-2 text-sm text-white"
               onClick={() => handleUpdate()}>
               Update
             </button>
