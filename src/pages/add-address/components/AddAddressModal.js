@@ -3,6 +3,7 @@ import { Loader } from '../../../common/components';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { ACCESS_TOKEN } from '../../../common/utils/config';
 
 const Field = ({ id, label, type, value, onChange, onBlur, isValid, errorMessage, placeholder }) => (
   <div className="flex flex-col">
@@ -22,7 +23,7 @@ const Field = ({ id, label, type, value, onChange, onBlur, isValid, errorMessage
             onChange={onChange}
             onBlur={onBlur}
             placeholder={placeholder}
-            className={` focus:border-primary h-[36px] w-full flex-grow rounded-r-md border border-gray-300 p-2 text-xs focus:ring-primary${
+            className={` h-[36px] w-full flex-grow rounded-r-md border border-gray-300 p-2 text-xs focus:border-primary focus:ring-primary${
               !isValid ? 'border-red-500' : ''
             }`}
           />
@@ -36,7 +37,7 @@ const Field = ({ id, label, type, value, onChange, onBlur, isValid, errorMessage
           onChange={onChange}
           onBlur={onBlur}
           placeholder={placeholder}
-          className={`focus:border-primary focus:ring-primary h-[36px] w-full rounded-md border border-gray-300 p-2 text-xs ${
+          className={`h-[36px] w-full rounded-md border border-gray-300 p-2 text-xs focus:border-primary focus:ring-primary ${
             !isValid ? 'border-red-500' : ''
           }`}
         />
@@ -58,7 +59,10 @@ function AddAddressModal({ handleClose, getAddressData, stateData, editData, han
   const company_id = sessionStorage.getItem('company_id');
   const is_admin = sessionStorage.getItem('is_admin');
   const [validPincode, setValidPincode] = useState(false);
-
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: ACCESS_TOKEN,
+  };
   const [error, setError] = useState(null);
   // const companyId = is_admin == 2 ? stateData.id : company_id;
 
@@ -104,13 +108,17 @@ function AddAddressModal({ handleClose, getAddressData, stateData, editData, han
     setLoading(true);
     handleClose();
     axios
-      .post(BACKEND_URL + `/address/truck_booking_address/?created_by=${company_id}`, {
-        area: address,
-        pincode,
-        state,
-        city,
-        country,
-      })
+      .post(
+        BACKEND_URL + `/address/truck_booking_address/?created_by=${company_id}`,
+        {
+          area: address,
+          pincode,
+          state,
+          city,
+          country,
+        },
+        { headers: headers },
+      )
       .then((response) => {
         setLoading(false);
         handleClear();
@@ -129,13 +137,17 @@ function AddAddressModal({ handleClose, getAddressData, stateData, editData, han
     handleClose();
 
     axios
-      .put(`${BACKEND_URL}/address/update_address/?id=${editData.id}`, {
-        area: address,
-        city,
-        state,
-        pincode,
-        country,
-      })
+      .put(
+        `${BACKEND_URL}/address/update_address/?id=${editData.id}`,
+        {
+          area: address,
+          city,
+          state,
+          pincode,
+          country,
+        },
+        { headers: headers },
+      )
       .then((response) => {
         setLoading(false);
         handleClear();
@@ -235,7 +247,7 @@ function AddAddressModal({ handleClose, getAddressData, stateData, editData, han
               Cancel
             </button>
             <button
-              className="bg-primary w-1/2 rounded-lg px-4 py-2 text-white"
+              className="w-1/2 rounded-lg bg-primary px-4 py-2 text-white"
               onClick={() => {
                 editData ? handleEditLocation() : handleSaveLocation();
               }}>

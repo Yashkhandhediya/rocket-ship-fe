@@ -15,6 +15,7 @@ import { IoLogOutOutline } from 'react-icons/io5';
 import { FaRegComments } from 'react-icons/fa6';
 import { IoNotificationsOutline } from 'react-icons/io5';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+import { logo } from '../../images';
 
 const Navbar = () => {
   const is_company = sessionStorage.getItem('is_company');
@@ -42,11 +43,12 @@ const Navbar = () => {
   };
 
   const handleRecharge = () => {
-    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
+    const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
     axios
       .post(
         BACKEND_URL +
-          `/company/request_balance/?user_id=${parseInt(id_user)}&amount=${parseInt(rechargeAmount)}`,{headers}
+          `/company/request_balance/?user_id=${parseInt(id_user)}&amount=${parseInt(rechargeAmount)}`,
+        { headers },
       )
       .then((res) => {
         console.log('Recharge Responsee', res);
@@ -57,11 +59,11 @@ const Navbar = () => {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-          sessionStorage.clear()
+          sessionStorage.clear();
           navigate('/login');
-      } else {
-        console.log('Error In Rechargeee');
-      }
+        } else {
+          console.log('Error In Rechargeee');
+        }
       });
     setShowPopup(false);
     // window.location.reload()
@@ -182,11 +184,11 @@ const Navbar = () => {
   };
 
   const getUser = async () => {
-    const headers = { 'Content-Type': 'application/json','Authorization': ACCESS_TOKEN };
+    const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
     const apiURL =
       is_company == 0 ? `${BACKEND_URL}/users/${id_user}` : `${BACKEND_URL}/company/${id_company}`;
     try {
-      const response = await axios.get(apiURL,{headers});
+      const response = await axios.get(apiURL, { headers });
       setUserData(response.data);
       console.log('Hallllllllllllll', userData, response.data);
       if (response.data.wallet_balance == null || response.data.wallet_balance <= 0) {
@@ -205,11 +207,11 @@ const Navbar = () => {
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        sessionStorage.clear()
+        sessionStorage.clear();
         navigate('/login');
-    } else {
+      } else {
         console.log(error); //eslint-disable-line
-    }
+      }
     }
   };
 

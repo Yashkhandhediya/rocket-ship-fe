@@ -1,13 +1,16 @@
-
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import OtpPopup from './OtpPopup';
+import { homelogo, LogoRCSL } from '../../common/images';
+import loginLogo from '../../common/images/loginLogo.png';
 import { Loader } from '../../common/components';
 import deliveryCarLogo from '../../common/images/delivery-car.png';
 import { ACCESS_TOKEN } from '../../common/utils/config';
+import logo from '../../common/images/logo.png';
+
 // import { GoogleLogin } from 'react-google-login';
 // import {gapi} from 'gapi-script'
 
@@ -59,78 +62,81 @@ const LogIn = () => {
       toast('Email and Password both are required', { type: 'error' });
       return;
     }
-  
+
     sessionStorage.setItem('user_email', loginInput.username);
-  
+
     const apiURL = '/login/access-token';
     const otpURL = userType === 'user' ? '/login' : '/company';
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': ACCESS_TOKEN,
+      Authorization: ACCESS_TOKEN,
     };
-  
+
     setLoading(true);
-  
-    axios.post(
-      BACKEND_URL + apiURL,
-      {
-        username: loginInput.username.toLowerCase(),
-        password: loginInput.password,
-      },
-      { headers },
-    )
-    .then((response) => {
-      setLoading(false);
-  
-      if (response.data.access_token) {
-        sessionStorage.setItem('user_id', response.data.user_id);
-        sessionStorage.setItem('company_id', response.data.company_id);
-        sessionStorage.setItem('is_company', response.data.is_company);
-        sessionStorage.setItem('is_admin', response.data.is_admin);
-        sessionStorage.setItem('balance', response.data.wallet_balance);
-        sessionStorage.setItem('is_kyc', response.data.kyc_status_id);
-        sessionStorage.setItem('is_super', response.data.user_type_id);
-        sessionStorage.setItem('is_otpVerified', JSON.stringify(false));
-        sessionStorage.setItem('access_token', response.data.access_token);
-        sessionStorage.setItem('user_name', response.data?.user_name?.split(' ')[0]);
-  
-        const user_id = userType === 'user' ? sessionStorage.getItem('user_id') : sessionStorage.getItem('company_id');
-        setUserId(response.data.user_id);
-        setCompanyId(response.data.company_id);
-  
-        const otpPayload = {
-          email_id: String(loginInput.username),
-          [userType === 'user' ? 'user_id' : 'comp_id']: String(user_id),
-        };
-  
-        axios.post(
-          BACKEND_URL +
-            `${otpURL}/generate_otp?email_id=${loginInput.username}&${
-              userType === 'user' ? 'user_id' : 'comp_id'
-            }=${user_id}`,
-          otpPayload,
-          { headers: headers },
-        )
-        .then((otpResponse) => {
-          setHandlePopup(true);
-          console.log(otpResponse);
-        })
-        .catch((otpError) => {
-          setLoading(false);
-          console.error('Error fetching OTP:', otpError);
-          toast('Error generating OTP', { type: 'error' });
-        });
-      } else if (response.data.msg) {
-        toast(response.data.msg, { type: 'error' });
-      }
-    })
-    .catch((error) => {
-      setLoading(false);
-      console.error('Login error:', error);
-      toast('An error occurred during login', { type: 'error' });
-    });
+
+    axios
+      .post(
+        BACKEND_URL + apiURL,
+        {
+          username: loginInput.username.toLowerCase(),
+          password: loginInput.password,
+        },
+        { headers },
+      )
+      .then((response) => {
+        setLoading(false);
+
+        if (response.data.access_token) {
+          sessionStorage.setItem('user_id', response.data.user_id);
+          sessionStorage.setItem('company_id', response.data.company_id);
+          sessionStorage.setItem('is_company', response.data.is_company);
+          sessionStorage.setItem('is_admin', response.data.is_admin);
+          sessionStorage.setItem('balance', response.data.wallet_balance);
+          sessionStorage.setItem('is_kyc', response.data.kyc_status_id);
+          sessionStorage.setItem('is_super', response.data.user_type_id);
+          sessionStorage.setItem('is_otpVerified', JSON.stringify(false));
+          sessionStorage.setItem('access_token', response.data.access_token);
+          sessionStorage.setItem('user_name', response.data?.user_name?.split(' ')[0]);
+
+          const user_id =
+            userType === 'user' ? sessionStorage.getItem('user_id') : sessionStorage.getItem('company_id');
+          setUserId(response.data.user_id);
+          setCompanyId(response.data.company_id);
+
+          const otpPayload = {
+            email_id: String(loginInput.username),
+            [userType === 'user' ? 'user_id' : 'comp_id']: String(user_id),
+          };
+
+          axios
+            .post(
+              BACKEND_URL +
+                `${otpURL}/generate_otp?email_id=${loginInput.username}&${
+                  userType === 'user' ? 'user_id' : 'comp_id'
+                }=${user_id}`,
+              otpPayload,
+              { headers: headers },
+            )
+            .then((otpResponse) => {
+              setHandlePopup(true);
+              console.log(otpResponse);
+            })
+            .catch((otpError) => {
+              setLoading(false);
+              console.error('Error fetching OTP:', otpError);
+              toast('Error generating OTP', { type: 'error' });
+            });
+        } else if (response.data.msg) {
+          toast(response.data.msg, { type: 'error' });
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.error('Login error:', error);
+        toast('An error occurred during login', { type: 'error' });
+      });
   };
-  
+
   // const onSuccess = (response) => {
   //   console.log('Login Success:', response);
   //   // Handle the response here, e.g., send it to your backend for authentication
@@ -145,18 +151,18 @@ const LogIn = () => {
     <>
       {loading && <Loader />}
       <div className="flex-column flex h-full">
-        <div className="flex h-full w-1/2 flex-col items-center justify-start">
-          <img src={deliveryCarLogo} className="h-[80%] w-[85%] self-end object-cover" alt="Logo"></img>
-          <p className="my-5 self-end text-4xl font-medium">From Anywhere To Anywhere, Anytime</p>
+        <div className="flex h-full w-1/2 flex-col items-center justify-center">
+          <img src={loginLogo} className="self-between h-[85%] w-[85%] object-cover" alt="Logo"></img>
+          {/* <p className="my-5 self-end text-4xl font-medium">From Anywhere To Anywhere, Anytime</p> */}
         </div>
         <div className="mt-8 flex h-full w-[49%] flex-col items-center justify-center">
           <div className="mb-8 text-center text-4xl font-bold">
-            <h1>Truck Booking</h1>
+            <h1>Welcome to Book Truck</h1>
           </div>
           {!handlePopup && (
             <div className="bg-body mb-3 w-[95%] rounded-2xl bg-white px-12 py-6 shadow md:w-9/12">
               <div className="mb-2 text-center">
-                <h3 className="m-0 text-xl font-medium">Login to Truck Booking</h3>
+                <h3 className="m-0 text-xl font-medium">Login to your account</h3>
               </div>
               {/* <GoogleLogin
                 clientId="285163063974-00ubuj8sg12diejh6j2hn3mq845d5ngn.apps.googleusercontent.com"
@@ -202,7 +208,7 @@ const LogIn = () => {
                   <input
                     type="email"
                     id="username"
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
                     placeholder="Enter your email ID"
                     value={loginInput.username}
                     onChange={handleChangeInput}
@@ -215,20 +221,20 @@ const LogIn = () => {
                   <input
                     type="password"
                     id="password"
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
                     placeholder="Enter password"
                     value={loginInput.password}
                     onChange={handleChangeInput}
                   />
                 </div>
                 <div className="mb-3 text-sm">
-                  <Link onClick={handleForgotPassword} className="text-decoration-none text-[#1072f1]">
+                  <Link onClick={handleForgotPassword} className="text-decoration-none text-primary">
                     Forgot Password?
                   </Link>
                 </div>
                 <button
                   type="button"
-                  className="dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900 mb-2 w-full rounded-lg bg-[#2684FC] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#1072f1] focus:outline-none focus:ring-4 focus:ring-blue-300"
+                  className="dark:bg-primary dark:hover:bg-primary dark:focus:ring-primary mb-2 w-full rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-dark focus:outline-none focus:ring-4 focus:ring-primary"
                   onClick={handleSubmit}>
                   Login
                 </button>
@@ -241,7 +247,7 @@ const LogIn = () => {
               </Link> */}
                       <Link
                         to={userType === 'user' ? '/signup-user' : '/signup'}
-                        className="text-decoration-none text-[#2684FC]">
+                        className="text-decoration-none text-primary">
                         Sign Up Now
                       </Link>
                     </p>
@@ -258,12 +264,15 @@ const LogIn = () => {
               companyId={companyId}
             />
           )}
-          <div className="ml-auto mt-4 flex flex-row items-end justify-between">
-            <h1 className="ml-auto mr-4 text-xl font-bold text-sky-500">Powered By</h1>
-            <img
-              src={logo}
-              className="h-25 mx-20 ml-auto mt-10 w-32 mix-blend-multiply"
-              alt="Powered By Logo"></img>
+          <div className="ml-auto mt-10 flex flex-row items-center">
+            <h1 className="ml-auto  text-xl font-bold text-primary">Powered By</h1>
+            <div className="relative h-40 w-60">
+              <img
+                src={logo}
+                className="absolute right-10 top-0 h-full w-full object-cover mix-blend-multiply"
+                alt="Powered By Logo"
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -5,23 +5,26 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { ACCESS_TOKEN } from '../../../common/utils/config';
 import { useNavigate } from 'react-router-dom';
+import { truckTypes, typeTrucks } from './constants';
 
 function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEdit }) {
-  console.log(editData, state);
+  // console.log(editData, state);
   const navigate = useNavigate();
+  const [typeTruck, setTypeTruck] = useState('Select Truck Type');
   const [loading, setLoading] = useState(false);
   const company_id = sessionStorage.getItem('company_id');
   const [errors, setErrors] = useState(null);
   const is_admin = sessionStorage.getItem('is_admin');
-  const headers = {             
+  const headers = {
     'Content-Type': 'application/json',
-    'Authorization': ACCESS_TOKEN};
+    Authorization: ACCESS_TOKEN,
+  };
   // const id = is_admin == 2 ? state.id : company_id;
   // console.log(id);
   const [truckData, setTruckData] = useState({
     truck_type: editData ? editData?.truck_type : 'Select Type',
     capacity_type: editData ? editData?.capacity_type : 'KG',
-    truck_number: editData ? editData.truck_number : '',
+    truck_number: editData ? editData.truck_number : '0',
     truck_dimension: editData ? editData.truck_dimension : '',
     capacity: editData ? editData.capacity : '',
   });
@@ -31,7 +34,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
 
     if (truckData.truck_type === 'Select Type') newErrors.truck_type = 'Truck type is Required';
     if (truckData.truck_dimension === '') newErrors.truck_dimension = 'Truck Dimension is Required';
-    if (truckData.truck_number === '') newErrors.truck_number = 'Truck Number is Required';
+    // if (truckData.truck_number === '') newErrors.truck_number = 'Truck Number is Required';
     if (truckData.capacity === '') newErrors.capacity = 'Truck Capacity is Required';
     return newErrors;
   };
@@ -44,6 +47,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
   console.log(truckData);
 
   const handleAddTruck = async () => {
+    console.log('clicked');
     const requiredError = requiredFields();
     if (Object.keys(requiredError).length > 0) {
       setErrors(requiredError);
@@ -51,13 +55,17 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
     }
     setLoading(true);
     handleClose();
+    console.log('clicked');
 
     try {
-      const response = await axios.post(`${BACKEND_URL}/trucktype/create_truck_type/`, {
-        ...truckData,
-        created_by: company_id,
-        truck_type: truckData.truck_type === 'Truck' ? typeTruck : truckData.truck_type,
-      });
+      const response = await axios.post(
+        `${BACKEND_URL}/trucktype/create_truck_type/`,
+        {
+          ...truckData,
+          created_by: company_id,
+        },
+        { headers: headers },
+      );
       setTruckData({
         truck_type: 'Select Type',
         capacity_type: '',
@@ -68,7 +76,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
       console.log(response);
       getTruckData(company_id);
       toast('Added Truck Sucessfully', { type: 'success' });
-    } catch (err){
+    } catch (err) {
       if (err.response.status === 400) {
         toast(err.response.data.detail, { type: 'error' });
       } else if (err.response.status === 401) {
@@ -92,10 +100,13 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
     handleClose();
 
     try {
-      const response = await axios.put(`${BACKEND_URL}/trucktype/update_truck_type/?id=${editData.id}`, {
-        ...truckData,
-        truck_type: truckData.truck_type === 'Truck' ? typeTruck : truckData.truck_type,
-      });
+      const response = await axios.put(
+        `${BACKEND_URL}/trucktype/update_truck_type/?id=${editData.id}`,
+        {
+          ...truckData,
+        },
+        { headers: headers },
+      );
       setTruckData({
         truck_type: 'Select Type',
         capacity_type: '',
@@ -107,7 +118,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
       console.log(response);
       getTruckData(company_id);
       toast('Edited Truck Sucessfully', { type: 'success' });
-    } catch (err)  {
+    } catch (err) {
       if (err.response.status === 400) {
         toast(err.response.data.detail, { type: 'error' });
       } else if (err.response.status === 401) {
@@ -152,23 +163,23 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
           {truckData.truck_type === 'Truck' && (
             <div className="mb-2 ">
               <label htmlFor="" className="block text-[12px] font-semibold">
-                Type <span className="text-red-500">*</span>
+                Truck Tyres <span className="text-red-500">*</span>
               </label>
               <CustomMultiSelect
                 isMulti={false}
                 options={typeTrucks}
-                selected={typeTruck}
+                selected={truckData.truck_dimension}
                 closeMenuOnSelect={true}
-                placeholder={typeTruck}
+                placeholder={truckData.truck_dimension}
                 hideSelectedOptions={false}
                 onChange={(value) => {
                   setTypeTruck(value);
+                  setTruckData({ ...truckData, truck_dimension: value });
                 }}
               />
               {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_type}</p>}
             </div>
           )}
-
           <div className="mb-2 ">
             <label htmlFor="truck_capacity" className="block text-[12px] font-medium">
               Truck Capacity <span className="text-red-500">*</span>{' '}
@@ -195,7 +206,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
             </div>
             {errors && <p className="w-1/2 text-xs text-red-500">{errors?.capacity}</p>}
           </div>
-          <div className="mb-2 ">
+          {/* <div className="mb-2 ">
             <label htmlFor="truck_number" className="block text-[12px] font-medium ">
               Truck Number <span className="text-red-500">*</span>
             </label>
@@ -208,19 +219,21 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
             />
             {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_number}</p>}
           </div> */}
-          <div className="mb-4">
-            <label htmlFor="truck_dimension" className="block text-[12px] font-medium ">
-              Truck Tyres <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              id="truck_dimension"
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
-              value={truckData.truck_dimension}
-              onChange={(e) => setTruckData({ ...truckData, truck_dimension: e.target.value })}
-            />
-            {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_dimension}</p>}
-          </div>
+          {truckData.truck_type !== 'Truck' && (
+            <div className="mb-4">
+              <label htmlFor="truck_dimension" className="block text-[12px] font-medium ">
+                Truck Tyres <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="truck_dimension"
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
+                value={truckData.truck_dimension}
+                onChange={(e) => setTruckData({ ...truckData, truck_dimension: e.target.value })}
+              />
+              {errors && <p className="w-1/2 text-xs text-red-500">{errors?.truck_dimension}</p>}
+            </div>
+          )}
           <div className="flex w-full justify-center gap-4">
             <button
               className="w-1/2 rounded-lg bg-zinc-200 px-4 py-2"
