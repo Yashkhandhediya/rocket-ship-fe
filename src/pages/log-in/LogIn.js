@@ -81,7 +81,7 @@ const LogIn = () => {
           username: loginInput.username.toLowerCase(),
           password: loginInput.password,
         },
-        { headers },
+        { headers: headers },
       )
       .then((response) => {
         setLoading(false);

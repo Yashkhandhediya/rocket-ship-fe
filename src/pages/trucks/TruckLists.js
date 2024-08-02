@@ -32,9 +32,10 @@ function TruckLists() {
   const [deleteId, setDeleteId] = useState(null);
   const [editData, setEditData] = useState(null);
   const [userData, setUserData] = useState([]);
-  const headers = {             
+  const headers = {
     'Content-Type': 'application/json',
-    'Authorization': ACCESS_TOKEN};
+    Authorization: ACCESS_TOKEN,
+  };
   const [fetchData, setFetchData] = useState(false);
   const [showTruckTable, setShowTruckTable] = useState(false);
   const is_admin = sessionStorage.getItem('is_admin');
@@ -82,17 +83,17 @@ function TruckLists() {
   const fetchDataFromAPI = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${BACKEND_URL}/company/all_company/`,{ headers:headers });
+      const res = await axios.get(`${BACKEND_URL}/company/all_company/`, { headers: headers });
       const filteredData = res.data.filter((item) => item.kyc_status_id === 1);
       setUserData(filteredData);
       setFetchData(true);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        sessionStorage.clear();
         navigate('/login');
-    } else {
-      console.log('Error fetching company data', err);
-    }
+      } else {
+        console.log('Error fetching company data', err);
+      }
     } finally {
       setLoading(false);
     }
@@ -165,17 +166,18 @@ function TruckLists() {
   const getSearchData = async () => {
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/trucktype/search_truck_type/?string=${query}&company_id=${company_id}`,{ headers:headers }
+        `${BACKEND_URL}/trucktype/search_truck_type/?string=${query}&company_id=${company_id}`,
+        { headers: headers },
       );
       console.log(response);
       setSearchData(response.data);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        sessionStorage.clear();
         navigate('/login');
-    } else {
-      toast(`There is Some error while searching`, { type: 'error' });
-    }
+      } else {
+        toast(`There is Some error while searching`, { type: 'error' });
+      }
     }
   };
 
@@ -187,19 +189,21 @@ function TruckLists() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/trucktype/get_truck_types/?created_by=${companyId}&page=${page}&page_size=${pageSize}`,{ headers:headers }
+        `${BACKEND_URL}/trucktype/get_truck_types/?created_by=${companyId}&page=${page}&page_size=${pageSize}`,
+        { headers: headers },
       );
       setTruckData(response.data);
       setSelectedCompanyName(companyName);
       setShowTruckTable(true);
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        toast(err.response.data.msg, { type: 'error' });
+        sessionStorage.clear();
         navigate('/login');
-    } else {
-      console.log('Error fetching truck data', err);
-      toast('There is some error while fetching data', { type: 'error' });
-    }
+      } else {
+        console.log('Error fetching truck data', err);
+        toast('There is some error while fetching data', { type: 'error' });
+      }
     } finally {
       setLoading(false);
     }
@@ -216,7 +220,9 @@ function TruckLists() {
     setShowDelete(false);
     setLoading(true);
     try {
-      await axios.delete(`${BACKEND_URL}/trucktype/delete_truck_type/?truck_type_id=${id}`,{ headers:headers });
+      await axios.delete(`${BACKEND_URL}/trucktype/delete_truck_type/?truck_type_id=${id}`, {
+        headers: headers,
+      });
       if (state) {
         getTruckData(state.id, state.name);
       } else {
@@ -225,11 +231,11 @@ function TruckLists() {
       toast('Delete Successfully', { type: 'success' });
     } catch (err) {
       if (err.response && err.response.status === 401) {
-        sessionStorage.clear()
+        sessionStorage.clear();
         navigate('/login');
-    } else {
-      console.log('Error deleting truck data', err);
-    }
+      } else {
+        console.log('Error deleting truck data', err);
+      }
     } finally {
       setLoading(false);
     }
