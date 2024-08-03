@@ -17,10 +17,6 @@ const OtpPopup = ({
 }) => {
   console.log('DATAAAAAAAAA', userType);
   const is_super = sessionStorage.getItem('is_super');
-  const headers = {
-    'Content-Type': 'application/x-www-form-urlencoded',
-    Authorization: ACCESS_TOKEN,
-  };
   const id_user = sessionStorage.getItem('user_id');
   const is_admin = sessionStorage.getItem('is_admin');
   const [seconds, setSeconds] = useState(45);
@@ -62,6 +58,13 @@ const OtpPopup = ({
 
   const handleSendOTP = () => {
     // const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: 'Bearer ' + sessionStorage.getItem('access_token'),
+    };
+
+    console.log('headerss' + headers);
+
     if (upDatePassWord) {
       axios
         .post(BACKEND_URL + `/users/generate_otp?email_id=${username}`, { headers: headers })
@@ -142,15 +145,21 @@ const OtpPopup = ({
       toast('Enter your OTP', { type: 'error' });
       return;
     }
+
     setLoading(true);
-    const headers = { 'Content-Type': 'application/x-www-form-urlencoded', Authorization: ACCESS_TOKEN };
+    let headers2 = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: 'Bearer ' + sessionStorage.getItem('access_token'),
+    };
+    console.log('heaaders', headers2);
+    // const headers = { 'Content-Type': 'application/x-www-form-urlencoded', Authorization: ACCESS_TOKEN };
     const tempId = userType === 'user' ? userId : companyId;
     const otpURL =
       userType === 'user'
         ? `/login/verify_otp/?otp=${joinOTP}&user_id=${tempId}`
         : `/company/verify_otp/?otp=${joinOTP}&id=${tempId}`;
     axios
-      .get(BACKEND_URL + otpURL, { otp: OTP, headers: headers })
+      .get(BACKEND_URL + otpURL, { otp: OTP, headers: headers2 })
       .then((response) => {
         setLoading(false);
         sessionStorage.setItem('is_otpVerified', JSON.stringify(true));
@@ -209,7 +218,7 @@ const OtpPopup = ({
         ? `/users/verify_forgot_pass_otp/?otp=${joinOTP}&user_id=${tempId}`
         : `/company/verify_otp/?otp=${joinOTP}&id=${tempId}`;
     axios
-      .get(BACKEND_URL + verifyURL, { headers })
+      .get(BACKEND_URL + verifyURL, { headers: headers })
       .then((response) => {
         setLoading(false);
         console.log(response);

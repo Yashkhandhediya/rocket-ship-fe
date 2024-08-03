@@ -33,7 +33,11 @@ const ForgotPassword = () => {
 
   const handleSubmit = () => {
     setErrorMessage('');
-    const headers = { 'Content-Type': 'application/x-www-form-urlencoded', Authorization: ACCESS_TOKEN };
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: ACCESS_TOKEN,
+    };
+
     const otpURL =
       type_user === 'user'
         ? `/users/generate_otp?email_id=${userInput.username}`
@@ -41,7 +45,7 @@ const ForgotPassword = () => {
 
     setLoading(true);
     axios
-      .post(BACKEND_URL + otpURL, {}, { headers })
+      .post(BACKEND_URL + otpURL, {}, { headers: headers })
       .then((otpResponse) => {
         console.log('OTP Response:', otpResponse);
         if (otpResponse.data.status === 'Success') {
