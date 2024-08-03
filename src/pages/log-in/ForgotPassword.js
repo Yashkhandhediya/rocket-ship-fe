@@ -33,10 +33,10 @@ const ForgotPassword = () => {
 
   const handleSubmit = () => {
     setErrorMessage('');
-    const headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: ACCESS_TOKEN,
-    };
+    // const headers = {
+    //   'Content-Type': 'application/x-www-form-urlencoded',
+    //   Authorization: ACCESS_TOKEN,
+    // };
 
     const otpURL =
       type_user === 'user'
@@ -45,7 +45,7 @@ const ForgotPassword = () => {
 
     setLoading(true);
     axios
-      .post(BACKEND_URL + otpURL, {}, { headers: headers })
+      .post(BACKEND_URL + otpURL, {})
       .then((otpResponse) => {
         console.log('OTP Response:', otpResponse);
         if (otpResponse.data.status === 'Success') {
@@ -62,7 +62,7 @@ const ForgotPassword = () => {
           console.log(fullUrl);
           setHandlePopup(true);
           axios
-            .post(fullUrl, {}, { headers })
+            .post(fullUrl, {})
             .then((generateOtpResponse) => {
               setLoading(false);
               console.log('Generate OTP Response:', generateOtpResponse);

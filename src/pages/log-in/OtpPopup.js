@@ -67,7 +67,7 @@ const OtpPopup = ({
 
     if (upDatePassWord) {
       axios
-        .post(BACKEND_URL + `/users/generate_otp?email_id=${username}`, { headers: headers })
+        .post(BACKEND_URL + `/users/generate_otp?email_id=${username}`)
         .then((otpResponse) => {
           console.log(otpResponse);
         })
@@ -209,16 +209,16 @@ const OtpPopup = ({
     setLoading(true);
     const tempId = userType === 'user' ? userId : companyId;
     // const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-    const headers = {
-      'Content-Type': 'application/json',
-      Authorization: ACCESS_TOKEN,
-    };
+    // const headers = {
+    //   'Content-Type': 'application/json',
+    //   Authorization: ACCESS_TOKEN,
+    // };
     const verifyURL =
       userType === 'user'
         ? `/users/verify_forgot_pass_otp/?otp=${joinOTP}&user_id=${tempId}`
         : `/company/verify_otp/?otp=${joinOTP}&id=${tempId}`;
     axios
-      .get(BACKEND_URL + verifyURL, { headers: headers })
+      .get(BACKEND_URL + verifyURL)
       .then((response) => {
         setLoading(false);
         console.log(response);
