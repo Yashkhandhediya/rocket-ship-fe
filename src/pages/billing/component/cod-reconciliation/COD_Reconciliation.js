@@ -1,22 +1,30 @@
 import axios from "axios";
+import { useState, useEffect } from "react";
 import { CustomTooltip } from "../../../../common/components";
 import { remitance } from "../../../../common/images";
 import { BACKEND_URL } from "../../../../common/utils/env.config";
 import { toast } from "react-toastify";
 
 const COD_Reconciliation = ({ charges, data }) => {
-    console.log("COncil",data)
-    const updateStatus = (id,status_name) => {
-        axios.put(BACKEND_URL + `/order/cod_remittance_update_status/${id}?status_name=${status_name}`)
-        .then((res) => {
-            console.log("Response Of Update Status",res.data)
-            toast(`status updated to ${status_name}`,{type:'success'})
-            window.location.reload()
-        }).catch((err) => {
-            console.log("Error in updating status",err)
-            toast(`Error in updating status`,{type:'error'})
-        })
-    }
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        const adminStatus = localStorage.getItem('is_admin');
+        setIsAdmin(adminStatus === '2');
+    }, []);
+
+    const updateStatus = (id, status_name) => {
+        axios.put(`${BACKEND_URL}/order/cod_remittance_update_status/${id}?status_name=${status_name}`)
+            .then((res) => {
+                console.log("Response Of Update Status", res.data);
+                toast(`Status updated to ${status_name}`, { type: 'success' });
+                window.location.reload();
+            }).catch((err) => {
+                console.log("Error in updating status", err);
+                toast(`Error in updating status`, { type: 'error' });
+            });
+    };
+
     return (
         <>
             <div className="flex flex-row w-full justify-evenly my-4 px-6">
@@ -39,86 +47,129 @@ const COD_Reconciliation = ({ charges, data }) => {
             </div>
             <div>
                 {data.length > 0 ? (
-                        <div className="m-2">
-                            <div className="flex items-center border border-b-[#E5E7EB] text-left">
-                            <div className="w-[13.66%] border-r-2 py-2.5 pl-2">Order ID</div>
-                            <div className="w-[13.66%] border-r-2 py-2.5 pl-2">COD To Remitted</div>
-                            <div className="w-[13.66%] border-r-2 py-2.5 pl-2">Last COD Remitted</div>
-                            <div className="w-[13.66%] border-r-2 py-2.5 pl-2">Total COD Remitted</div>
-                            <div className="w-[16.66%] border-r-2 py-2.5 pl-2">Total Deduction From COD</div>
-                            <div className="w-[13.66%] border-r-2 py-2.5 pl-2">Remittence Initiated</div>
-                            <div className="w-[12.66%] border-r-2 py-2.5 pl-2">Status</div>
-                            <div className="w-[12.66%] border-r-2 py-2.5 pl-2">Action</div>
+                    isAdmin ? (<div className="m-2">
+                        <div className="flex items-center border border-b-[#E5E7EB] text-left">
+                            <div className="w-[11.11%] border-r-2 py-2.5 text-center">User Name</div>
+                            <div className="w-[11.11%] border-r-2 py-2.5 text-center">Order ID</div>
+                            <div className="w-[11.11%] border-r-2 py-2.5 text-center">Courier Partner</div>
+                            <div className="w-[11.11%] border-r-2 py-2.5 text-center">AWB No.</div>
+                            <div className="w-[11.11%] border-r-2 py-2.5 text-center">Date</div>
+                            <div className="w-[11.11%] border-r-2 py-2.5 text-center">Bank Transaction Id</div>
+                            <div className="w-[11.11%] border-r-2 py-2.5 text-center">Status</div>
+                            <div className="w-[11.11%] border-r-2 py-2.5 text-center">COD To Remitted</div>
+                            <div className="w-[11.11%] border-r-2 py-2.5 text-center">Action</div>
                         </div>
-                        {/* table data */}
                         <div className="flex flex-col items-center justify-center">
-                            {console.log(data)} {/* eslint-disable-line */}
-                            {Array.isArray(data) && data.length > 0 ? data.map((item, key) => {
-                            return (
+                            {Array.isArray(data) && data.length > 0 ? data.map((item, key) => (
                                 <div
-                                className="flex h-12 w-full flex-row items-center border border-b-[#E5E7EB] text-left"
-                                key={key}
+                                    className="flex h-12 w-full flex-row items-center border border-b-[#E5E7EB] text-center"
+                                    key={key}
                                 >
-                                <div className="flex h-full w-[13.66%] items-center border-r-2 pl-2 font-normal">{item.order_id}</div>
-                                <div className="flex flex-col h-full w-[13.66%] justify-center border-r-2 pl-2 font-normal">
-                                    <div>{item.cod_to_be_remitted}</div>
-                                </div>
-                                <div className="flex h-full w-[13.66%] flex-col justify-center gap-4 border-r-2 pl-2 text-left">
-                                    <div>{item.last_cod_remitted}</div>
-                                </div>
-                                <div className="h-full flex justify-center flex-col w-[13.66%] border-r-2 pl-2 font-normal">
-                                    <div>{`${item.total_cod_remitted}`}</div>
-                                   
-                                </div>
-                                <div className="h-full flex justify-center flex-col w-[16.66%] border-r-2 pl-2 font-normal">
-                                    <div>{`${item.total_deduction_from_cod}`}</div>
-                                    
-                                </div>
-                                <div className="h-full flex justify-center flex-col w-[13.66%] border-r-2 pl-2 font-normal">
-                                    <div><span className='text-red-800'>{item.remittance_initiated}</span></div>
-                                </div>
-                                <div className="px-2 flex item-center h-full w-[12.66%] items-center border-r-2 pl-2 font-normal">
-                                    <div className='rounded basis-full font-semibold bg-red-100 text-red-700 text-center'>{
-                                        item.status
-                                    }
+                                    <div className="flex h-full w-[11.11%] items-center border-r-2 justify-center font-normal">{item.user_name}</div>
+                                    <div className="flex h-full w-[11.11%] items-center border-r-2 justify-center font-normal">{item.order_id}</div>
+                                    <div className="flex flex-col h-full w-[11.11%] justify-center border-r-2 font-normal">
+                                        <div>{item.partner_name}</div>
                                     </div>
-                                </div> 
-                                <div className="px-2 flex item-center h-full w-[12.66%] items-center border-r-2 pl-2 font-normal">
-                                <button className={`border-2 p-1 mr-2 border-red-400 rounded font-semibold text-red-600 ${item.status === 'done' ? 'cursor-not-allowed': ''}`}
-                                    onClick={() => {
-                                        updateStatus(item.id,"done");
-                                    }}
-                                    disabled={item.status === 'done'}
-                                    >Done</button>
-                                    <button
-                                    className={`border-2 p-1 border-red-400 rounded font-semibold text-red-600 ${(item.status === 'inprogress' || item.status === 'done') ? 'cursor-not-allowed': ''}`}
-                                    onClick={() => {
-                                        updateStatus(item.id,"inprogress");
-                                    }}
-                                    disabled={item.status === 'inprogress' || item.status === 'done'}
-                                    >InProgrss</button>
-                                </div> 
+                                    <div className="flex h-full w-[11.11%] flex-col justify-center gap-4 border-r-2 text-center">
+                                        <div>{item.waybill_no}</div>
+                                    </div>
+                                    <div className="h-full flex justify-center flex-col w-[11.11%] border-r-2 font-normal">
+                                        <div>{item.created_date}</div>
+                                    </div>
+                                    <div className="h-full flex justify-center flex-col w-[11.11%] border-r-2 font-normal">
+                                        <div>{item.bank_transaction_id ? item.bank_transaction_id : '-'}</div>
+                                    </div>
+                                    <div className="px-2 flex item-center h-full w-[11.11%] items-center border-r-2 justify-center font-normal">
+                                        <div className={`rounded basis-full font-semibold bg-red-100 text-red-700 text-center ${item.status === 'done' ? 'text-green-700 bg-green-100' : ''}`}>
+                                            {item.status}
+                                        </div>
+                                    </div>
+                                    <div className="h-full flex justify-center flex-col w-[11.11%] border-r-2 font-normal">
+                                        <div>{item.cod_to_be_remitted}</div>
+                                    </div>
+                                    <div className="px-2 flex item-center h-full w-[11.11%] items-center border-r-2 justify-center font-normal">
+                                        <button
+                                            className={`py-1.5 w-48 bg-[#E02424] text-white text-[14px] rounded-md ${(!item.buttun_flag) ? 'cursor-not-allowed' : ''}`}
+                                            onClick={() => updateStatus(item.id, "inprogress")}
+                                            disabled={!item.buttun_flag}
+                                        >Initiated COD</button>
+                                    </div>
+
                                 </div>
-                            );
-                            }) : (
-                        <div className='pt-16 mb-12 w-full flex justify-center items-center flex-col'>
-                        <img src={remitance} alt="" width={'200px'} />
-                        <div className='text-3xl mt-10 text-[#b54040] font-bold'>Your remittance is on its way.</div>
-                        <div className='text-[15px] text-[#313131] mt-2 font-semibold opacity-80'>
-                            Hey {localStorage.getItem('user_name')}, We release COD remittance 3 times in a week and on the 8th day from the date of delivery.
-                        </div>
-                        <div className="mt-8">
-                            <button className="bg-[#b54040] px-16 py-3 rounded-3xl text-white text-[13px]">
-                                Learn More
-                            </button>
-                        </div>
-                    </div>
+                            )) : (
+                                <div className='pt-16 mb-12 w-full flex justify-center items-center flex-col'>
+                                    <img src="remitance.png" alt="Remittance" width={'200px'} />
+                                    <div className='text-3xl mt-10 text-[#b54040] font-bold'>Your remittance is on its way.</div>
+                                    <div className='text-[15px] text-[#313131] mt-2 font-semibold opacity-80'>
+                                        Hey {localStorage.getItem('user_name')}, We release COD remittance 3 times a week and on the 8th day from the date of delivery.
+                                    </div>
+                                    <div className="mt-8">
+                                        <button className="bg-[#b54040] px-16 py-3 rounded-3xl text-white text-[13px]">
+                                            Learn More
+                                        </button>
+                                    </div>
+                                </div>
                             )}
                         </div>
-                </div>
+                    </div>) : (<div className="m-2">
+                        <div className="flex items-center border border-b-[#E5E7EB] text-left">
+                            <div className="w-[14.29%] border-r-2 py-2.5 text-center">Order ID</div>
+                            <div className="w-[14.29%] border-r-2 py-2.5 text-center">Courier Partner</div>
+                            <div className="w-[14.29%] border-r-2 py-2.5 text-center">AWB No.</div>
+                            <div className="w-[14.29%] border-r-2 py-2.5 text-center">Date</div>
+                            <div className="w-[14.29%] border-r-2 py-2.5 text-center">Bank Transaction Id</div>
+                            <div className="w-[14.29%] border-r-2 py-2.5 text-center">Status</div>
+                            <div className="w-[14.29%] border-r-2 py-2.5 text-center">COD To Remitted</div>
+                        </div>
+                        <div className="flex flex-col items-center justify-center">
+                            {Array.isArray(data) && data.length > 0 ? data.map((item, key) => (
+                                <div
+                                    className="flex h-12 w-full flex-row items-center border border-b-[#E5E7EB] text-center"
+                                    key={key}
+                                >
+                                    <div className="flex h-full w-[14.29%] items-center border-r-2 justify-center font-normal">{item.order_id}</div>
+                                    <div className="flex flex-col h-full w-[14.29%] justify-center border-r-2 font-normal">
+                                        <div>{item.partner_name}</div>
+                                    </div>
+                                    <div className="flex h-full w-[14.29%] flex-col justify-center gap-4 border-r-2 text-center">
+                                        <div>{item.waybill_no}</div>
+                                    </div>
+                                    <div className="h-full flex justify-center flex-col w-[14.29%] border-r-2 font-normal">
+                                        <div>{item.created_date}</div>
+                                    </div>
+                                    <div className="h-full flex justify-center flex-col w-[14.29%] border-r-2 font-normal">
+                                        <div>{item.bank_transaction_id ? item.bank_transaction_id : '-'}</div>
+                                    </div>
+                                    <div className="px-2 flex item-center h-full w-[14.29%] items-center border-r-2 justify-center font-normal">
+                                        <div className={`rounded basis-full font-semibold bg-red-100 text-red-700 text-center ${item.status === 'done' ? 'text-green-700 bg-green-100' : ''}`}>
+                                            {item.status}
+                                        </div>
+                                    </div>
+                                    <div className="h-full flex justify-center flex-col w-[14.29%] border-r-2 font-normal">
+                                        <div>{item.cod_to_be_remitted}</div>
+                                    </div>
+                                </div>
+                            )) : (
+                                <div className='pt-16 mb-12 w-full flex justify-center items-center flex-col'>
+                                    <img src="remitance.png" alt="Remittance" width={'200px'} />
+                                    <div className='text-3xl mt-10 text-[#b54040] font-bold'>Your remittance is on its way.</div>
+                                    <div className='text-[15px] text-[#313131] mt-2 font-semibold opacity-80'>
+                                        Hey {localStorage.getItem('user_name')}, We release COD remittance 3 times a week and on the 8th day from the date of delivery.
+                                    </div>
+                                    <div className="mt-8">
+                                        <button className="bg-[#b54040] px-16 py-3 rounded-3xl text-white text-[13px]">
+                                            Learn More
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>)
+
+
                 ) : (
                     <div className='pt-16 mb-12 w-full flex justify-center items-center flex-col'>
-                        <img src={remitance} alt="" width={'200px'} />
+                        <img src={remitance} alt="Remittance" width={'200px'} />
                         <div className='text-3xl mt-10 text-[#b54040] font-bold'>Your remittance is on its way.</div>
                         <div className='text-[15px] text-[#313131] mt-2 font-semibold opacity-80'>
                             Hey {localStorage.getItem('user_name')}, We release COD remittance 3 times in a week and on the 8th day from the date of delivery.
@@ -132,7 +183,7 @@ const COD_Reconciliation = ({ charges, data }) => {
                 )}
             </div>
         </>
-    )
-}
+    );
+};
 
 export default COD_Reconciliation;
