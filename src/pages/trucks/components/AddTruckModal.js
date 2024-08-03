@@ -24,7 +24,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
   const [truckData, setTruckData] = useState({
     truck_type: editData ? editData?.truck_type : 'Select Type',
     capacity_type: editData ? editData?.capacity_type : 'KG',
-    truck_number: editData ? editData.truck_number : '0',
+    // truck_number: editData ? editData.truck_number : '0',
     truck_dimension: editData ? editData.truck_dimension : '',
     capacity: editData ? editData.capacity : '',
   });
@@ -69,7 +69,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
       setTruckData({
         truck_type: 'Select Type',
         capacity_type: '',
-        truck_number: '',
+        // truck_number: '',
         truck_dimension: '',
         capacity: '',
       });
@@ -111,7 +111,7 @@ function AddTruckModal({ handleClose, getTruckData, state, editData, handleSetEd
       setTruckData({
         truck_type: 'Select Type',
         capacity_type: '',
-        truck_number: '',
+        // truck_number: '',
         truck_dimension: '',
         capacity: '',
       });
