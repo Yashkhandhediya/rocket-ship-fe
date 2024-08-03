@@ -732,8 +732,12 @@ const Indent = () => {
             toast(`City/State not found for this pincode: ${value}`, { type: 'error' });
           }
         })
-        .catch(() => {
-          toast(`Unable to get location from this pincode: ${value}`, { type: 'error' });
+        .catch((error) => {
+          if (error.response && error.response.status === 401) {
+            toast.error('Session expired. Please login again.');
+            sessionStorage.clear();
+            navigate('/login');
+          } else toast(`Unable to get location from this pincode: ${value}`, { type: 'error' });
         });
     } catch (e) {
       console.error(e);
