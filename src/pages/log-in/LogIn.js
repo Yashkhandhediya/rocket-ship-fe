@@ -65,7 +65,7 @@ const LogIn = () => {
 
     sessionStorage.setItem('user_email', loginInput.username);
 
-    const apiURL = '/login/access-token';
+    const apiURL = `/login/access-token?type=${userType}`;
     const otpURL = userType === 'user' ? '/login' : '/company';
     let headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -73,9 +73,7 @@ const LogIn = () => {
     };
 
     setLoading(true);
-
-
-
+    console.log(BACKEND_URL + apiURL);
     axios
       .post(
         BACKEND_URL + apiURL,
@@ -112,11 +110,8 @@ const LogIn = () => {
 
           let headers2 = {
             'Content-Type': 'application/x-www-form-urlencoded',
-            Authorization: "Bearer "+ sessionStorage.getItem('access_token'),
+            Authorization: 'Bearer ' + sessionStorage.getItem('access_token'),
           };
-
-          console.log("heaaders",headers2)
-
           axios
             .post(
               BACKEND_URL +
@@ -124,7 +119,7 @@ const LogIn = () => {
                   userType === 'user' ? 'user_id' : 'comp_id'
                 }=${user_id}`,
               otpPayload,
-              { headers: headers2},
+              { headers: headers2 },
             )
             .then((otpResponse) => {
               setHandlePopup(true);
