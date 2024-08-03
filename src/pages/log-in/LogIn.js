@@ -67,12 +67,14 @@ const LogIn = () => {
 
     const apiURL = '/login/access-token';
     const otpURL = userType === 'user' ? '/login' : '/company';
-    const headers = {
+    let headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       Authorization: ACCESS_TOKEN,
     };
 
     setLoading(true);
+
+
 
     axios
       .post(
@@ -108,6 +110,13 @@ const LogIn = () => {
             [userType === 'user' ? 'user_id' : 'comp_id']: String(user_id),
           };
 
+          let headers2 = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Authorization: "Bearer "+ sessionStorage.getItem('access_token'),
+          };
+
+          console.log("heaaders",headers2)
+
           axios
             .post(
               BACKEND_URL +
@@ -115,7 +124,7 @@ const LogIn = () => {
                   userType === 'user' ? 'user_id' : 'comp_id'
                 }=${user_id}`,
               otpPayload,
-              { headers: headers },
+              { headers: headers2},
             )
             .then((otpResponse) => {
               setHandlePopup(true);
