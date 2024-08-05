@@ -121,7 +121,7 @@ function EarlyCOD({ onClose }) {
                 {plans.map((plan) => (
                     <div key={plan.planType} className="relative">
                         {Label === plan.planType && (
-                            <div className="w-[60%] absolute top-[-16px] left-12 right-0 bg-red-500 text-black px-2 py-1 rounded-lg text-center z-10" style={{ minWidth: '10px' }}>
+                            <div className="w-[60%] absolute top-[-16px] left-12 right-0 bg-red-500 text-black px-2 py-1 rounded-lg text-center z-5" style={{ minWidth: '10px' }}>
                                 <span className="flex items-center justify-center text-white text-sm font-semibold">
                                     <FontAwesomeIcon icon={faCrown} className="mr-1" style={{ color: 'yellow' }} />
                                     Active Plan
@@ -166,7 +166,7 @@ function EarlyCOD({ onClose }) {
 
             <div className="mt-4 flex justify-center">
                 <button
-                    className={`bg-blue-500 text-white px-6 py-2 rounded-md ${!termsAccepted ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`bg-green-500 text-white px-6 py-2 rounded-md ${!termsAccepted ? 'opacity-50 cursor-not-allowed' : ''}`}
                     onClick={handleSave}
                     disabled={!termsAccepted}
                 >

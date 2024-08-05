@@ -206,7 +206,7 @@ const PickupMenifests = ({ data, isLoading }) => {
     const headers = { 'Content-Type': 'application/json' };
 
     temp_payload['client_name'] = 'cloud_cargo';
-    temp_payload['file_name'] = 'manifest';
+    temp_payload['file_name'] = 'shippinglabel';
 
     axios
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
@@ -401,7 +401,7 @@ const PickupMenifests = ({ data, isLoading }) => {
                   downloadInvoice: () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row?.original),
                   cancelOrder: () => cancelOrder(row?.row?.original),
-                  editOrder: () => editOrder(row?.original),
+                  editOrder: () => editOrder(row?.row?.original),
                 })}
               />
             </div>
@@ -441,6 +441,7 @@ const PickupMenifests = ({ data, isLoading }) => {
   function editOrder(orderDetails) {
     // let isEdit = true
     // order_id = orderDetails?.id
+    console.log('order_iddddddd',orderDetails)
     let data = {
       isEdit: true,
       order_id: orderDetails?.id,
