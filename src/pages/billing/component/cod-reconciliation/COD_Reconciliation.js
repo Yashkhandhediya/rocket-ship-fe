@@ -9,8 +9,8 @@ const COD_Reconciliation = ({ charges, data }) => {
     const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
-        const adminStatus = localStorage.getItem('is_admin');
-        setIsAdmin(adminStatus === '2');
+        const adminStatus = localStorage.getItem('is_super');
+        setIsAdmin(adminStatus === '3');
     }, []);
 
     const updateStatus = (id, status_name) => {
