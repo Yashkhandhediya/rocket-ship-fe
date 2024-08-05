@@ -201,6 +201,28 @@ const PickupMenifests = ({ data, isLoading }) => {
       });
   };
 
+  const handleShiipingLabel = (id) => {
+    let temp_payload = flattenObject(resData, id);
+    const headers = { 'Content-Type': 'application/json' };
+
+    temp_payload['client_name'] = 'cloud_cargo';
+    temp_payload['file_name'] = 'manifest';
+
+    axios
+      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
+      .then((response) => {
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+        toast('Menifest Download Successfully', { type: 'success' });
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        toast('Error in Menifest Download', { type: 'error' });
+      });
+  };
+
   const getColumns = () => {
     const columnHelper = createColumnHelper();
 
@@ -375,6 +397,7 @@ const PickupMenifests = ({ data, isLoading }) => {
               <MoreDropdown
                 renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                 options={moreActionOptions({
+                  downloadShiipingLabel: () => handleShiipingLabel(row?.original?.id),
                   downloadInvoice: () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row?.original),
                   cancelOrder: () => cancelOrder(row?.row?.original),

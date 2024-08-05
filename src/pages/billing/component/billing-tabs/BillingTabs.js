@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { earlyCodIcon } from "../../../../common/images";
-import EarlyCOD from "./EarlyCOD"; // Adjust the import path accordingly
+import EarlyCOD from "../cod-remittance/EarlyCOD"; // Adjust the import path accordingly
 
 const BillingTabs = ({ children }) => {
     const [activeTab, setActiveTab] = useState(0);

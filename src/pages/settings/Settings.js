@@ -5,6 +5,7 @@ import { settings_modules } from '../manage-role/user-management/constants';
 const Settings = () => {
   let settings = [];
   const is_company = localStorage.getItem('is_company');
+  const is_super = localStorage.getItem('is_super');
 
   const mapModuleToLink = (module) => ({
     title: module.label,
@@ -444,6 +445,35 @@ const Settings = () => {
             strokeLinecap="round"
             strokeLinejoin="round"
             d="M9.75 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM12 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM14.25 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM16.5 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM18.75 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM21 6.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V7.5a.75.75 0 0 1 .75-.75ZM2.25 12h19.5m-18 6v3m16.5-3v3M12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Zm7.5-6.75h.75A.75.75 0 0 1 21 9.75v9a.75.75 0 0 1-.75.75h-.75m0-12H16.5v-3a1.5 1.5 0 0 1 3 0v3Zm-1.5-12h-15a1.5 1.5 0 0 0-1.5 1.5v3h15V3a1.5 1.5 0 0 0-1.5-1.5Z"
+          />
+        </svg>
+      ),
+    });
+  }
+  if (is_super == 3) {
+    while (settings.length > 0) {
+      settings.pop();
+    }
+    settings.push({
+      title: 'COD Payments',
+      items: [
+        {
+          title: 'Bank Details',
+          link: '/company-bank-details',
+        },
+      ],
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="#B07828"
+          className="h-6 w-6">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z"
           />
         </svg>
       ),
