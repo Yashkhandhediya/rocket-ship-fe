@@ -268,9 +268,8 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
             return (
               <div
                 key={i}
-                className={`px-3 text-[#888] ${
-                  i + 1 !== services?.length ? 'border-r-2 border-[#dbdbdb]' : ''
-                }`}>
+                className={`px-3 text-[#888] ${i + 1 !== services?.length ? 'border-r-2 border-[#dbdbdb]' : ''
+                  }`}>
                 {service}
               </div>
             );
@@ -282,14 +281,17 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
 
   return (
     <div className="mt-3 h-full w-full text-left">
+      
       {isLoading && (
         <div className="loader-overlay">
           <div className="loader"></div>
         </div>
       )}
-      <div className="mb-4 text-xs text-[rgb(136,136,136)]">{`${
-        shipmentDetails?.length || 0
-      } Couriers Found`}</div>
+      <div className="mb-4 text-xs text-[rgb(136,136,136)]">{`${shipmentDetails?.length || 0
+        } Couriers Found`}</div>
+
+      
+
       <CustomDataTable
         columns={getColumns()}
         rowData={shipmentDetails}

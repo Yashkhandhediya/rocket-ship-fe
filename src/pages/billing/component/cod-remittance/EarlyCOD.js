@@ -18,7 +18,7 @@ function EarlyCOD({ onClose }) {
                 const response = await fetch(`${BACKEND_URL}/order/get_code_plan/${userId}`);
                 const data = await response.json();
                 setActivePlan(data.plan_type);
-                setLabel(data.plan_type)
+                setLabel(data.plan_type);
             } catch (error) {
                 console.error('Error fetching plan type:', error);
             }
@@ -72,21 +72,28 @@ function EarlyCOD({ onClose }) {
         setTermsAccepted(event.target.checked);
     };
 
-    const handleSave = async () => {
+    const handleSave = async (planType) => {
         if (!termsAccepted) {
             alert('Please accept the Terms and Conditions.');
             return;
         }
 
         try {
-            const response = await fetch(`${BACKEND_URL}/order/set_code_plan?user_id=${userId}&plan_id=${activePlan}`, {
-                method: 'POST',
-            });
+            let response;
+            if (Label === planType) {
+                response = await fetch(`${BACKEND_URL}/order/deactive_code_plan/${userId}`, {
+                    method: 'POST',
+                });
+            } else {
+                response = await fetch(`${BACKEND_URL}/order/set_code_plan?user_id=${userId}&plan_id=${planType}`, {
+                    method: 'POST',
+                });
+            }
             const result = await response.json();
-            toast.success(result);
+            toast.success(result || 'Operation successful');
             window.location.reload();
         } catch (error) {
-            toast.error(error);
+            toast.error('Error saving plan: ' + error.message);
         }
     };
 
@@ -129,32 +136,45 @@ function EarlyCOD({ onClose }) {
                             </div>
                         )}
                         <button
-                            className={`p-6 rounded-lg focus:outline-none flex flex-col items-center justify-center h-64 ${activePlan === plan.planType ? 'bg-red-300' : 'bg-red-100'}`}
+                            className={`p-6 rounded-lg focus:outline-none flex flex-col items-center justify-between h-65 ${Label === plan.planType ? 'bg-red-300' : 'bg-red-100'}`}
                             onClick={() => handlePlanClick(plan.planType)}
+                            style={{ height: '335px' }}
                         >
-                            <div className="flex items-center mb-2">
-                                <h3 className="text-2xl font-bold">{plan.days}</h3>
-                                <CustomTooltip text={plan.tooltip} style="dark" placement="right">
-                                    <svg className="w-4 h-4 text-gray-800 ml-2 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="#ffffff" viewBox="0 0 24 24">
-                                        <path fillRule="evenodd" d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm11-4a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0V8Zm-1 7a1 1 0 1 0 0 2 1 1 0 1 0 0-2Z" clipRule="evenodd" />
-                                    </svg>
-                                </CustomTooltip>
-                            </div>
-                            <div className="text-gray-600 my-4 border-t border-b border-gray-300 py-2 flex flex-col items-center">
-                                <span className="text-2xl font-bold">{plan.rate}</span>
-                                <span>{plan.codAmount}</span>
-                            </div>
-                            <ul className="list-none text-left space-y-2">
-                                {plan.features.map((feature, index) => (
-                                    <li key={index} className="flex items-center mb-1">
-                                        <svg className="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M20.293 6.293a1 1 0 00-1.414 0L10 14.586 5.121 9.707a1 1 0 00-1.415 1.414l5.657 5.657a1 1 0 001.414 0l9.95-9.95a1 1 0 000-1.414z" />
+                            <div className="flex flex-col items-center justify-center h-full w-full">
+                                <div className="flex items-center mb-2">
+                                    <h3 className="text-2xl font-bold">{plan.days}</h3>
+                                    <CustomTooltip text={plan.tooltip} style="dark" placement="right">
+                                        <svg className="w-4 h-4 text-gray-800 ml-2 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="#ffffff" viewBox="0 0 24 24">
+                                            <path fillRule="evenodd" d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm11-4a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0V8Zm-1 7a1 1 0 1 0 0 2 1 1 0 1 0 0-2Z" clipRule="evenodd" />
                                         </svg>
-                                        {feature}
-                                    </li>
-                                ))}
-                            </ul>
+                                    </CustomTooltip>
+                                </div>
+                                <div className="text-gray-600 my-4 border-t border-b border-gray-300 py-2 w-full flex flex-col items-center">
+                                    <span className="text-2xl font-bold">{plan.rate}</span>
+                                    <span>{plan.codAmount}</span>
+                                </div>
+                                <ul className="list-none text-left space-y-2 w-full px-2">
+                                    {plan.features.map((feature, index) => (
+                                        <li key={index} className="flex items-center mb-1">
+                                            <svg className="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M20.293 6.293a1 1 0 00-1.414 0L10 14.586 5.121 9.707a1 1 0 00-1.415 1.414l5.657 5.657a1 1 0 001.414 0l9.95-9.95a1 1 0 000-1.414z" />
+                                            </svg>
+                                            {feature}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className="mt-4 flex justify-center w-full">
+                                <button
+                                    className={`bg-red-500 mb-1 text-white px-6 py-2 rounded-md ${!termsAccepted ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    onClick={() => handleSave(plan.planType)}
+                                    disabled={!termsAccepted}
+                                >
+                                    {Label === plan.planType ? "Deactivate" : "Activate"}
+                                </button>
+                            </div>
                         </button>
+
                     </div>
                 ))}
             </div>
@@ -162,16 +182,6 @@ function EarlyCOD({ onClose }) {
             <div className="mt-4">
                 <input type="checkbox" id="terms" className="mr-2" onChange={handleCheckboxChange} />
                 <label htmlFor="terms">I have read the <span className="text-blue-500">Terms and Conditions</span></label>
-            </div>
-
-            <div className="mt-4 flex justify-center">
-                <button
-                    className={`bg-green-500 text-white px-6 py-2 rounded-md ${!termsAccepted ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    onClick={handleSave}
-                    disabled={!termsAccepted}
-                >
-                    Save
-                </button>
             </div>
         </div>
     );
