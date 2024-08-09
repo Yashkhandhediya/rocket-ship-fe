@@ -175,6 +175,11 @@ const PickupMenifests = ({ data, isLoading }) => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   }
 
+  const formatDDMMYYYY = (dateString) => {
+    const date = new Date(dateString);
+    return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+  };
+
   function splitString(string, length) {
     let result = [];
     for (let i = 0; i < string.length; i += length) {
@@ -182,6 +187,9 @@ const PickupMenifests = ({ data, isLoading }) => {
     }
     return result;
   }
+
+  const splitLimit = (text, maxLength) => 
+    text.match(new RegExp(`.{1,${maxLength}}`, 'g')) || [];
 
   const handleMenifest = (id) => {
     let temp_payload = flattenObject(resData, id);
@@ -239,8 +247,21 @@ const PickupMenifests = ({ data, isLoading }) => {
   };
 
   const handleShiipingLabel = (id) => {
-    console.log('asdfghjkjhgfdsa', id)
     let temp_payload = flattenShipmentLabel(resData, id);
+    temp_payload.state_country = `${temp_payload.user_info_state}, ${temp_payload.user_info_country}`;
+    temp_payload.city_pincode = `${temp_payload.user_info_city}, ${temp_payload.user_info_pincode}`;
+    temp_payload.created_date = formatDDMMYYYY(temp_payload.created_date);
+    splitLimit(temp_payload.buyer_info_complete_address, 45).forEach((line, index) => {
+        temp_payload[`buyer_info_complete_address_${index}`] = line;
+    });
+    Object.keys(temp_payload).forEach(key => {
+      if (key.startsWith('product_info_') && key.endsWith('_name')) {
+          splitLimit(temp_payload[key], 52).forEach((line, index) => {
+              temp_payload[`${key}_${index}`] = line;
+          });
+      }
+    });
+
     const headers = { 'Content-Type': 'application/json' };
 
     temp_payload['client_name'] = 'cloud_cargo';
