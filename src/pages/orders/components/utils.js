@@ -5,10 +5,16 @@ export const moreActionOptions = (actions) => [
     onClick: actions?.downloadInvoice,
   },
   {
+    label: 'Shipping Label',
+    key: 'downloadShiipingLabel',
+    onClick: actions?.downloadShiipingLabel,
+  },
+  {
     label: 'Edit Order',
     key: 'editOrder',
     onClick: actions?.editOrder,
   },
+  
   { type: 'divider' },
   // {
   //   label: 'Verify Order',

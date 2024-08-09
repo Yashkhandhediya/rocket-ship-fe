@@ -236,6 +236,12 @@ if (access_modules == null || access_modules?.length == 0) {
         icon: weight,
         hoverIcon: weight,
       },
+      {
+        title: 'Settings',
+        path: '/settings',
+        icon: settings,
+        hoverIcon: settings,
+      },
     ];
   }
 } else {

@@ -13,7 +13,7 @@ import { setAllOrders } from '../../../../../redux';
 
 
 const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentDrawer }) => {
-  console.log("SHIPPPPPPPPPPPP",shipmentDetails)
+  console.log("SHIPPPPPPPPPPPP", shipmentDetails)
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [scheduleModal, setScheduleModal] = useState({ isOpen: false, pickupDetails: {} });
@@ -29,7 +29,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
       setInfo({
         partner_id: 2,
         amount: data?.total_charge,
-        waybill_no:''
+        waybill_no: ''
       });
       return;
     }
@@ -37,26 +37,26 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
       requestData = {
         partner_id: 1,
         amount: data?.total_charge,
-        waybill_no:''
+        waybill_no: ''
       };
     }
     else if (data?.partner_name === 'Xpressbees') {
       requestData = {
         partner_id: 3,
         amount: data?.total_charge,
-        waybill_no:''
+        waybill_no: ''
       };
     } else if (data?.partner_name === 'ECOM EXPRESS') {
       requestData = {
         partner_id: 4,
         amount: data?.total_charge,
-        waybill_no:''
+        waybill_no: ''
       };
     } else if (data?.partner_name === 'Maruti') {
       requestData = {
         partner_id: 5,
         amount: data?.total_charge,
-        waybill_no:''
+        waybill_no: ''
       };
     }
     // setIsLoading(true);
@@ -239,9 +239,9 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
             id={row.id}
             className="min-w-fit rounded bg-orange-600 px-5 py-2 text-white"
             onClick={() => {
-                console.log('PARTNER NAME', row?.partner_name);
-                handleShipOrder(row);
-              }}>
+              console.log('PARTNER NAME', row?.partner_name);
+              handleShipOrder(row);
+            }}>
             {'Ship Now'}
           </button>
         </div>
@@ -256,9 +256,9 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           <div className="loader"></div>
         </div>
       )}
-      <div className="text-xs text-[rgb(136,136,136)]">{`${
-        shipmentDetails?.length || 0
-      } Couriers Found`}</div>
+      <div className="text-xs text-[rgb(136,136,136)]">{`${shipmentDetails?.length || 0
+        } Couriers Found`}</div>
+      
       <div className="mt-4 h-full w-full">
         <DataTable
           columns={columns}
@@ -279,28 +279,28 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         pickupDetails={scheduleModal.pickupDetails}
       />
 
-    {showPopup && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-gray-400 bg-opacity-50 outline-none focus:outline-none">
-              <div className="rounded-lg bg-white p-6 ">
-                <div className="flex justify-between">
-                  <h2 className="mb-4 text-lg font-semibold">Enter Way Bill No.</h2>
-                <span onClick={() => {setShowPopup(false)}}><i className="fa-solid fa-xmark"></i></span> 
-                </div>
-                <input
-                  type="text"
-                  value={wayBill}
-                  onChange={(e) => setWayBill(e.target.value)}
-                  placeholder="Enter Way Bill No."
-                  className="mb-4 rounded-lg border border-gray-400 px-3 py-2"
-                />
-                <div className="flex justify-end">
-                  <button className="rounded-lg bg-blue-500 px-4 py-2 text-white" onClick={() => handleDtdc()}>
-                    Submit
-                  </button>
-                </div>
-              </div>
+      {showPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-gray-400 bg-opacity-50 outline-none focus:outline-none">
+          <div className="rounded-lg bg-white p-6 ">
+            <div className="flex justify-between">
+              <h2 className="mb-4 text-lg font-semibold">Enter Way Bill No.</h2>
+              <span onClick={() => { setShowPopup(false) }}><i className="fa-solid fa-xmark"></i></span>
             </div>
-          )}
+            <input
+              type="text"
+              value={wayBill}
+              onChange={(e) => setWayBill(e.target.value)}
+              placeholder="Enter Way Bill No."
+              className="mb-4 rounded-lg border border-gray-400 px-3 py-2"
+            />
+            <div className="flex justify-end">
+              <button className="rounded-lg bg-blue-500 px-4 py-2 text-white" onClick={() => handleDtdc()}>
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

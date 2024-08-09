@@ -30,27 +30,27 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         "amount": data?.total_charge,
       }
     }
-    else if(data?.partner_name === 'Xpressbees'){
+    else if (data?.partner_name === 'Xpressbees') {
       requestData = {
-        "partner_id":3,
-        "amount":data?.total_charge,
+        "partner_id": 3,
+        "amount": data?.total_charge,
       }
     }
-    else if(data?.partner_name === 'ECOM EXPRESS'){
+    else if (data?.partner_name === 'ECOM EXPRESS') {
       requestData = {
-        "partner_id":4,
-        "amount":data?.total_charge,
+        "partner_id": 4,
+        "amount": data?.total_charge,
       }
     }
-    else if(data?.partner_name === 'Maruti'){
+    else if (data?.partner_name === 'Maruti') {
       requestData = {
-        "partner_id":5,
-        "amount":data?.total_charge,
+        "partner_id": 5,
+        "amount": data?.total_charge,
       }
     }
     setIsLoading(true);
     if (orderId) {
-      console.log("JTTTTTTTTTT",requestData)
+      console.log("JTTTTTTTTTT", requestData)
       axios
         .post(`${BACKEND_URL}/order/${orderId}/shipment`, requestData)
         .then((resp) => {
@@ -91,9 +91,9 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
   const getColumns = () => {
     const columnHelper = createColumnHelper()
     return [
-      columnHelper.accessor('courierPartner',{
+      columnHelper.accessor('courierPartner', {
         header: 'Courier Partner',
-        cell: ({row}) => (
+        cell: ({ row }) => (
           <div className="flex gap-1 text-left">
             <div>{/* <img src={''} className="h-10 w-10 rounded-full bg-gray-400" /> */}</div>
             <div>
@@ -112,9 +112,9 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           </div>
         ),
       }),
-      columnHelper.accessor('rating',{
+      columnHelper.accessor('rating', {
         header: 'Rating',
-        cell: ({row}) => (
+        cell: ({ row }) => (
           <div className="flex flex-col gap-1 text-left">
             <div className="relative h-12 w-12 text-sm font-medium">
               <RatingProgressBar rating={row?.original?.rating || 0} />
@@ -122,33 +122,33 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           </div>
         ),
       }),
-      columnHelper.accessor('expectedPickup',{
+      columnHelper.accessor('expectedPickup', {
         header: 'Expected Pickup',
-        cell: ({row}) => (
+        cell: ({ row }) => (
           <div className="flex flex-col gap-1 text-left">
             <div className="text-xs text-[#555]">{row?.original?.expected_pickup || '-'}</div>
           </div>
         ),
       }),
-      columnHelper.accessor('estimatedDelivery',{
+      columnHelper.accessor('estimatedDelivery', {
         header: 'Estimated Delivery',
-        cell: ({row}) => (
+        cell: ({ row }) => (
           <div className="flex flex-col gap-1 text-left">
             <div className="text-xs text-[#555]">{row?.original?.estimated_delivery || '-'}</div>
           </div>
         ),
       }),
-      columnHelper.accessor('chargebleWeight',{
+      columnHelper.accessor('chargebleWeight', {
         header: 'Chargeable Weight',
-        cell: ({row}) => (
+        cell: ({ row }) => (
           <div className="flex flex-col gap-1 text-center justify-center">
             <div className="text-xs text-[#555]">{`${row?.original?.chargable_weight || ''} Kg`}</div>
           </div>
         ),
       }),
-      columnHelper.accessor('charges',{
+      columnHelper.accessor('charges', {
         header: 'Charges',
-        cell: ({row}) => (
+        cell: ({ row }) => (
           <div className="flex flex-col gap-1 py-2 text-left">
             <div className="flex items-center">
               <div className="text-base font-bold text-[gray]">{`₹${row?.original?.total_charge || ''}`}</div>
@@ -196,7 +196,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
       <div className='flex text-[10px] p-1'>
         <div className='text-black'>{"Availale Services:"}</div>
         {["Call before delivery", "Instant POD", "Delivery personn contact no.", "Real Time Tracking"].map((service, i) => {
-          return (<div key={i} className={`px-3 text-[#888] ${i+1 !== services?.length ? 'border-r-2 border-[#dbdbdb]': ''}`}>{service}</div>)
+          return (<div key={i} className={`px-3 text-[#888] ${i + 1 !== services?.length ? 'border-r-2 border-[#dbdbdb]' : ''}`}>{service}</div>)
         })}
       </div>
     );
@@ -209,9 +209,12 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           <div className="loader"></div>
         </div>
       )}
-      <div className="text-xs mb-4 text-[rgb(136,136,136)]">{`${
-        shipmentDetails?.length || 0
-      } Couriers Found`}</div>
+      <div className="text-xs mb-4 text-[rgb(136,136,136)]">{`${shipmentDetails?.length || 0
+        } Couriers Found`}</div>
+        <div className="ml-4 mt-2 mb-3 w-[98%] text-red-700 p-2 ">
+        <marquee className=''>If your pincode is serviceable by our partners, the applicable shipping charges will be displayed.</marquee>
+      </div>
+      
       <CustomDataTable
         columns={getColumns()}
         rowData={shipmentDetails}
@@ -222,7 +225,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
 
       <SchedulePickupModal
         isOpen={scheduleModal.isOpen}
-        onClose={() =>{
+        onClose={() => {
           setScheduleModal({
             isOpen: false,
             pickupDetails: {},
