@@ -106,6 +106,7 @@ const PickupMenifests = ({ data, isLoading }) => {
     const keyCounts = {};
     for (let i = 0; i < resData.length; i++) {
       if (resData[i].id == id) {
+        console.log('asdfghjk', resData[i].id)
         obj = resData[i];
         break;
       }
@@ -132,6 +133,42 @@ const PickupMenifests = ({ data, isLoading }) => {
     flatten(obj);
     return flattened;
   }
+
+  function flattenShipmentLabel(obj, id) {
+    function flatten(obj, parentKey = '', res = {}) {
+      for (let key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+          let newKey = parentKey ? `${parentKey}_${key}` : key;
+  
+          if (Array.isArray(obj[key])) {
+            obj[key].forEach((item, index) => {
+              if (typeof item === 'object' && item !== null) {
+                flatten(item, `${newKey}_${index}`, res);
+              } else {
+                res[`${newKey}_${index}`] = item;
+              }
+            });
+          } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+            flatten(obj[key], newKey, res);
+          } else {
+            res[newKey] = obj[key];
+          }
+        }
+      }
+      return res;
+    }
+  
+    let flatObj = {};
+    for (let i = 0; i < resData.length; i++) {
+      if (resData[i].id == id) {
+        flatObj = flatten(resData[i]);
+        break;
+      }
+    }
+  
+    return flatObj;
+  }
+  
 
   function formatDate(dateString) {
     const options = { day: 'numeric', month: 'short', year: 'numeric' };
@@ -202,7 +239,8 @@ const PickupMenifests = ({ data, isLoading }) => {
   };
 
   const handleShiipingLabel = (id) => {
-    let temp_payload = flattenObject(resData, id);
+    console.log('asdfghjkjhgfdsa', id)
+    let temp_payload = flattenShipmentLabel(resData, id);
     const headers = { 'Content-Type': 'application/json' };
 
     temp_payload['client_name'] = 'cloud_cargo';
@@ -215,7 +253,7 @@ const PickupMenifests = ({ data, isLoading }) => {
         const url = window.URL.createObjectURL(blob);
         window.open(url);
         toast('Menifest Download Successfully', { type: 'success' });
-        window.location.reload();
+        // window.location.reload();
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -397,7 +435,7 @@ const PickupMenifests = ({ data, isLoading }) => {
               <MoreDropdown
                 renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                 options={moreActionOptions({
-                  downloadShiipingLabel: () => handleShiipingLabel(row?.original?.id),
+                  downloadShiipingLabel: () => handleShiipingLabel(row?.row?.original?.id),
                   downloadInvoice: () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row?.original),
                   cancelOrder: () => cancelOrder(row?.row?.original),
@@ -441,7 +479,7 @@ const PickupMenifests = ({ data, isLoading }) => {
   function editOrder(orderDetails) {
     // let isEdit = true
     // order_id = orderDetails?.id
-    console.log('order_iddddddd',orderDetails)
+    console.log('order_iddddddd', orderDetails)
     let data = {
       isEdit: true,
       order_id: orderDetails?.id,
