@@ -159,9 +159,9 @@ const PickupMenifests = ({ data, isLoading }) => {
     }
   
     let flatObj = {};
-    for (let i = 0; i < resData.length; i++) {
-      if (resData[i].id == id) {
-        flatObj = flatten(resData[i]);
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].id == id) {
+        flatObj = flatten(data[i]);
         break;
       }
     }
@@ -188,8 +188,11 @@ const PickupMenifests = ({ data, isLoading }) => {
     return result;
   }
 
-  const splitLimit = (text, maxLength) => 
-    text.match(new RegExp(`.{1,${maxLength}}`, 'g')) || [];
+  const splitLimit = (text, maxLength) => {
+    if (!text) return [];
+    return text.match(new RegExp(`.{1,${maxLength}}`, 'g')) || [];
+  };
+  
 
   const handleMenifest = (id) => {
     let temp_payload = flattenObject(resData, id);
@@ -247,7 +250,7 @@ const PickupMenifests = ({ data, isLoading }) => {
   };
 
   const handleShiipingLabel = (id) => {
-    let temp_payload = flattenShipmentLabel(resData, id);
+    let temp_payload = flattenShipmentLabel(data, id);
     temp_payload.user_info_state_country = `${temp_payload.user_info_state}-${temp_payload.user_info_country}`;
     temp_payload.user_info_city_pincode = `${temp_payload.user_info_city}-, ${temp_payload.user_info_pincode}`;
     temp_payload.buyer_info_state_country = `${temp_payload.buyer_info_state}-${temp_payload.buyer_info_country}`;
