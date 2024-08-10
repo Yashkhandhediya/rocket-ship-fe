@@ -211,8 +211,8 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
       )}
       <div className="text-xs mb-4 text-[rgb(136,136,136)]">{`${shipmentDetails?.length || 0
         } Couriers Found`}</div>
-        <div className="ml-4 mt-2 mb-3 w-[98%] text-red-700 p-2 ">
-        <marquee className=''>If your pincode is serviceable by our partners, the applicable shipping charges will be displayed.</marquee>
+        <div className=" mt-2 mb-3 w-[98%] text-red-700 p-2 ">
+        If your pincode is serviceable by our partners, the applicable shipping charges will be displayed.
       </div>
       
       <CustomDataTable

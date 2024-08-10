@@ -92,7 +92,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
             dispatch(setAllOrders(null));
             if (resp?.data?.success) {
               closeShipmentDrawer();
-              window.location.reload();
+              // window.location.reload();
             }
           }
         })

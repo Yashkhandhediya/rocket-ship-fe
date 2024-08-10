@@ -89,8 +89,8 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
   return (
     <div className="mt-3 h-full">
       {isLoading && <Loader/>}
-      <div className="w-[98%] text-red-700 p-2 ">
-        <marquee className=''>If your pincode is serviceable by our partners, the applicable shipping charges will be displayed.</marquee>
+      <div className="w-[98%] text-red-600 p-2 text-left mb-1">
+        If your pincode is serviceable by our partners, the applicable shipping charges will be displayed.
       </div>
       <Tabs tabs={tabsData} tabClassNames={'px-6 text-[#888]'} />
     </div>

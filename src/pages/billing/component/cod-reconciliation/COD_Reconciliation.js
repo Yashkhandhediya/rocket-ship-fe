@@ -57,7 +57,7 @@ const COD_Reconciliation = ({ charges, data }) => {
                             <div className="w-[11.11%] border-r-2 py-2.5 text-center">Bank Transaction Id</div>
                             <div className="w-[11.11%] border-r-2 py-2.5 text-center">Status</div>
                             <div className="w-[11.11%] border-r-2 py-2.5 text-center">COD To Remitted</div>
-                            <div className="w-[11.11%] border-r-2 py-2.5 text-center">Action</div>
+                            <div className="w-[19.2%] border-r-2 py-2.5 text-center">Action</div>
                         </div>
                         <div className="flex flex-col items-center justify-center">
                             {Array.isArray(data) && data.length > 0 ? data.map((item, key) => (
@@ -87,12 +87,17 @@ const COD_Reconciliation = ({ charges, data }) => {
                                     <div className="h-full flex justify-center flex-col w-[11.11%] border-r-2 font-normal">
                                         <div>{item.cod_to_be_remitted}</div>
                                     </div>
-                                    <div className="px-2 flex item-center h-full w-[11.11%] items-center border-r-2 justify-center font-normal">
+                                    <div className="px-2 flex item-center h-full w-[17.77%] items-center border-r-2 justify-center font-normal">
                                         <button
-                                            className={`py-1.5 w-48 bg-[#E02424] text-white text-[14px] rounded-md ${(!item.buttun_flag) ? 'cursor-not-allowed' : ''}`}
-                                            onClick={() => updateStatus(item.id, "inprogress")}
+                                            className={`py-1.5 mr-1 w-48 bg-[#E02424] text-white text-[14px] rounded-md ${(!item.buttun_flag) ? 'cursor-not-allowed' : ''}`}
+                                            onClick={() => updateStatus(item.id, "In Progress")}
                                             disabled={!item.buttun_flag}
                                         >Initiated COD</button>
+                                        <button
+                                            className={`py-1.5 w-48 bg-[#E02424] text-white text-[14px] rounded-md ${(!item.buttun_flag) ? 'cursor-not-allowed' : ''}`}
+                                            onClick={() => updateStatus(item.id, "Transferd")}
+                                            disabled={!item.buttun_flag}
+                                        >Manual Transfer</button>
                                     </div>
 
                                 </div>
@@ -111,6 +116,7 @@ const COD_Reconciliation = ({ charges, data }) => {
                                 </div>
                             )}
                         </div>
+                        
                     </div>) : (<div className="m-2">
                         <div className="flex items-center border border-b-[#E5E7EB] text-left">
                             <div className="w-[14.29%] border-r-2 py-2.5 text-center">Order ID</div>

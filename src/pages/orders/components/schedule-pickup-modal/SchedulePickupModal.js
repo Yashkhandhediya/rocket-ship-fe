@@ -35,6 +35,7 @@ const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
         if (resp.status === 200) {
           toast(`pickup scheduled successfully on date ${formattedDate}`, { type: 'success' });
           onClose();
+          window.location.reload();
         }
       })
       .catch(() => {
