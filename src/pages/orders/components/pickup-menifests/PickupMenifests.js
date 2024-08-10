@@ -205,7 +205,7 @@ const PickupMenifests = ({ data, isLoading }) => {
         const url = window.URL.createObjectURL(blob);
         window.open(url);
         toast('Menifest Download Successfully', { type: 'success' });
-        window.location.reload();
+        // window.location.reload();
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -248,11 +248,17 @@ const PickupMenifests = ({ data, isLoading }) => {
 
   const handleShiipingLabel = (id) => {
     let temp_payload = flattenShipmentLabel(resData, id);
-    temp_payload.state_country = `${temp_payload.user_info_state}, ${temp_payload.user_info_country}`;
-    temp_payload.city_pincode = `${temp_payload.user_info_city}, ${temp_payload.user_info_pincode}`;
+    temp_payload.user_info_state_country = `${temp_payload.user_info_state}-${temp_payload.user_info_country}`;
+    temp_payload.user_info_city_pincode = `${temp_payload.user_info_city}-, ${temp_payload.user_info_pincode}`;
+    temp_payload.buyer_info_state_country = `${temp_payload.buyer_info_state}-${temp_payload.buyer_info_country}`;
+    temp_payload.buyer_info_city_pincode = `${temp_payload.buyer_info_city}-${temp_payload.buyer_info_pincode}`;
+    temp_payload.length_width_height = `${temp_payload.length} × ${temp_payload.width} × ${temp_payload.height}`;
     temp_payload.created_date = formatDDMMYYYY(temp_payload.created_date);
     splitLimit(temp_payload.buyer_info_complete_address, 45).forEach((line, index) => {
         temp_payload[`buyer_info_complete_address_${index}`] = line;
+    });
+    splitLimit(temp_payload.user_info_complete_address, 45).forEach((line, index) => {
+      temp_payload[`user_info_complete_address_${index}`] = line;
     });
     Object.keys(temp_payload).forEach(key => {
       if (key.startsWith('product_info_') && key.endsWith('_name')) {
@@ -261,6 +267,9 @@ const PickupMenifests = ({ data, isLoading }) => {
           });
       }
     });
+    if(temp_payload.payment_type_name==='cod'){
+      temp_payload.collect_amount = temp_payload.sub_total
+    }
 
     const headers = { 'Content-Type': 'application/json' };
 
