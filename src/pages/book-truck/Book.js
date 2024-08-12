@@ -274,25 +274,27 @@ const Book = () => {
                   <p>Truck Type</p>
                   <p>Charges</p>
                 </div>
-                {selectedCity[index]
-                  ? (selectedTrucks[selectedCity[index]] || []).map((truck, truckIndex) => (
-                      <div
-                        className="flex cursor-pointer flex-row justify-between border-b px-3 py-1.5 text-[16px] font-medium text-[#5f5f5f] hover:bg-gray-100"
-                        key={truckIndex}
-                        onClick={() => setShowModal(true)}>
-                        <p className="font-normal">{truck.truck_type}</p>
-                        <p>{truck.avg_price}</p>
-                      </div>
-                    ))
-                  : route.truck_rates.map((truck, truckIndex) => (
-                      <div
-                        className="flex cursor-pointer flex-row justify-between border-b px-3 py-1.5 text-[16px] font-medium text-[#5f5f5f] hover:bg-gray-100"
-                        key={truckIndex}
-                        onClick={() => setShowModal(true)}>
-                        <p className="font-normal">{truck.truck_type}</p>
-                        <p>{truck.avg_price}</p>
-                      </div>
-                    ))}
+                <div className="flex-grow overflow-auto max-h-[150px]">
+                  {selectedCity[index]
+                    ? (selectedTrucks[selectedCity[index]] || []).map((truck, truckIndex) => (
+                        <div
+                          className="flex cursor-pointer flex-row justify-between border-b px-3 py-1.5 text-[16px] font-medium text-[#5f5f5f] hover:bg-gray-100"
+                          key={truckIndex}
+                          onClick={() => setShowModal(true)}>
+                          <p className="font-normal">{truck.truck_type}</p>
+                          <p>{truck.avg_price}</p>
+                        </div>
+                      ))
+                    : route.truck_rates.map((truck, truckIndex) => (
+                        <div
+                          className="flex cursor-pointer flex-row justify-between border-b px-3 py-1.5 text-[16px] font-medium text-[#5f5f5f] hover:bg-gray-100"
+                          key={truckIndex}
+                          onClick={() => setShowModal(true)}>
+                          <p className="font-normal">{truck.truck_type}</p>
+                          <p>{truck.avg_price}</p>
+                        </div>
+                      ))}
+                </div>
               </div>
 
               <div className="mt-auto flex flex-row justify-between px-3">
