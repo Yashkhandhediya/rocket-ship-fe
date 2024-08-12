@@ -48,13 +48,13 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   const [isOrderIdValid, setIsOrderIdValid] = useState(true);
 
   const [formDirectField, setFormDirectField] = useState({
-    channel: '',
+    channel: domesticOrderFormValues?.channel_name || 'custom',
     date: moment(new Date()).format('YYYY-MM-DD'),
-    tag: '',
-    reseller_name: '',
-    sub_total: 0,
-    other_charges: 0,
-    total_amount: 0,
+    tag: domesticOrderFormValues?.tag || '',
+    reseller_name: domesticOrderFormValues?.reseller_name || '',
+    sub_total: domesticOrderFormValues?.sub_total || 0,
+    other_charges: domesticOrderFormValues?.other_charges || 0,
+    total_amount: domesticOrderFormValues?.total_amount || 0,
   });
 
   const [productFields, setProductFields] = useState([defaultProductField]);
@@ -222,7 +222,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
 
   // Handle product suggestion selection
   const handleProductSuggestionClick = (suggestion, index) => {
-    console.log("Suggestion Valueeeeee",suggestion)
+    console.log('Suggestion Valueeeeee', suggestion);
     const allFields = [...productFields];
     allFields[index]['name'] = suggestion.name;
     allFields[index]['unit_price'] = suggestion.unit_price;
@@ -234,7 +234,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     package_info.length = suggestion.length;
     package_info.width = suggestion.width;
     package_info.height = suggestion.height;
-    package_info.volumatric_weight = suggestion.volumatric_weight
+    package_info.volumatric_weight = suggestion.volumatric_weight;
     // setCashCharge(suggestion.cod_charge)
     setShowProductSuggestions(false);
   };
@@ -375,7 +375,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
       const filteredSuggestions = response.data.filter(
         (user) => user.name && user.name.toLowerCase().includes(value.toLowerCase()),
       );
-      console.log("REEEEEEEE",filteredSuggestions)
+      console.log('REEEEEEEE', filteredSuggestions);
       setSuggestions(filteredSuggestions);
     } catch (error) {
       console.error('Error fetching suggestions:', error);
@@ -422,6 +422,8 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     suggestion: 'p-2 cursor-pointer',
     suggestionHighlighted: 'bg-gray-300',
   };
+
+  console.log(formDirectField, domesticOrderFormValues);
 
   return (
     <div>
@@ -534,7 +536,9 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               <div className="mb-4 border-b border-gray-200" key={index}>
                 <div className="mb-3 w-full md:flex">
                   <div className="relative w-full px-2 pb-2 xl:w-4/12">
-                    <label className={`mb-2 flex items-center text-xs font-medium text-gray-600`}>{`Product ${index + 1} Name`}</label>
+                    <label className={`mb-2 flex items-center text-xs font-medium text-gray-600`}>{`Product ${
+                      index + 1
+                    } Name`}</label>
                     <Autosuggest
                       suggestions={suggestions}
                       onSuggestionsFetchRequested={onSuggestionsFetchRequested}
@@ -560,17 +564,17 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                           sku: suggestion.sku,
                           unit_price: suggestion.unit_price,
                           category: suggestion.category,
-                          discount:suggestion.discount
+                          discount: suggestion.discount,
                         };
                         newProductFields[index] = {
                           ...newProductFields[index],
                           ...responseSchema,
                         };
                         setProductFields(newProductFields);
-                        package_info.length = suggestion.length
-                        package_info.width = suggestion.width
-                        package_info.height = suggestion.height
-                        package_info.volumatric_weight = String(suggestion.volumetric_weight)
+                        package_info.length = suggestion.length;
+                        package_info.width = suggestion.width;
+                        package_info.height = suggestion.height;
+                        package_info.volumatric_weight = String(suggestion.volumetric_weight);
                       }}
                       theme={theme}
                     />
@@ -650,7 +654,9 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                           inputClassNames={'text-xs'}
                           labelClassNames={'text-xs'}
                           placeHolder={'Enter your product HSN code'}
-                          tooltip={'HSN code is a 6-digit uniform code that classifies 5000+ products and is accepted worldwide.'}
+                          tooltip={
+                            'HSN code is a 6-digit uniform code that classifies 5000+ products and is accepted worldwide.'
+                          }
                           value={field?.hsn_code || ''}
                           onChange={(e) => handleSetProductFields(e, index)}
                         />

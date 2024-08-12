@@ -217,7 +217,10 @@ const Orders = () => {
             {is_company == 0 && (
               <button
                 className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-sm font-medium text-orange-600'}
-                onClick={() => navigate('/add-order')}>
+                onClick={() => {
+                  navigate('/add-order');
+                  window.location.reload();
+                }}>
                 + Add Order
               </button>
             )}
