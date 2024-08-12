@@ -16,11 +16,7 @@ const Book = () => {
   const navigate = useNavigate();
 
   const [showModal, setShowModal] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState([
-    { isOpen: false },
-    { isOpen: false },
-    { isOpen: false },
-  ]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(null);
 
   const [trucks, setTrucks] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -45,9 +41,18 @@ const Book = () => {
       setCityList(toCity);
       setFilteredCities(toCity);
 
-      // Initialize selectedTrucks with truck data for the first city
-      const initialTrucks = response.data.find((truck) => truck.to_city === toCity[0]);
-      setSelectedTrucks(initialTrucks ? { [toCity[0]]: initialTrucks.truck_rates } : {});
+      // Initialize selectedCity with all available 'to_city'
+      setSelectedCity(toCity);
+
+      // Initialize selectedTrucks with truck data for each city
+      const initialTrucks = toCity.reduce((result, city) => {
+        const cityTrucks = response.data.find((truck) => truck.to_city === city);
+        if (cityTrucks) {
+          result[city] = cityTrucks.truck_rates;
+        }
+        return result;
+      }, {});
+      setSelectedTrucks(initialTrucks);
     } catch (err) {
       console.log('Error fetching truck rates', err);
     } finally {
@@ -62,12 +67,10 @@ const Book = () => {
   useEffect(() => {
     function handleClickOutside(event) {
       if (
-        inputRef.current &&
-        !inputRef.current.contains(event.target) &&
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target)
       ) {
-        setIsDropdownOpen((prev) => prev.map((item, index) => ({ isOpen: false })));
+        setIsDropdownOpen(null);
       }
     }
 
@@ -96,7 +99,9 @@ const Book = () => {
       }));
     }
 
-    setIsDropdownOpen((prev) => prev.map((item, i) => (i === index ? { isOpen: false } : item)));
+    // setIsDropdownOpen((prev) => prev.map((item, i) => (i === index ? { isOpen: false } : item)));
+    setIsDropdownOpen(null); 
+
   }
 
   useEffect(() => {
@@ -118,18 +123,13 @@ const Book = () => {
       return newSelected;
     });
 
-    // Filter cities based on user input
     if (inputValue) {
       setFilteredCities(cityList.filter((city) => city.toLowerCase().includes(inputValue.toLowerCase())));
     } else {
       setFilteredCities(cityList);
     }
 
-    setIsDropdownOpen((prev) => {
-      const newDropdown = [...prev];
-      newDropdown[index] = { isOpen: true };
-      return newDropdown;
-    });
+    setIsDropdownOpen((prevIndex) => (prevIndex === index || inputValue ? index : null));
   }
 
   function Dropdown({ isOpen, index }) {
@@ -256,22 +256,17 @@ const Book = () => {
                 <div className="mr-2">{route.from_city} to </div>
                 <div className="relative flex items-center rounded bg-gray-100 shadow-md ">
                   <div className="m-2 h-2  w-2 rounded bg-red-500"></div>
-                  <input
-                    ref={inputRef}
-                    className="h-10 w-[100%] cursor-pointer rounded border-0 bg-gray-100 px-2 outline-none ring-0 focus:outline-none focus:ring-0"
-                    placeholder="Select a city"
-                    value={selectedCity[index] || route.to_city}
-                    onChange={(e) => handleInputChange(e, index)}
-                    // readOnly
-                    onClick={() =>
-                      setIsDropdownOpen((prev) => {
-                        const newDropdown = [...prev];
-                        newDropdown[index] = { isOpen: !newDropdown[index]?.isOpen };
-                        return newDropdown;
-                      })
-                    }
-                  />
-                  <Dropdown isOpen={isDropdownOpen[index]?.isOpen} index={index} />
+                    <input
+                      ref={inputRef}
+                      className="h-10 w-[100%] cursor-pointer rounded border-0 bg-gray-100 px-2 outline-none ring-0 focus:outline-none focus:ring-0"
+                      placeholder="Select a city"
+                      value={selectedCity[index] || ''}
+                      onChange={(e) => handleInputChange(e, index)}
+                      onClick={() => setIsDropdownOpen((prevIndex) => (prevIndex === index ? null : index))}
+                    />
+                  {/* <Dropdown isOpen={isDropdownOpen[index]?.isOpen} index={index} /> */}
+                  <Dropdown isOpen={isDropdownOpen === index} index={index} />
+
                 </div>
               </div>
               <div className="flex flex-grow flex-col">
