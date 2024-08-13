@@ -15,7 +15,7 @@ function EarlyCOD({ onClose }) {
     useEffect(() => {
         const fetchPlanType = async () => {
             try {
-                const response = await fetch(`${BACKEND_URL}/order/get_code_plan/${userId}`);
+                const response = await fetch(`${BACKEND_URL}/order/get_cod_plan/${userId}`);
                 const data = await response.json();
                 setActivePlan(data.plan_type);
                 setLabel(data.plan_type);
@@ -79,19 +79,17 @@ function EarlyCOD({ onClose }) {
         }
 
         try {
-            let response;
-            if (Label === planType) {
-                response = await fetch(`${BACKEND_URL}/order/deactive_code_plan/${userId}`, {
-                    method: 'POST',
-                });
-            } else {
-                response = await fetch(`${BACKEND_URL}/order/set_code_plan?user_id=${userId}&plan_id=${planType}`, {
-                    method: 'POST',
-                });
-            }
+            const url = Label === planType
+                ? `${BACKEND_URL}/order/deactive_cod_plan/${userId}?plan_id=${planType}`
+                : `${BACKEND_URL}/order/set_cod_plan?user_id=${userId}&plan_id=${planType}`;
+            const response = await fetch(url, { method: 'POST' });
             const result = await response.json();
-            toast.success(result || 'Operation successful');
-            window.location.reload();
+            if (result.status === 1) {
+                toast.success(result.details || 'Operation successful');
+                window.location.reload();
+            } else {
+                toast.error(result.details || 'Operation failed');
+            }
         } catch (error) {
             toast.error('Error saving plan: ' + error.message);
         }
@@ -130,8 +128,16 @@ function EarlyCOD({ onClose }) {
                         {Label === plan.planType && (
                             <div className="w-[60%] absolute top-[-16px] left-12 right-0 bg-red-500 text-black px-2 py-1 rounded-lg text-center z-5" style={{ minWidth: '10px' }}>
                                 <span className="flex items-center justify-center text-white text-sm font-semibold">
-                                    <FontAwesomeIcon icon={faCrown} className="mr-1" style={{ color: 'yellow' }} />
+                                    {/* <FontAwesomeIcon icon={faCrown} className="mr-1" style={{ color: 'yellow' }} /> */}
                                     Active Plan
+                                </span>
+                            </div>
+                        )}
+                        {2 === plan.planType && (
+                            <div className="w-[60%] absolute top-[-16px] left-12 right-0 bg-yellow-500 text-black px-2 py-1 rounded-lg text-center z-5" style={{ minWidth: '10px' }}>
+                                <span className="flex items-center justify-center text-white text-sm font-semibold">
+                                    <FontAwesomeIcon icon={faCrown} className="mr-1" style={{ color: 'yellow' }} />
+                                    {Label === plan.planType ? "Active Plan" : "Most Popular Plan"}
                                 </span>
                             </div>
                         )}
