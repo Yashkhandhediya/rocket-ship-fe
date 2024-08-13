@@ -26,6 +26,7 @@ import {
   UserList,
   Catalogue,
   Manage_user,
+  Early_COD
 } from '../pages';
 
 import Tracking from '../pages/tracking/Tracking';
@@ -62,6 +63,7 @@ import { GstinInvoicing } from '../pages/gstin-invoicing';
 import { Reports } from '../pages/reports';
 import ScheduleReports from '../pages/reports/ScheduledReports';
 import ScheduledReports from '../pages/reports/ScheduledReports';
+
 
 const routes = createBrowserRouter([
   {
@@ -337,6 +339,10 @@ const routes = createBrowserRouter([
   {
     path: '/scheduled-reports',
     element: <PrivateRoute component={<ScheduledReports />} />,
+  },
+  {
+    path: '/early-cod',
+    element: <PrivateRoute component={<Early_COD />} />,
   },
 ]);
 

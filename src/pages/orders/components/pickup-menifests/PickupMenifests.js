@@ -195,7 +195,7 @@ const PickupMenifests = ({ data, isLoading }) => {
   
 
   const handleMenifest = (id) => {
-    let temp_payload = flattenObject(resData, id);
+    let temp_payload = flattenObject(data, id);
     const headers = { 'Content-Type': 'application/json' };
 
     temp_payload['client_name'] = 'cloud_cargo';
@@ -217,7 +217,7 @@ const PickupMenifests = ({ data, isLoading }) => {
   };
 
   const handleInvoice = (id) => {
-    let temp_payload = flattenObject(resData, id);
+    let temp_payload = flattenObject(data, id);
     console.log('kkkkkkkkkk', temp_payload);
     const headers = { 'Content-Type': 'application/json' };
     // console.log("jtttttttttt",temp_payload['complete_address1'],temp_payload['complete_address1'].length)

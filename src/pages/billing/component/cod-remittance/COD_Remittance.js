@@ -242,7 +242,7 @@ const COD_Remittance = () => {
                     }
                 </div>
                 {activeTab === 0 && <COD_Reconciliation charges={charges} data={currentPageData} />}
-                {activeTab === 0 && <div>
+                {activeTab === 0 && currentPageData.length > 0 && <div>
                     <Pagination page={page} totalData={totalData} setPage={setPage} perPage={per_page} data={data} handlePageChange={handlePageChange} handlePerPageChange={handlePerPageChange} />
                 </div>}
                 {activeTab === 1 && <FutureCod />}

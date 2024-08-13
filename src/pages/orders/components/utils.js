@@ -1,53 +1,38 @@
-export const moreActionOptions = (actions) => [
-  {
-    label: 'Download Invoice',
-    key: 'downloadInvoice',
-    onClick: actions?.downloadInvoice,
-  },
-  {
-    label: 'Shipping Label',
-    key: 'downloadShiipingLabel',
-    onClick: actions?.downloadShiipingLabel,
-  },
-  {
-    label: 'Edit Order',
-    key: 'editOrder',
-    onClick: actions?.editOrder,
-  },
-  
-  { type: 'divider' },
-  // {
-  //   label: 'Verify Order',
-  //   key: 'verifyOrder',
-  //   onClick: () => {},
-  // },
-  // {
-  //   label: 'Call Buyer',
-  //   key: 'callBuyer',
-  //   onClick: () => {},
-  // },
-  // {
-  //   label: 'Mark as verified',
-  //   key: 'markAsVerified',
-  //   onClick: () => {},
-  // },
-  // { type: 'divider' },
-  // {
-  //   label: 'Add Order Tag',
-  //   key: 'addOrderTag',
-  //   onClick: () => {},
-  // },
-  {
-    label: 'Clone Order',
-    key: 'cloneOrder',
-    onClick: actions?.cloneOrder,
-  },
-  {
-    label: 'Cancel Order',
-    key: 'cancelOrder',
-    onClick: actions?.cancelOrder,
-  },
-];
+export const moreActionOptions = (actions) => {
+  const activeOrderTab = localStorage.getItem('activeOrderTab');
+
+  return [
+    {
+      label: 'Download Invoice',
+      key: 'downloadInvoice',
+      onClick: actions?.downloadInvoice,
+    },
+    ...(activeOrderTab === '2' || activeOrderTab === '3' || activeOrderTab === '4' ? [{
+      label: 'Shipping Label',
+      key: 'downloadShiipingLabel',
+      onClick: actions?.downloadShiipingLabel,
+    }] : []),
+    {
+      label: 'Edit Order',
+      key: 'editOrder',
+      onClick: actions?.editOrder,
+    },
+    
+    { type: 'divider' },
+    {
+      label: 'Clone Order',
+      key: 'cloneOrder',
+      onClick: actions?.cloneOrder,
+    },
+    {
+      label: 'Cancel Order',
+      key: 'cancelOrder',
+      onClick: actions?.cancelOrder,
+    },
+  ];
+};
+
+
 
 export const moreActionRtoOptions = (actions) => [
   {

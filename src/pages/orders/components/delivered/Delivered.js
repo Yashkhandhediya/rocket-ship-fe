@@ -166,6 +166,95 @@ const Delivered = ({ data, isLoading }) => {
         toast('Error in Invoice Download', { type: 'error' });
       });
   };
+  const splitLimit = (text, maxLength) => {
+    if (!text) return [];
+    return text.match(new RegExp(`.{1,${maxLength}}`, 'g')) || [];
+  };
+
+  const formatDDMMYYYY = (dateString) => {
+    const date = new Date(dateString);
+    return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+  };
+
+  function flattenShipmentLabel(obj, id) {
+    function flatten(obj, parentKey = '', res = {}) {
+      for (let key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+          let newKey = parentKey ? `${parentKey}_${key}` : key;
+
+          if (Array.isArray(obj[key])) {
+            obj[key].forEach((item, index) => {
+              if (typeof item === 'object' && item !== null) {
+                flatten(item, `${newKey}_${index}`, res);
+              } else {
+                res[`${newKey}_${index}`] = item;
+              }
+            });
+          } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+            flatten(obj[key], newKey, res);
+          } else {
+            res[newKey] = obj[key];
+          }
+        }
+      }
+      return res;
+    }
+
+    let flatObj = {};
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].id == id) {
+        flatObj = flatten(data[i]);
+        break;
+      }
+    }
+
+    return flatObj;
+  }
+
+  const handleShiipingLabel = (id) => {
+    let temp_payload = flattenShipmentLabel(data, id);
+    temp_payload.user_info_state_country = `${temp_payload.user_info_state}-${temp_payload.user_info_country}`;
+    temp_payload.user_info_city_pincode = `${temp_payload.user_info_city}-, ${temp_payload.user_info_pincode}`;
+    temp_payload.buyer_info_state_country = `${temp_payload.buyer_info_state}-${temp_payload.buyer_info_country}`;
+    temp_payload.buyer_info_city_pincode = `${temp_payload.buyer_info_city}-${temp_payload.buyer_info_pincode}`;
+    temp_payload.length_width_height = `${temp_payload.length} × ${temp_payload.width} × ${temp_payload.height}`;
+    temp_payload.created_date = formatDDMMYYYY(temp_payload.created_date);
+    splitLimit(temp_payload.buyer_info_complete_address, 45).forEach((line, index) => {
+      temp_payload[`buyer_info_complete_address_${index}`] = line;
+    });
+    splitLimit(temp_payload.user_info_complete_address, 45).forEach((line, index) => {
+      temp_payload[`user_info_complete_address_${index}`] = line;
+    });
+    Object.keys(temp_payload).forEach(key => {
+      if (key.startsWith('product_info_') && key.endsWith('_name')) {
+        splitLimit(temp_payload[key], 52).forEach((line, index) => {
+          temp_payload[`${key}_${index}`] = line;
+        });
+      }
+    });
+    if (temp_payload.payment_type_name === 'cod') {
+      temp_payload.collect_amount = temp_payload.sub_total
+    }
+
+    const headers = { 'Content-Type': 'application/json' };
+
+    temp_payload['client_name'] = 'cloud_cargo';
+    temp_payload['file_name'] = 'shippinglabel';
+
+    axios
+      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
+      .then((response) => {
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+        toast('Menifest Download Successfully', { type: 'success' });
+        // window.location.reload();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        toast('Error in Menifest Download', { type: 'error' });
+      });
+  };
 
   const handleReturn = (id) => {
     console.log('IDDDDDDDDd', id);
@@ -281,9 +370,8 @@ const Delivered = ({ data, isLoading }) => {
               <CustomTooltip
                 text={
                   <>
-                    <div className="text-wrap">{`${row?.original?.user_info?.address_line1 ?? ''} ${
-                      row?.original?.user_info?.address_line2 ?? ''
-                    }`}</div>
+                    <div className="text-wrap">{`${row?.original?.user_info?.address_line1 ?? ''} ${row?.original?.user_info?.address_line2 ?? ''
+                      }`}</div>
                     <div>{row?.original?.user_info?.city ?? ''}</div>
                     <div>
                       {row?.original?.user_info?.state ?? ''}-{row?.original?.user_info?.pincode}
@@ -349,6 +437,7 @@ const Delivered = ({ data, isLoading }) => {
               <MoreDropdown
                 renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                 options={moreActionOptions({
+                  downloadShiipingLabel: () => handleShiipingLabel(row?.row?.original?.id),
                   downloadInvoice: () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row?.original),
                   cancelOrder: () => cancelOrder(row?.original),

@@ -82,7 +82,7 @@ const Settings = () => {
           },
           {
             title: 'Early COD',
-            link: '/',
+            link: '/early-cod',
           },
           {
             title: 'Postpaid',
