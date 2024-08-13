@@ -128,8 +128,8 @@ const EarlyCOD = () => {
                             <div className="flex items-center justify-between mb-8">
                                 <div className="flex items-center">
                                     <div>
-                                        <h2 className="text-2xl font-bold mb-2">Get Early COD</h2>
-                                        <p className="text-gray-600">Why Wait? Scale your business with <span className='font-bold'>Daily COD remittance</span></p>
+                                        <h2 className="text-2xl font-bold mb-2">Early COD Remittance</h2>
+                                        <p className="text-gray-600">Get guaranteed remittance from the shipment delivered date.</p>
                                     </div>
                                 </div>
                             </div>
@@ -201,25 +201,27 @@ const EarlyCOD = () => {
                             </h2>
                             {isTableVisible && (
                                 <div className="m-2">
-                                    <div className="flex items-center border border-b-[#E5E7EB] text-left">
-                                        <div className="w-[25%] border-r-2 py-2.5 text-center">User</div>
-                                        <div className="w-[25%] border-r-2 py-2.5 text-center">Remark</div>
-                                        <div className="w-[25%] border-r-2 py-2.5 text-center">Plan Type</div>
-                                        <div className="w-[25%] py-2.5 text-center">Created At</div>
+                                    <div className="flex items-center border-b-2 border-[#000] text-left">
+                                        <div className="w-[25%] py-2.5 text-center font-bold">User</div>
+                                        <div className="w-[25%] py-2.5 text-center font-bold">Remark</div>
+                                        <div className="w-[25%] py-2.5 text-center font-bold">Plan Type</div>
+                                        <div className="w-[25%] py-2.5 text-center font-bold">Created At</div>
                                     </div>
+                                    <div className="border-b-2 border-[#E5E7EB]"></div> 
                                     <div className="flex flex-col items-center justify-center">
                                         {activationData.map((activation, index) => (
                                             <div
-                                                className="flex h-12 w-full flex-row items-center border border-b-[#E5E7EB] text-center"
+                                                className="flex h-12 w-full flex-row items-center border-b-2 border-[#E5E7EB] text-center"
                                                 key={index}
                                             >
-                                                <div className="flex h-full w-[25%] items-center border-r-2 justify-center font-normal">{activation.user}</div>
-                                                <div className="flex h-full w-[25%] items-center border-r-2 justify-center font-normal">{activation.remarks}</div>
-                                                <div className="flex h-full w-[25%] items-center border-r-2 justify-center font-normal">{activation.plan} Days</div>
+                                                <div className="flex h-full w-[25%] items-center justify-center font-normal">{activation.user}</div>
+                                                <div className="flex h-full w-[25%] items-center justify-center font-normal">{activation.remarks}</div>
+                                                <div className="flex h-full w-[25%] items-center justify-center font-normal">{activation.plan} Days</div>
                                                 <div className="flex h-full w-[25%] items-center justify-center font-normal">{format(new Date(activation.created_at), 'MMM d, yyyy h:mm a')}</div>
                                             </div>
                                         ))}
                                     </div>
+
                                     <Pagination
                                         page={page}
                                         totalData={totalData}
