@@ -26,7 +26,7 @@ import {
   UserList,
   Catalogue,
   Manage_user,
-  Early_COD
+  Early_COD,
 } from '../pages';
 
 import Tracking from '../pages/tracking/Tracking';
@@ -63,7 +63,7 @@ import { GstinInvoicing } from '../pages/gstin-invoicing';
 import { Reports } from '../pages/reports';
 import ScheduleReports from '../pages/reports/ScheduledReports';
 import ScheduledReports from '../pages/reports/ScheduledReports';
-
+import { CurrentPlanDetails } from '../pages/billing/component/current-plan-details';
 
 const routes = createBrowserRouter([
   {
@@ -343,6 +343,10 @@ const routes = createBrowserRouter([
   {
     path: '/early-cod',
     element: <PrivateRoute component={<Early_COD />} />,
+  },
+  {
+    path: '/current-plan-details',
+    element: <PrivateRoute component={<CurrentPlanDetails />} />,
   },
 ]);
 
