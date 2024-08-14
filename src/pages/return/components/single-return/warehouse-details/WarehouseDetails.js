@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { AddressVerifiedTag } from '../../../../../common/address-verified-tag';
 import { Field } from '../../../../../common/components';
@@ -88,7 +89,7 @@ const WarehouseDetails = ({ currentStep, handleChangeStep }) => {
             <div className="mb-6 text-xl font-bold"> {'Warehouse Address'} </div>
             <div className="mb-3.5 rounded-xl bg-white p-9">
                 <div className="mb-3 text-sm font-medium">
-                    {'Where is the order being sent from?'}
+                    {'Where the return is being delieverd?'}
                     <span className="pl-1 text-gray-400">{'(Your Address)'}</span>
                 </div>
                 <div className="xxl:-6/12 w-full md:w-8/12 ">

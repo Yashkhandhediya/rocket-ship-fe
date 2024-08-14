@@ -247,6 +247,13 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
     }
   }, [domesticReturnFormValues]);
 
+  const [formValues, setFormValues] = useState({ });
+  const handleQualityCheckChange = (event) => {
+    setFormValues({
+      ...formValues,
+      qualityCheck: event.target.value,
+    });
+  };
   return (
     <div>
       <div className="mb-6 text-xl font-bold"> {'Order Details'} </div>
@@ -256,7 +263,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
             {/* missing field in API */}
             <Field
               id={'return_id'}
-              label={'Return ID'}
+              label={'Return ID (Auto Generated)'}
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
               placeHolder={'Enter Return ID'}
@@ -286,7 +293,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
             )}
           </div>
           <div className="px-2 pb-2 md:w-3/12 md:pb-0">
-            <Field
+            {/* <Field
               type={'select'}
               id={'channel'}
               label={'Channel'}
@@ -296,9 +303,33 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
               tooltip={
                 'can select your connected store (Shopify/WooCommerce etc.) or mark the order as "Custom" (used for adding manual orders)'
               }
+              options={[
+                { label: 'CUSTOM', value: 'custom' },
+              ]}
               required={true}
               value={formDirectField?.channel}
               onChange={setDirectKeysInForm}
+            /> */}
+            <CustomMultiSelect
+              isMulti={false}
+              id={'channel'}
+              label={'Channel'}
+              placeholder="Enter Channel"
+              options={[
+                { label: 'CUSTOM', value: 'custom' },
+              ]}
+              tooltip={
+                'can select your connected store (Shopify/WooCommerce etc.) or mark the order as "Custom" (used for adding manual orders)'
+              }
+              closeMenuOnSelect={true}
+              onChange={(val) =>
+                handleChangeValues({
+                  target: {
+                    id: 'channel',
+                    value: val,
+                  },
+                })
+              }
             />
             {productValidation && !formDirectField?.channel && (
               <p className="mt-1 text-xs text-red-500">Channel is required.</p>
@@ -327,6 +358,9 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
               { label: 'Changed my mind', value: 'changed_my_mind' },
               { label: 'Other', value: 'other' },
             ]}
+            tooltip={
+              'Select the reason why your buyer is returning the product(s)'
+            }
             withCheckbox={false}
             displayValuesAsStrings
             closeMenuOnSelect={true}
@@ -380,7 +414,44 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
         </FieldAccordion>
         <div className="mb-6 mt-4 w-full border border-gray-200" />
         <div>
-          <div className="mb-3 text-sm font-medium">{'Product Details'}</div>
+          <div className="mb-3 text-sm font-medium">{'Return Product Details'}</div>
+          <div className='mb-8'>
+            <div className="mb-3 text-xs font-medium">{'Will this order be applicable for Quality Check?'}</div>
+            <div className="flex items-center space-x-4">
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  name="qualityCheck"
+                  value="yes"
+                  checked={formDirectField?.qualityCheck === 'yes'}
+                  onChange={handleQualityCheckChange}
+                  className="form-radio text-blue-600 cursor-pointer"
+                  style={{
+                    width: '14px',
+                    height: '14px',
+                    borderRadius: '15%',
+                  }}
+                />
+                <span className="ml-2 text-sm">Yes</span>
+              </label>
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  name="qualityCheck"
+                  value="no"
+                  checked={formDirectField?.qualityCheck === 'no'}
+                  onChange={handleQualityCheckChange}
+                  className="form-radio text-blue-600 ml-20 cursor-pointer"
+                  style={{
+                    width: '14px',
+                    height: '14px',
+                    borderRadius: '15%',
+                  }}
+                />
+                <span className="ml-2 text-sm">No</span>
+              </label>
+            </div>
+          </div>
           {productFields.map((field, index) => {
             return (
               <div className="mb-4 border-b border-gray-200" key={index}>
@@ -399,6 +470,18 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
                     {productValidation && !field?.name?.length && (
                       <p className="mt-1 text-xs text-red-500">Product Name is required.</p>
                     )}
+                  </div>
+                  <div className="w-full px-2 pb-2 lg:w-4/12">
+                    <Field
+                      id={'sku'}
+                      label={'SKU'}
+                      inputClassNames={'text-xs'}
+                      labelClassNames={'text-xs'}
+                      placeHolder={'Edit Product SKU'}
+                      required={true}
+                      value={field?.sku || ''}
+                      onChange={(e) => handleSetProductFields(e, index)}
+                    />
                   </div>
                   <div className="w-full px-2 pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
                     <Field
@@ -436,7 +519,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
                       <p className="mt-1 text-xs text-red-500">Quantity should be greter than 0.</p>
                     )}
                   </div>
-                  <div className="w-10/12 px-2 pb-2 md:w-4/12 md:pb-0 xl:w-3/12">
+                  {/* <div className="w-10/12 px-2 pb-2 md:w-4/12 md:pb-0 xl:w-3/12">
                     <Field
                       id={'category'}
                       label={'Product Category'}
@@ -448,7 +531,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
                       value={field?.category || ''}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
-                  </div>
+                  </div> */}
                   <div className="self-center">
                     <button
                       disabled={productFields.length === 1}
@@ -539,7 +622,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
             <p className="w-6/12 text-gray-600">{'Sub-total for Product'}</p>
             <p className="w-6/12 text-end">{'₹ ' + formDirectField?.sub_total || 0}</p>
           </div>
-          <div className="mb-1 flex justify-between">
+          {/* <div className="mb-1 flex justify-between">
             <p className="w-6/12 text-gray-600">{'Other Charges'}</p>
             <p className="w-6/12 text-end">{'₹ ' + formDirectField?.other_charges || 0}</p>
           </div>
@@ -548,7 +631,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
             <p className="w-6/12 text-end">
               {'₹ ' + (paymentDetails?.discount ? Number(paymentDetails?.discount) : 0)}
             </p>
-          </div>
+          </div> */}
           <div className="mt-4 flex justify-between">
             <p className="w-6/12 font-medium">{'Total Order Value'}</p>
             <p className="w-6/12 text-end font-medium">{'₹ ' + formDirectField?.total_amount || 0}</p>

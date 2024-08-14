@@ -1,9 +1,11 @@
 import { Checkbox } from 'flowbite-react';
 import Select, { components } from 'react-select';
-
+import { CustomTooltip } from '../custom-tooltip';
+import { infoIcon } from '../../icons';
 const CustomMultiSelect = ({
   onChange,
   id,
+  tooltip,
   isMulti = true,
   options,
   label,
@@ -133,7 +135,14 @@ const CustomMultiSelect = ({
 
   return (
     <>
-      <label className="mb-2 flex items-center  text-xs font-medium text-gray-600">{label}</label>
+      <label className="mb-2 flex items-center  text-xs font-medium text-gray-600">
+        {label}
+        {tooltip && (
+          <CustomTooltip text={tooltip}>
+            <img src={infoIcon} className="ms-2" />
+          </CustomTooltip>
+        )}
+      </label>
       <Select
         isMulti={isMulti}
         id={id}
