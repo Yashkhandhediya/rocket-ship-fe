@@ -184,7 +184,8 @@ export const New = () => {
                       orderDetails: row.original,
                     });
                   }}>
-                  {'Ship Now'}
+                  {/* {'Ship Now'} */}
+                  {'Initiate Return'}
                 </button>
               ) : (
                 <button
