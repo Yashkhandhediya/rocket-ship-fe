@@ -471,7 +471,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
                       <p className="mt-1 text-xs text-red-500">Product Name is required.</p>
                     )}
                   </div>
-                  <div className="w-full px-2 pb-2 lg:w-4/12">
+                  {/* <div className="w-full px-2 pb-2 lg:w-4/12">
                     <Field
                       id={'sku'}
                       label={'SKU'}
@@ -482,7 +482,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
                       value={field?.sku || ''}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
-                  </div>
+                  </div> */}
                   <div className="w-full px-2 pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
                     <Field
                       type={'number'}
