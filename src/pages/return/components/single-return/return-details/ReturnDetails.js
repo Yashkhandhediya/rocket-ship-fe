@@ -192,7 +192,10 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
       const isValidProducts = productFields?.every((product) => {
         return product.name && product.unit_price > 0 && product.quantity > 0;
       });
-      if (!productFields?.length ||!isValidProducts || !formDirectField?.channel || !formDirectField?.date) {
+
+      const isQualityCheckSelected = checkboxValues?.qualityCheck !== '';
+
+      if (!productFields?.length ||!isValidProducts || !formDirectField?.channel || !formDirectField?.date || !isQualityCheckSelected) {
         toast('Please enter all required fields', { type: 'error' });
       } else {
         dispatch(
@@ -247,13 +250,31 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
     }
   }, [domesticReturnFormValues]);
 
-  const [formValues, setFormValues] = useState({ });
+  const [checkboxValues, setCheckBoxValues] = useState({
+    qualityCheck: '', 
+    
+  });
+  
   const handleQualityCheckChange = (event) => {
-    setFormValues({
-      ...formValues,
-      qualityCheck: event.target.value,
-    });
+    const { value, checked } = event.target;
+  
+    // Ensure only one checkbox can be selected at a time
+    if (checked) {
+      setCheckBoxValues({
+        ...checkboxValues,
+        qualityCheck: value,
+      });
+    } else {
+      // If checkbox is unchecked, clear the selection if it was the selected one
+      if (checkboxValues.qualityCheck === value) {
+        setCheckBoxValues({
+          ...checkboxValues,
+          qualityCheck: '',
+        });
+      }
+    }
   };
+
   return (
     <div>
       <div className="mb-6 text-xl font-bold"> {'Order Details'} </div>
@@ -263,7 +284,11 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
             {/* missing field in API */}
             <Field
               id={'return_id'}
-              label={'Return ID (Auto Generated)'}
+              label={
+                <span>
+                  Return ID <span className="text-gray-400 ml-2" style={{ fontSize: '10px' }}>(Auto Generated)</span>
+                </span>
+              }
               inputClassNames={'text-xs'}
               labelClassNames={'text-xs'}
               placeHolder={'Enter Return ID'}
@@ -416,39 +441,39 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
         <div>
           <div className="mb-3 text-sm font-medium">{'Return Product Details'}</div>
           <div className='mb-8'>
-            <div className="mb-3 text-xs font-medium">{'Will this order be applicable for Quality Check?'}</div>
-            <div className="flex items-center space-x-4">
+            <div className="mb-3 text-xs font-normal">{'Will this order be applicable for Quality Check?'}</div>
+            <div className="flex items-center">
               <label className="inline-flex items-center">
                 <input
-                  type="radio"
+                  type="checkbox"
                   name="qualityCheck"
                   value="yes"
-                  checked={formDirectField?.qualityCheck === 'yes'}
+                  checked={checkboxValues?.qualityCheck === 'yes'}
                   onChange={handleQualityCheckChange}
-                  className="form-radio text-blue-600 cursor-pointer"
+                  className="form-checkbox appearance-none checked:bg-blue-600 cursor-pointer"
                   style={{
-                    width: '14px',
-                    height: '14px',
+                    width: '10px',
+                    height: '10px',
                     borderRadius: '15%',
                   }}
                 />
-                <span className="ml-2 text-sm">Yes</span>
+                <span className="ml-2 text-xs font-normal">Yes</span>
               </label>
-              <label className="inline-flex items-center">
+              <label className="inline-flex items-center pl-20">
                 <input
-                  type="radio"
+                  type="checkbox"
                   name="qualityCheck"
                   value="no"
-                  checked={formDirectField?.qualityCheck === 'no'}
+                  checked={checkboxValues?.qualityCheck === 'no'}
                   onChange={handleQualityCheckChange}
-                  className="form-radio text-blue-600 ml-20 cursor-pointer"
+                  className="form-checkbox appearance-none checked:bg-blue-600 cursor-pointer"
                   style={{
-                    width: '14px',
-                    height: '14px',
+                    width: '10px',
+                    height: '10px',
                     borderRadius: '15%',
                   }}
                 />
-                <span className="ml-2 text-sm">No</span>
+                <span className="ml-2 text-xs font-normal">No</span>
               </label>
             </div>
           </div>
