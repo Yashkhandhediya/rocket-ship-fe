@@ -64,6 +64,7 @@ import { Reports } from '../pages/reports';
 import ScheduleReports from '../pages/reports/ScheduledReports';
 import ScheduledReports from '../pages/reports/ScheduledReports';
 import { CurrentPlanDetails } from '../pages/billing/component/current-plan-details';
+import { Report } from '../pages/settings/components/reports';
 
 const routes = createBrowserRouter([
   {
@@ -347,6 +348,10 @@ const routes = createBrowserRouter([
   {
     path: '/current-plan-details',
     element: <PrivateRoute component={<CurrentPlanDetails />} />,
+  },
+  {
+    path: '/setting-reports',
+    element: <PrivateRoute component={<Report />} />,
   },
 ]);
 

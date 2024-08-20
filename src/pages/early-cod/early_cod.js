@@ -196,7 +196,7 @@ const EarlyCOD = () => {
                             <h2 className="text-lg font-bold mb-4 cursor-pointer flex items-center" onClick={toggleTableVisibility}>
                                 Activation History
                                 <span className='ml-3 text-red-500'>
-                                    {isTableVisible ? '▼' : '▲'}
+                                    {isTableVisible ? '▲' : '▼'}
                                 </span>
                             </h2>
                             {isTableVisible && (
@@ -207,7 +207,7 @@ const EarlyCOD = () => {
                                         <div className="w-[25%] py-2.5 text-center font-bold">Plan Type</div>
                                         <div className="w-[25%] py-2.5 text-center font-bold">Created At</div>
                                     </div>
-                                    <div className="border-b-2 border-[#E5E7EB]"></div> 
+                                    <div className="border-b-2 border-[#E5E7EB]"></div>
                                     <div className="flex flex-col items-center justify-center">
                                         {activationData.map((activation, index) => (
                                             <div

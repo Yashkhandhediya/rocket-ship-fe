@@ -394,7 +394,7 @@ const Settings = () => {
         ),
       },
       {
-        title: 'API',
+        title: 'Additional Settings',
         items: [
           {
             title: 'Configure',
@@ -403,6 +403,10 @@ const Settings = () => {
           {
             title: 'Webhooks',
             link: '/webhooks',
+          },
+          {
+            title: 'Reports',
+            link: '/setting-reports',
           },
         ],
         icon: (
