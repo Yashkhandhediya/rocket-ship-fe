@@ -177,11 +177,11 @@ if (access_modules == null || access_modules?.length == 0) {
           },
           {
             title: 'Rate Card',
-            path: '/',
+            path: '/rate-card',
           },
           {
             title: 'Pincode Zone Mapping',
-            path: '/',
+            path: '/pincode-zone-mapping',
           },
           {
             title: 'Bulk Print Actions',
