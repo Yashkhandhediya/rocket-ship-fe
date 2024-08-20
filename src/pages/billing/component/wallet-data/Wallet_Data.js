@@ -14,8 +14,6 @@ const Wallet_Data = () => {
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
 
-  const user_id = is_company == 1 ? id_company : id_user;
-
   const charges = [
     {
       label: 'Successfull Recharge',
@@ -34,8 +32,12 @@ const Wallet_Data = () => {
 
   const fetchWalletHistory = async () => {
     setLoading(true);
+    const url =
+      is_company == 1
+        ? `paymentwallet_history?user_id=${id_company}`
+        : `users/wallet_history/?user_id=${id_user}`;
     try {
-      const response = await axios.get(`${BACKEND_URL}/paymentwallet_history?user_id=${user_id}`);
+      const response = await axios.get(`${BACKEND_URL}/${url}`);
       setWalletHistoryData(response.data);
     } catch (err) {
       console.log(err);

@@ -64,6 +64,8 @@ import { Reports } from '../pages/reports';
 import ScheduleReports from '../pages/reports/ScheduledReports';
 import ScheduledReports from '../pages/reports/ScheduledReports';
 import { CurrentPlanDetails } from '../pages/billing/component/current-plan-details';
+import { RateCard } from '../pages/rate-card';
+import { PincodeZoneMapping } from '../pages/pincode-zone-mapping';
 
 const routes = createBrowserRouter([
   {
@@ -347,6 +349,15 @@ const routes = createBrowserRouter([
   {
     path: '/current-plan-details',
     element: <PrivateRoute component={<CurrentPlanDetails />} />,
+  },
+  // rate-card
+  {
+    path: '/rate-card',
+    element: <PrivateRoute component={<RateCard />} />,
+  },
+  {
+    path: '/pincode-zone-mapping',
+    element: <PrivateRoute component={<PincodeZoneMapping />} />,
   },
 ]);
 
