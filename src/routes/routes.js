@@ -64,12 +64,9 @@ import { Reports } from '../pages/reports';
 import ScheduleReports from '../pages/reports/ScheduledReports';
 import ScheduledReports from '../pages/reports/ScheduledReports';
 import { CurrentPlanDetails } from '../pages/billing/component/current-plan-details';
-<<<<<<< HEAD
 import { Report } from '../pages/settings/components/reports';
-=======
 import { RateCard } from '../pages/rate-card';
 import { PincodeZoneMapping } from '../pages/pincode-zone-mapping';
->>>>>>> f1c8b1b83d4184688a9c8047c162d06d2e2a3127
 
 const routes = createBrowserRouter([
   {
