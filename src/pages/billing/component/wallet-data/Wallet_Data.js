@@ -33,12 +33,15 @@ const Wallet_Data = () => {
   ];
 
   const fetchWalletHistory = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(`${BACKEND_URL}/paymentwallet_history?user_id=${user_id}`);
       setWalletHistoryData(response.data);
     } catch (err) {
       console.log(err);
       toast(`There is some error while fetching data`, { type: 'error' });
+    } finally {
+      setLoading(false);
     }
   };
 
