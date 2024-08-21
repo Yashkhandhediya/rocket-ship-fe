@@ -5,10 +5,10 @@ import { BACKEND_URL } from '../../../../common/utils/env.config';
 import { toast } from 'react-toastify';
 
 const Report = () => {
-  const [businessEmails, setBusinessEmails] = useState('');
-  const [businessContacts, setBusinessContacts] = useState('');
-  const [operationEmails, setOperationEmails] = useState('');
-  const [operationContacts, setOperationContacts] = useState('');
+  const [businessEmails, setBusinessEmails] = useState([]);
+  const [businessContacts, setBusinessContacts] = useState([]);
+  const [operationEmails, setOperationEmails] = useState([]);
+  const [operationContacts, setOperationContacts] = useState([]);
 
   const [emailError, setEmailError] = useState('');
   const [contactError, setContactError] = useState('');
@@ -17,10 +17,10 @@ const Report = () => {
     fetch(`${BACKEND_URL}/users/get_communications_details/?user_id=${localStorage.getItem('user_id')}`)
       .then((response) => response.json())
       .then((data) => {
-        setBusinessEmails(data.business_email || '');
-        setBusinessContacts(data.business_number || '');
-        setOperationEmails(data.operation_email || '');
-        setOperationContacts(data.operation_number || '');
+        setBusinessEmails(data.business_email || []);
+        setBusinessContacts(data.business_number || []);
+        setOperationEmails(data.operation_email || []);
+        setOperationContacts(data.operation_number || []);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
@@ -48,16 +48,16 @@ const Report = () => {
 
         switch (type) {
           case 'businessEmail':
-            setBusinessEmails((prev) => (prev ? `${prev}, ${value}` : value));
+            setBusinessEmails((prev) => [...prev, value]);
             break;
           case 'businessContact':
-            setBusinessContacts((prev) => (prev ? `${prev}, ${value}` : value));
+            setBusinessContacts((prev) => [...prev, value]);
             break;
           case 'operationEmail':
-            setOperationEmails((prev) => (prev ? `${prev}, ${value}` : value));
+            setOperationEmails((prev) => [...prev, value]);
             break;
           case 'operationContact':
-            setOperationContacts((prev) => (prev ? `${prev}, ${value}` : value));
+            setOperationContacts((prev) => [...prev, value]);
             break;
           default:
             break;
@@ -76,36 +76,16 @@ const Report = () => {
   const handleRemoveItem = (type, itemToRemove) => {
     switch (type) {
       case 'businessEmail':
-        setBusinessEmails((prev) =>
-          prev
-            .split(',')
-            .filter((email) => email.trim() !== itemToRemove)
-            .join(', '),
-        );
+        setBusinessEmails((prev) => prev.filter((email) => email !== itemToRemove));
         break;
       case 'businessContact':
-        setBusinessContacts((prev) =>
-          prev
-            .split(',')
-            .filter((contact) => contact.trim() !== itemToRemove)
-            .join(', '),
-        );
+        setBusinessContacts((prev) => prev.filter((contact) => contact !== itemToRemove));
         break;
       case 'operationEmail':
-        setOperationEmails((prev) =>
-          prev
-            .split(',')
-            .filter((email) => email.trim() !== itemToRemove)
-            .join(', '),
-        );
+        setOperationEmails((prev) => prev.filter((email) => email !== itemToRemove));
         break;
       case 'operationContact':
-        setOperationContacts((prev) =>
-          prev
-            .split(',')
-            .filter((contact) => contact.trim() !== itemToRemove)
-            .join(', '),
-        );
+        setOperationContacts((prev) => prev.filter((contact) => contact !== itemToRemove));
         break;
       default:
         break;
@@ -143,13 +123,13 @@ const Report = () => {
 
   return (
     <PageWithSidebar>
-      <div className="header mx-2 border-b border-[#b3b3b3] bg-[#FAFBFC] p-2 text-xl">Settings-Early COD</div>
+      <div className="header mx-2 border-b border-[#b3b3b3] bg-[#FAFBFC] p-2 text-xl">Settings-Reports</div>
       <div className="mx-2 w-full bg-[#EDEDED] px-6 pb-16">
         <div className="pb-5 pt-2 font-bold text-[#656565]">
           <Link to={'/settings'} className="font-semibold text-green-500">
             Settings
           </Link>{' '}
-          &gt; Seller Remittance &gt; Early COD Remittance
+          &gt; Additional Settings &gt; Reports
         </div>
         <div className="flex flex-col gap-3 bg-white p-7">
           <h2 className="text-lg text-xl  font-bold">Reports</h2>
@@ -172,8 +152,7 @@ const Report = () => {
                 <div
                   className={`mt-1 flex flex-wrap items-center justify-start gap-1
                      rounded-md border border-gray-300 p-1 shadow-sm ${emailError ? 'border-red-500' : ''}`}>
-                  {businessEmails.split(',').map(
-                    (email, index) =>
+                  {businessEmails.map((email, index) =>
                       email.trim() && (
                         <span key={index} className="inline-block rounded-md bg-red-200 px-2 py-1">
                           {email.trim()}
@@ -201,23 +180,11 @@ const Report = () => {
                 <label htmlFor="businessContact" className="block text-sm font-medium text-gray-700">
                   Contact Number
                 </label>
-                <div className="mt-1">
-                  <input
-                    type="tel"
-                    id="businessContact"
-                    className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                      contactError ? 'border-red-500' : ''
-                    }`}
-                    placeholder="Enter contact number and press enter"
-                    onKeyDown={(e) => handleAddItem(e, 'businessContact')}
-                  />
-                  {contactError && <p className="text-sm text-red-500">{contactError}</p>}
-                </div>
-                <div className="mt-2 text-sm">
-                  {businessContacts.split(',').map(
-                    (contact, index) =>
+                <div className={`mt-1 flex flex-wrap items-center justify-start gap-1
+                     rounded-md border border-gray-300 p-1 shadow-sm ${contactError ? 'border-red-500' : ''}`}>
+                  {businessContacts.map((contact, index) =>
                       contact.trim() && (
-                        <span key={index} className="mb-2 mr-2 inline-block rounded-md bg-red-200 px-2 py-1">
+                        <span key={index} className="inline-block rounded-md bg-red-200 px-2 py-1">
                           {contact.trim()}
                           <button
                             type="button"
@@ -228,7 +195,15 @@ const Report = () => {
                         </span>
                       ),
                   )}
+                  <input
+                    type="tel"
+                    id="businessContact"
+                    className={`block border-none outline-none focus:border-none focus:ring-0 sm:text-sm `}
+                    placeholder="Enter number and enter"
+                    onKeyDown={(e) => handleAddItem(e, 'businessContact')}
+                  />                  
                 </div>
+                {contactError && <p className="text-sm text-red-500">{contactError}</p>}
               </div>
             </div>
           </div>
@@ -244,23 +219,11 @@ const Report = () => {
                 <label htmlFor="operationEmail" className="block text-sm font-medium text-gray-700">
                   Email Id
                 </label>
-                <div className="mt-1">
-                  <input
-                    type="email"
-                    id="operationEmail"
-                    className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                      emailError ? 'border-red-500' : ''
-                    }`}
-                    placeholder="Enter email id and press enter"
-                    onKeyDown={(e) => handleAddItem(e, 'operationEmail')}
-                  />
-                  {emailError && <p className="text-sm text-red-500">{emailError}</p>}
-                </div>
-                <div className="mt-2 text-sm">
-                  {operationEmails.split(',').map(
-                    (email, index) =>
+                <div className={`mt-1 flex flex-wrap items-center justify-start gap-1
+                     rounded-md border border-gray-300 p-1 shadow-sm ${contactError ? 'border-red-500' : ''}`}>
+                  {operationEmails.map((email, index) =>
                       email.trim() && (
-                        <span key={index} className="mb-2 mr-2 inline-block rounded-md bg-red-200 px-2 py-1">
+                        <span key={index} className="inline-block rounded-md bg-red-200 px-2 py-1">
                           {email.trim()}
                           <button
                             type="button"
@@ -271,29 +234,25 @@ const Report = () => {
                         </span>
                       ),
                   )}
+                  <input
+                    type="email"
+                    id="operationEmail"
+                    className={`block border-none outline-none focus:border-none focus:ring-0 sm:text-sm `}
+                    placeholder="Enter email id and enter"
+                    onKeyDown={(e) => handleAddItem(e, 'operationEmail')}
+                  />
                 </div>
+                {emailError && <p className="text-sm text-red-500">{emailError}</p>}
               </div>
               <div className="flex-1">
                 <label htmlFor="operationContact" className="block text-sm font-medium text-gray-700">
                   Contact Number
                 </label>
-                <div className="mt-1">
-                  <input
-                    type="tel"
-                    id="operationContact"
-                    className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                      contactError ? 'border-red-500' : ''
-                    }`}
-                    placeholder="Enter contact number and press enter"
-                    onKeyDown={(e) => handleAddItem(e, 'operationContact')}
-                  />
-                  {contactError && <p className="text-sm text-red-500">{contactError}</p>}
-                </div>
-                <div className="mt-2 text-sm">
-                  {operationContacts.split(',').map(
-                    (contact, index) =>
+                <div className={`mt-1 flex flex-wrap items-center justify-start gap-1
+                     rounded-md border border-gray-300 p-1 shadow-sm ${contactError ? 'border-red-500' : ''}`}>
+                  {operationContacts.map((contact, index) =>
                       contact.trim() && (
-                        <span key={index} className="mb-2 mr-2 inline-block rounded-md bg-red-200 px-2 py-1">
+                        <span key={index} className="inline-block rounded-md bg-red-200 px-2 py-1">
                           {contact.trim()}
                           <button
                             type="button"
@@ -304,15 +263,22 @@ const Report = () => {
                         </span>
                       ),
                   )}
+                  <input
+                    type="tel"
+                    id="operationContact"
+                    className={`block border-none outline-none focus:border-none focus:ring-0 sm:text-sm `}
+                    placeholder="Enter number and enter"
+                    onKeyDown={(e) => handleAddItem(e, 'operationContact')}
+                  />                  
                 </div>
+                {contactError && <p className="text-sm text-red-500">{contactError}</p>}
               </div>
             </div>
           </div>
 
           <button
-            type="submit"
-            className="w-[100px] rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700"
-            onClick={handleSubmit}>
+            onClick={handleSubmit}
+            className="w-1/6 rounded bg-red-500 py-2 px-4 font-bold text-white hover:bg-red-700">
             Save
           </button>
         </div>
