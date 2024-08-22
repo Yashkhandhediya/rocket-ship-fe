@@ -66,10 +66,7 @@ const Book = () => {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(null);
       }
     }
@@ -100,8 +97,7 @@ const Book = () => {
     }
 
     // setIsDropdownOpen((prev) => prev.map((item, i) => (i === index ? { isOpen: false } : item)));
-    setIsDropdownOpen(null); 
-
+    setIsDropdownOpen(null);
   }
 
   useEffect(() => {
@@ -256,17 +252,16 @@ const Book = () => {
                 <div className="mr-2">{route.from_city} to </div>
                 <div className="relative flex items-center rounded bg-gray-100 shadow-md ">
                   <div className="m-2 h-2  w-2 rounded bg-red-500"></div>
-                    <input
-                      ref={inputRef}
-                      className="h-10 w-[100%] cursor-pointer rounded border-0 bg-gray-100 px-2 outline-none ring-0 focus:outline-none focus:ring-0"
-                      placeholder="Select a city"
-                      value={selectedCity[index] || ''}
-                      onChange={(e) => handleInputChange(e, index)}
-                      onClick={() => setIsDropdownOpen((prevIndex) => (prevIndex === index ? null : index))}
-                    />
+                  <input
+                    ref={inputRef}
+                    className="h-10 w-[100%] cursor-pointer rounded border-0 bg-gray-100 px-2 outline-none ring-0 focus:outline-none focus:ring-0"
+                    placeholder="Select a city"
+                    value={selectedCity[index] || ''}
+                    onChange={(e) => handleInputChange(e, index)}
+                    onClick={() => setIsDropdownOpen((prevIndex) => (prevIndex === index ? null : index))}
+                  />
                   {/* <Dropdown isOpen={isDropdownOpen[index]?.isOpen} index={index} /> */}
                   <Dropdown isOpen={isDropdownOpen === index} index={index} />
-
                 </div>
               </div>
               <div className="flex flex-grow flex-col">
@@ -274,7 +269,7 @@ const Book = () => {
                   <p>Truck Type</p>
                   <p>Charges</p>
                 </div>
-                <div className="flex-grow overflow-auto max-h-[150px]">
+                <div className="max-h-[150px] flex-grow overflow-auto">
                   {selectedCity[index]
                     ? (selectedTrucks[selectedCity[index]] || []).map((truck, truckIndex) => (
                         <div
@@ -313,7 +308,7 @@ const Book = () => {
             </div>
           ))}
         </div>
-        <div className="mx-2 flex items-center gap-1">
+        <div className="absolute bottom-0 left-20 mx-2 flex items-center gap-1">
           <img src={copyRightIcon} className="h-5" /> <p className="italic">Copyrights by Veracity</p>
         </div>
       </div>

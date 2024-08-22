@@ -69,11 +69,12 @@ const Indent = () => {
   });
   const [truckType, setTruckType] = useState(data?.truck_type_id || 'Select Truck Type');
   const [materialType, setMaterialType] = useState(data?.material_type_id || 'Select Material Type');
-  const [tons, setTons] = useState(data?.weight_type || 'Select Weight Type');
+  const [tons, setTons] = useState(data?.weight_type || 'Ton');
   const [targetPrice, setTargetPrice] = useState(data?.customer_price || null);
-  const [targetWeight, setTargetWeight] = useState(data?.weight || 'Select Weight');
+  const [targetWeight, setTargetWeight] = useState(data?.weight || ' ');
   const [pkgs, setPkgs] = useState(data?.pkgs || null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isWeightOpen, setisWeightOpen] = useState(true);
   const [pickUpDate, setPickUpDate] = useState({
     date: data?.created_date
       ? moment(data.created_date).format('YYYY-MM-DD')
@@ -313,6 +314,7 @@ const Indent = () => {
 
   useEffect(() => {
     setTargetWeight('Select Weight');
+    setisWeightOpen(true);
   }, [tons]);
 
   let count = 1;
@@ -816,6 +818,26 @@ const Indent = () => {
     suggestionHighlighted: 'bg-gray-300',
   };
 
+  const tonWeights = [
+    { label: '5', value: '5' },
+    { label: '10', value: '10' },
+    { label: '15', value: '15' },
+    { label: '20', value: '20' },
+    { label: '25', value: '25' },
+  ];
+
+  const kgWeights = [
+    { label: '5k', value: '5000' },
+    { label: '10k', value: '10000' },
+    { label: '15k', value: '15000' },
+    { label: '20k', value: '20000' },
+    { label: '25k', value: '25000' },
+  ];
+
+  console.log(isWeightOpen);
+
+  const weightType = tons === 'Ton' ? tonWeights : kgWeights;
+
   return (
     <PageWithSidebar>
       {isLoading && <Loader />}
@@ -1113,16 +1135,40 @@ const Indent = () => {
                     }}
                   />
                 </div>
-                <div className="mt-4 flex w-1/2 items-center pr-2">
+                <div className="relative mt-4 flex w-1/2 items-center pr-2">
                   <div className="mt-1 w-1/2">
                     <Field
                       value={targetWeight}
                       type="number"
                       placeholder="Enter Weight"
-                      onChange={(e) => setTargetWeight(e.target.value)}
+                      onChange={(e) => {
+                        setTargetWeight(e.target.value);
+                        setisWeightOpen(true);
+                      }}
                     />
                   </div>
-                  <div className="w-1/2">
+                  {isWeightOpen && (
+                    <div
+                      className="absolute top-12 w-1/2 rounded bg-white"
+                      onClick={() => setisWeightOpen(false)}>
+                      {weightType.map(
+                        (type, index) =>
+                          type.label.includes(targetWeight) && (
+                            <p
+                              key={index}
+                              className="block cursor-pointer p-1 hover:bg-zinc-200"
+                              onClick={() => {
+                                setTargetWeight(type.value);
+                              }}>
+                              {type.label}
+                            </p>
+                          ),
+                      )}
+                      {/* <p className=" p-1  hover:bg-zinc-200">5</p>
+                    <p className=" p-1  hover:bg-zinc-200">5</p> */}
+                    </div>
+                  )}
+                  {/* <div className="w-1/2">
                     <CustomMultiSelect
                       isMulti={false}
                       // label={tons == 'Ton' ? 'Ton Weight' : 'Kg Weight'}
@@ -1135,7 +1181,7 @@ const Indent = () => {
                         setTargetWeight(value);
                       }}
                     />
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
