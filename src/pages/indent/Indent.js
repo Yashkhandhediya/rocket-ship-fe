@@ -1144,7 +1144,7 @@ const Indent = () => {
                 </div>
                 <div
                   className="relative mt-4 flex w-1/2 items-center pr-2"
-                  onClick={() => setShowSuggestions(true)}>
+                  onFocus={() => setShowSuggestions(true)}>
                   <div className="mt-1 w-1/2">
                     <Field
                       value={targetWeight}
