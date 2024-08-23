@@ -71,10 +71,10 @@ const Indent = () => {
   const [materialType, setMaterialType] = useState(data?.material_type_id || 'Select Material Type');
   const [tons, setTons] = useState(data?.weight_type || 'Ton');
   const [targetPrice, setTargetPrice] = useState(data?.customer_price || null);
-  const [targetWeight, setTargetWeight] = useState(data?.weight || ' ');
+  const [targetWeight, setTargetWeight] = useState(data?.weight || '');
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [pkgs, setPkgs] = useState(data?.pkgs || null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isWeightOpen, setisWeightOpen] = useState(true);
   const [pickUpDate, setPickUpDate] = useState({
     date: data?.created_date
       ? moment(data.created_date).format('YYYY-MM-DD')
@@ -313,8 +313,7 @@ const Indent = () => {
   }, [truckType]);
 
   useEffect(() => {
-    setTargetWeight('Select Weight');
-    setisWeightOpen(true);
+    setTargetWeight('');
   }, [tons]);
 
   let count = 1;
@@ -834,9 +833,17 @@ const Indent = () => {
     { label: '25k', value: '25000' },
   ];
 
-  console.log(isWeightOpen);
-
   const weightType = tons === 'Ton' ? tonWeights : kgWeights;
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setTargetWeight(value);
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setTargetWeight(suggestion.value);
+    setShowSuggestions(false);
+  };
 
   return (
     <PageWithSidebar>
@@ -1135,39 +1142,49 @@ const Indent = () => {
                     }}
                   />
                 </div>
-                <div className="relative mt-4 flex w-1/2 items-center pr-2">
+                <div
+                  className="relative mt-4 flex w-1/2 items-center pr-2"
+                  onClick={() => setShowSuggestions(true)}>
                   <div className="mt-1 w-1/2">
                     <Field
                       value={targetWeight}
                       type="number"
                       placeholder="Enter Weight"
-                      onChange={(e) => {
-                        setTargetWeight(e.target.value);
-                        setisWeightOpen(true);
-                      }}
+                      onChange={handleChange}
+                      onBlur={() => setTimeout(() => setShowSuggestions(false), 100)} // Timeout to allow click
                     />
                   </div>
-                  {isWeightOpen && (
-                    <div
-                      className="absolute top-12 w-1/2 rounded bg-white"
-                      onClick={() => setisWeightOpen(false)}>
-                      {weightType.map(
-                        (type, index) =>
-                          type.label.includes(targetWeight) && (
-                            <p
-                              key={index}
-                              className="block cursor-pointer p-1 hover:bg-zinc-200"
-                              onClick={() => {
-                                setTargetWeight(type.value);
-                              }}>
-                              {type.label}
-                            </p>
-                          ),
-                      )}
-                      {/* <p className=" p-1  hover:bg-zinc-200">5</p>
-                    <p className=" p-1  hover:bg-zinc-200">5</p> */}
-                    </div>
+                  {showSuggestions && (
+                    <ul className="absolute top-12 w-1/2 rounded bg-white">
+                      {weightType
+                        .filter((item) => item.label.toLowerCase().includes(targetWeight.toLowerCase()))
+                        .map((suggestion, index) => (
+                          <li
+                            key={index}
+                            className="cursor-pointer p-2 hover:bg-gray-100"
+                            onMouseDown={() => handleSuggestionClick(suggestion)}>
+                            {suggestion.label}
+                          </li>
+                        ))}
+                    </ul>
                   )}
+                  {/* <div className="absolute top-12 w-1/2 rounded bg-white">
+                    {weightType
+                      .filter((type) => type.label.includes(targetWeight))
+                      .map((weighType, index) => {
+                        return (
+                          <p
+                            key={index}
+                            className="block cursor-pointer p-1 hover:bg-zinc-200"
+                            onClick={() => {
+                              setTargetWeight(weighType.value);
+                            }}>
+                            {weighType.label}
+                          </p>
+                        );
+                      })}
+                  </div> */}
+
                   {/* <div className="w-1/2">
                     <CustomMultiSelect
                       isMulti={false}
