@@ -20,7 +20,7 @@ function CustomSingleSelect({ data }) {
           {data &&
             data.lists.map((list, index) => {
               return (
-                <div key={index}>
+                <div key={list.id}>
                   <ul className="flex gap-2 px-2 py-2 text-[12px] font-semibold">
                     {data.selectName !== 'Sort by:Low to High Weight' && (
                       <input
@@ -30,7 +30,7 @@ function CustomSingleSelect({ data }) {
                         className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     )}
-                    <p>{list}</p>
+                    <p>{list.type}</p>
                   </ul>
                 </div>
               );

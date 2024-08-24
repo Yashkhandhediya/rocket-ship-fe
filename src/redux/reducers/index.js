@@ -8,6 +8,7 @@ import returnsList from './setReturnsReducer';
 import weightDiscrepanciesList from './setWeightDiscrepanciesReducer';
 import filteredOrdersList from './setFilteredOrders';
 import filteredReturnOrdersList from './setFilteredReturnOrders';
+import rateCardData from './setRateCardReducer';
 export default combineReducers({
   ordersList,
   clonedOrder,
@@ -18,4 +19,5 @@ export default combineReducers({
   filteredOrdersList,
   filteredReturnOrdersList,
   editOrder,
+  rateCardData,
 });

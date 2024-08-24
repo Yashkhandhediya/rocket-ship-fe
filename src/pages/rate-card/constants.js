@@ -20,25 +20,6 @@ export const rateCardTabs = [
   },
 ];
 
-export const customSelectData = [
-  {
-    selectName: 'Sort by:Low to High Weight',
-    lists: ['Sort by:Low to High Weight', 'Sort by:High to Low Weight'],
-  },
-  {
-    selectName: 'Select Couriers',
-    lists: ['Aarya Ship', 'Air Cargo X', 'Aj World Wide', 'Amazon 250 g', 'Amazon Brand'],
-  },
-  {
-    selectName: 'Select Modes',
-    lists: ['Air', 'Surface', 'Hyper Local'],
-  },
-  {
-    selectName: 'Select Weight',
-    lists: ['0.25kg', '0.5kg', '1kg', '2kg', '5kg', '10kg'],
-  },
-];
-
 export const tableHeadData = [
   {
     headerName: 'Couriers',

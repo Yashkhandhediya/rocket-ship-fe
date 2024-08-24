@@ -5,3 +5,4 @@ export * from './setAllWeightDiscrepanciesAction';
 export * from './editOrderAction';
 export * from './setFilteredOrders';
 export * from './setFilteredReturnOrders';
+export * from './setRateCardAction';

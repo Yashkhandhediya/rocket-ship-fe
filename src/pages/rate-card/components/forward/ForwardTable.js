@@ -1,8 +1,12 @@
 import { tableData, tableHeadData } from '../../constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBusSimple } from '@fortawesome/free-solid-svg-icons';
+import { useSelector } from 'react-redux';
+import { resData } from '../../../orders/Orders';
 
 function ForwardTable() {
+  const data = useSelector((state) => state?.rateCardData) || {};
+  console.log(data);
   return (
     <>
       <table className="mt-10 min-w-full overflow-hidden rounded-lg text-[12px] shadow">
@@ -33,38 +37,37 @@ function ForwardTable() {
           </tr>
         </thead>
         <tbody>
-          {tableData &&
-            tableData.map((data) => {
+          {data &&
+            data?.rate?.map((rateData, index) => {
               return (
                 <tr
-                  key={data.id}
+                  key={rateData?.id}
                   className={`${
-                    data.id % 2 !== 0 ? 'bg-blue-100' : 'bg-white'
+                    index % 2 !== 1 ? 'bg-blue-100' : 'bg-white'
                   } text-[13px] font-semibold text-gray-400`}>
-                  <td className=" px-4 py-4 text-left">{data.couriers}</td>
-                  <td className=" px-4 py-2 text-left">
-                    {data.mode === 'bus' && <FontAwesomeIcon icon={faBusSimple} size="2x" />}
+                  <td className=" px-4 py-4 text-center">{rateData?.partner_name}</td>
+                  <td className=" px-4 py-2 text-center">
+                    {/* {rateData?.mode >= 1 && <FontAwesomeIcon icon={faBusSimple} size="2x" />} */}
+                    {rateData?.mode_type_name}
                   </td>
-                  <td className=" px-4 py-2 text-left">{data.minWeight}</td>
-                  <td className=" px-4 py-2 text-left">
-                    {data.zoneA.forward} | &#8377;{data.zoneA.rto}
+                  <td className=" px-4 py-2 text-center">{rateData?.weight}</td>
+                  <td className=" px-4 py-2 text-center">
+                    {rateData?.a_forward} | &#8377;{rateData?.a_rto}
                   </td>
-                  <td className=" px-4 py-2 text-left">
-                    {data.zoneB.forward} | &#8377;{data.zoneB.rto}
+                  <td className=" px-4 py-2 text-center">
+                    {rateData?.b_forward} | &#8377;{rateData?.b_rto}
                   </td>
-                  <td className=" px-4 py-2 text-left">
-                    {data.zoneC.forward} | &#8377;{data.zoneC.rto}
+                  <td className=" px-4 py-2 text-center">
+                    {rateData?.c_forward} | &#8377;{rateData?.c_rto}
                   </td>
-                  <td className=" px-4 py-2 text-left">
-                    {data.zoneD.forward} | &#8377;{data.zoneD.rto}
+                  <td className=" px-4 py-2 text-center">
+                    {rateData?.d_forward} | &#8377;{rateData?.d_rto}
                   </td>
-                  <td className=" px-4 py-2 text-left">
-                    {data.zoneE.forward} | &#8377;{data.zoneE.rto}
+                  <td className=" px-4 py-2 text-center">
+                    {rateData?.e_forward} | &#8377;{rateData?.e_rto}
                   </td>
-                  <td className=" px-4 py-2 text-left">
-                    &#8377;{data.codCharges.inRupess} | {data.codCharges.inPercentage}
-                  </td>
-                  <td className=" px-4 py-2 text-left">{data.otherCharges}</td>
+                  <td className=" px-4 py-2 text-center">&#8377;{`NA`}</td>
+                  <td className=" px-4 py-2 text-center">{rateData?.other_charges}</td>
                 </tr>
               );
             })}
