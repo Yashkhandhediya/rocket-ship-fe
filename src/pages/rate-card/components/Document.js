@@ -2,12 +2,10 @@ import React from 'react';
 import { tableData, tableHeadData } from '../constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBusSimple } from '@fortawesome/free-solid-svg-icons';
-import CustomSelect from './customSelect/CustomSelect';
 
 function Document() {
   return (
     <div>
-      <CustomSelect />
       <table className="mt-10 min-w-full overflow-hidden rounded-lg text-[12px] shadow">
         <thead className=" bg-white">
           <tr>

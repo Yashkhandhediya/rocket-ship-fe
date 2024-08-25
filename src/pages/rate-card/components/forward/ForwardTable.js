@@ -4,8 +4,9 @@ import { faBusSimple } from '@fortawesome/free-solid-svg-icons';
 import { useSelector } from 'react-redux';
 import { resData } from '../../../orders/Orders';
 
-function ForwardTable() {
-  const data = useSelector((state) => state?.rateCardData) || {};
+function ForwardTable({ filteredData }) {
+  console.log(filteredData.length);
+  const data = filteredData.length == 0 ? useSelector((state) => state?.rateCardData) : filteredData || {};
   console.log(data);
   return (
     <>

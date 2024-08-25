@@ -2,12 +2,12 @@ import React from 'react';
 import { tableData, tableHeadData } from '../constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBusSimple } from '@fortawesome/free-solid-svg-icons';
-import CustomSelect from './customSelect/CustomSelect';
+import SelectFilter from './SelectFilter';
 
 function Reverse() {
   return (
     <div>
-      <CustomSelect />
+      <SelectFilter />
       <table className="mt-10 min-w-full overflow-hidden rounded-lg text-[12px] shadow">
         <thead className=" bg-white">
           <tr>
