@@ -26,18 +26,20 @@ const MultiSelectDropdown = ({
 
   const handleClear = () => {
     setTempSelectedOptions([]);
+    setSelectedOptions([]);
+    setIsOpen(false);
   };
 
   console.log(tempSelectedOptions);
   const handleApply = () => {
     setSelectedOptions(tempSelectedOptions);
-    fetchFilteredData(type, tempSelectedOptions);
+    fetchFilteredData();
     setTempSelectedOptions([]);
     setIsOpen(false);
   };
 
   return (
-    <div className="relative w-52">
+    <div className="relative">
       <button
         className="no-wrap flex w-full items-center justify-between overflow-hidden rounded-sm bg-white px-2.5 py-1.5 text-sm"
         onClick={toggleDropdown}>

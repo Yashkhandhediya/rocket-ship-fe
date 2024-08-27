@@ -4,16 +4,15 @@ import SelectFilter from '../SelectFilter';
 import { useDispatch } from 'react-redux';
 
 function Forward() {
-  const [filteredData, setFilteredData] = useState([]);
+  const [filteredForwardData, setForwardFilteredData] = useState([]);
   const dataFiltered = (data) => {
-    setFilteredData(data);
+    setForwardFilteredData(data);
   };
 
-  console.log(filteredData);
   return (
     <div>
       <SelectFilter dataFiltered={dataFiltered} />
-      <ForwardTable filteredData={filteredData} />
+      <ForwardTable filteredData={filteredForwardData} />
     </div>
   );
 }

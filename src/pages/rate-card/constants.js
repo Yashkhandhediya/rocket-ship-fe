@@ -34,40 +34,30 @@ export const tableHeadData = [
     headerName: {
       name: 'Zone A',
       area: 'Within City',
-      forward: 'forward',
-      rto: 'RTO',
     },
   },
   {
     headerName: {
       name: 'Zone B',
       area: 'Within State',
-      forward: 'forward',
-      rto: 'RTO',
     },
   },
   {
     headerName: {
       name: 'Zone C',
       area: 'Metro to Metro',
-      forward: 'forward',
-      rto: 'RTO',
     },
   },
   {
     headerName: {
       name: 'Zone D',
       area: 'Rest of india',
-      forward: 'forward',
-      rto: 'RTO',
     },
   },
   {
     headerName: {
       name: 'Zone E',
       area: 'North East J&K',
-      forward: 'forward',
-      rto: 'RTO',
     },
   },
   {

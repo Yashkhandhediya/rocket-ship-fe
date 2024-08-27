@@ -5,9 +5,7 @@ import { useSelector } from 'react-redux';
 import { resData } from '../../../orders/Orders';
 
 function ForwardTable({ filteredData }) {
-  console.log(filteredData.length);
-  const data = filteredData.length == 0 ? useSelector((state) => state?.rateCardData) : filteredData || {};
-  console.log(data);
+  // const rateCardData = useSelector((state) => state?.rateCardData);
   return (
     <>
       <table className="mt-10 min-w-full overflow-hidden rounded-lg text-[12px] shadow">
@@ -26,9 +24,7 @@ function ForwardTable({ filteredData }) {
                         <div className="flex flex-col text-center">
                           <span>{data.headerName.name}</span>
                           <span className="mb-3 text-gray-400">{data.headerName.area}</span>
-                          <span>
-                            {data.headerName.forward} | {data.headerName.rto}
-                          </span>
+                          <span>forward | rto</span>
                         </div>
                       </th>
                     )}
@@ -38,8 +34,8 @@ function ForwardTable({ filteredData }) {
           </tr>
         </thead>
         <tbody>
-          {data &&
-            data?.rate?.map((rateData, index) => {
+          {filteredData &&
+            filteredData?.rate?.map((rateData, index) => {
               return (
                 <tr
                   key={rateData?.id}
