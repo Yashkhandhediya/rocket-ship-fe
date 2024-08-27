@@ -33,7 +33,7 @@ const MultiSelectDropdown = ({
   console.log(tempSelectedOptions);
   const handleApply = () => {
     setSelectedOptions(tempSelectedOptions);
-    fetchFilteredData();
+    fetchFilteredData(type, tempSelectedOptions);
     setTempSelectedOptions([]);
     setIsOpen(false);
   };

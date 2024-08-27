@@ -37,18 +37,23 @@ function SelectFilter({ dataFiltered }) {
     type: value,
   }));
 
-  const fetchFilteredData = useCallback(async () => {
-    const filter_fields = {
-      partner_id: selectedPartnerOptions.map((item) => item.id),
-      mode_type: selectedModeOptions.map((item) => item.id),
-      weight: selectedWeightOptions.map((item) => item.type),
-    };
-
-    console.log(filter_fields);
-
+  const fetchFilteredData = async (filterType, options) => {
     try {
       const response = await axios.post(`${BACKEND_URL}/rate_card/${user_id}`, {
-        filter_fields,
+        filter_fields: {
+          partner_id:
+            filterType === 'partner_id'
+              ? options.map((item) => item.id)
+              : selectedPartnerOptions.map((item) => item.id),
+          mode_type:
+            filterType === 'mode_type'
+              ? options.map((item) => item.id)
+              : selectedModeOptions.map((item) => item.id),
+          weight:
+            filterType === 'weight'
+              ? options.map((item) => item.id)
+              : selectedWeightOptions.map((item) => item.type),
+        },
         paginate: {
           page_number: 1,
           number_of_rows: 10,
@@ -59,11 +64,11 @@ function SelectFilter({ dataFiltered }) {
     } catch (err) {
       console.log(err);
     }
-  }, [selectedPartnerOptions, selectedModeOptions, selectedWeightOptions, dataFiltered]);
+  };
 
-  useEffect(() => {
-    fetchFilteredData();
-  }, [selectedPartnerOptions, selectedModeOptions, selectedWeightOptions]);
+  // useEffect(() => {
+  //   fetchFilteredData();
+  // }, [selectedPartnerOptions, selectedModeOptions, selectedWeightOptions]);
 
   return (
     <div className="mt-5 flex gap-5">
