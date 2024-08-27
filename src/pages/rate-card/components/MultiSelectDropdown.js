@@ -12,7 +12,7 @@ const MultiSelectDropdown = ({
   type,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [tempSelectedOptions, setTempSelectedOptions] = useState([...selectedOptions]);
+  let [tempSelectedOptions, setTempSelectedOptions] = useState([...selectedOptions]);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -27,6 +27,7 @@ const MultiSelectDropdown = ({
   const handleClear = () => {
     setTempSelectedOptions([]);
     setSelectedOptions([]);
+    fetchFilteredData(type, (tempSelectedOptions = []));
     setIsOpen(false);
   };
 
@@ -34,12 +35,11 @@ const MultiSelectDropdown = ({
   const handleApply = () => {
     setSelectedOptions(tempSelectedOptions);
     fetchFilteredData(type, tempSelectedOptions);
-    setTempSelectedOptions([]);
     setIsOpen(false);
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-52">
       <button
         className="no-wrap flex w-full items-center justify-between overflow-hidden rounded-sm bg-white px-2.5 py-1.5 text-sm"
         onClick={toggleDropdown}>
@@ -57,9 +57,11 @@ const MultiSelectDropdown = ({
               <input
                 type="checkbox"
                 id={option.id}
-                checked={tempSelectedOptions.includes(option)}
+                checked={tempSelectedOptions.map((option) => option.type).includes(option.type)}
                 onChange={() => handleOptionClick(option)}
               />
+              {console.log(option)}
+
               <label htmlFor={option.type}>{option.type}</label>
             </div>
           ))}

@@ -52,7 +52,7 @@ function SelectFilter({ dataFiltered }) {
               : selectedModeOptions.map((item) => item.id),
           weight:
             filterType === 'weight'
-              ? options.map((item) => item.id)
+              ? options.map((item) => item.type)
               : selectedWeightOptions.map((item) => item.type),
         },
         paginate: {
@@ -68,13 +68,13 @@ function SelectFilter({ dataFiltered }) {
     }
   };
 
-  // useEffect(() => {
-  //   fetchFilteredData();
-  // }, [selectedPartnerOptions, selectedModeOptions, selectedWeightOptions]);
+  useEffect(() => {
+    fetchFilteredData();
+  }, []);
 
   return (
-    <div className="mt-5 flex gap-5">
-      <div className="w-52">
+    <>
+      <div className="mt-5 flex gap-5">
         <MultiSelectDropdown
           options={partnerDictOptions}
           selectedOptions={selectedPartnerOptions}
@@ -83,8 +83,7 @@ function SelectFilter({ dataFiltered }) {
           type={`partner_id`}
           fetchFilteredData={fetchFilteredData}
         />
-      </div>
-      <div className="w-52">
+
         <MultiSelectDropdown
           options={modeTypeOptions}
           selectedOptions={selectedModeOptions}
@@ -93,8 +92,7 @@ function SelectFilter({ dataFiltered }) {
           type={`mode_type`}
           fetchFilteredData={fetchFilteredData}
         />
-      </div>
-      <div className="w-52">
+
         <MultiSelectDropdown
           options={weightOptions}
           selectedOptions={selectedWeightOptions}
@@ -104,7 +102,13 @@ function SelectFilter({ dataFiltered }) {
           fetchFilteredData={fetchFilteredData}
         />
       </div>
-    </div>
+      {/* <div className="flex">
+        {selectedPartnerOptions &&
+          selectedPartnerOptions.map((option) => {
+            return <p key={option.id}>{option.type}</p>;
+          })}
+      </div> */}
+    </>
   );
 }
 
