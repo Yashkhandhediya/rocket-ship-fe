@@ -1,23 +1,114 @@
-import React, { useState } from 'react';
-import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
+import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import ReturnProcessDetail from './components/ReturnProcessDetail';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { returnProcessDetails } from './constants';
-import { returnReasonsList } from './constants';
-import { faUpload } from '@fortawesome/free-solid-svg-icons';
-import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import ReturnPolicySettings from './ReturnPolicySettings';
+import SkuUpload from './components/sku';
+import { BACKEND_URL } from '../../common/utils/env.config';
 
 function ReturnSettings() {
   const [isApproveRequest, setIsApproveRequest] = useState(false);
   const [allowedValue, setAllowedValue] = useState('allowedCustomizeList');
+  const [returnReasonsList, setReturnReasonsList] = useState([]);
+  const [selectedCheckboxes, setSelectedCheckboxes] = useState({});
+  const [selectedreasonCheckboxes, setSelectedreasonCheckboxes] = useState({});
+  const [autoAssign, setAutoAssign] = useState(false);
+  const [maxDays, setMaxDays] = useState(0);
+  const [id, setid] = useState('');
 
-  const fileInputRef = React.useRef(null);
+  const handleCheckboxChange = (id) => {
+    setSelectedCheckboxes((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id],
+    }));
+  };
 
-  const handleButtonClick = () => {
-    fileInputRef.current.click();
+  const handlereasonCheckboxChange = (id) => {
+    setSelectedreasonCheckboxes((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id],
+    }));
+  };
+
+
+  const handleSelectAllChange = () => {
+    const isAllSelected = Object.values(selectedCheckboxes).every(Boolean);
+    const newCheckboxesState = {};
+
+    returnReasonsList.forEach((list) => {
+      newCheckboxesState[list.id] = !isAllSelected;
+    });
+
+    setSelectedCheckboxes(newCheckboxesState);
+  };
+
+  useEffect(() => {
+    fetch(`${BACKEND_URL}/returnpolicy/get_return_reason/`)
+      .then((response) => response.json())
+      .then((data) => {
+        setReturnReasonsList(data);
+      })
+      .catch((error) => {
+        console.error('Error fetching return reasons:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch(`${BACKEND_URL}/returnpolicy/get_return_policy?created_by=${localStorage.getItem('user_id')}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setAutoAssign(data.auto_assign === 1);
+        setIsApproveRequest(data.auto_approve === 1);
+        setAllowedValue(data.all_skus === 1 ? 'allProducts' : 'allowedCustomizeList');
+        setMaxDays(data.max_days);
+        setid(data.id)
+        const initialSelectedCheckboxes = {};
+        data.auto_approve_reason.forEach((reason) => {
+          initialSelectedCheckboxes[reason.id] = true;
+        });
+        setSelectedCheckboxes(initialSelectedCheckboxes);
+
+        const initialSelectedReasonCheckboxes = {};
+        data.shown_returns_reasons.forEach((reason) => {
+          initialSelectedReasonCheckboxes[reason.id] = true;
+        });
+        setSelectedreasonCheckboxes(initialSelectedReasonCheckboxes);
+
+
+      })
+      .catch((error) => {
+        console.error('Error fetching return policy:', error);
+      });
+  }, []);
+
+  const handleSave = () => {
+    const payload = {
+      id: id || null,
+      all_skus: allowedValue === 'allProducts' ? 1 : 0,
+      max_days: maxDays,
+      auto_approve: isApproveRequest ? 1 : 0,
+      auto_assign: autoAssign ? 1 : 0,
+      created_by: 222,
+      shown_returns_reason: Object.keys(selectedreasonCheckboxes).filter(key => selectedreasonCheckboxes[key]).map(Number),
+      auto_approve_reason: isApproveRequest ? Object.keys(selectedCheckboxes).filter(key => selectedCheckboxes[key]).map(Number) : [],
+    };
+
+    fetch(`${BACKEND_URL}/returnpolicy/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Save successful:', data);
+      })
+      .catch((error) => {
+        console.error('Error saving return policy:', error);
+      });
   };
 
   return (
@@ -48,16 +139,10 @@ function ReturnSettings() {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <select className="rounded-lg text-sm">
-                <option>0</option>
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-                <option>6</option>
-                <option>7</option>
-                <option>8</option>
+              <select className="rounded-lg text-sm" value={maxDays} onChange={(e) => setMaxDays(Number(e.target.value))}>
+                {[...Array(9)].map((_, i) => (
+                  <option key={i} value={i}>{i}</option>
+                ))}
               </select>
               <p className="text-sm">Days</p>
             </div>
@@ -77,7 +162,8 @@ function ReturnSettings() {
               <label className="relative inline-flex cursor-pointer items-center">
                 <input
                   type="checkbox"
-                  value={isApproveRequest}
+                  value=''
+                  checked={isApproveRequest}
                   onChange={() => setIsApproveRequest((prev) => !prev)}
                   className="peer sr-only"
                 />
@@ -90,16 +176,28 @@ function ReturnSettings() {
               {returnReasonsList &&
                 returnReasonsList.map((list, index) => {
                   return (
-                    <div key={index} className="mb-5 flex w-1/4 gap-2">
-                      <input type="checkbox" />
+                    <div key={list.id} className="mb-5 flex w-1/4 gap-2">
+                      <input
+                        type="checkbox"
+                        checked={selectedCheckboxes[list.id] || false}
+                        onChange={() => handleCheckboxChange(list.id)}
+                      />
                       <div className="text-[12px]">
-                        <p className="font-semibold">{list.title}</p>
+                        <p className="font-semibold">{list.name.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())}</p>
                       </div>
                     </div>
                   );
                 })}
               <div className="my-5 flex w-1/4 gap-2">
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  checked={
+                    returnReasonsList.length > 0 &&
+                    Object.values(selectedCheckboxes).length === returnReasonsList.length &&
+                    Object.values(selectedCheckboxes).every(Boolean)
+                  }
+                  onChange={handleSelectAllChange}
+                />
                 <div className="text-[12px]">
                   <p className="font-semibold">select all</p>
                 </div>
@@ -119,7 +217,13 @@ function ReturnSettings() {
             </div>
             <div className="flex items-center gap-2">
               <label className="relative inline-flex cursor-pointer items-center">
-                <input type="checkbox" value="" className="peer sr-only" />
+                <input
+                  type="checkbox"
+                  value=""
+                  className="peer sr-only"
+                  checked={autoAssign}
+                  onChange={() => setAutoAssign(!autoAssign)}
+                />
                 <div className="dark:border-gray-600 peer h-5 w-9 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-0.5 after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-0 rtl:peer-checked:after:-translate-x-full"></div>
               </label>
             </div>
@@ -135,24 +239,23 @@ function ReturnSettings() {
                   <input
                     type="radio"
                     id="allProducts"
+                    value="allProducts"
+                    checked={allowedValue === 'allProducts'}
+                    onChange={() => setAllowedValue('allProducts')}
                     className="mr-3"
-                    value={allowedValue}
-                    onChange={() => {
-                      setAllowedValue('allProducts');
-                    }}
                     name="type"
                   />
                   <label
                     htmlFor="allProducts"
                     className="mb-2 inline-flex items-center text-xs font-medium text-gray-900">
-                    All Products SKUs are allowed to be return
+                    All Products SKUs are allowed to be returned
                   </label>
                 </div>
                 <div>
                   <input
                     type="radio"
                     id="customizeProducts"
-                    value={allowedValue}
+                    value="allowedCustomizeList"
                     checked={allowedValue === 'allowedCustomizeList'}
                     onChange={() => setAllowedValue('allowedCustomizeList')}
                     className="mr-3"
@@ -161,42 +264,11 @@ function ReturnSettings() {
                   <label
                     htmlFor="customizeProducts"
                     className="mb-2 inline-flex items-center text-xs font-medium text-gray-900">
-                    Customize the list for returnable products{' '}
+                    Customize the list for returnable products
                   </label>
                 </div>
                 {allowedValue === 'allowedCustomizeList' && (
-                  <div className="my-4 rounded-lg bg-red-50 p-4">
-                    <p className="text-[12px] font-semibold">
-                      Please upload the list of SKU’s that are eligible for return{' '}
-                      <span className="text-[10px] text-gray-500">
-                        (Only csv file formal will be accepted.)
-                      </span>
-                    </p>
-                    <div className="  w-full py-2">
-                      <div className="mt-1 flex items-center">
-                        <input
-                          ref={fileInputRef}
-                          type="file"
-                          className="hidden"
-                          onChange={(e) => {
-                            // Handle file selection
-                            console.log(e.target.files);
-                          }}
-                        />
-                        <button
-                          type="button"
-                          onClick={handleButtonClick}
-                          className="flex cursor-pointer items-center gap-2 rounded-md border border-red-300 bg-white px-8 py-3 text-red-800 shadow-sm  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                          <FontAwesomeIcon icon={faUpload} className="ml-2 h-4 w-4 text-red-800" />
-                          <span className="text-[12px]">Browse and Upload (csv)</span>
-                        </button>
-                      </div>
-                      <p className="mt-4 flex gap-2 font-medium text-red-800">
-                        <FontAwesomeIcon icon={faDownload} className="ml-2 h-4 w-4 text-red-800" />
-                        <span className="text-[12px]">Download Sample file</span>
-                      </p>
-                    </div>
-                  </div>
+                  <SkuUpload id={id} />
                 )}
               </div>
             </div>
@@ -210,17 +282,27 @@ function ReturnSettings() {
               {returnReasonsList &&
                 returnReasonsList.map((list, index) => {
                   return (
-                    <div key={index} className="mb-5 flex w-1/4 gap-2">
-                      <input type="checkbox" />
+                    <div key={list.id} className="mb-5 flex w-1/4 gap-2">
+                      <input
+                        type="checkbox"
+                        checked={selectedreasonCheckboxes[list.id] || false}
+                        onChange={() => handlereasonCheckboxChange(list.id)}
+                      />
                       <div className="text-[12px]">
-                        <p className="font-semibold">{list.title}</p>
-                        <p className="text-gray-500">Image : {list.isMandatory ? 'Mandatory' : 'Optional'}</p>
+                        <p className="font-semibold">{list.name.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())}</p>
+                        <p className="text-gray-500">Image : {list.is_image ? 'Mandatory' : 'Optional'}</p>
                       </div>
                     </div>
                   );
                 })}
             </div>
+
           </div>
+        </div>
+        <div className="my-8 flex w-full justify-center">
+          <button onClick={handleSave} className="rounded-lg bg-orange-600 px-6 py-2 text-sm font-semibold text-white hover:bg-orange-700 focus:outline-none focus:ring-4 focus:ring-orange-300">
+            Save
+          </button>
         </div>
       </div>
     </ReturnPolicySettings>
