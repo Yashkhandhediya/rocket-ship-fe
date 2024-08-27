@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import MultiSelectDropdown from './MultiSelectDropdown';
 import axios from 'axios';
 import { BACKEND_URL } from '../../../common/utils/env.config';
+import { toast } from 'react-toastify';
 
 function SelectFilter({ dataFiltered }) {
   const data = useSelector((state) => state?.rateCardData) || {};
@@ -62,6 +63,7 @@ function SelectFilter({ dataFiltered }) {
       console.log(response);
       dataFiltered(response?.data);
     } catch (err) {
+      toast(`Not found`, { type: 'error' });
       console.log(err);
     }
   };
