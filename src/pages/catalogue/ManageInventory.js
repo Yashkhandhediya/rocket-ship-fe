@@ -13,7 +13,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import CatalogueTab from './CatalogueTab';
 
-const Catalogue = () => {
+const ManageInventory = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState('');
   const [selectedFile, setSelectedFile] = useState('');
@@ -240,9 +240,10 @@ const Catalogue = () => {
   return (
     <CatalogueTab>
       {loading && <Loader />}
+      {/* <div className="ml-4 mt-2 text-base">Channel Catalog</div> */}
       <div className="w-full">
         <div className="mb-2 flex justify-between">
-          <div className="ml-4 mt-2 text-xl">Channel Catalog</div>
+          <div className="ml-4 mt-2 text-xl">Inventory</div>
           <div>
             <button
               className="ml-2 rounded-md border bg-black p-2"
@@ -337,25 +338,26 @@ const Catalogue = () => {
             <div className="rounded-lg bg-white shadow">
               <div className="mb-4 flex justify-between">
                 <div className="flex w-full flex-row items-center border border-l-2 bg-[#FAFAFA]">
-                  <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">Channel</div>
-                  <div className="h-full w-2/12 flex-grow border-r-2 p-2 text-sm font-semibold">
+                  <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
+                    Category Name
+                  </div>
+                  <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">SKU</div>
+                  <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                     Product Name
                   </div>
                   <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                    Category Heading
-                  </div>
-                  <div className="h-full w-[12%] flex-grow border-r-2 p-2 text-sm font-semibold">
-                    SKU Summary
+                    Total Quantity
                   </div>
                   <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                    Selling Price
-                  </div>
-                  <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">HSN Code</div>
-                  <div className="h-full w-2/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                    Dimension/Weight
+                    Available Quantity
                   </div>
                   <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                    Select Package
+                    Blocked Quantity
+                  </div>
+                  <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">Type</div>
+                  <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">Brand</div>
+                  <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
+                    Updated On
                   </div>
                 </div>
               </div>
@@ -372,13 +374,13 @@ const Catalogue = () => {
                   data.map((item, index) => (
                     <div className="flex h-12 w-full flex-row items-center border bg-[#FAFAFA]" key={index}>
                       <div className="h-full w-1/12 flex-grow p-2 text-sm font-semibold">{'Custom'}</div>
-                      <div className="h-full w-2/12 flex-grow border-l-2 border-r-2 p-2 text-sm font-semibold">
+                      <div className="h-full w-1/12 flex-grow border-l-2 border-r-2 p-2 text-sm font-semibold">
                         {item.name ? item.name : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                         {item.category ? item.category : 'N.A'}
                       </div>
-                      <div className="h-full w-[12%] flex-grow border-r-2 p-1 text-sm font-semibold">
+                      <div className="h-full w-1/12 flex-grow border-r-2 p-1 text-sm font-semibold">
                         {item.sku ? item.sku : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-1 text-sm font-semibold">
@@ -387,11 +389,14 @@ const Catalogue = () => {
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                         {item.hsn_code ? item.hsn_code : '-'}
                       </div>
-                      <div className="h-full w-2/12 flex-grow border-r-2 p-2 text-sm font-semibold">
+                      <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                         {item.volumetric_weight ? item.volumetric_weight : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                         {item.remarks ? item.remarks : '-'}
+                      </div>
+                      <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
+                        {`updated on`}
                       </div>
                     </div>
                   ))
@@ -531,4 +536,4 @@ const Catalogue = () => {
   );
 };
 
-export default Catalogue;
+export default ManageInventory;
