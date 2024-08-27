@@ -67,6 +67,10 @@ import { CurrentPlanDetails } from '../pages/billing/component/current-plan-deta
 import { Report } from '../pages/settings/components/reports';
 import { RateCard } from '../pages/rate-card';
 import { PincodeZoneMapping } from '../pages/pincode-zone-mapping';
+import ManageInventory from '../pages/catalogue/ManageInventory';
+import AllProducts from '../pages/catalogue/AllProducts';
+import Categories from '../pages/catalogue/Categories';
+import TaxClasses from '../pages/catalogue/TaxClasses';
 
 const routes = createBrowserRouter([
   {
@@ -354,7 +358,6 @@ const routes = createBrowserRouter([
   {
     path: '/setting-reports',
     element: <PrivateRoute component={<Report />} />,
-
   },
   {
     path: '/rate-card',
@@ -363,6 +366,22 @@ const routes = createBrowserRouter([
   {
     path: '/pincode-zone-mapping',
     element: <PrivateRoute component={<PincodeZoneMapping />} />,
+  },
+  {
+    path: '/manage-inventory',
+    element: <PrivateRoute component={<ManageInventory />} />,
+  },
+  {
+    path: '/all-products',
+    element: <PrivateRoute component={<AllProducts />} />,
+  },
+  {
+    path: '/categories',
+    element: <PrivateRoute component={<Categories />} />,
+  },
+  {
+    path: '/tax-classes',
+    element: <PrivateRoute component={<TaxClasses />} />,
   },
 ]);
 
