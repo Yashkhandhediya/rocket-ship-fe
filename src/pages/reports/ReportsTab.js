@@ -28,7 +28,7 @@ function ReportsTab({ children }) {
     const usersId = localStorage.getItem('user_id');
     const fromDate = format(dateRange.startDate, "yyyy-MM-dd'T'HH:mm:ss.SSSX");
     const toDate = format(dateRange.endDate, "yyyy-MM-dd'T'HH:mm:ss.SSSX");
-    
+
     const payload = {
       users_id: usersId,
       from_date: fromDate,
@@ -56,11 +56,10 @@ function ReportsTab({ children }) {
         window.URL.revokeObjectURL(url); // Clean up the blob URL
         console.log('Report downloaded successfully');
       } else {
-        
         console.error('Failed to download report');
       }
     } catch (error) {
-      toast("Error fetching report", { type: 'error' });
+      toast('Error fetching report', { type: 'error' });
       console.error('Error fetching report:', error);
     }
   };
@@ -74,7 +73,7 @@ function ReportsTab({ children }) {
         </div>
         <div className="flex items-center text-sm">
           <NavLink to={`/reports`} className="border p-2">
-            Shiprockets Report
+            Cargo Cloud Report
           </NavLink>
           {/* <NavLink to={`/scheduled-reports`} className="border p-2">
             Scheduled Report
@@ -85,8 +84,7 @@ function ReportsTab({ children }) {
             id="select"
             value={type}
             className="block w-1/2 rounded-md border border-gray-300 p-1 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-            onChange={handleChange}
-          >
+            onChange={handleChange}>
             <option value="1">Orders</option>
             <option value="2">Shipments</option>
             <option value="3">Weight</option>
@@ -95,10 +93,7 @@ function ReportsTab({ children }) {
             <RangeDatePicker onDateChange={handleDateChange} />
           </div>
           <div className="w-1/2">
-            <button
-              className="rounded bg-green-500 px-2 py-1 text-white"
-              onClick={handleDownload}
-            >
+            <button className="rounded bg-green-500 px-2 py-1 text-white" onClick={handleDownload}>
               Download
             </button>
           </div>

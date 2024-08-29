@@ -12,6 +12,7 @@ import { Button } from 'flowbite-react';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import CatalogueTab from './CatalogueTab';
+import { format, parseISO } from 'date-fns';
 
 const ManageInventory = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -98,9 +99,7 @@ const ManageInventory = () => {
   const handleCatalogueData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `${BACKEND_URL}/product/get_product_details/?page=${page}&page_size=${itemsPerPage}`,
-      );
+      const response = await axios.get(`${BACKEND_URL}/product/get_all_inventory/`);
       if (response.status === 200) {
         setData(response.data);
         setIncrementDisable(false);
@@ -147,94 +146,97 @@ const ManageInventory = () => {
   // };
 
   const handleUpload = async () => {
-    if (!selectedFile) {
-      console.log('No file selected');
-      return;
-    }
+    console.log('upload');
+    // if (!selectedFile) {
+    //   console.log('No file selected');
+    //   return;
+    // }
 
-    //   const payload = {
-    //     excel_file: selectedFileBinaryString
-    // };
+    // //   const payload = {
+    // //     excel_file: selectedFileBinaryString
+    // // };
 
-    const formData = new FormData();
-    // const binaryBlob = dataURLtoBlob(selectedFile);
-    formData.append('excel_file', selectedFile, 'sample.xlsx');
+    // const formData = new FormData();
+    // // const binaryBlob = dataURLtoBlob(selectedFile);
+    // formData.append('excel_file', selectedFile, 'sample.xlsx');
 
-    // Convert the binary string back to a Blob object for FormData usage
-    // const binaryBlob = new Blob([selectedFileBinaryString], { type: 'application/octet-stream' });
+    // // Convert the binary string back to a Blob object for FormData usage
+    // // const binaryBlob = new Blob([selectedFileBinaryString], { type: 'application/octet-stream' });
 
-    // Add the binary blob as the value of the excel_file field
-    // formData.append("excel_file", selectedFileBinaryString, 'sample.xls');
+    // // Add the binary blob as the value of the excel_file field
+    // // formData.append("excel_file", selectedFileBinaryString, 'sample.xls');
 
-    try {
-      // Make the POST request to the server using axios
-      const response = await axios.post(BACKEND_URL + '/product/add_product_catalogue', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          // "Authorization":ACCESS_TOKEN
-        },
-      });
+    // try {
+    //   // Make the POST request to the server using axios
+    //   const response = await axios.post(BACKEND_URL + '/product/add_product_catalogue', formData, {
+    //     headers: {
+    //       'Content-Type': 'multipart/form-data',
+    //       // "Authorization":ACCESS_TOKEN
+    //     },
+    //   });
 
-      // Handle the response
-      if (response.status === 200) {
-        const data = response.data;
-        console.log('File uploaded successfully:', data);
-        toast('File uploaded successfully:', { type: 'success' });
-      } else {
-        console.error('Failed to upload file:', response.statusText);
-        toast('Failed to upload file:', { type: 'error' });
-      }
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      toast('Error uploading file:', { type: 'error' });
-    }
+    //   // Handle the response
+    //   if (response.status === 200) {
+    //     const data = response.data;
+    //     console.log('File uploaded successfully:', data);
+    //     toast('File uploaded successfully:', { type: 'success' });
+    //   } else {
+    //     console.error('Failed to upload file:', response.statusText);
+    //     toast('Failed to upload file:', { type: 'error' });
+    //   }
+    // } catch (error) {
+    //   console.error('Error uploading file:', error);
+    //   toast('Error uploading file:', { type: 'error' });
+    // }
   };
 
   const handleSampleFile = () => {
-    const headers = { 'Content-Type': 'application/json' };
-    axios
-      .get(
-        BACKEND_URL + '/product/get_sample_file/',
-        {
-          responseType: 'blob',
-        },
-        { headers },
-      )
-      .then((res) => {
-        const url = URL.createObjectURL(res.data);
+    console.log('file');
+    // const headers = { 'Content-Type': 'application/json' };
+    // axios
+    //   .get(
+    //     BACKEND_URL + '/product/get_sample_file/',
+    //     {
+    //       responseType: 'blob',
+    //     },
+    //     { headers },
+    //   )
+    //   .then((res) => {
+    //     const url = URL.createObjectURL(res.data);
 
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'sample_file.xlsx';
+    //     const link = document.createElement('a');
+    //     link.href = url;
+    //     link.download = 'sample_file.xlsx';
 
-        document.body.appendChild(link);
+    //     document.body.appendChild(link);
 
-        link.click();
+    //     link.click();
 
-        // Clean up by removing the link element from the DOM
-        document.body.removeChild(link);
-      })
-      .catch((err) => {
-        console.log('Error in File', err);
-      });
+    //     // Clean up by removing the link element from the DOM
+    //     document.body.removeChild(link);
+    //   })
+    //   .catch((err) => {
+    //     console.log('Error in File', err);
+    //   });
   };
 
   const handleDownload = () => {
-    setLoading(true);
-    const headers = {
-      'Content-Type': 'application/json',
-      // "Authorization":ACCESS_TOKEN
-    };
-    axios
-      .get(BACKEND_URL + '/product/send_product_mail/', { headers })
-      .then((res) => {
-        setLoading(false);
-        setDownloadPopup(true);
-      })
-      .catch((err) => {
-        console.log('Error in File', err);
-        setLoading(false);
-      });
+    console.log('Download');
+    // setLoading(true);
+    // const headers = {
+    //   'Content-Type': 'application/json',
+    //   // "Authorization":ACCESS_TOKEN
+    // };
+    // axios
+    //   .get(BACKEND_URL + '/product/send_product_mail/', { headers })
+    //   .then((res) => {
+    //     setLoading(false);
+    //     setDownloadPopup(true);
+    //   })
+    //   .catch((err) => {
+    //     console.log('Error in File', err);
+    //     setLoading(false);
+    //   });
   };
 
   return (
@@ -373,30 +375,35 @@ const ManageInventory = () => {
                 ) : (
                   data.map((item, index) => (
                     <div className="flex h-12 w-full flex-row items-center border bg-[#FAFAFA]" key={index}>
-                      <div className="h-full w-1/12 flex-grow p-2 text-sm font-semibold">{'Custom'}</div>
+                      <div className="h-full w-1/12 flex-grow p-2 text-sm font-semibold">
+                        {' '}
+                        {item['Category Name'] ? item['Category Name'] : '-'}
+                      </div>
                       <div className="h-full w-1/12 flex-grow border-l-2 border-r-2 p-2 text-sm font-semibold">
-                        {item.name ? item.name : '-'}
+                        {item['SKU'] ? item['SKU'] : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                        {item.category ? item.category : 'N.A'}
+                        {item['Product Name'] ? item['Product Name'] : 'N.A'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-1 text-sm font-semibold">
-                        {item.sku ? item.sku : '-'}
+                        {item['Total Quantity'] ? item['Total Quantity'] : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-1 text-sm font-semibold">
-                        {item.unit_price ? '₹' + item.unit_price : '-'}
+                        {item['Available Quantity'] ? '₹' + item['Available Quantity'] : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                        {item.hsn_code ? item.hsn_code : '-'}
+                        {item['Blocked Quantity'] ? item['Blocked Quantity'] : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                        {item.volumetric_weight ? item.volumetric_weight : '-'}
+                        {item['Type'] ? item['Type'] : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                        {item.remarks ? item.remarks : '-'}
+                        {item['Brand'] ? item['Brand'] : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                        {`updated on`}
+                        {item['Modified Date']
+                          ? format(parseISO(item['Modified Date']), 'dd MMM yyyy hh:mm a')
+                          : '-'}
                       </div>
                     </div>
                   ))

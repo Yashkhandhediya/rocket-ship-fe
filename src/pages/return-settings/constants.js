@@ -110,3 +110,17 @@ export const instantRefundDetails = [
       'On selecting payout link at the Shiprocket panel, a link will be created for the refund which will be sent to the buyer through SMS or Email for the refund amount after confirmation.',
   },
 ];
+
+{
+  /* <select className="rounded-lg text-[12px]">
+                    <option></option>
+                    <option></option>
+                    <option></option>
+                  </select> */
+}
+
+export const autoRefundData = [
+  { label: 'Return Acknowledge', value: 'Return Acknowledge', id: '1' },
+  { label: 'Return Delivered', value: 'Return Delivered', id: '2' },
+  { label: 'Return Picked Up', value: 'Return Picked Up', id: '3' },
+];

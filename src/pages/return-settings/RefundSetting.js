@@ -1,24 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReturnPolicySettings from './ReturnPolicySettings';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { noOrdersFound } from '../../common/images';
-import { instantRefundDetails, selectRefundDetails } from './constants';
+import { autoRefundData, instantRefundDetails, selectRefundDetails } from './constants';
 import RefundMode from './components/RefundMode';
+import { CustomMultiSelect, Loader } from '../../common/components';
+import axios from 'axios';
+import { BACKEND_URL } from '../../common/utils/env.config';
+import { toast } from 'react-toastify';
 
 function RefundSetting() {
   const [enableOption, setEnableOption] = useState(false);
   const [selectedOrderTypes, setSelectedOrderTypes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedAutoRefund, setSelectedAutoRefund] = useState('Return Acknowledge');
   const [checkedModes, setCheckedModes] = useState({
     backToSource: false,
     storeCredits: false,
     upiTransfer: false,
     bankTransfer: false,
     payoutLink: false,
+    autoRefundBankTransfer: false,
+    autoRefundStoreCredit: false,
+    refundModes: false,
   });
   const [expirationYears, setExpirationYears] = useState('1');
   const [selectedOption, setSelectedOption] = useState('years'); // Default to 'Days'
+
+  const id_user = localStorage.getItem('user_id');
+  const id_company = localStorage.getItem('company_id');
+  const is_company = localStorage.getItem('is_company');
+
+  const user_id = is_company == 1 ? id_company : id_user;
 
   const handleExpirationChange = (event) => {
     setExpirationYears(event.target.value);
@@ -52,9 +67,77 @@ function RefundSetting() {
     });
   };
 
+  const getRefundSetting = async () => {
+    setLoading(true);
+    try {
+      const { data } = await axios.get(`${BACKEND_URL}/returnpolicy/refund-settings/${user_id}`);
+      console.log(data);
+      setEnableOption(data.allow_refund == 1);
+      setCheckedModes({
+        backToSource: data.return_to_source == 1,
+        storeCredits: data.store_credit == 1,
+        upiTransfer: data.upi_transfer == 1,
+        bankTransfer: data.bank_transfer == 1,
+        payoutLink: data.payout_link == 1,
+        autoRefundBankTransfer: data.auto_refund_bank_transfer == 1,
+        autoRefundStoreCredit: data.auto_refund_store_credit == 1,
+        refundModes: data.refund_modes == 1,
+      });
+      setSelectedAutoRefund(data.auto_refund);
+      setSelectedOrderTypes({
+        storeCredits: data.store_credit_order_type,
+        upiTransfer: data.upi_transfer_order_type,
+        bankTransfer: data.bank_transfer_order_type,
+        payoutLink: data.payout_link_order_type,
+        backToSource: data.return_to_source == 1 ? [1] : [0],
+      });
+    } catch (err) {
+      toast('Error While Setting Refund', { type: 'error' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(`${BACKEND_URL}/returnpolicy/refund-settings/`, {
+        user_id: Number(user_id),
+        allow_refund: enableOption ? 1 : 0,
+        manual_refund: 1,
+        return_to_source: checkedModes.backToSource ? 1 : 0,
+        store_credit: checkedModes.storeCredits ? 1 : 0,
+        refund_modes: checkedModes.refundModes ? 1 : 0,
+        upi_transfer: checkedModes.upiTransfer ? 1 : 0,
+        bank_transfer: checkedModes.bankTransfer ? 1 : 0,
+        payout_link: checkedModes.payoutLink ? 1 : 0,
+        auto_refund: selectedAutoRefund,
+        auto_refund_store_credit: checkedModes.autoRefundStoreCredit ? 1 : 0,
+        auto_refund_bank_transfer: checkedModes.autoRefundBankTransfer ? 1 : 0,
+        store_credit_expiration_no: Number(expirationYears),
+        store_credit_expiration_unit: selectedOption,
+        store_credit_order_type: selectedOrderTypes.storeCredits || [0],
+        upi_transfer_order_type: selectedOrderTypes.upiTransfer || [0],
+        bank_transfer_order_type: selectedOrderTypes.bankTransfer || [0],
+        payout_link_order_type: selectedOrderTypes.payoutLink || [0],
+      });
+
+      toast('Refund Setting Updated', { type: 'success' });
+      getRefundSetting();
+    } catch (err) {
+      toast('Error While Setting Refund', { type: 'error' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getRefundSetting();
+  }, []);
 
   return (
     <ReturnPolicySettings>
+      {loading && <Loader />}
       <div className="flex h-full w-full flex-col">
         <div className="4/5 h-full w-full rounded-lg bg-white px-6 py-4 shadow">
           <p className="text-lg font-bold">Refund Settings</p>
@@ -63,7 +146,7 @@ function RefundSetting() {
               <div>
                 <p className="text-sm font-semibold">Enable Refund option on return orders</p>
                 <p className="text-[12px] text-gray-500">
-                  To process refunds from Shiprocket return panel, please enable and configure some rules and
+                  To process refunds from Cargo Cloud return panel, please enable and configure some rules and
                   permissions to define your refund policy.
                 </p>
               </div>
@@ -72,6 +155,7 @@ function RefundSetting() {
                   <input
                     type="checkbox"
                     value={enableOption}
+                    checked={enableOption}
                     onChange={() => setEnableOption((prev) => !prev)}
                     className="peer sr-only"
                   />
@@ -107,14 +191,13 @@ function RefundSetting() {
                 <div className="w-[60%]">
                   <p className="text-sm font-semibold">1. Manual Refund Mode (Always Active)</p>
                   <p className="text-[12px] text-gray-500">
-                    If you process your refunds manually to a buyer, you can update the refund status on
-                    Shiprocket panel using this mode by providing the UTR number (Unique Taxpayer Reference
-                    No.)
+                    If you process your refunds manually to a buyer, you can update the refund status on Cargo
+                    Cloud panel using this mode by providing the UTR number (Unique Taxpayer Reference No.)
                   </p>
                 </div>
                 <div className=" flex items-center gap-2">
                   <label className="relative inline-flex cursor-pointer items-center">
-                    <input type="checkbox" checked={true} className="peer sr-only" />
+                    <input type="checkbox" checked={true} className="peer sr-only" disabled />
                     <div className="dark:border-gray-600 peer h-4 w-7 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-0.5 after:h-3 after:w-3 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-0 rtl:peer-checked:after:-translate-x-full"></div>
                   </label>
                 </div>
@@ -124,7 +207,8 @@ function RefundSetting() {
                 <div className="w-[60%]">
                   <p className="text-sm font-semibold">2. Back to source</p>
                   <p className="text-[12px] text-gray-500">
-                    The refunded amount is credited back by using the original payment method. This is only applicable for Prepaid orders.
+                    The refunded amount is credited back by using the original payment method. This is only
+                    applicable for Prepaid orders.
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -141,8 +225,10 @@ function RefundSetting() {
               </div>
 
               {checkedModes.backToSource && (
-                <div className="mb-4 bg-red-50 border border-red-200 p-4 rounded-lg">
-                  <h2 className="text-sm font-semibold mb-2">Select the order type for which you need to enable this mode:</h2>
+                <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
+                  <h2 className="mb-2 text-sm font-semibold">
+                    Select the order type for which you need to enable this mode:
+                  </h2>
                   <div className="flex space-x-4">
                     <label className="flex items-center">
                       <span>Order Type</span>
@@ -151,8 +237,8 @@ function RefundSetting() {
                       <input
                         type="checkbox"
                         value="1"
-                        checked={selectedOrderTypes['backToSource']?.includes('1')}
-                        onChange={() => handleOrderTypeChange('1', 'backToSource')}
+                        checked={selectedOrderTypes['backToSource']?.includes(1)}
+                        onChange={() => handleOrderTypeChange(1, 'backToSource')}
                         className="mr-2 border-red-500 text-red-500 focus:ring-red-500"
                       />
                       <span className="text-[12px] text-gray-500">Prepaid</span>
@@ -160,7 +246,6 @@ function RefundSetting() {
                   </div>
                 </div>
               )}
-
 
               <div className="mb-4 flex justify-between">
                 <div className="w-[60%]">
@@ -184,8 +269,10 @@ function RefundSetting() {
 
               {checkedModes.storeCredits && (
                 <div>
-                  <div className="mb-4 bg-red-50 border border-red-200 p-4 rounded-lg">
-                    <h2 className="text-sm font-semibold mb-2">Select the order type for which you need to enable this mode:</h2>
+                  <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
+                    <h2 className="mb-2 text-sm font-semibold">
+                      Select the order type for which you need to enable this mode:
+                    </h2>
                     <div className="flex space-x-4">
                       <label className="flex items-center">
                         <span>Order Type</span>
@@ -194,8 +281,8 @@ function RefundSetting() {
                         <input
                           type="checkbox"
                           value="1"
-                          checked={selectedOrderTypes['storeCredits']?.includes('1')}
-                          onChange={() => handleOrderTypeChange('1', 'storeCredits')}
+                          checked={selectedOrderTypes['storeCredits']?.includes(1)}
+                          onChange={() => handleOrderTypeChange(1, 'storeCredits')}
                           className="mr-2 border-red-500 text-red-500 focus:ring-red-500"
                         />
                         <span className="text-[12px] text-gray-500">Prepaid</span>
@@ -204,8 +291,8 @@ function RefundSetting() {
                         <input
                           type="checkbox"
                           value="2"
-                          checked={selectedOrderTypes['storeCredits']?.includes('2')}
-                          onChange={() => handleOrderTypeChange('2', 'storeCredits')}
+                          checked={selectedOrderTypes['storeCredits']?.includes(2)}
+                          onChange={() => handleOrderTypeChange(2, 'storeCredits')}
                           className="mr-2 border-red-500 text-red-500 focus:ring-red-500"
                         />
                         <span className="text-[12px] text-gray-500">Cash on Delivery</span>
@@ -216,7 +303,8 @@ function RefundSetting() {
                     <div className="w-[60%]">
                       <p className="text-sm font-semibold">Store credit expiration</p>
                       <p className="text-[12px] text-gray-500">
-                        You can customize the validity of the store credits that will be refunded to your buyer.
+                        You can customize the validity of the store credits that will be refunded to your
+                        buyer.
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -226,33 +314,28 @@ function RefundSetting() {
                             type="number"
                             value={expirationYears}
                             onChange={handleExpirationChange}
-                            className="border border-gray-300 rounded-md px-4 py-2 mr-3 w-[100px] text-sm"
-
+                            className="mr-3 w-[100px] rounded-md border border-gray-300 px-4 py-2 text-sm"
                           />
                         )}
                         <select
                           value={selectedOption}
                           onChange={handleOptionChange}
-                          className="border border-gray-300 text-sm rounded-md px-4 py-2 w-[100px]"
-
-                        >
+                          className="w-[100px] rounded-md border border-gray-300 px-4 py-2 text-sm">
                           <option value="days">Days</option>
                           <option value="months">Months</option>
                           <option value="years">Years</option>
                           <option value="never">Never</option>
                         </select>
                       </div>
-                      
                     </div>
                   </div>
-                  <p className="flex items-center rounded-lg bg-yellow-50 p-2 text-[12px] text-gray-500 mb-4">
-                        <FontAwesomeIcon icon={faCircleExclamation} className="pr-2 text-xl text-yellow-300" />
-                        <strong>Note</strong>: For Shopify and Wocommerce channel, coupon code will be created automatically. In other cases, you’ll have to provide a coupon code to
-                        be shared with your customer.
-                      </p>
+                  <p className="mb-4 flex items-center rounded-lg bg-yellow-50 p-2 text-[12px] text-gray-500">
+                    <FontAwesomeIcon icon={faCircleExclamation} className="pr-2 text-xl text-yellow-300" />
+                    <strong>Note</strong>: For Shopify and Wocommerce channel, coupon code will be created
+                    automatically. In other cases, you’ll have to provide a coupon code to be shared with your
+                    customer.
+                  </p>
                 </div>
-
-
               )}
 
               <div className="mb-5 flex justify-between">
@@ -267,8 +350,8 @@ function RefundSetting() {
                   <label className="relative inline-flex cursor-pointer items-center">
                     <input
                       type="checkbox"
-                      //   value={enableOption}
-                      //   onChange={() => setEnableOption((prev) => !prev)}
+                      checked={checkedModes.refundModes}
+                      onChange={() => handleCheckboxChange('refundModes')}
                       className="peer sr-only"
                     />
                     <div className="dark:border-gray-600 peer h-4 w-7 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-0.5 after:h-3 after:w-3 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-0 rtl:peer-checked:after:-translate-x-full"></div>
@@ -280,7 +363,7 @@ function RefundSetting() {
                   <div className="w-[60%]">
                     <p className="text-sm font-semibold">Connect RAZORPAY to enable modes below</p>
                     <p className="text-[12px] text-gray-500">
-                      Connect your RazorpayX account with Shiprocket to use the instant refund modes. Learn
+                      Connect your RazorpayX account with Cargo Cloud to use the instant refund modes. Learn
                       More about RazorpayX API Authentication.
                     </p>
                   </div>
@@ -311,8 +394,10 @@ function RefundSetting() {
                 </div>
               </div>
               {checkedModes.upiTransfer && (
-                <div className="mb-4 bg-red-50 border border-red-200 p-4 rounded-lg">
-                  <h2 className="text-sm font-semibold mb-2">Select the order type for which you need to enable this mode:</h2>
+                <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
+                  <h2 className="mb-2 text-sm font-semibold">
+                    Select the order type for which you need to enable this mode:
+                  </h2>
                   <div className="flex space-x-4">
                     <label className="flex items-center">
                       <span>Order Type</span>
@@ -321,8 +406,8 @@ function RefundSetting() {
                       <input
                         type="checkbox"
                         value="1"
-                        checked={selectedOrderTypes['upiTransfer']?.includes('1')}
-                        onChange={() => handleOrderTypeChange('1', 'upiTransfer')}
+                        checked={selectedOrderTypes['upiTransfer']?.includes(1)}
+                        onChange={() => handleOrderTypeChange(1, 'upiTransfer')}
                         className="mr-2 border-red-500 text-red-500 focus:ring-red-500"
                       />
                       <span className="text-[12px] text-gray-500">Prepaid</span>
@@ -331,8 +416,8 @@ function RefundSetting() {
                       <input
                         type="checkbox"
                         value="2"
-                        checked={selectedOrderTypes['upiTransfer']?.includes('2')}
-                        onChange={() => handleOrderTypeChange('2', 'upiTransfer')}
+                        checked={selectedOrderTypes['upiTransfer']?.includes(2)}
+                        onChange={() => handleOrderTypeChange(2, 'upiTransfer')}
                         className="mr-2 border-red-500 text-red-500 focus:ring-red-500"
                       />
                       <span className="text-[12px] text-gray-500">Cash on Delivery</span>
@@ -362,8 +447,10 @@ function RefundSetting() {
               </div>
 
               {checkedModes.bankTransfer && (
-                <div className="mb-4 bg-red-50 border border-red-200 p-4 rounded-lg">
-                  <h2 className="text-sm font-semibold mb-2">Select the order type for which you need to enable this mode:</h2>
+                <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
+                  <h2 className="mb-2 text-sm font-semibold">
+                    Select the order type for which you need to enable this mode:
+                  </h2>
                   <div className="flex space-x-4">
                     <label className="flex items-center">
                       <span>Order Type</span>
@@ -372,8 +459,8 @@ function RefundSetting() {
                       <input
                         type="checkbox"
                         value="1"
-                        checked={selectedOrderTypes['bankTransfer']?.includes('1')}
-                        onChange={() => handleOrderTypeChange('1', 'bankTransfer')}
+                        checked={selectedOrderTypes['bankTransfer']?.includes(1)}
+                        onChange={() => handleOrderTypeChange(1, 'bankTransfer')}
                         className="mr-2 border-red-500 text-red-500 focus:ring-red-500"
                       />
                       <span className="text-[12px] text-gray-500">Prepaid</span>
@@ -382,8 +469,8 @@ function RefundSetting() {
                       <input
                         type="checkbox"
                         value="2"
-                        checked={selectedOrderTypes['bankTransfer']?.includes('2')}
-                        onChange={() => handleOrderTypeChange('2', 'bankTransfer')}
+                        checked={selectedOrderTypes['bankTransfer']?.includes(2)}
+                        onChange={() => handleOrderTypeChange(2, 'bankTransfer')}
                         className="mr-2 border-red-500 text-red-500 focus:ring-red-500"
                       />
                       <span className="text-[12px] text-gray-500">Cash on Delivery</span>
@@ -412,8 +499,10 @@ function RefundSetting() {
                 </div>
               </div>
               {checkedModes.payoutLink && (
-                <div className="mb-4 bg-red-50 border border-red-200 p-4 rounded-lg">
-                  <h2 className="text-sm font-semibold mb-2">Select the order type for which you need to enable this mode:</h2>
+                <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
+                  <h2 className="mb-2 text-sm font-semibold">
+                    Select the order type for which you need to enable this mode:
+                  </h2>
                   <div className="flex space-x-4">
                     <label className="flex items-center">
                       <span>Order Type</span>
@@ -422,8 +511,8 @@ function RefundSetting() {
                       <input
                         type="checkbox"
                         value="1"
-                        checked={selectedOrderTypes['payoutLink']?.includes('1')}
-                        onChange={() => handleOrderTypeChange('1', 'payoutLink')}
+                        checked={selectedOrderTypes['payoutLink']?.includes(1)}
+                        onChange={() => handleOrderTypeChange(1, 'payoutLink')}
                         className="mr-2 border-red-500 text-red-500 focus:ring-red-500"
                       />
                       <span className="text-[12px] text-gray-500">Prepaid</span>
@@ -432,8 +521,8 @@ function RefundSetting() {
                       <input
                         type="checkbox"
                         value="2"
-                        checked={selectedOrderTypes['payoutLink']?.includes('2')}
-                        onChange={() => handleOrderTypeChange('2', 'payoutLink')}
+                        checked={selectedOrderTypes['payoutLink']?.includes(2)}
+                        onChange={() => handleOrderTypeChange(2, 'payoutLink')}
                         className="mr-2 border-red-500 text-red-500 focus:ring-red-500"
                       />
                       <span className="text-[12px] text-gray-500">Cash on Delivery</span>
@@ -442,8 +531,6 @@ function RefundSetting() {
                 </div>
               )}
             </div>
-
-
 
             <div className="4/5 mt-4 h-full w-full rounded-lg bg-white px-6 py-4 shadow">
               <p className="text-[17px] font-bold">Auto-Refund Mode</p>
@@ -460,11 +547,17 @@ function RefundSetting() {
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <select className="rounded-lg text-[12px]">
-                    <option>Return Acknowledge</option>
-                    <option>Return Delivered</option>
-                    <option>Return Picked Up</option>
-                  </select>
+                  <CustomMultiSelect
+                    isMulti={false}
+                    options={autoRefundData}
+                    selected={selectedAutoRefund}
+                    closeMenuOnSelect={true}
+                    placeholder={selectedAutoRefund}
+                    hideSelectedOptions={false}
+                    onChange={(value) => {
+                      setSelectedAutoRefund(value);
+                    }}
+                  />
                 </div>
               </div>
               <div className="mb-5 flex justify-between">
@@ -478,8 +571,8 @@ function RefundSetting() {
                   <label className="relative inline-flex cursor-pointer items-center">
                     <input
                       type="checkbox"
-                      //   value={enableOption}
-                      //   onChange={() => setEnableOption((prev) => !prev)}
+                      checked={checkedModes.autoRefundStoreCredit}
+                      onChange={() => handleCheckboxChange('autoRefundStoreCredit')}
                       className="peer sr-only"
                     />
                     <div className="dark:border-gray-600 peer h-4 w-7 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-0.5 after:h-3 after:w-3 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-0 rtl:peer-checked:after:-translate-x-full"></div>
@@ -498,8 +591,8 @@ function RefundSetting() {
                   <label className="relative inline-flex cursor-pointer items-center">
                     <input
                       type="checkbox"
-                      //   value={enableOption}
-                      //   onChange={() => setEnableOption((prev) => !prev)}
+                      checked={checkedModes.autoRefundBankTransfer}
+                      onChange={() => handleCheckboxChange('autoRefundBankTransfer')}
                       className="peer sr-only"
                     />
                     <div className="dark:border-gray-600 peer h-4 w-7 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-0.5 after:h-3 after:w-3 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-0 rtl:peer-checked:after:-translate-x-full"></div>
@@ -515,7 +608,9 @@ function RefundSetting() {
           </>
         )}
         <div className="my-4 w-full text-center">
-          <button className=" w-24 rounded-lg bg-red-800 px-4 py-2 text-white">Save</button>
+          <button className=" w-24 rounded-lg bg-red-800 px-4 py-2 text-white" onClick={handleSave}>
+            Save
+          </button>
         </div>
       </div>
     </ReturnPolicySettings>

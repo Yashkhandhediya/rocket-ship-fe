@@ -185,7 +185,7 @@ if (access_modules == null || access_modules?.length == 0) {
           },
           {
             title: 'Bulk Print Actions',
-            path: '/',
+            path: '/bulk-actions',
           },
           {
             title: 'Reports',
@@ -193,7 +193,7 @@ if (access_modules == null || access_modules?.length == 0) {
           },
           {
             title: 'Activity Logs',
-            path: '/',
+            path: '/activity-logs',
           },
         ],
       },
