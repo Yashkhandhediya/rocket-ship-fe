@@ -12,7 +12,7 @@ import { Button } from 'flowbite-react';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import CatalogueTab from './CatalogueTab';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 
 const ManageInventory = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -401,7 +401,9 @@ const ManageInventory = () => {
                         {item['Brand'] ? item['Brand'] : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                        {item['Modified Date'] ? format(item['Modified Date'], 'dd-MM-yyyy') : '-'}
+                        {item['Modified Date']
+                          ? format(parseISO(item['Modified Date']), 'dd MMM yyyy hh:mm a')
+                          : '-'}
                       </div>
                     </div>
                   ))
