@@ -11,8 +11,8 @@ To set up and run the Cargo Cloud Frontend project, follow these steps:
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/your-username/cargo-cloud-frontend.git
-    cd cargo-cloud-frontend
+    https://github.com/tdharmik19/rocket-ship-fe.git
+    cd rocket-ship-fe
     ```
 
 2. **Install dependencies:**
@@ -35,10 +35,11 @@ To set up and run the Cargo Cloud Frontend project, follow these steps:
     Create a `.env` file in the root directory and add the necessary environment variables. For example:
 
     ```env
-    REACT_APP_API_BASE_URL=http://localhost:8000/api
+    export const BACKEND_URL = 
+    export const MENIFEST_URL = 
     ```
 
-    Adjust the `REACT_APP_API_BASE_URL` to point to your backend API.
+    Adjust the `BACKEND_URL` to point to your backend API and `MENIFEST_URL` to point to your print backend API.
 
 4. **Run the application:**
 
@@ -61,6 +62,6 @@ To set up and run the Cargo Cloud Frontend project, follow these steps:
 
 To run tests, use:
 
-```bash
-npm test
-```
+    ```bash
+    npm test
+    ```
