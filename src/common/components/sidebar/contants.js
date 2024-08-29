@@ -185,7 +185,7 @@ if (access_modules == null || access_modules?.length == 0) {
           },
           {
             title: 'Bulk Print Actions',
-            path: '/',
+            path: '/bulk-actions',
           },
           {
             title: 'Reports',

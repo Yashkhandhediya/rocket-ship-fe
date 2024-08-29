@@ -71,6 +71,7 @@ import ManageInventory from '../pages/catalogue/ManageInventory';
 import AllProducts from '../pages/catalogue/AllProducts';
 import Categories from '../pages/catalogue/Categories';
 import TaxClasses from '../pages/catalogue/TaxClasses';
+import { BulkActions } from '../pages/bulk-actions';
 
 const routes = createBrowserRouter([
   {
@@ -323,7 +324,7 @@ const routes = createBrowserRouter([
     element: <PrivateRoute component={<BillingAddress />} />,
   },
   {
-    path: '/shiprocket-bank-details',
+    path: '/cargo-cloud-bank-details',
     element: <PrivateRoute component={<ShiprocketBankDetails />} />,
   },
   {
@@ -382,6 +383,10 @@ const routes = createBrowserRouter([
   {
     path: '/tax-classes',
     element: <PrivateRoute component={<TaxClasses />} />,
+  },
+  {
+    path: '/bulk-actions',
+    element: <PrivateRoute component={<BulkActions />} />,
   },
 ]);
 

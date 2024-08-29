@@ -117,8 +117,8 @@ const Settings = () => {
             link: '/billing-address',
           },
           {
-            title: 'Shiprocket Bank Details',
-            link: '/shiprocket-bank-details',
+            title: 'Cargo Cloud Bank Details',
+            link: '/cargo-cloud-bank-details',
           },
         ],
         icon: (

@@ -50,7 +50,7 @@ const Channels = () => {
     }
   };
 
-  const id_user = localStorage.getItem('user_id')
+  const id_user = localStorage.getItem('user_id');
   const fetchApiChannels = async () => {
     try {
       const response = await axios.get(`${BACKEND_URL}/shopchannel/get_store_by_user_id?user_id=${id_user}`);
@@ -73,7 +73,7 @@ const Channels = () => {
           <div>
             <h2 className="text-2xl font-semibold">Sales Channels</h2>
             <p className="text-sm text-gray-500">
-              Connect & manage your sales channels to automate order syncing with Shiprocket
+              Connect & manage your sales channels to automate order syncing with Cargo Cloud
             </p>
           </div>
           {/* <button className="rounded bg-[#E02424] bg-opacity-25 px-4 py-2 text-[#E02424]">
@@ -128,8 +128,7 @@ const Channels = () => {
                 return (
                   <div
                     key={channel.id} // Assuming each channel has a unique ID
-                    className="flex h-96 h-[200px] w-[30%] flex-col items-center justify-start rounded-lg bg-red-100"
-                  >
+                    className="flex h-96 h-[200px] w-[30%] flex-col items-center justify-start rounded-lg bg-red-100">
                     <div className="mt-1 flex h-2/3 flex-col items-center justify-center">
                       <div className="flex w-[15rem] items-center justify-center rounded-full border-0">
                         {channelImage ? (
@@ -149,8 +148,7 @@ const Channels = () => {
                         onClick={() => {
                           navigate('/channels/add_channel', { state: channel.id });
                         }}
-                        disabled={localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2}
-                      >
+                        disabled={localStorage.getItem('is_kyc') == 1 || localStorage.getItem('is_kyc') == 2}>
                         Connect
                       </button>
                     </div>

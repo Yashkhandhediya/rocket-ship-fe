@@ -146,7 +146,7 @@ function RefundSetting() {
               <div>
                 <p className="text-sm font-semibold">Enable Refund option on return orders</p>
                 <p className="text-[12px] text-gray-500">
-                  To process refunds from Shiprocket return panel, please enable and configure some rules and
+                  To process refunds from Cargo Cloud return panel, please enable and configure some rules and
                   permissions to define your refund policy.
                 </p>
               </div>
@@ -191,9 +191,8 @@ function RefundSetting() {
                 <div className="w-[60%]">
                   <p className="text-sm font-semibold">1. Manual Refund Mode (Always Active)</p>
                   <p className="text-[12px] text-gray-500">
-                    If you process your refunds manually to a buyer, you can update the refund status on
-                    Shiprocket panel using this mode by providing the UTR number (Unique Taxpayer Reference
-                    No.)
+                    If you process your refunds manually to a buyer, you can update the refund status on Cargo
+                    Cloud panel using this mode by providing the UTR number (Unique Taxpayer Reference No.)
                   </p>
                 </div>
                 <div className=" flex items-center gap-2">
@@ -364,7 +363,7 @@ function RefundSetting() {
                   <div className="w-[60%]">
                     <p className="text-sm font-semibold">Connect RAZORPAY to enable modes below</p>
                     <p className="text-[12px] text-gray-500">
-                      Connect your RazorpayX account with Shiprocket to use the instant refund modes. Learn
+                      Connect your RazorpayX account with Cargo Cloud to use the instant refund modes. Learn
                       More about RazorpayX API Authentication.
                     </p>
                   </div>

@@ -32,7 +32,6 @@ function ReturnSettings() {
     }));
   };
 
-
   const handleSelectAllChange = () => {
     const isAllSelected = Object.values(selectedCheckboxes).every(Boolean);
     const newCheckboxesState = {};
@@ -63,7 +62,7 @@ function ReturnSettings() {
         setIsApproveRequest(data.auto_approve === 1);
         setAllowedValue(data.all_skus === 1 ? 'allProducts' : 'allowedCustomizeList');
         setMaxDays(data.max_days);
-        setid(data.id)
+        setid(data.id);
         const initialSelectedCheckboxes = {};
         data.auto_approve_reason.forEach((reason) => {
           initialSelectedCheckboxes[reason.id] = true;
@@ -75,8 +74,6 @@ function ReturnSettings() {
           initialSelectedReasonCheckboxes[reason.id] = true;
         });
         setSelectedreasonCheckboxes(initialSelectedReasonCheckboxes);
-
-
       })
       .catch((error) => {
         console.error('Error fetching return policy:', error);
@@ -91,8 +88,14 @@ function ReturnSettings() {
       auto_approve: isApproveRequest ? 1 : 0,
       auto_assign: autoAssign ? 1 : 0,
       created_by: 222,
-      shown_returns_reason: Object.keys(selectedreasonCheckboxes).filter(key => selectedreasonCheckboxes[key]).map(Number),
-      auto_approve_reason: isApproveRequest ? Object.keys(selectedCheckboxes).filter(key => selectedCheckboxes[key]).map(Number) : [],
+      shown_returns_reason: Object.keys(selectedreasonCheckboxes)
+        .filter((key) => selectedreasonCheckboxes[key])
+        .map(Number),
+      auto_approve_reason: isApproveRequest
+        ? Object.keys(selectedCheckboxes)
+            .filter((key) => selectedCheckboxes[key])
+            .map(Number)
+        : [],
     };
 
     fetch(`${BACKEND_URL}/returnpolicy/`, {
@@ -119,7 +122,7 @@ function ReturnSettings() {
         <div className="flex flex-col gap-8 border-b px-4 py-8 ">
           <div className="flex gap-8">
             {returnProcessDetails &&
-              returnProcessDetails.map((details, index) => {
+              returnProcessDetails?.map((details, index) => {
                 return <ReturnProcessDetail key={index} {...details} />;
               })}
           </div>
@@ -139,9 +142,14 @@ function ReturnSettings() {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <select className="rounded-lg text-sm" value={maxDays} onChange={(e) => setMaxDays(Number(e.target.value))}>
+              <select
+                className="rounded-lg text-sm"
+                value={maxDays}
+                onChange={(e) => setMaxDays(Number(e.target.value))}>
                 {[...Array(9)].map((_, i) => (
-                  <option key={i} value={i}>{i}</option>
+                  <option key={i} value={i}>
+                    {i}
+                  </option>
                 ))}
               </select>
               <p className="text-sm">Days</p>
@@ -162,7 +170,7 @@ function ReturnSettings() {
               <label className="relative inline-flex cursor-pointer items-center">
                 <input
                   type="checkbox"
-                  value=''
+                  value=""
                   checked={isApproveRequest}
                   onChange={() => setIsApproveRequest((prev) => !prev)}
                   className="peer sr-only"
@@ -174,7 +182,7 @@ function ReturnSettings() {
           {isApproveRequest && (
             <div className="my-4 flex w-full flex-wrap rounded-lg bg-red-50 px-4 pt-4">
               {returnReasonsList &&
-                returnReasonsList.map((list, index) => {
+                returnReasonsList?.map((list, index) => {
                   return (
                     <div key={list.id} className="mb-5 flex w-1/4 gap-2">
                       <input
@@ -183,7 +191,9 @@ function ReturnSettings() {
                         onChange={() => handleCheckboxChange(list.id)}
                       />
                       <div className="text-[12px]">
-                        <p className="font-semibold">{list.name.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())}</p>
+                        <p className="font-semibold">
+                          {list.name.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())}
+                        </p>
                       </div>
                     </div>
                   );
@@ -192,7 +202,7 @@ function ReturnSettings() {
                 <input
                   type="checkbox"
                   checked={
-                    returnReasonsList.length > 0 &&
+                    returnReasonsList?.length > 0 &&
                     Object.values(selectedCheckboxes).length === returnReasonsList.length &&
                     Object.values(selectedCheckboxes).every(Boolean)
                   }
@@ -267,9 +277,7 @@ function ReturnSettings() {
                     Customize the list for returnable products
                   </label>
                 </div>
-                {allowedValue === 'allowedCustomizeList' && (
-                  <SkuUpload id={id} />
-                )}
+                {allowedValue === 'allowedCustomizeList' && <SkuUpload id={id} />}
               </div>
             </div>
           </div>
@@ -280,7 +288,7 @@ function ReturnSettings() {
             </div>
             <div className="my-4 flex w-full flex-wrap rounded-lg bg-red-50 px-4 pt-4">
               {returnReasonsList &&
-                returnReasonsList.map((list, index) => {
+                returnReasonsList?.map((list, index) => {
                   return (
                     <div key={list.id} className="mb-5 flex w-1/4 gap-2">
                       <input
@@ -289,18 +297,21 @@ function ReturnSettings() {
                         onChange={() => handlereasonCheckboxChange(list.id)}
                       />
                       <div className="text-[12px]">
-                        <p className="font-semibold">{list.name.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())}</p>
+                        <p className="font-semibold">
+                          {list.name.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())}
+                        </p>
                         <p className="text-gray-500">Image : {list.is_image ? 'Mandatory' : 'Optional'}</p>
                       </div>
                     </div>
                   );
                 })}
             </div>
-
           </div>
         </div>
         <div className="my-8 flex w-full justify-center">
-          <button onClick={handleSave} className="rounded-lg bg-orange-600 px-6 py-2 text-sm font-semibold text-white hover:bg-orange-700 focus:outline-none focus:ring-4 focus:ring-orange-300">
+          <button
+            onClick={handleSave}
+            className="rounded-lg bg-orange-600 px-6 py-2 text-sm font-semibold text-white hover:bg-orange-700 focus:outline-none focus:ring-4 focus:ring-orange-300">
             Save
           </button>
         </div>
