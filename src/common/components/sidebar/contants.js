@@ -193,7 +193,7 @@ if (access_modules == null || access_modules?.length == 0) {
           },
           {
             title: 'Activity Logs',
-            path: '/',
+            path: '/activity-logs',
           },
         ],
       },

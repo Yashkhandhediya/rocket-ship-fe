@@ -72,6 +72,7 @@ import AllProducts from '../pages/catalogue/AllProducts';
 import Categories from '../pages/catalogue/Categories';
 import TaxClasses from '../pages/catalogue/TaxClasses';
 import { BulkActions } from '../pages/bulk-actions';
+import { ActivityLogs } from '../pages/activity-logs';
 
 const routes = createBrowserRouter([
   {
@@ -387,6 +388,10 @@ const routes = createBrowserRouter([
   {
     path: '/bulk-actions',
     element: <PrivateRoute component={<BulkActions />} />,
+  },
+  {
+    path: '/activity-logs',
+    element: <PrivateRoute component={<ActivityLogs />} />,
   },
 ]);
 
