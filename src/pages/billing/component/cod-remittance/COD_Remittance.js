@@ -117,7 +117,7 @@ const COD_Remittance = () => {
         filter_fields: {
           waybill_no: waybill_no,
           year: selectedYear == 'Select Year' ? '' : selectedYear,
-          user_name: selectedUserName,
+          user_name: selectedUserName == 'select' ? '' : selectedUserName,
         },
         paginate: {
           page_number: page,
