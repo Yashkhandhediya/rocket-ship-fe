@@ -36,12 +36,12 @@ function GeoChart({ stateWiseOrderCount }) {
         <span>Last 30 Days</span>
       </div>
       {stateWiseOrderCount ? (
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <div className="flex">
           <Chart chartType="GeoChart" width="100%" height="100%" data={data} options={options} />
         </div>
       ) : (
         <div
-          className="mb-12 flex w-full flex-col items-center justify-center pt-16"
+          className="mb-12 flex w-full flex-col items-center justify-center pt-2"
           style={{ height: '100%' }}>
           <img src={noShipment} alt="" width={'100px'} />
           <div className="mt-10 text-[1.3rem] font-semibold text-[#b54040]">No Data in last 30 days.</div>
