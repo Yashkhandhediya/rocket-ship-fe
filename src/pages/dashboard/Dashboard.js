@@ -9,8 +9,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Card, DonutChart } from './components';
 import ShipmentDetailCard from './components/shipment-card/ShipmentDetailCard';
 import { ShipmentOverview } from './components/shipment-overview';
-
-
+import GeoChart from './components/GeoChart';
+import ShipmentZone from './components/ShipmentZone';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -24,13 +24,16 @@ const Dashboard = () => {
   const [todayRevenue, setTodayRevenue] = useState(0);
   const [yesterdayOrder, setYesterdayOrder] = useState(0);
   const [yesterdayRevenue, setYesterdayRevenue] = useState(0);
-  const [averageShipment, setAverageShipment] = useState(0)
+  const [averageShipment, setAverageShipment] = useState(0);
   const [shipData, setShipData] = useState([]);
   const [result, setResult] = useState([]);
   const [flag, setFlag] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('Overview');
   const hasFetched = useRef(false);
+  const [stateWiseOrderCount, setStateWiseOrderCount] = useState([]);
+  const [zoneWiseOrderCount, setZoneWiseOrderCount] = useState([]);
+  const [revenue, setRevenue] = useState([]);
   const [shipmentDetail, setShipmentDetail] = useState({
     total_shipment: 0,
     pickup_pending: 0,
@@ -83,7 +86,7 @@ const Dashboard = () => {
     labels: shipData.map((item) => item.partner_name),
     datasets: [
       {
-        data: shipData.map(item => item.status_count),
+        data: shipData.map((item) => item.status_count),
         backgroundColor: backgroundColor,
       },
     ],
@@ -93,7 +96,7 @@ const Dashboard = () => {
     labels: shipmentDetails.map((item) => item.label),
     datasets: [
       {
-        data: shipmentDetails.map(item => item.value),
+        data: shipmentDetails.map((item) => item.value),
         backgroundColor: backgroundColor,
       },
     ],
@@ -122,7 +125,7 @@ const Dashboard = () => {
         setYesterdayOrder(res.data.yesterdays_order_count);
         setTodayRevenue(res.data.todays_revenue);
         setYesterdayRevenue(res.data.yesterdays_revenue);
-        setAverageShipment(res.data.average_shipment)
+        setAverageShipment(res.data.average_shipment);
         let total = 0;
         const data = res.data.order_details;
         for (const key in data) {
@@ -141,6 +144,9 @@ const Dashboard = () => {
         setShipData(res.data.shipment_details);
         setFlag(true);
         setLoading(false);
+        setStateWiseOrderCount(res.data.state_wise_order_count);
+        setZoneWiseOrderCount(res.data.zone_wise_order_count);
+        setRevenue(res.data.revenue);
       })
       .catch((err) => {
         console.log('ERRRRRR', err);
@@ -353,8 +359,8 @@ const Dashboard = () => {
                       }
                       title="Average Shipping"
                       mainText={
-                        <span className='flex'>
-                          <em className="fa fa fa-inr mr-1 text-lg text-left font-semibold"></em>
+                        <span className="flex">
+                          <em className="fa fa fa-inr mr-1 text-left text-lg font-semibold"></em>
                           {averageShipment}
                         </span>
                       }
@@ -366,6 +372,11 @@ const Dashboard = () => {
                   <DonutChart data={sampleData1} title={'Couriers Split'} />
                   <DonutChart data={sampleData2} title={'Overall Shipment Status'} />
                   <DonutChart data={{}} title={'Delivery Performance'} />
+                </div>
+                <div className="flex justify-between gap-8">
+                  <GeoChart stateWiseOrderCount={stateWiseOrderCount} />
+                  <ShipmentZone data={zoneWiseOrderCount} title={`Shipment Zone`} />
+                  <ShipmentZone title={`Revenue`} data={revenue} />
                 </div>
                 <ShipmentOverview
                   title={'Shipment Overview By Courier'}
