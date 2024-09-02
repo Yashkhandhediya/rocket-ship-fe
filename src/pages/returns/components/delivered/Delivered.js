@@ -186,10 +186,10 @@ const Delivered = ({ data, isLoading }) => {
               id={row?.original?.id}
               className="min-w-fit rounded bg-orange-700 px-4 py-1.5 text-white"
               onClick={() => {
-                // setScheduleModal({
-                //   isOpen: true,
-                //   pickupDetails: row?.original,
-                // });
+                setScheduleModal({
+                  isOpen: true,
+                  pickupDetails: row?.original,
+                });
                 handleUpdateStatus(row?.original?.id);
                 console.log('Refund');
                 // const resp = axios.get(BACKEND_URL+'/order/track?order_id=' + row.id);

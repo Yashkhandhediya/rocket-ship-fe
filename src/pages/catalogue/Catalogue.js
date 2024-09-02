@@ -374,7 +374,7 @@ const Catalogue = () => {
                   </div>
                 ) : (
                   data.map((item, index) => (
-                    <div className="flex h-12 w-full flex-row items-center border bg-[#FAFAFA]" key={index}>
+                    <div className="flex h-20 w-full flex-row items-center border bg-[#FAFAFA]" key={index}>
                       <div className="h-full w-1/12 flex-grow p-2 text-sm font-semibold">
                         {item.channel_name ? item.channel_name : '-'}
                       </div>
@@ -393,15 +393,17 @@ const Catalogue = () => {
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                         {item.hsn_code ? item.hsn_code : '-'}
                       </div>
-                      <div className="h-full w-2/12 flex-grow overflow-y-auto border-r-2 p-1 text-[12px] font-semibold">
+                      <div className="h-full w-2/12 flex-grow border-r-2 p-1 text-[12px] font-semibold">
                         {item.dimension ? (
                           <div>
                             <p>
-                              {item?.dimension?.height} x {item?.dimension?.width} x {item?.dimension?.length}
+                              {item?.dimension?.height || 0} x {item?.dimension?.width || 0} x{' '}
+                              {item?.dimension?.length || 0}
                               cm
                             </p>
                             <span>
-                              Volumetric : {item?.dimension?.volumetric}kg Entered:{item?.dimension?.entered}
+                              Volumetric : {item?.dimension?.volumetric || 0}kg Entered:
+                              {item?.dimension?.entered || 0}
                               kg
                             </span>
                           </div>

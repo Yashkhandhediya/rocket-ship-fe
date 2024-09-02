@@ -237,7 +237,9 @@ export const All = ({ data, isLoading }) => {
               id={row.id}
               className="min-w-fit rounded bg-orange-700 px-4 py-1.5 text-white"
               onClick={() => {}}>
-              {(row?.original?.status_name || '')?.toLowerCase() == 'new' ? 'Ship Now' : 'Download Menifest'}
+              {(row?.original?.status_name || '')?.toLowerCase() == 'return confirmed'
+                ? 'Ship Now'
+                : 'Download Menifest'}
             </button>
             <div className="min-h-[32px] min-w-[32px]">
               <MoreDropdown

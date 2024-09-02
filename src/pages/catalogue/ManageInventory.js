@@ -377,32 +377,32 @@ const ManageInventory = () => {
                     <div className="flex h-12 w-full flex-row items-center border bg-[#FAFAFA]" key={index}>
                       <div className="h-full w-1/12 flex-grow p-2 text-sm font-semibold">
                         {' '}
-                        {item['Category Name'] ? item['Category Name'] : '-'}
+                        {item.category_name ? item.category_name : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-l-2 border-r-2 p-2 text-sm font-semibold">
-                        {item['SKU'] ? item['SKU'] : '-'}
+                        {item.sku ? item.sku : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                        {item['Product Name'] ? item['Product Name'] : 'N.A'}
+                        {item.product_name ? item.product_name : 'N.A'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-1 text-sm font-semibold">
-                        {item['Total Quantity'] ? item['Total Quantity'] : '-'}
+                        {item.total_quantity ? item.total_quantity : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-1 text-sm font-semibold">
-                        {item['Available Quantity'] ? '₹' + item['Available Quantity'] : '-'}
+                        {item.available_quantity ? '₹' + item.available_quantity : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                        {item['Blocked Quantity'] ? item['Blocked Quantity'] : '-'}
+                        {item.blocked_quantity ? item.blocked_quantity : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                        {item['Type'] ? item['Type'] : '-'}
+                        {item.type ? item.type : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                        {item['Brand'] ? item['Brand'] : '-'}
+                        {item.brand ? item.brand : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                        {item['Modified Date']
-                          ? format(parseISO(item['Modified Date']), 'dd MMM yyyy hh:mm a')
+                        {item.modified_date
+                          ? format(parseISO(item.modified_date), 'dd MMM yyyy hh:mm a')
                           : '-'}
                       </div>
                     </div>

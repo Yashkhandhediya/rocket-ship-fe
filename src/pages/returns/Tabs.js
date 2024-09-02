@@ -104,8 +104,8 @@ const Tabs = ({ tabs, tabClassNames, activeReturnTab, setReturnActiveTab, onTabC
       </div>
       <div id="default-tab-content">
         <div className={`rounded-lg`}>
-          {activeReturnTab === 0 && <New data={data} isLoading={loading} />}
-          {activeReturnTab === 1 && <ReadyToShip data={data} isLoading={loading} />}
+          {activeReturnTab === 0 && <ReadyToShip data={data} isLoading={loading} />}
+          {activeReturnTab === 1 && <New data={data} isLoading={loading} />}
           {activeReturnTab === 2 && <PickupMenifests data={data} isLoading={loading} />}
           {activeReturnTab === 3 && <InTransit data={data} isLoading={loading} />}
           {activeReturnTab === 4 && <Delivered data={data} isLoading={loading} />}
