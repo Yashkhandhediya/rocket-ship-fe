@@ -21,7 +21,7 @@ function Courier() {
           pod: 'On Request',
           deliveryBoyNumber: 'Not Available',
           trackingServices: 'Real Time',
-          img_name:Delivery
+          img_name:Ecom
         },
         {
             id: '2',
@@ -54,7 +54,7 @@ function Courier() {
             pod: 'Instant',
             deliveryBoyNumber: 'Not Available',
             trackingServices: 'Real Time',
-            img_name:Ecom
+            img_name:Delivery
           },
           {
             id: '5',
