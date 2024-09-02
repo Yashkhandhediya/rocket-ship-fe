@@ -31,6 +31,10 @@ const Orders = () => {
     JSON.parse(localStorage.getItem('activeOrderTab')) || 0,
   );
 
+  let data = {
+    isEdit: false
+  };
+
   console.log(filteredOrderId, searchBy, errorMsg);
 
   const navigate = useNavigate();
@@ -64,25 +68,25 @@ const Orders = () => {
       console.log(response.data);
       setFilteredOrderId(
         (response.data.awb.order_id.length != 0 && response.data.awb.order_id) ||
-          (response.data.email.order_id.length != 0 && response.data.email.order_id) ||
-          (response.data.order_id.order_id.length != 0 && response.data.order_id.order_id) ||
-          (response.data.phone.order_id.length != 0 && response.data.phone.order_id) ||
-          (response.data.sku.order_id.length != 0 && response.data.sku.order_id),
+        (response.data.email.order_id.length != 0 && response.data.email.order_id) ||
+        (response.data.order_id.order_id.length != 0 && response.data.order_id.order_id) ||
+        (response.data.phone.order_id.length != 0 && response.data.phone.order_id) ||
+        (response.data.sku.order_id.length != 0 && response.data.sku.order_id),
       );
       setSearchBy(
         (response.data.awb.order_id.length != 0 && 'AWB') ||
-          (response.data.email.order_id.length != 0 && 'Email') ||
-          (response.data.order_id.order_id.length != 0 && 'Order ID') ||
-          (response.data.phone.order_id.length != 0 && 'Phone') ||
-          (response.data.sku.order_id.length != 0 && 'SKU'),
+        (response.data.email.order_id.length != 0 && 'Email') ||
+        (response.data.order_id.order_id.length != 0 && 'Order ID') ||
+        (response.data.phone.order_id.length != 0 && 'Phone') ||
+        (response.data.sku.order_id.length != 0 && 'SKU'),
       );
       setErrorMsg(
         response.data.awb.order_id.length == 0 &&
-          response.data.email.order_id.length == 0 &&
-          response.data.order_id.order_id.length == 0 &&
-          response.data.phone.order_id.length == 0 &&
-          response.data.sku.order_id.length == 0 &&
-          'No Result Found',
+        response.data.email.order_id.length == 0 &&
+        response.data.order_id.order_id.length == 0 &&
+        response.data.phone.order_id.length == 0 &&
+        response.data.sku.order_id.length == 0 &&
+        'No Result Found',
       );
     } catch (err) {
       setErrorMsg('There is Error while fetching');
@@ -193,9 +197,8 @@ const Orders = () => {
             </form>
             {query.length != 0 && (
               <div
-                className={`absolute w-full cursor-pointer rounded-lg bg-white p-4 text-[12px] shadow-lg hover:bg-gray-200  ${
-                  errorMsg ? 'text-red-800' : 'text-gray-400'
-                } hover:text-red-800`}
+                className={`absolute w-full cursor-pointer rounded-lg bg-white p-4 text-[12px] shadow-lg hover:bg-gray-200  ${errorMsg ? 'text-red-800' : 'text-gray-400'
+                  } hover:text-red-800`}
                 onClick={handlePostFilteredOrder}>
                 {!loading ? (
                   <p className={`text-left`}>{searchBy ? `${searchBy}: ${query}` : `${errorMsg}`}</p>
@@ -218,8 +221,9 @@ const Orders = () => {
               <button
                 className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-sm font-medium text-orange-600'}
                 onClick={() => {
-                  navigate('/add-order');
+                  navigate('/add-order', { state: data });
                   window.location.reload();
+                  setIsLoading(false);
                 }}>
                 + Add Order
               </button>

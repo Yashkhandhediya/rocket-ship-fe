@@ -87,7 +87,7 @@ function ReturnSettings() {
       max_days: maxDays,
       auto_approve: isApproveRequest ? 1 : 0,
       auto_assign: autoAssign ? 1 : 0,
-      created_by: 222,
+      created_by: localStorage.getItem('user_id'),
       shown_returns_reason: Object.keys(selectedreasonCheckboxes)
         .filter((key) => selectedreasonCheckboxes[key])
         .map(Number),

@@ -1,10 +1,12 @@
-import { Link } from 'react-router-dom';
+import { useLocation,Link } from 'react-router-dom';
 import { BulkOrder, DomesticOrder, InternationalOrder, QuickShipment } from './components';
 import { Tabs } from '../../common/components';
 import { blackLeftArrow } from '../../common/icons';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 
 const AddOrder = () => {
+  const location = useLocation();
+  const { isEdit } = location.state || { isEdit: false }; 
   const tabData = [
     {
       title: 'Domestic Order',
@@ -38,7 +40,7 @@ const AddOrder = () => {
         <div className="py-4">
           <Link to={'/orders'} className="text-decoration-none flex items-center text-lg font-bold">
             <img src={blackLeftArrow} className="mr-2 mt-1 h-4 w-4" />
-            <span>{'Add Order'}</span>
+            <span>{isEdit ? 'Edit Order' : 'Add Order'}</span>
           </Link>
         </div>
         <Tabs tabs={tabData} tabClassNames={'font-normal'} />

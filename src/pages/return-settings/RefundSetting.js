@@ -27,7 +27,7 @@ function RefundSetting() {
     refundModes: false,
   });
   const [expirationYears, setExpirationYears] = useState('1');
-  const [selectedOption, setSelectedOption] = useState('years'); // Default to 'Days'
+  const [selectedOption, setSelectedOption] = useState('years');
 
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
