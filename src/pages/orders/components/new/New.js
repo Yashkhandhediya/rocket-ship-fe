@@ -45,6 +45,7 @@ export const New = ({ data, isLoading }) => {
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
   const is_cod_verified = localStorage.getItem('is_cod_verified');
+  const is_prepaid_verified = localStorage.getItem('is_prepaid_verified');
   console.log('data', data);
   // const user_id = is_company == 1 ? id_company : id_user;
 
@@ -512,7 +513,7 @@ export const New = ({ data, isLoading }) => {
                     cancelOrder: () => cancelOrder(row?.original?.id),
                     editOrder: () => editOrder(row?.original),
                     verifyOrder: () => verifyOrder(row?.original?.id, 1),
-                  }, is_cod_verified, row?.original?.is_verified)}
+                  }, is_cod_verified, is_prepaid_verified, row?.original?.is_verified, row?.original?.payment_type_id)}
                 />
               </div>
             </div>
