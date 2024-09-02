@@ -18,6 +18,12 @@ function ActivityLogs() {
     endDate: new Date(),
   });
 
+  const id_user = localStorage.getItem('user_id');
+  const id_company = localStorage.getItem('company_id');
+  const is_company = localStorage.getItem('is_company');
+
+  const user_id = is_company == 1 ? id_company : id_user;
+
   const handleDateChange = (ranges) => {
     console.log(ranges);
     setDateRange({
@@ -33,7 +39,7 @@ function ActivityLogs() {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${BACKEND_URL}/bulk_action/get_bulk_action?user_id=222`, {
+      const response = await axios.post(`${BACKEND_URL}/bulk_action/get_bulk_action?user_id=${user_id}`, {
         filter_fields: { action_type: actionType },
         paginate: {
           page_number: 1,
