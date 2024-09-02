@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import Loader from '../../common/loader/Loader';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDownload } from '@fortawesome/free-solid-svg-icons';
 
 function ActivityLogs() {
   const [data, setData] = useState([]);
@@ -59,6 +61,18 @@ function ActivityLogs() {
       console.log(response?.data);
     } catch (err) {
       toast('There is some error while fetching Data', { type: 'error' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDownload = async (id) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${BACKEND_URL}/bulk_action/get_error_sheet?bulk_action_id=${id}`);
+      console.log(response);
+    } catch (err) {
+      console.log(err);
     } finally {
       setLoading(false);
     }
@@ -135,7 +149,12 @@ function ActivityLogs() {
                         <td className="p-3 text-left">{actionData?.total_count}</td>
                         <td className="p-3 text-left">{actionData?.success_count}</td>
                         <td className="p-3 text-left">{actionData?.error_count}</td>
-                        <td className="p-3 text-left">{`Errors`}</td>
+                        <td className="p-3 text-left">
+                          <button className="text-red-800" onClick={() => handleDownload(actionData.id)}>
+                            <FontAwesomeIcon icon={faDownload} />
+                            {` Errors`}
+                          </button>
+                        </td>
                       </tr>
                     );
                   })

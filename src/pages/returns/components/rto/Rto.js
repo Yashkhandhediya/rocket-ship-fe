@@ -186,10 +186,11 @@ const Rto = ({ data, isLoading }) => {
               id={row?.original?.id}
               className="min-w-fit rounded bg-orange-700 px-4 py-1.5 text-white"
               onClick={() => {
-                setScheduleModal({
-                  isOpen: true,
-                  pickupDetails: row?.original,
-                });
+                // setScheduleModal({
+                //   isOpen: true,
+                //   pickupDetails: row?.original,
+                // });
+                handleUpdateStatus(row?.original?.id);
                 // const resp = axios.get(BACKEND_URL+'/order/track?order_id=' + row.id);
                 // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
                 // let newTab = window.open(newURL, '_blank');
@@ -197,9 +198,9 @@ const Rto = ({ data, isLoading }) => {
                 //   newTab.focus();
                 // }
               }}>
-              {'Schedule Pickup'}
+              {'Manual Transfer'}
             </button>
-            <div className="min-h-[32px] min-w-[32px]">
+            {/* <div className="min-h-[32px] min-w-[32px]">
               <MoreDropdown
                 renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                 options={moreActionOptions({
@@ -208,7 +209,7 @@ const Rto = ({ data, isLoading }) => {
                   cancelOrder: () => cancelOrder(row?.original),
                 })}
               />
-            </div>
+            </div> */}
           </div>
         ),
       }),
@@ -285,6 +286,18 @@ const Rto = ({ data, isLoading }) => {
         console.error('Error:', error);
         toast('Error in Invoice Download', { type: 'error' });
       });
+  };
+
+  const handleUpdateStatus = async (id) => {
+    try {
+      const response = await axios.post(
+        `${BACKEND_URL}/return/update_status?return_id=${id}&status_to_update=manual%20transfer`,
+      );
+      console.log(response.data);
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   function cloneOrder(orderDetails) {
