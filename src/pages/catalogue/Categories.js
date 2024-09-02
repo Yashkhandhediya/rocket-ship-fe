@@ -109,11 +109,11 @@ function Categories() {
                           onClick={() => handleEdit(item.id)}>
                           Edit
                         </button>
-                        <button
+                        {/* <button
                           className="flex items-center gap-2 rounded bg-red-800 px-2 py-1 text-white"
                           onClick={() => handleDelete(item.id)}>
                           Delete
-                        </button>
+                        </button> */}
                       </div>
                     </td>
                   </tr>
