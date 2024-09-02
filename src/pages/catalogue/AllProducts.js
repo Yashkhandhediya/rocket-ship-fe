@@ -377,31 +377,32 @@ const AllProducts = () => {
                   data.map((item, index) => (
                     <div className="flex h-12 w-full flex-row items-center border bg-[#FAFAFA]" key={index}>
                       <div className="h-full w-1/12 flex-grow overflow-hidden p-2 text-sm font-semibold ">
-                        {'Custom'}
+                        {item.category ? item.category : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow overflow-hidden border-l-2 border-r-2 p-2 text-sm font-semibold">
-                        {item.name ? item.name : '-'}
-                      </div>
-                      <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
-                        {item.category ? item.category : 'N.A'}
-                      </div>
-                      <div className="h-full w-1/12 flex-grow overflow-hidden overflow-hidden border-r-2 p-1 text-sm font-semibold">
                         {item.sku ? item.sku : '-'}
                       </div>
+                      <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
+                        {item.name ? item.name : '-'}
+                      </div>
+                      <div className="h-full w-1/12 flex-grow overflow-hidden overflow-hidden border-r-2 p-1 text-sm font-semibold">
+                        {item.hsn_code ? item.hsn_code : '-'}
+                      </div>
                       <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-1 text-sm font-semibold">
-                        {item.unit_price ? '₹' + item.unit_price : '-'}
+                        {item.tax_rate ? '₹' + item.tax_rate : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
-                        {item.hsn_code ? item.hsn_code : '-'}
+                        {item.unit_price ? '₹' + item.unit_price : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
                         {item.volumetric_weight ? item.volumetric_weight : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
-                        {item.remarks ? item.remarks : '-'}
+                        {/* {item.remarks ? item.remarks : '-'} */}
+                        {'-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
-                        {`-`}
+                        {'-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
                         {`-`}

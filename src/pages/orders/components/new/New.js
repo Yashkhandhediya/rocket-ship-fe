@@ -595,16 +595,14 @@ export const New = ({ data, isLoading }) => {
             {'More Filters'}
           </button>
 
-          {is_company != 0 && (
-            <button
-              className="ml-6 min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
-              onClick={() => {
-                setLoading(true);
-                handleBulkOrder();
-              }}>
-              {'Bulk Shipment'}
-            </button>
-          )}
+          <button
+            className="ml-6 min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
+            onClick={() => {
+              setLoading(true);
+              handleBulkOrder();
+            }}>
+            {'Bulk Shipment'}
+          </button>
         </div>
       </div>
 

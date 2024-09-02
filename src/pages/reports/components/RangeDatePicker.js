@@ -16,8 +16,10 @@ function RangeDatePicker({ onDateChange }) {
   });
 
   const handleChange = (ranges) => {
+    console.log(ranges);
     setDate(ranges.selection);
-    onDateChange(ranges); 
+    onDateChange(ranges);
+    setOpenDate(false);
   };
 
   const handleToggle = () => {
@@ -28,17 +30,14 @@ function RangeDatePicker({ onDateChange }) {
     <div className="relative">
       <p
         className="flex items-center justify-between rounded border bg-white px-3 py-1 text-sm"
-        onClick={handleToggle}
-      >
+        onClick={handleToggle}>
         {`${format(date.startDate, 'dd MMM, yyyy')} - ${format(date.endDate, 'dd MMM, yyyy')}`}
         <FontAwesomeIcon icon={faCalendarDays} />
       </p>
       {openDate && (
         <div className="absolute left-0 top-10">
           <DateRangePicker ranges={[date]} onChange={handleChange} />
-          <div className="flex items-center gap-2 bg-white px-3 py-2 text-sm">
-            
-          </div>
+          <div className="flex items-center gap-2 bg-white px-3 py-2 text-sm"></div>
         </div>
       )}
     </div>
