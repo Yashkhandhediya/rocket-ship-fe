@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { NavLink } from 'react-router-dom';
 import RangeDatePicker from './components/RangeDatePicker';
-import { format } from 'date-fns';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
+import { format, startOfDay, endOfDay } from 'date-fns';
 
 function ReportsTab({ children }) {
   const [type, setType] = useState('1');
@@ -26,8 +26,8 @@ function ReportsTab({ children }) {
 
   const handleDownload = async () => {
     const usersId = localStorage.getItem('user_id');
-    const fromDate = format(dateRange.startDate, "yyyy-MM-dd'T'HH:mm:ss.SSSX");
-    const toDate = format(dateRange.endDate, "yyyy-MM-dd'T'HH:mm:ss.SSSX");
+    const fromDate = format(startOfDay(dateRange.startDate), "yyyy-MM-dd'T'HH:mm:ss.SSSX");
+    const toDate = format(endOfDay(dateRange.endDate), "yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
     const payload = {
       users_id: usersId,

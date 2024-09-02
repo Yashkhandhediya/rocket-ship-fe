@@ -1,19 +1,21 @@
 export const ordersActivityLogs = [
   'Bulk Order Import',
   'Bulk Courier Assign',
-  'Bulk Courier Reassign',
+  // 'Bulk Courier Reassign',
   'Bulk Pickup Schedule',
-  'Bulk Invoice Download',
-  'Bulk Label Download',
-  'Bulk Manifest Download',
-  'Bulk NDR Escalation',
-  'Bulk Weight Discrepancy',
-  'Bulk Order Data Download',
-  'Bulk Return',
-  'Channel Synced Orders',
+  // 'Bulk Invoice Download',
+  // 'Bulk Label Download',
+  // 'Bulk Manifest Download',
+  // 'Bulk NDR Escalation',
+  // 'Bulk Weight Discrepancy',
+  // 'Bulk Order Data Download',
+  // 'Bulk Return',
+  // 'Channel Synced Orders',
 ];
 
-export const catalogue = ['Channel Catalog Import', 'Master Catalog Import', 'ONDC Catalog Import'];
+export const catalogue = [
+  // 'Channel Catalog Import', 'Master Catalog Import', 'ONDC Catalog Import'
+];
 
 export const timeData = [
   { value: 'Today', id: '2', label: 'Today' },
