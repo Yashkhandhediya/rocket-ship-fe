@@ -350,14 +350,14 @@ const ManageInventory = () => {
                   <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                     Total Quantity
                   </div>
-                  <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
+                  {/* <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                     Available Quantity
-                  </div>
-                  <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
+                  </div> */}
+                  {/* <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                     Blocked Quantity
-                  </div>
+                  </div> */}
                   <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">Type</div>
-                  <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">Brand</div>
+                  {/* <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">Brand</div> */}
                   <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                     Updated On
                   </div>
@@ -388,18 +388,18 @@ const ManageInventory = () => {
                       <div className="h-full w-1/12 flex-grow border-r-2 p-1 text-sm font-semibold">
                         {item.total_quantity ? item.total_quantity : '-'}
                       </div>
-                      <div className="h-full w-1/12 flex-grow border-r-2 p-1 text-sm font-semibold">
-                        {item.available_quantity ? '₹' + item.available_quantity : '-'}
-                      </div>
-                      <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
+                      {/* <div className="h-full w-1/12 flex-grow border-r-2 p-1 text-sm font-semibold">
+                        {item.available_quantity ? item.available_quantity : '-'}
+                      </div> */}
+                      {/* <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                         {item.blocked_quantity ? item.blocked_quantity : '-'}
-                      </div>
+                      </div> */}
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                         {item.type ? item.type : '-'}
                       </div>
-                      <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
+                      {/* <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                         {item.brand ? item.brand : '-'}
-                      </div>
+                      </div> */}
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                         {item.modified_date
                           ? format(parseISO(item.modified_date), 'dd MMM yyyy hh:mm a')
