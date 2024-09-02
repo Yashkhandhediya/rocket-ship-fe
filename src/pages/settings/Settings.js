@@ -148,10 +148,10 @@ const Settings = () => {
             title: 'Courier Selection',
             link: '/courier-selection',
           },
-          {
-            title: 'Courier Rules',
-            link: '/courier-rule',
-          },
+          // {
+          //   title: 'Courier Rules',
+          //   link: '/courier-rule',
+          // },
         ],
         icon: (
           <svg
