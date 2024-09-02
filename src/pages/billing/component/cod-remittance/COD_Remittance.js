@@ -53,7 +53,12 @@ const COD_Remittance = () => {
   const currentPageData = data.slice((page - 1) * per_page, page * per_page);
 
   useEffect(() => {
-    handleCODData();
+    const fetchData = async () => {
+      const result = await handleCODData();
+      setUsersName(result);
+    };
+
+    fetchData();
   }, [page, per_page]);
 
   const [remittanceInfo, setRemittanceInfo] = useState({
@@ -125,7 +130,7 @@ const COD_Remittance = () => {
         },
       });
       setData(response?.data[0]);
-      setUsersName(response?.data[1]);
+      return response?.data[1]
     } catch (err) {
       toast.error('There is some error');
     } finally {
@@ -205,11 +210,10 @@ const COD_Remittance = () => {
       <BillingTabs>
         <div className="my-4 flex w-full flex-row justify-start px-6">
           <button
-            className={`rounded-l-[3px] border border-r-0 px-4 py-1 text-[13px] focus:outline-none ${
-              0 === activeTab
-                ? 'border-[#1D99D9] bg-[#159700] font-semibold text-white'
-                : 'border-[#CFD4D6] bg-[#FAFAFA] font-normal text-[#333333]'
-            }`}
+            className={`rounded-l-[3px] border border-r-0 px-4 py-1 text-[13px] focus:outline-none ${0 === activeTab
+              ? 'border-[#1D99D9] bg-[#159700] font-semibold text-white'
+              : 'border-[#CFD4D6] bg-[#FAFAFA] font-normal text-[#333333]'
+              }`}
             onClick={() => {
               navigate('/remittance-logs');
               setActiveTab(0);
@@ -217,11 +221,10 @@ const COD_Remittance = () => {
             {'COD Reconciliation'}
           </button>
           <button
-            className={`rounded-r-[3px] border border-l-0 px-4 py-1 text-[13px] focus:outline-none ${
-              1 === activeTab
-                ? 'border-[#1D99D9] bg-[#159700] font-semibold text-white'
-                : 'border-[#CFD4D6] bg-[#FAFAFA] font-normal text-[#333333]'
-            }`}
+            className={`rounded-r-[3px] border border-l-0 px-4 py-1 text-[13px] focus:outline-none ${1 === activeTab
+              ? 'border-[#1D99D9] bg-[#159700] font-semibold text-white'
+              : 'border-[#CFD4D6] bg-[#FAFAFA] font-normal text-[#333333]'
+              }`}
             onClick={() => {
               navigate('/future-cod');
               setActiveTab(1);
@@ -330,23 +333,26 @@ const COD_Remittance = () => {
                   </svg>
                 </button>
               </div>
-              <div className="ml-2">
-                <button
-                  className="border-1 h-[33px] w-[100px] rounded-[4px] border-[#B07828] bg-[#B07828] text-[12px] leading-[30px] text-white hover:text-white"
-                  onClick={handleCreate}>
-                  Create
-                </button>
-              </div>
-              <div className="ml-2">
-                <button className="border-1 h-[33px] w-[100px] rounded-[4px] border-[#5a28b0] bg-[#5a28b0] text-[12px] leading-[30px] text-white hover:text-white">
-                  Upload
-                </button>
-              </div>
             </div>
           )}
         </div>
-        {activeTab === 0 && <COD_Reconciliation charges={charges} data={currentPageData} />}
-        {activeTab === 0 && currentPageData.length > 0 && (
+        {activeTab === 0 && (
+          <COD_Reconciliation
+            charges={charges}
+            data={currentPageData.filter(item =>
+              item.status === 'Transferd' || item.status === 'In Progress'
+            )}
+          />
+        )}
+        {activeTab === 1 && (
+          <FutureCod
+            data={currentPageData.filter(item => item.status === 'Pending')}
+          />
+        )}
+
+        {activeTab === 0 && currentPageData.filter(item =>
+              item.status === 'Transferd' || item.status === 'In Progress'
+            ).length > 0 && (
           <div>
             <Pagination
               page={page}
@@ -359,7 +365,19 @@ const COD_Remittance = () => {
             />
           </div>
         )}
-        {activeTab === 1 && <FutureCod />}
+        {activeTab === 1 && currentPageData.filter(item => item.status === 'Pending').length > 0 && (
+          <div>
+            <Pagination
+              page={page}
+              totalData={totalData}
+              setPage={setPage}
+              perPage={per_page}
+              data={data}
+              handlePageChange={handlePageChange}
+              handlePerPageChange={handlePerPageChange}
+            />
+          </div>
+        )}
       </BillingTabs>
 
       {show && (

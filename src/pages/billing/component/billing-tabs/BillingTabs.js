@@ -82,6 +82,17 @@ const BillingTabs = ({ children }) => {
             path: '/international-shipping-bill'
         }
     ];
+    const supertab = [{
+        name: 'COD Remittance',
+        icon: (
+            <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+        ),
+        path: '/remittance-logs'
+    }];
+
+    const is_super = localStorage.getItem('is_super')
 
     const handleTabClick = (index) => {
         setActiveTab(index);
@@ -105,6 +116,9 @@ const BillingTabs = ({ children }) => {
         if (path === '/recharge-status') {
             index = 2;
         }
+        if (is_super === '3'){
+            index = 0;
+        }
         setActiveTab(index);
     }, [window.location.pathname])
 
@@ -113,18 +127,24 @@ const BillingTabs = ({ children }) => {
             <div className="flex justify-between pt-[15px] px-[10px] border-b-[1px] border-[#b3b3b3] m-2 lg:flex-nowrap flex-wrap bg-white">
                 <div className='flex flex-row gap-1 items-center lg:flex-nowrap flex-wrap'>
                     <div className="px-2 text-[20px]">Billing</div>
-                    {tabs.map((tab, index) => (
-                        <button key={index} className={`-mb-[0.10rem] px-2 flex flex-row gap-2 items-center text-[13px] py-4 ${activeTab === index ? 'rounded-t-md border-x-[1px] border-t-2 border-b-[2px] border-t-[#ca4545] border-x-[#b3b3b3] border-b-white text-[#a84949]' : 'text-[#959595]'}`}
+                    {(is_super === '3' ? supertab : tabs).map((tab, index) => (
+                        <button
+                            key={index}
+                            className={`-mb-[0.10rem] px-2 flex flex-row gap-2 items-center text-[13px] py-4 ${activeTab === index
+                                    ? 'rounded-t-md border-x-[1px] border-t-2 border-b-[2px] border-t-[#ca4545] border-x-[#b3b3b3] border-b-white text-[#a84949]'
+                                    : 'text-[#959595]'
+                                }`}
                             onClick={() => handleTabClick(index)}
                         >
                             {tab.icon}
                             {tab.name}
                         </button>
                     ))}
+
                 </div>
                 {[0, 1, 2, 3, 5].includes(activeTab) &&
                     <div className="flex flex-row gap-2 items-center">
-                        {activeTab !== 5 &&
+                        {activeTab !== 5 && is_super !== '3' &&
                             <button className="bg-[#27C24C] flex flex-row justify-start w-28 items-center h-7 rounded-[4px] text-white hover:bg-[#49a75f] text-[13px]"
                                 onClick={handleEarlyCODClick}
                             >
@@ -132,7 +152,7 @@ const BillingTabs = ({ children }) => {
                                 <span className="ml-4">Early COD</span>
                             </button>
                         }
-                        {activeTab !== 3 &&
+                        {activeTab !== 3 && is_super !== '3' &&
                             <button className="bg-[#555555] flex flex-row gap-2 items-center text-[13px] px-3 h-7 rounded-sm text-white">
                                 IMP
                             </button>
