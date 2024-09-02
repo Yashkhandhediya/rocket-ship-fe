@@ -26,6 +26,12 @@ const Catalogue = () => {
   const [page, setPage] = useState(1);
   const [incrementDisabled, setIncrementDisable] = useState(false);
 
+  const id_user = localStorage.getItem('user_id');
+  const id_company = localStorage.getItem('company_id');
+  const is_company = localStorage.getItem('is_company');
+
+  const user_id = is_company == 1 ? id_company : id_user;
+
   const handleChange = (event) => {
     setItemsPerPage(event.target.value);
   };
@@ -98,11 +104,9 @@ const Catalogue = () => {
   const handleCatalogueData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `${BACKEND_URL}/product/get_product_details/?page=${page}&page_size=${itemsPerPage}`,
-      );
+      const response = await axios.get(`${BACKEND_URL}/product/get_inventory_by_channel/?user_id=${user_id}`);
       if (response.status === 200) {
-        setData(response.data);
+        setData(response?.data?.data);
         setIncrementDisable(false);
       } else {
         toast(`There is some error while fetching orders`, { type: 'error' });
@@ -334,7 +338,7 @@ const Catalogue = () => {
           </ul>
         </div> */}
           <div className="w-full overflow-x-auto">
-            <div className="rounded-lg bg-white shadow">
+            <div className=" rounded-lg bg-white shadow">
               <div className="mb-4 flex justify-between">
                 <div className="flex w-full flex-row items-center border border-l-2 bg-[#FAFAFA]">
                   <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">Channel</div>
@@ -371,27 +375,42 @@ const Catalogue = () => {
                 ) : (
                   data.map((item, index) => (
                     <div className="flex h-12 w-full flex-row items-center border bg-[#FAFAFA]" key={index}>
-                      <div className="h-full w-1/12 flex-grow p-2 text-sm font-semibold">{'Custom'}</div>
+                      <div className="h-full w-1/12 flex-grow p-2 text-sm font-semibold">
+                        {item.channel_name ? item.channel_name : '-'}
+                      </div>
                       <div className="h-full w-2/12 flex-grow border-l-2 border-r-2 p-2 text-sm font-semibold">
-                        {item.name ? item.name : '-'}
+                        {item.product_name ? item.product_name : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                        {item.category ? item.category : 'N.A'}
+                        {item.category_heading ? item.category_heading : 'N.A'}
                       </div>
                       <div className="h-full w-[12%] flex-grow border-r-2 p-1 text-sm font-semibold">
-                        {item.sku ? item.sku : '-'}
+                        {item.sku_summary ? item.sku_summary : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-1 text-sm font-semibold">
-                        {item.unit_price ? '₹' + item.unit_price : '-'}
+                        {item.selling_price ? item.selling_price : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                         {item.hsn_code ? item.hsn_code : '-'}
                       </div>
-                      <div className="h-full w-2/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                        {item.volumetric_weight ? item.volumetric_weight : '-'}
+                      <div className="h-full w-2/12 flex-grow overflow-y-auto border-r-2 p-1 text-[12px] font-semibold">
+                        {item.dimension ? (
+                          <div>
+                            <p>
+                              {item?.dimension?.height} x {item?.dimension?.width} x {item?.dimension?.length}
+                              cm
+                            </p>
+                            <span>
+                              Volumetric : {item?.dimension?.volumetric}kg Entered:{item?.dimension?.entered}
+                              kg
+                            </span>
+                          </div>
+                        ) : (
+                          '-'
+                        )}
                       </div>
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                        {item.remarks ? item.remarks : '-'}
+                        {'-'}
                       </div>
                     </div>
                   ))

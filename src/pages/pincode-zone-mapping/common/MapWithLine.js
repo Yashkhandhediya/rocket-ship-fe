@@ -15,7 +15,12 @@ const MapWithLine = ({ location1, location2 }) => {
         `https://nominatim.openstreetmap.org/search?q=${location}&format=json&limit=1`,
       );
       const data = response.data[0];
-      return [parseFloat(data.lat), parseFloat(data.lon)];
+
+      if (!location) {
+        return [20.5937, 78.9629];
+      } else {
+        return [parseFloat(data.lat), parseFloat(data.lon)];
+      }
     };
 
     const fetchPositions = async () => {
@@ -50,9 +55,9 @@ const MapWithLine = ({ location1, location2 }) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
-      {positions.length === 2 && <ZoomToFitBounds positions={positions} />}
-      {positions.length === 2 && (
+      {location1 && location2 && positions.length === 2 && (
         <>
+          <ZoomToFitBounds positions={positions} />
           <Marker position={positions[0]} icon={customIcon} />
           <Marker position={positions[1]} icon={customIcon} />
           <Polyline positions={positions} color="red" />
