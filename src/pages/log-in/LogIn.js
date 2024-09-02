@@ -77,6 +77,8 @@ const LogIn = () => {
         localStorage.setItem('balance', response.data.wallet_balance);
         localStorage.setItem('is_kyc', response.data.kyc_status_id);
         localStorage.setItem('is_super', response.data.user_type_id);
+        localStorage.setItem('is_cod_verified', response.data.is_cod_verified);
+        localStorage.setItem('is_prepaid_verified', response.data.is_prepaid_verified);
         localStorage.setItem('is_otpVerified', JSON.stringify(false));
         const user_id =
           userType === 'user' ? localStorage.getItem('user_id') : localStorage.getItem('company_id');

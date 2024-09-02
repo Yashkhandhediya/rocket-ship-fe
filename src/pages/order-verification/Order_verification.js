@@ -6,12 +6,13 @@ const Order_verification = () => {
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
-  const is_otpVerified = localStorage.getItem('is_otpVerified');
+  const is_cod_verified = localStorage.getItem('is_cod_verified');
+  const is_prepaid_verified = localStorage.getItem('is_prepaid_verified');
 
   const user_id = is_company == 1 ? id_company : id_user;
 
-  const [codEnabled, setCodEnabled] = useState(is_otpVerified);
-  const [prepaidEnabled, setPrepaidEnabled] = useState(false);
+  const [codEnabled, setCodEnabled] = useState(is_cod_verified  );
+  const [prepaidEnabled, setPrepaidEnabled] = useState(is_prepaid_verified);
 
   useEffect(() => {
     const verificationStatus = codEnabled ? 1 : 0;
