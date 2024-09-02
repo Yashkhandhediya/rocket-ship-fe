@@ -224,7 +224,10 @@ export const All = ({ data, isLoading }) => {
         cell: ({ row }) => {
           return (
             <div className="flex flex-col gap-1 text-left text-xs">
-              <CommonBadge type={'SUCCESS'} text={row?.original?.status_name} />
+              <CommonBadge
+                type={row?.original?.status_name == 'return decline' ? 'REJECT' : 'SUCCESS'}
+                text={row?.original?.status_name}
+              />
             </div>
           );
         },

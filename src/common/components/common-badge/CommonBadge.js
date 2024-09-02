@@ -19,7 +19,15 @@ const CommonBadge = ({ type, text }) => {
     }
     case 'SUCCESS': {
       return (
-        <Badge className="flex w-fit py-1 px-2 items-center justify-center rounded-lg bg-[#ebf7e8] font-semibold text-[10px] capitalize text-[#008e27]">
+        <Badge className="flex w-fit items-center justify-center rounded-lg bg-[#ebf7e8] px-2 py-1 text-[10px] font-semibold capitalize text-[#008e27]">
+          {text}
+        </Badge>
+      );
+    }
+
+    case 'REJECT': {
+      return (
+        <Badge className="flex w-fit items-center justify-center rounded-lg bg-red-50 px-2 py-1 text-[10px] font-semibold capitalize text-red-800">
           {text}
         </Badge>
       );
