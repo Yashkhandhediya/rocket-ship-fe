@@ -3,38 +3,31 @@ import { All, Delivered, InTransit, New, PickupMenifests, ReadyToShip, Rto } fro
 export const returnsTabs = [
   {
     title: 'Returns Request',
-    id: 'returnsReequest',
-    panel: <ReadyToShip />,
+    id: 'return requested',
   },
   {
     title: 'New Returns',
-    id: 'newReturns',
-    panel: <New />,
+    id: 'return confirmed',
   },
 
   {
     title: 'Return Pickup Scheduled',
-    id: 'returnPickupScheduled',
-    panel: <PickupMenifests />,
+    id: 'return scheduled',
   },
   {
     title: 'Intransit',
-    id: 'inTransit',
-    panel: <InTransit />,
+    id: 'return in transit',
   },
   {
     title: 'Return Received',
-    id: 'returnReceived',
-    panel: <Delivered />,
+    id: 'return received',
   },
   {
     title: 'All',
     id: 'all',
-    panel: <All />,
   },
   {
     title: 'Pending for Refund',
-    id: 'pendingforRefund',
-    panel: <Rto />,
+    id: 'refund pending',
   },
 ];

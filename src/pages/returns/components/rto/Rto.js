@@ -1,4 +1,4 @@
-import { Fragment,useState } from 'react';
+import { Fragment, useState } from 'react';
 import { filterIcon, moreAction } from '../../../../common/icons';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
 import { filterInRTO } from '../utils';
@@ -14,22 +14,22 @@ import moment from 'moment';
 import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { Badge } from 'flowbite-react';
 import { MoreDropdown, CustomTooltip, CommonBadge, CustomDataTable } from '../../../../common/components';
-import {  moreActionOptions } from '../utils';
+import { moreActionOptions } from '../utils';
 import DrawerWithSidebar from '../../../../common/components/drawer-with-sidebar/DrawerWithSidebar';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
-import {resData} from '../../Returns'
+import { resData } from '../../Returns';
+import Loader from '../../../../common/loader/Loader';
 
-const Rto = () => {
+const Rto = ({ data, isLoading }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const flattened = {};
   const allOrdersList = useSelector((state) => state?.returnsList);
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
 
-  const newOrdersList =
-  allOrdersList?.filter((order) => (order?.status_id) === 7) || [];
+  const newOrdersList = allOrdersList?.filter((order) => order?.status_id === 7) || [];
 
   const [selectShipmentDrawer, setSelectShipmentDrawer] = useState({
     isOpen: false,
@@ -51,7 +51,7 @@ const Rto = () => {
             <div className="flex flex-col gap-2 text-left text-xs">
               <div className="pb-0.5">
                 <Link
-                  to={generatePath(`/track-order/:orderId`, { orderId: row?.original?.id || 1}) + `?flag=1`}
+                  to={generatePath(`/track-order/:orderId`, { orderId: row?.original?.id || 1 }) + `?flag=1`}
                   className="border-b-2 border-b-red-700 text-red-700">
                   {row?.original?.id}
                 </Link>
@@ -138,7 +138,7 @@ const Rto = () => {
       }),
       columnHelper.accessor('shippingDetails', {
         header: 'Shipping Details',
-        cell: ({row}) => {
+        cell: ({ row }) => {
           return (
             <div className="flex flex-col gap-1 text-left text-xs">
               <div>{row?.courier_name}</div>
@@ -147,7 +147,7 @@ const Rto = () => {
                 {(row?.status_name || '')?.toLowerCase() === 'new' ? (
                   'Not Assigned'
                 ) : (
-                    <Link
+                  <Link
                     to={generatePath(`/return-tracking/:orderId`, { orderId: row?.original?.id || 1 })}
                     className="border-b-2 border-b-red-700 text-red-700">
                     {'Track order'}
@@ -177,10 +177,10 @@ const Rto = () => {
             </div>
           );
         },
-      }), 
+      }),
       columnHelper.accessor('action', {
         header: 'Action',
-        cell: ({row}) => (
+        cell: ({ row }) => (
           <div className="flex gap-2 text-left text-xs">
             <button
               id={row?.original?.id}
@@ -203,7 +203,7 @@ const Rto = () => {
               <MoreDropdown
                 renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                 options={moreActionOptions({
-                  downloadInvoice : () => handleInvoice(row?.original?.id),
+                  downloadInvoice: () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row),
                   cancelOrder: () => cancelOrder(row?.original),
                 })}
@@ -218,76 +218,74 @@ const Rto = () => {
   function splitString(string, length) {
     let result = [];
     for (let i = 0; i < string.length; i += length) {
-        result.push(string.substr(i, length));
+      result.push(string.substr(i, length));
     }
     return result;
-}
+  }
 
   function flattenObject(obj, id) {
     const keyCounts = {};
-    for(let i=0;i<resData.length;i++){
-          if(resData[i].id == id){
-            obj = resData[i];
-            break;
-          }
-        }
-  
+    for (let i = 0; i < resData.length; i++) {
+      if (resData[i].id == id) {
+        obj = resData[i];
+        break;
+      }
+    }
+
     function flatten(obj, parentKey = '') {
-            for (let key in obj) {
-                let propName = parentKey ? `${key}` : key;
-                
-                // Check if the key already exists, if yes, increment count
-                if (flattened[propName] !== undefined) {
-                    keyCounts[propName] = (keyCounts[propName] || 0) + 1;
-                    propName = `${propName}${keyCounts[propName]}`;
-                }
-                
-                if (typeof obj[key] === 'object' && obj[key] !== null) {
-                    flatten(obj[key], propName);
-                } else {
-                    flattened[propName] = obj[key];
-                }
-            }
+      for (let key in obj) {
+        let propName = parentKey ? `${key}` : key;
+
+        // Check if the key already exists, if yes, increment count
+        if (flattened[propName] !== undefined) {
+          keyCounts[propName] = (keyCounts[propName] || 0) + 1;
+          propName = `${propName}${keyCounts[propName]}`;
+        }
+
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
+          flatten(obj[key], propName);
+        } else {
+          flattened[propName] = obj[key];
+        }
+      }
     }
     flatten(obj);
     return flattened;
-}
+  }
 
   const handleInvoice = (id) => {
-    let temp_payload = flattenObject(resData,id)
-    console.log("kkkkkkkkkk",temp_payload)
-    const headers={'Content-Type': 'application/json'};
+    let temp_payload = flattenObject(resData, id);
+    console.log('kkkkkkkkkk', temp_payload);
+    const headers = { 'Content-Type': 'application/json' };
 
-    
-    let temp_str = splitString(temp_payload['complete_address1'],35)
-    let temp1 = splitString(temp_payload['complete_address'],35)
+    let temp_str = splitString(temp_payload['complete_address1'], 35);
+    let temp1 = splitString(temp_payload['complete_address'], 35);
 
     for (let i = 0; i < temp1.length; i++) {
-      temp_payload[`${i+1}_complete_address_`] = temp1[i];
-    }
-    
-    for(let i=0;i<temp_str.length;i++){
-      temp_payload[`complete_address1_${i+1}`] = temp_str[i]
+      temp_payload[`${i + 1}_complete_address_`] = temp1[i];
     }
 
-    temp_payload['client_name']="cloud_cargo"
-    temp_payload['file_name']="invoice"
+    for (let i = 0; i < temp_str.length; i++) {
+      temp_payload[`complete_address1_${i + 1}`] = temp_str[i];
+    }
 
-    axios.post(MENIFEST_URL +'/bilty/print/',
-    temp_payload,
-     {headers}).then(
-        (response)=>{
+    temp_payload['client_name'] = 'cloud_cargo';
+    temp_payload['file_name'] = 'invoice';
+
+    axios
+      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
+      .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
         const url = window.URL.createObjectURL(blob);
         window.open(url);
-          console.log("General",response);
-          toast('Invoice Download Successfully',{type:'success'})
-        }
-      ) .catch((error) => {
-        console.error("Error:", error);
-        toast('Error in Invoice Download',{type:'error'})
-    });
-  }
+        console.log('General', response);
+        toast('Invoice Download Successfully', { type: 'success' });
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        toast('Error in Invoice Download', { type: 'error' });
+      });
+  };
 
   function cloneOrder(orderDetails) {
     const clonedOrder = getClonedOrderFields(orderDetails);
@@ -333,6 +331,7 @@ const Rto = () => {
 
   return (
     <div className="mt-5">
+      {isLoading && <Loader />}
       <div className="mb-4 flex w-full">
         <div>
           <button
@@ -346,12 +345,12 @@ const Rto = () => {
 
       <CustomDataTable
         columns={getColumns()}
-        rowData={newOrdersList}
+        rowData={data}
         enableRowSelection={true}
         shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
         onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}
         rowSubComponent={rowSubComponent}
-        enablePagination={true}
+        enablePagination={false}
         tableWrapperStyles={{ height: '78vh' }}
       />
 

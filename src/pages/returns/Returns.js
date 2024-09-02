@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Tabs } from '../../common/components/tabs';
+import Tabs from './Tabs';
 import { returnsTabs } from './duck';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import axios from 'axios';
@@ -28,8 +28,9 @@ const Returns = () => {
   const id_user = localStorage.getItem('user_id');
   const company_id = localStorage.getItem('company_id');
   const userId = is_company == 1 ? company_id : id_user;
-  const [activeTab, setActiveTab] = useState(JSON.parse(localStorage.getItem('activeTab')) || 0);
-
+  const [activeReturnTab, setReturnActiveTab] = useState(
+    JSON.parse(localStorage.getItem('activeReturnTab')) || 0,
+  );
   console.log(filteredOrderId, searchBy, errorMsg);
 
   const [isFocused, setIsFocused] = useState(false);
@@ -87,7 +88,7 @@ const Returns = () => {
     try {
       const response = await axios.post(`${BACKEND_URL}/return/filter_returns`, filteredOrderId);
       dispatch(setFilteredReturnOrders(response?.data || []));
-      setActiveTab(5);
+      setReturnActiveTab(5);
       clearSearch();
     } catch (err) {
       toast('There is Error while fetching', { type: 'error' });
@@ -98,7 +99,7 @@ const Returns = () => {
 
   useEffect(() => {
     fetchFilteredOrders();
-    localStorage.setItem('activeTab', JSON.stringify(activeTab));
+    localStorage.setItem('activeReturnTab', JSON.stringify(activeReturnTab));
   }, [query]);
 
   const allReturnsList = useSelector((state) => state?.returnsList);
@@ -203,9 +204,9 @@ const Returns = () => {
         <div>
           <Tabs
             tabs={returnsTabs}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            tabClassNames="mr-6 px-3 py-3.5 text-[#7f7f7f] font-medium"
+            activeReturnTab={activeReturnTab}
+            setReturnActiveTab={setReturnActiveTab}
+            tabClassNames={'mr-6 px-3 py-3.5 text-[#7f7f7f] font-medium'}
           />
         </div>
       </div>

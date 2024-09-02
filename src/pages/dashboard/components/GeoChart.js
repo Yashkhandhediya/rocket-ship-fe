@@ -16,6 +16,7 @@ function GeoChart({ stateWiseOrderCount }) {
     region: 'IN', // Focus on India
     resolution: 'provinces', // Show states within India
     colorAxis: { colors: ['#e0e0f8', '#1f4f9b'] }, // Gradient for data
+    displayMode: 'State', // Display mode to show regions (states)
     backgroundColor: 'transparent', // Removes the unnecessary background
     datalessRegionColor: 'transparent', // Makes non-data regions transparent
     defaultColor: '#f5f5f5', // Default color for regions with no data
@@ -35,8 +36,8 @@ function GeoChart({ stateWiseOrderCount }) {
         <h2 className="mb-2 text-lg font-semibold">Orders</h2>
         <span>Last 30 Days</span>
       </div>
-      {stateWiseOrderCount ? (
-        <div className="flex">
+      {stateWiseOrderCount.length != 0 ? (
+        <div className="mt-10 flex">
           <Chart chartType="GeoChart" width="100%" height="100%" data={data} options={options} />
         </div>
       ) : (

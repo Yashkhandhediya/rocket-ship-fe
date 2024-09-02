@@ -9,6 +9,8 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { user } from '../../common/icons/sidebar-icons';
 
+export let temp_user_id;
+
 const Users = () => {
   let amount = 0;
   const [isLoading, setIsLoading] = useState(true);

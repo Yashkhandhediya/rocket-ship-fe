@@ -21,8 +21,9 @@ import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Returns';
 import { getEditReturnFields } from '../../../../common/utils/ordersUtils';
 import EditDrawer from '../edit-drawer/EditDrawer';
+import Loader from '../../../../common/loader/Loader';
 
-export const New = () => {
+export const New = ({ data, isLoading }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const flattened = {};
@@ -363,6 +364,7 @@ export const New = () => {
 
   return (
     <div className="mt-5">
+      {isLoading && <Loader />}
       <div className="mb-4 flex w-full">
         <div>
           <button
@@ -376,12 +378,12 @@ export const New = () => {
 
       <CustomDataTable
         columns={getColumns()}
-        rowData={newReturnsList}
+        rowData={data}
         enableRowSelection={true}
         shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
         onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}
         rowSubComponent={rowSubComponent}
-        enablePagination={true}
+        enablePagination={false}
         tableWrapperStyles={{ height: '78vh' }}
       />
 

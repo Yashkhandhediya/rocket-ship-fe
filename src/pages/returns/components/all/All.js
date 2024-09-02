@@ -15,15 +15,16 @@ import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Returns';
+import Loader from '../../../../common/loader/Loader';
 
-export const All = () => {
+export const All = ({ data, isLoading }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const flattened = {};
   const allOrdersList = useSelector((state) => state?.returnsList) || [];
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   const filteredReturnOrder = useSelector((state) => state?.filteredReturnOrdersList);
-
+  console.log(data);
   function splitString(string, length) {
     let result = [];
     for (let i = 0; i < string.length; i += length) {
@@ -291,6 +292,7 @@ export const All = () => {
 
   return (
     <div className="mt-5">
+      {isLoading && <Loader />}
       <div className="mb-4 flex w-full">
         <div>
           <button
@@ -313,12 +315,12 @@ export const All = () => {
       /> */}
       <CustomDataTable
         columns={getColumns()}
-        rowData={filteredReturnOrder ? filteredReturnOrder : allOrdersList}
+        rowData={data}
         enableRowSelection={true}
         shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
         onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}
         rowSubComponent={rowSubComponent}
-        enablePagination={true}
+        enablePagination={false}
         tableWrapperStyles={{ height: '78vh' }}
       />
       <MoreFiltersDrawer
