@@ -12,6 +12,7 @@ import { Button } from 'flowbite-react';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import CatalogueTab from './CatalogueTab';
+import { format, parseISO } from 'date-fns';
 
 const AllProducts = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -350,7 +351,7 @@ const AllProducts = () => {
                   <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">HSN</div>
                   <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">Tax Code</div>
                   <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">MRP</div>
-                  <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
+                  <div className="h-full w-3/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                     Dimension & Weight
                   </div>
                   <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">Color</div>
@@ -375,43 +376,59 @@ const AllProducts = () => {
                   </div>
                 ) : (
                   data.map((item, index) => (
-                    <div className="flex h-12 w-full flex-row items-center border bg-[#FAFAFA]" key={index}>
+                    <div className="flex h-16 w-full flex-row items-center border bg-[#FAFAFA]" key={index}>
                       <div className="h-full w-1/12 flex-grow overflow-hidden p-2 text-sm font-semibold ">
-                        {item.category ? item.category : '-'}
+                        {item.category_name ? item.category_name : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow overflow-hidden border-l-2 border-r-2 p-2 text-sm font-semibold">
-                        {item.sku ? item.sku : '-'}
+                        {item.master_sku ? item.master_sku : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
-                        {item.name ? item.name : '-'}
+                        {item.product_name ? item.product_name : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow overflow-hidden overflow-hidden border-r-2 p-1 text-sm font-semibold">
                         {item.hsn_code ? item.hsn_code : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-1 text-sm font-semibold">
-                        {item.tax_rate ? '₹' + item.tax_rate : '-'}
+                        {item.tax_code ? '₹' + item.tax_code : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
-                        {item.unit_price ? '₹' + item.unit_price : '-'}
+                        {item.mrp ? '₹' + item.mrp : '-'}
+                      </div>
+                      <div className="h-full w-3/12 flex-grow overflow-hidden border-r-2 p-2 text-[12px] font-semibold">
+                        {item.dimension ? (
+                          <div>
+                            <p>
+                              {item?.dimension?.height || 0} x {item?.dimension?.width || 0} x
+                              {item?.dimension?.length || 0}
+                              cm
+                            </p>
+                            <span>
+                              Volumetric : {item?.dimension?.volumetric || 0}kg Entered:
+                              {item?.dimension?.entered || 0}
+                              kg
+                            </span>
+                          </div>
+                        ) : (
+                          '-'
+                        )}
                       </div>
                       <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
-                        {item.volumetric_weight ? item.volumetric_weight : '-'}
+                        {item.color ? '₹' + item.color : '-'}
                       </div>
                       <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
-                        {/* {item.remarks ? item.remarks : '-'} */}
-                        {'-'}
+                        {item.availabile_quantity ? '₹' + item.availabile_quantity : '-'}
                       </div>
-                      <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
-                        {'-'}
+                      <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
+                        {item.type ? item.type : '-'}
                       </div>
-                      <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
-                        {`-`}
+                      <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
+                        {item.brand ? item.brand : '-'}
                       </div>
-                      <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
-                        {`-`}
-                      </div>
-                      <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
-                        {`-`}
+                      <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
+                        {item.modified_date
+                          ? format(parseISO(item.modified_date), 'dd MMM yyyy hh:mm a')
+                          : '-'}
                       </div>
                     </div>
                   ))

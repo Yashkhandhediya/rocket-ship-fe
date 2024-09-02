@@ -173,9 +173,10 @@ export const New = ({ data, isLoading }) => {
       columnHelper.accessor('action', {
         header: 'Action',
         cell: ({ row }) => {
+          console.log(row?.original?.status_name);
           return (
             <div className="flex gap-2 text-left text-xs">
-              {row?.original?.status_name == 'new' ? (
+              {row?.original?.status_name == 'return confirmed' ? (
                 <button
                   id={row?.original?.id}
                   className="min-w-fit rounded bg-orange-700 px-4 py-1.5 text-white"
@@ -185,8 +186,7 @@ export const New = ({ data, isLoading }) => {
                       orderDetails: row.original,
                     });
                   }}>
-                  {/* {'Ship Now'} */}
-                  {'Initiate Return'}
+                  {'Ship Now'}
                 </button>
               ) : (
                 <button

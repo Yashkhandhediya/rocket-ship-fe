@@ -188,7 +188,9 @@ const PickupMenifests = ({ data, isLoading }) => {
                 console.log(row.row.original.id);
                 handleMenifest(row.row.original.id);
               }}>
-              {(row?.original?.status_name || '')?.toLowerCase() == 'new' ? 'Ship Now' : 'Download Menifest'}
+              {(row?.original?.status_name || '')?.toLowerCase() == 'return confirmed'
+                ? 'Ship Now'
+                : 'Download Menifest'}
             </button>
             <div className="min-h-[32px] min-w-[32px]">
               <MoreDropdown

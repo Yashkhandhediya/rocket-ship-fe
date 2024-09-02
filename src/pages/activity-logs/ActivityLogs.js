@@ -69,8 +69,19 @@ function ActivityLogs() {
   const handleDownload = async (id) => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/bulk_action/get_error_sheet?bulk_action_id=${id}`);
-      console.log(response);
+      const response = await axios.get(`${BACKEND_URL}/bulk_action/get_error_sheet?bulk_action_id=${id}`, {
+        responseType: 'blob',
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.ms-excel' }));
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'file.xlsx');
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (err) {
       console.log(err);
     } finally {

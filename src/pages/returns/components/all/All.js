@@ -224,7 +224,10 @@ export const All = ({ data, isLoading }) => {
         cell: ({ row }) => {
           return (
             <div className="flex flex-col gap-1 text-left text-xs">
-              <CommonBadge type={'SUCCESS'} text={row?.original?.status_name} />
+              <CommonBadge
+                type={row?.original?.status_name == 'return decline' ? 'REJECT' : 'SUCCESS'}
+                text={row?.original?.status_name}
+              />
             </div>
           );
         },
@@ -237,7 +240,9 @@ export const All = ({ data, isLoading }) => {
               id={row.id}
               className="min-w-fit rounded bg-orange-700 px-4 py-1.5 text-white"
               onClick={() => {}}>
-              {(row?.original?.status_name || '')?.toLowerCase() == 'new' ? 'Ship Now' : 'Download Menifest'}
+              {(row?.original?.status_name || '')?.toLowerCase() == 'return confirmed'
+                ? 'Ship Now'
+                : 'Download Menifest'}
             </button>
             <div className="min-h-[32px] min-w-[32px]">
               <MoreDropdown

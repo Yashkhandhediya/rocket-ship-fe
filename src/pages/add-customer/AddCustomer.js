@@ -72,6 +72,7 @@ function AddCustomer() {
               placeHolder={'Phone No.'}
               required={true}
               value={customerInfo?.phone}
+              onChange={handleCustomerInfo}
             />
           </div>
         </div>
@@ -95,7 +96,7 @@ function AddCustomer() {
                 labelClassNames={'text-xs'}
                 placeHolder={'City'}
                 required={true}
-                value={customerInfo.addressLine2}
+                value={customerInfo.city}
                 onChange={handleCustomerInfo}
               />
               <Field

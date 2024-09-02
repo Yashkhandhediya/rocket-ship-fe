@@ -187,10 +187,11 @@ export const ReadyToShip = ({ data, isLoading }) => {
               id={row?.original?.id}
               className="min-w-fit rounded bg-orange-700 px-4 py-1.5 text-white"
               onClick={() => {
-                setScheduleModal({
-                  isOpen: true,
-                  pickupDetails: row?.original,
-                });
+                // setScheduleModal({
+                //   isOpen: true,
+                //   pickupDetails: row?.original,
+                // });
+                handleUpdateStatus(row?.original?.id, 'return accepted');
                 // const resp = axios.get(BACKEND_URL+'/order/track?order_id=' + row.id);
                 // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
                 // let newTab = window.open(newURL, '_blank');
@@ -198,9 +199,28 @@ export const ReadyToShip = ({ data, isLoading }) => {
                 //   newTab.focus();
                 // }
               }}>
-              {'Schedule Pickup'}
+              {'Accept'}
             </button>
-            <div className="min-h-[32px] min-w-[32px]">
+            <button
+              id={row?.original?.id}
+              className="min-w-fit rounded bg-orange-700 px-4 py-1.5 text-white"
+              onClick={() => {
+                // setScheduleModal({
+                //   isOpen: true,
+                //   pickupDetails: row?.original,
+                // });
+                handleUpdateStatus(row?.original?.id, 'return decline');
+
+                // const resp = axios.get(BACKEND_URL+'/order/track?order_id=' + row.id);
+                // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
+                // let newTab = window.open(newURL, '_blank');
+                // if (newTab) {
+                //   newTab.focus();
+                // }
+              }}>
+              {'Decline'}
+            </button>
+            {/* <div className="min-h-[32px] min-w-[32px]">
               <MoreDropdown
                 renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                 options={moreActionOptions({
@@ -209,11 +229,23 @@ export const ReadyToShip = ({ data, isLoading }) => {
                   cancelOrder: () => cancelOrder(row?.original),
                 })}
               />
-            </div>
+            </div> */}
           </div>
         ),
       }),
     ];
+  };
+
+  const handleUpdateStatus = async (id, status) => {
+    try {
+      const response = await axios.post(
+        `${BACKEND_URL}/return/update_status?return_id=${id}&status_to_update=${status}`,
+      );
+      console.log(response.data);
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   function splitString(string, length) {
