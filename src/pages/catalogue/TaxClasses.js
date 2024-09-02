@@ -44,11 +44,19 @@ function TaxClasses() {
   };
 
   const handleAddRow = () => {
-    setPopupData(prevData => [
-      { minPrice: '', maxPrice: '', gst: '0' }, // New row
-      ...prevData.slice(0, -1), // Keep existing rows except the last one
-      prevData[prevData.length - 1] // Ensure the "+" row stays at the end
-    ]);
+    setPopupData(prevData => {
+      // Get the index of the "+" row
+      const plusRowIndex = prevData.length - 1;
+      
+      // Create a new row with placeholders
+      const newRow = { minPrice: '', maxPrice: '', gst: '0' };
+
+      return [
+        ...prevData.slice(0, plusRowIndex), // Existing rows before the "+" row
+        newRow, // New row to be inserted
+        prevData[plusRowIndex] // The "+" row remains at the end
+      ];
+    });
   };
 
   const handleRemoveRow = (index) => {
@@ -83,7 +91,7 @@ function TaxClasses() {
     opacity: isPopupVisible ? 1 : 0,
     backgroundColor: 'white',
     borderRadius: '8px',
-    padding: '15px',
+    padding: '30px',
     maxWidth: '550px',
     width: '100%',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
