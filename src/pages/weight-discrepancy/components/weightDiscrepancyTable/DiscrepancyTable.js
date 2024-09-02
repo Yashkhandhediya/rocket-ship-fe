@@ -22,7 +22,7 @@ const DiscrepancyTable = ({ data, setLoading }) => {
         try {
           const response = await axios.get(
             BACKEND_URL +
-              `/weight_discrepancy/get_weight_discrepancy_courier_image?weight_discrepancy_id=${item.weight_discrepancy.id}`,
+              `/weight_discrepancy/get_weight_discrepancy_courier_image?weight_discrepancy_id=${item.weight_discrepancy.id}&image_type=courier_image`,
             { responseType: 'blob' },
           );
           const imgUrl = URL.createObjectURL(response.data);

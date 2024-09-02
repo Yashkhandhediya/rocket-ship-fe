@@ -284,7 +284,7 @@ const WeightDiscrepancy = () => {
         const imageUploadHeaders = { 'Content-Type': 'multipart/form-data' };
 
         const imageResponse = await axios.post(
-          `${BACKEND_URL}/weight_discrepancy/add_image?weight_discrepancy_id=${discrepancyId}`,
+          `${BACKEND_URL}/weight_discrepancy/add_image?weight_discrepancy_id=${discrepancyId}&image_type=courier_image`,
           formData,
           { headers: imageUploadHeaders },
         );
