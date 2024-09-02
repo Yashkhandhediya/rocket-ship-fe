@@ -1,4 +1,4 @@
-export const moreActionOptions = (actions, is_otpVerified, is_verified) => {
+export const moreActionOptions = (actions, is_cod_verified, is_prepaid_verified, is_verified, payment_type_id) => {
   const activeOrderTab = localStorage.getItem('activeOrderTab');
 
   return [
@@ -17,10 +17,16 @@ export const moreActionOptions = (actions, is_otpVerified, is_verified) => {
       key: 'editOrder',
       onClick: actions?.editOrder,
     },
-    ...(activeOrderTab === '0' ? [{
+    ...(activeOrderTab === '0' && payment_type_id == '1' ? [{
       label: 'Verify Order',
       key: 'verifyOrder',
-      disabled: !is_otpVerified || is_verified === 1,
+      disabled: is_cod_verified == 0 || is_verified === 1,
+      onClick: actions?.verifyOrder,
+    }] : []),
+    ...(activeOrderTab === '0' && payment_type_id == '2' ? [{
+      label: 'Verify Order',
+      key: 'verifyOrder',
+      disabled: is_prepaid_verified == 0 || is_verified === 1,
       onClick: actions?.verifyOrder,
     }] : []),
     { type: 'divider' },
