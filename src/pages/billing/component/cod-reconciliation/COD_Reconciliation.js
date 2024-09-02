@@ -75,7 +75,7 @@ const COD_Reconciliation = ({ charges, data }) => {
               </div>
               <div className="flex flex-col items-center justify-center">
                 {Array.isArray(data) && data.length > 0 ? (
-                  data.map((item, key) => (
+                  data.filter(item => item.status === 'Transferd' || item.status === 'In Progress').map((item, key) => (
                     <div
                       className="flex h-12 w-full flex-row items-center border border-b-[#E5E7EB] text-center"
                       key={key}>
@@ -99,9 +99,8 @@ const COD_Reconciliation = ({ charges, data }) => {
                       </div>
                       <div className="item-center flex h-full w-[11.11%] items-center justify-center border-r-2 px-2 font-normal">
                         <div
-                          className={`basis-full rounded bg-red-100 text-center font-semibold text-red-700 ${
-                            item.status === 'done' ? 'bg-green-100 text-green-700' : ''
-                          }`}>
+                          className={`basis-full rounded text-center font-semibold ${item.status === 'Transferd' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                            }`}>
                           {item.status}
                         </div>
                       </div>
@@ -110,19 +109,19 @@ const COD_Reconciliation = ({ charges, data }) => {
                       </div>
                       <div className="item-center flex h-full w-[17.77%] items-center justify-center border-r-2 px-2 font-normal">
                         <button
-                          className={`mr-1 w-48 rounded-md bg-[#E02424] py-1.5 text-[14px] text-white ${
-                            !item.buttun_flag ? 'cursor-not-allowed' : ''
-                          }`}
+                          className={`mr-1 w-48 rounded-md py-1.5 text-[14px] text-white ${!item.buttun_flag ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#E02424]'
+                            }`}
                           onClick={() => updateStatus(item.id, 'In Progress')}
-                          disabled={!item.buttun_flag}>
+                          disabled={!item.buttun_flag}
+                        >
                           Initiated COD
                         </button>
                         <button
-                          className={`w-48 rounded-md bg-[#E02424] py-1.5 text-[14px] text-white ${
-                            !item.buttun_flag ? 'cursor-not-allowed' : ''
-                          }`}
+                          className={`w-48 rounded-md py-1.5 text-[14px] text-white ${!item.buttun_flag ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#E02424]'
+                            }`}
                           onClick={() => updateStatus(item.id, 'Transferd')}
-                          disabled={!item.buttun_flag}>
+                          disabled={!item.buttun_flag}
+                        >
                           Manual Transfer
                         </button>
                       </div>
@@ -160,7 +159,7 @@ const COD_Reconciliation = ({ charges, data }) => {
               </div>
               <div className="flex flex-col items-center justify-center">
                 {Array.isArray(data) && data.length > 0 ? (
-                  data.map((item, key) => (
+                  data.filter(item => item.status === 'Transferd' || item.status === 'In Progress').map((item, key) => (
                     <div
                       className="flex h-12 w-full flex-row items-center border border-b-[#E5E7EB] text-center"
                       key={key}>
@@ -181,9 +180,9 @@ const COD_Reconciliation = ({ charges, data }) => {
                       </div>
                       <div className="item-center flex h-full w-[14.29%] items-center justify-center border-r-2 px-2 font-normal">
                         <div
-                          className={`basis-full rounded bg-red-100 text-center font-semibold text-red-700 ${
-                            item.status === 'done' ? 'bg-green-100 text-green-700' : ''
-                          }`}>
+                          className={`basis-full rounded text-center font-semibold
+                            ${item.status === 'Transferd' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                            }`}>
                           {item.status}
                         </div>
                       </div>
