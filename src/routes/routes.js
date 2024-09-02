@@ -73,6 +73,7 @@ import Categories from '../pages/catalogue/Categories';
 import TaxClasses from '../pages/catalogue/TaxClasses';
 import { BulkActions } from '../pages/bulk-actions';
 import { ActivityLogs } from '../pages/activity-logs';
+import { Order_verification } from '../pages/order-verification';
 
 const routes = createBrowserRouter([
   {
@@ -315,6 +316,10 @@ const routes = createBrowserRouter([
   {
     path: '/label-buyer-settings',
     element: <PrivateRoute component={<LabelPreferences />} />,
+  },
+  {
+    path: '/order-verification-settings',
+    element: <PrivateRoute component={<Order_verification />} />,
   },
   {
     path: '/invoice-preferences',

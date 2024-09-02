@@ -242,7 +242,7 @@ const Settings = () => {
           },
           {
             title: 'Order Verification',
-            link: '/',
+            link: '/order-verification-settings',
           },
           {
             title: 'Secure Shipment',

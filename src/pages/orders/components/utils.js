@@ -1,4 +1,4 @@
-export const moreActionOptions = (actions) => {
+export const moreActionOptions = (actions, is_otpVerified, is_verified) => {
   const activeOrderTab = localStorage.getItem('activeOrderTab');
 
   return [
@@ -17,7 +17,12 @@ export const moreActionOptions = (actions) => {
       key: 'editOrder',
       onClick: actions?.editOrder,
     },
-    
+    ...(activeOrderTab === '0' ? [{
+      label: 'Verify Order',
+      key: 'verifyOrder',
+      disabled: !is_otpVerified || is_verified === 1,
+      onClick: actions?.verifyOrder,
+    }] : []),
     { type: 'divider' },
     {
       label: 'Clone Order',

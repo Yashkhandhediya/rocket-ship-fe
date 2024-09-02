@@ -7,6 +7,7 @@ import { Badge } from 'flowbite-react';
 import {
   Woocommerce,
   bigLogo,
+  verified,
   bigcommerce,
   filterIcon,
   moreAction,
@@ -43,6 +44,7 @@ export const New = ({ data, isLoading }) => {
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
+  const is_otpVerified = localStorage.getItem('is_otpVerified');
   console.log('data', data);
   // const user_id = is_company == 1 ? id_company : id_user;
 
@@ -276,7 +278,12 @@ export const New = ({ data, isLoading }) => {
                 </div>
               )}
               {row?.original?.channel_name == null && row?.original?.shop_name == null && <span>Custom</span>}
-
+              {row?.original?.is_verified === 1 && (
+                <div className="flex items-center gap-1 text-xs bg-green-100 text-green-800 w-20 px-2 py-1 rounded-md">
+                  <img src={verified} className="h-4 w-4" alt="Verified" />
+                  <span>Verified</span>
+                </div>
+              )}
               <div>{(row?.original?.channel || '')?.toUpperCase()}</div>
               <div>
                 <CustomTooltip
@@ -504,7 +511,8 @@ export const New = ({ data, isLoading }) => {
                     cloneOrder: () => cloneOrder(row?.original),
                     cancelOrder: () => cancelOrder(row?.original?.id),
                     editOrder: () => editOrder(row?.original),
-                  })}
+                    verifyOrder: () => verifyOrder(row?.original?.id, 1),
+                  }, is_otpVerified, row?.original?.is_verified)}
                 />
               </div>
             </div>
@@ -513,6 +521,33 @@ export const New = ({ data, isLoading }) => {
       }),
     ];
   };
+
+  function verifyOrder(orderId, verificationStatus) {
+    axios
+      .post(
+        `${BACKEND_URL}/order/update_order_verification`,
+        {},
+        {
+          params: {
+            order_id: orderId,
+            verification_status: verificationStatus
+          },
+          headers: {
+            'accept': 'application/json'
+          }
+        }
+      )
+      .then((resp) => {
+        if (resp?.status === 200) {
+          dispatch(setAllOrders(null));
+          toast('Order verified successfully', { type: 'success' });
+          window.location.reload();
+        }
+      })
+      .catch(() => {
+        toast('Unable to verify Order', { type: 'error' });
+      });
+  }  
 
   function cancelOrder(orderDetails) {
     axios
