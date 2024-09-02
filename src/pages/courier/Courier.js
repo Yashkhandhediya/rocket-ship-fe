@@ -21,7 +21,7 @@ function Courier() {
           pod: 'On Request',
           deliveryBoyNumber: 'Not Available',
           trackingServices: 'Real Time',
-          img_name:Ecom
+          img_name:Delivery
         },
         {
             id: '2',
@@ -54,7 +54,7 @@ function Courier() {
             pod: 'Instant',
             deliveryBoyNumber: 'Not Available',
             trackingServices: 'Real Time',
-            img_name:Delivery
+            img_name:Ecom
           },
           {
             id: '5',
@@ -123,13 +123,13 @@ function Courier() {
         axios.get(BACKEND_URL + `/userpartner/courier_priority?user_id=${localStorage.getItem('user_id')}`)
         .then((res) => {
             console.log("RESPONSEEEEEEE",res.data)
-           if(res.data.courier_priority_type  == "recommended by cargo"){
+           if(res.data.courier_priority_type  == "Recommended by cargo"){
             setActiveCard(3)
-           }else if(res.data.courier_priority_type == "fastest"){
+           }else if(res.data.courier_priority_type == "Fastest"){
             setActiveCard(1)
-           }else if(res.data.courier_priority_type == "cheapest"){
+           }else if(res.data.courier_priority_type == "Cheapest"){
             setActiveCard(2);
-           }else if(res.data.courier_priority_type == "custom"){
+           }else if(res.data.courier_priority_type == "Custom"){
             setActiveCard(4);
            }else{
             setActiveCard(5);

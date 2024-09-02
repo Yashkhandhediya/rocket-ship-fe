@@ -205,7 +205,7 @@ if (access_modules == null || access_modules?.length == 0) {
       },
       {
         title: 'Help & Support',
-        path: '/',
+        path: '/create-ticket',
         icon: help,
         hoverIcon: help,
       },

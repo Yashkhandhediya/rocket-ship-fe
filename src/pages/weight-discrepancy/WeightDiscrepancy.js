@@ -560,11 +560,11 @@ const WeightDiscrepancy = () => {
             {/* </div> */}
           </div>
           <div className="flex items-center gap-2">
-            {/* <button className='py-1 px-2 bg-red-700 border rounded-md' title='create' onClick={handleShow}>
+            <button className='py-1 px-2 bg-red-700 border rounded-md' title='create' onClick={handleShow}>
              <span className="text-white text-base">
               Create
              </span> 
-          </button> */}
+          </button>
             <button className="bg-gray-700 px-2 py-1" title="export">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
