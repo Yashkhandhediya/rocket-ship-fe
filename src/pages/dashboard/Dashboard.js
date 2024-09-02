@@ -17,7 +17,7 @@ const Dashboard = () => {
   const id_user = localStorage.getItem('user_id');
   const company_id = localStorage.getItem('company_id');
   const oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().slice(0, 10);
-  const todayDate = new Date().toISOString().slice(0, 10);
+  const todayDate = new Date().toLocaleDateString('en-CA');
   const [fromDate, setFromDate] = useState(oneMonthAgo.toString());
   const [toDate, setToDate] = useState(todayDate.toString());
   const [todayOrder, setTodayOrder] = useState(0);
