@@ -108,7 +108,7 @@ function ActivityLogs() {
               })}
             </ul>
             <ul>
-              <li className="mt-3 font-bold text-gray-500">Catalog</li>
+              {/* <li className="mt-3 font-bold text-gray-500">Catalog</li> */}
               {catalogue.map((data, index) => {
                 return (
                   <li

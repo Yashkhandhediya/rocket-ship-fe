@@ -108,19 +108,19 @@ const COD_Reconciliation = ({ charges, data }) => {
                         <div>{item.cod_to_be_remitted}</div>
                       </div>
                       <div className="item-center flex h-full w-[17.77%] items-center justify-center border-r-2 px-2 font-normal">
-                        <button
-                          className={`mr-1 w-48 rounded-md py-1.5 text-[14px] text-white ${!item.buttun_flag ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#E02424]'
+                      <button
+                          className={`mr-1 w-48 rounded-md py-1.5 text-[14px] text-white ${item.button_flag ? 'bg-red-600' : 'bg-gray-400 cursor-not-allowed'
                             }`}
                           onClick={() => updateStatus(item.id, 'In Progress')}
-                          disabled={!item.buttun_flag}
+                          disabled={!item.button_flag}
                         >
                           Initiated COD
                         </button>
                         <button
-                          className={`w-48 rounded-md py-1.5 text-[14px] text-white ${!item.buttun_flag ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#E02424]'
+                          className={`w-48 rounded-md py-1.5 text-[14px] text-white ${item.button_flag ? 'bg-red-600' : 'bg-gray-400 cursor-not-allowed'
                             }`}
                           onClick={() => updateStatus(item.id, 'Transferd')}
-                          disabled={!item.buttun_flag}
+                          disabled={!item.button_flag}
                         >
                           Manual Transfer
                         </button>

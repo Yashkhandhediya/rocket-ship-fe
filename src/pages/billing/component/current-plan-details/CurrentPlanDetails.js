@@ -10,36 +10,38 @@ function CurrentPlanDetails() {
   const [plans, setPlans] = useState([]);
   const [activatedPlan, setActivatedPlan] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [selectedPeriodIndex, setSelectedPeriodIndex] = useState(1);
+  const periods = ['Monthly', 'Quarterly', 'Half Yearly', 'Yearly'];
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('user_id');
     setUserId(storedUserId);
 
     if (storedUserId) {
-      const fetchPlans = async () => {
-        try {
-          const response = await fetch(`${BACKEND_URL}/current_plan_details/`);
-          const data = await response.json();
-          setPlans(data);
-        } catch (error) {
-          console.error('Error fetching the data:', error);
-        }
-      };
-
-      const fetchActivatedPlan = async () => {
-        try {
-          const response = await fetch(`${BACKEND_URL}/current_plan_details/get_activated_plan/?user_id=${storedUserId}`);
-          const data = await response.json();
-          setActivatedPlan(data.plan_type);
-        } catch (error) {
-          console.error('Error fetching the activated plan:', error);
-        }
-      };
-
-      fetchPlans();
+      fetchPlans(); // Call fetchPlans initially to load data
       fetchActivatedPlan();
     }
-  }, []);
+  }, [selectedPeriodIndex]); // Re-run the effect when selectedPeriodIndex changes
+
+  const fetchPlans = async () => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/current_plan_details/?time_interval=${selectedPeriodIndex}`);
+      const data = await response.json();
+      setPlans(data);
+    } catch (error) {
+      console.error('Error fetching the data:', error);
+    }
+  };
+
+  const fetchActivatedPlan = async () => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/current_plan_details/get_activated_plan/?user_id=${userId}`);
+      const data = await response.json();
+      setActivatedPlan(data.plan_type);
+    } catch (error) {
+      console.error('Error fetching the activated plan:', error);
+    }
+  };
 
   const handleActivate = async (planId) => {
     if (!userId) {
@@ -67,6 +69,11 @@ function CurrentPlanDetails() {
     setIsOpen(false);
   };
 
+  const handlePeriodClick = (index) => {
+    setSelectedPeriodIndex(index + 1); // Update index to be 1-based
+
+  };
+
   const renderPlanRows = (key, valueExtractor) => (
     <tr className="border text-sm">
       <td className="bg-red-50 px-4 py-2 text-left font-bold text-gray-400">{key}</td>
@@ -87,11 +94,17 @@ function CurrentPlanDetails() {
         </div>
         <div className="m-4">
           <div className="flex justify-end rounded-t-xl bg-white px-3 py-4">
-            <ul className="flex cursor-pointer gap-8 text-[12px]">
-              {['Monthly', 'Quarterly', 'Half Yearly', 'Yearly'].map(period => (
-                <li key={period}>{period}</li>
+            <div className="flex cursor-pointer gap-8 text-[12px]">
+              {periods.map((period, index) => (
+                <button
+                  key={period}
+                  onClick={() => handlePeriodClick(index)} // Handle click to set state
+                  className={` bg-transparent ${selectedPeriodIndex === index + 1 ? 'border-b-2 border-red-500' : ''}`} // Apply underline if selected
+                >
+                  {period}
+                </button>
               ))}
-            </ul>
+            </div>
           </div>
           <table className="mt-2 w-full bg-white text-center">
             <thead>
@@ -100,7 +113,7 @@ function CurrentPlanDetails() {
                   <div className="flex flex-col items-start pl-4 py-2">
                     <h2 className='text-[25px]'>Select a plan</h2>
                     <p className="text-[12px] font-normal">
-                      Whether you&apos;re a new business or a well-known brand, 
+                      Whether you&apos;re a new business or a well-known brand,
                     </p>
                     <p className="text-[12px] font-normal">
                       we&apos;ve got you covered!

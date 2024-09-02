@@ -96,14 +96,14 @@ function CourierLog() {
                     Courier Selection
                     </Link>
                 </li>
-                <li>
+                {/* <li>
                     <Link
                     to="/courier-rule"
                     className="text-gray-600 hover:bg-gray-100 rounded-md px-4 py-2 block font-medium"
                     >
                     Courier Rules
                     </Link>
-                </li>
+                </li> */}
                 <li className='bg-white'>
                     <Link
                     to="/courier-log"

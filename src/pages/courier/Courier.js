@@ -1,7 +1,7 @@
 // src/App.js
 import React, {useState,useEffect} from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
-import { Dtdc, Express, cheap, custom, rated, recommand, truck } from '../../common/icons';
+import { Dtdc, Express, cheap, custom, rated, recommand, truck, Maruti } from '../../common/icons';
 import { toast } from 'react-toastify';
 import Card from './Card/Card';
 import { Link } from 'react-router-dom';
@@ -65,7 +65,7 @@ function Courier() {
             pod: 'Instant',
             deliveryBoyNumber: 'Not Available',
             trackingServices: 'Real Time',
-            img_name:Dtdc
+            img_name:Maruti
           },
       ]);
     
@@ -180,14 +180,14 @@ function Courier() {
                     Courier Selection
                     </Link>
                 </li>
-                <li>
+                {/* <li>
                     <Link
                     to="/courier-rule"
                     className="text-gray-600 hover:bg-gray-100 rounded-md px-4 py-2 block font-medium"
                     >
                     Courier Rules
                     </Link>
-                </li>
+                </li> */}
                 <li>
                     <Link
                     to="/courier-log"

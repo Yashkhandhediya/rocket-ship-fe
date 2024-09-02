@@ -103,13 +103,13 @@ function Courier_Selection() {
                       Courier Selection
                     </Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link
                       to="/courier-rule"
                       className="block rounded-md px-4 py-2 font-medium text-gray-600 hover:bg-gray-100">
                       Courier Rules
                     </Link>
-                  </li>
+                  </li> */}
                   <li>
                     <Link
                       to="/courier-log"
