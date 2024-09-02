@@ -349,17 +349,17 @@ const AllProducts = () => {
                     Product Name
                   </div>
                   <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">HSN</div>
-                  <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">Tax Code</div>
+                  {/* <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">Tax Code</div> */}
                   <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">MRP</div>
                   <div className="h-full w-3/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                     Dimension & Weight
                   </div>
-                  <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">Color</div>
+                  {/* <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">Color</div> */}
                   <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                     Available Quantity
                   </div>
-                  <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">Brand</div>
-                  <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">Type</div>
+                  {/* <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">Brand</div> */}
+                  {/* <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">Type</div> */}
                   <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                     Last Modified At
                   </div>
@@ -389,9 +389,9 @@ const AllProducts = () => {
                       <div className="h-full w-1/12 flex-grow overflow-hidden overflow-hidden border-r-2 p-1 text-sm font-semibold">
                         {item.hsn_code ? item.hsn_code : '-'}
                       </div>
-                      <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-1 text-sm font-semibold">
+                      {/* <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-1 text-sm font-semibold">
                         {item.tax_code ? '₹' + item.tax_code : '-'}
-                      </div>
+                      </div> */}
                       <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
                         {item.mrp ? '₹' + item.mrp : '-'}
                       </div>
@@ -413,21 +413,21 @@ const AllProducts = () => {
                           '-'
                         )}
                       </div>
-                      <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
+                      {/* <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
                         {item.color ? '₹' + item.color : '-'}
-                      </div>
+                      </div> */}
                       <div className="h-full w-1/12 flex-grow overflow-hidden border-r-2 p-2 text-sm font-semibold">
-                        {item.availabile_quantity ? '₹' + item.availabile_quantity : '-'}
+                        {item.availabile_quantity ? item.availabile_quantity : '-'}
                       </div>
-                      <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
+                      {/* <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                         {item.type ? item.type : '-'}
-                      </div>
-                      <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
+                      </div> */}
+                      {/* <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
                         {item.brand ? item.brand : '-'}
-                      </div>
+                      </div> */}
                       <div className="h-full w-1/12 flex-grow border-r-2 p-2 text-sm font-semibold">
-                        {item.modified_date
-                          ? format(parseISO(item.modified_date), 'dd MMM yyyy hh:mm a')
+                        {item.last_modified
+                          ? format(parseISO(item.last_modified), 'dd MMM yyyy hh:mm a')
                           : '-'}
                       </div>
                     </div>
