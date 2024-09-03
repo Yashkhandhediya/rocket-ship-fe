@@ -25,8 +25,8 @@ const MapWithLine = ({ location1, location2 }) => {
 
     const fetchPositions = async () => {
       try {
-        const position1 = await fetchCoordinates(location1);
-        const position2 = await fetchCoordinates(location2);
+        const position1 = await fetchCoordinates(`${location1},india`);
+        const position2 = await fetchCoordinates(`${location2},india`);
         setPositions([position1, position2]);
       } catch (error) {
         console.error('Error fetching coordinates: ', error);
@@ -44,6 +44,8 @@ const MapWithLine = ({ location1, location2 }) => {
       </div>
 `,
   });
+
+  console.log(location1, location2);
 
   return (
     <MapContainer
