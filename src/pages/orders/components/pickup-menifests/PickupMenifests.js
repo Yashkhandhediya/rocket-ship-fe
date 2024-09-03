@@ -257,6 +257,14 @@ const PickupMenifests = ({ data, isLoading }) => {
     temp_payload.buyer_info_city_pincode = `${temp_payload.buyer_info_city}-${temp_payload.buyer_info_pincode}`;
     temp_payload.length_width_height = `${temp_payload.length} × ${temp_payload.width} × ${temp_payload.height}`;
     temp_payload.created_date = formatDDMMYYYY(temp_payload.created_date);
+    // 
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].id == id) {
+        temp_payload['data'] = data[i].product_info
+        break;
+      }
+    }
+    console.log('darshannn',data,id)
     splitLimit(temp_payload.buyer_info_complete_address, 45).forEach((line, index) => {
         temp_payload[`buyer_info_complete_address_${index}`] = line;
     });
