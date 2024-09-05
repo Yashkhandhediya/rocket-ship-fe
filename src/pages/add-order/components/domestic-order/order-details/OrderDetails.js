@@ -33,7 +33,9 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   const [focusedProductIndex, setFocusedProductIndex] = useState(-1);
   // const [cashCharge,setCashCharge] = useState(0)
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order) || {};
-
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState('');
+  const [showCategories, setShowCategories] = useState(false);
   const defaultProductField = {
     name: '',
     unit_price: '',
@@ -42,6 +44,22 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     hsn_code: '',
     sku: '',
     discount: 0,
+  };
+
+  const getCategories = async () => {
+    // setLoading(true);
+    try {
+      const response = await axios.get(`${BACKEND_URL}/category`);
+      setCategories(response.data);
+      console.log(response.data);
+    } catch (err) {
+      toast('There is some error while fetching data', { type: 'error' });
+    }
+  };
+
+  const handleCategories = () => {
+    setShowCategories(true);
+    getCategories();
   };
 
   const [productValidation, setProductValidation] = useState(false);
@@ -58,6 +76,8 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   });
 
   const [productFields, setProductFields] = useState([defaultProductField]);
+
+  console.log(productFields);
 
   const [paymentDetails, setPaymentDetails] = useState({
     type: 'cod',
@@ -135,8 +155,8 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   };
 
   const handleSetProductFields = (event, index) => {
-    const { id, value } = event.target;
-
+    const { id, value } = event.target ? event.target : event;
+    console.log(id, value);
     if (id == 'name') {
       axios
         .get(BACKEND_URL + '/product/get_product_details/')
@@ -383,6 +403,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   };
 
   const onSuggestionsFetchRequested = ({ value }) => {
+    console.log(value);
     if (value) {
       fetchSuggestions(value);
     } else {
@@ -423,7 +444,33 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     suggestionHighlighted: 'bg-gray-300',
   };
 
-  console.log(formDirectField, domesticOrderFormValues);
+  const handleAddCatgory = async (category) => {
+    console.log('clicked');
+    const isCategoryExists = categories.some(
+      (item) => item.category.toLowerCase() === category.toLowerCase(),
+    );
+
+    if (isCategoryExists) {
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${BACKEND_URL}/category/`, {
+        category: category,
+      });
+
+      console.log(response);
+      getCategories();
+    } catch (err) {
+      toast('There is some error while Adding Category', { type: 'error' });
+    }
+  };
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+
+  console.log(formDirectField, domesticOrderFormValues, showCategories, productFields);
 
   return (
     <div>
@@ -618,18 +665,49 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                       <p className="mt-1 text-xs text-red-500">Quantity should be greater than 0.</p>
                     )}
                   </div>
-                  <div className="w-10/12 px-2 pb-2 md:w-4/12 md:pb-0 xl:w-3/12">
+                  <div
+                    className="relative w-10/12 px-2 pb-2 md:w-4/12 md:pb-0 xl:w-3/12"
+                    onFocus={() => setShowCategories(true)}
+                    onBlur={() => {
+                      setTimeout(() => setShowCategories(false), 150);
+                    }}>
                     <Field
                       id={'category'}
                       label={'Product Category'}
                       showOptional
-                      inputClassNames={'text-xs'}
-                      labelClassNames={'text-xs'}
+                      inputClassNames={'text-xs '}
+                      labelClassNames={'text-xs '}
                       placeHolder={'Edit Product Category'}
                       required={true}
+                      onBlur={(e) => handleAddCatgory(e.target.value)}
                       value={field?.category || ''}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
+
+                    {showCategories && (
+                      <div className="absolute mt-1 h-40 w-[95%] overflow-hidden overflow-y-auto rounded border bg-white px-4 py-2 text-sm">
+                        {categories.length != 0 &&
+                          categories
+                            .filter((item) =>
+                              item.category.toLowerCase().includes(field?.category?.toLowerCase() || ''),
+                            )
+                            .map((item) => {
+                              return (
+                                item.category.length != 0 && (
+                                  <p
+                                    key={item.id}
+                                    className="cursor-pointer py-1"
+                                    onClick={() => {
+                                      handleSetProductFields({ id: 'category', value: item.category }, index);
+                                      setShowCategories(false);
+                                    }}>
+                                    {item.category}
+                                  </p>
+                                )
+                              );
+                            })}
+                      </div>
+                    )}
                   </div>
                   <div className="self-center">
                     <button
