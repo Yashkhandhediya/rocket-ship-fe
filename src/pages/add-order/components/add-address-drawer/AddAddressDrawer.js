@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
 
 const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress }) => {
-  const id_user = localStorage.getItem('user_id')
+  const id_user = localStorage.getItem('user_id');
   const [isAddSupplier, setIsAddSupplier] = useState(false);
   const [isAddRTOAddress, setIsAddRTOAddress] = useState(false);
   const [addressInfo, setAddressInfo] = useState({
@@ -66,7 +66,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
   };
 
   const handleSaveAddressInRedux = () => {
-    console.log("PAYLOADDDDDDDD",addressInfo)
+    console.log('PAYLOADDDDDDDD', addressInfo);
     if (
       !addressInfo?.contact_no ||
       !addressInfo?.first_name ||
@@ -76,16 +76,16 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
       !addressInfo?.city ||
       !addressInfo?.state ||
       !addressInfo?.country ||
-      !isValidEmailAddress || 
-      !isValidFirstName||
+      !isValidEmailAddress ||
+      !isValidFirstName ||
       !isValidNumber
     ) {
       setTriggerValidations(true);
       return;
     }
-    
+
     axios
-      .post(BACKEND_URL+`/address?created_by=${id_user}`, addressInfo)
+      .post(BACKEND_URL + `/address?created_by=${id_user}`, addressInfo)
       .then((resp) => {
         if (resp.status == 200) {
           toast('Pickup details saved successfully', { type: 'success' });
@@ -318,7 +318,9 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
           onChange={handleSetAddressInfo}
           values={addressInfo}
           triggerValidation={triggerValidations}
-          onPincodeVeify={!isEdit ? onaddressPincodeVerify : null}
+          // onPincodeVeify={!isEdit ? onaddressPincodeVerify : null}
+          onPincodeVeify={onaddressPincodeVerify}
+          isEdit={isEdit}
           // disabledFields={
           //   isEdit
           //     ? {
