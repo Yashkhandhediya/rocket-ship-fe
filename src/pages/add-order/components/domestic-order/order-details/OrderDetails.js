@@ -685,7 +685,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                     />
 
                     {showCategories && (
-                      <div className="absolute mt-1 h-40 w-[95%] overflow-hidden overflow-y-auto rounded border bg-white px-4 py-2 text-sm">
+                      <div className="absolute mt-1 max-h-40 w-[95%] overflow-hidden overflow-y-auto rounded border bg-white px-4 py-2 text-sm">
                         {categories.length != 0 &&
                           categories
                             .filter((item) =>
