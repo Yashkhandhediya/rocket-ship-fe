@@ -161,11 +161,16 @@ function ActivityLogs() {
                         <td className="p-3 text-left">{actionData?.success_count}</td>
                         <td className="p-3 text-left">{actionData?.error_count}</td>
                         <td className="p-3 text-left">
-                          <button className="text-red-800" onClick={() => handleDownload(actionData.id)}>
+                          <button
+                            className={`text-red-800 ${actionData?.error_count === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            onClick={() => handleDownload(actionData.id)}
+                            disabled={actionData?.error_count === 0}
+                          >
                             <FontAwesomeIcon icon={faDownload} />
                             {` Errors`}
                           </button>
                         </td>
+
                       </tr>
                     );
                   })

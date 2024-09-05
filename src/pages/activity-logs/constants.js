@@ -4,7 +4,7 @@ export const ordersActivityLogs = [
   // 'Bulk Courier Reassign',
   'Bulk Pickup Schedule',
   // 'Bulk Invoice Download',
-  // 'Bulk Label Download',
+  'Bulk Label Download',
   // 'Bulk Manifest Download',
   // 'Bulk NDR Escalation',
   // 'Bulk Weight Discrepancy',
