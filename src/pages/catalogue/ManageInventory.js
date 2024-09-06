@@ -100,7 +100,7 @@ const ManageInventory = () => {
   const handleCatalogueData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${BACKEND_URL}/product/get_all_inventory/?user_id=${user_id}`);
+      const response = await axios.get(`${BACKEND_URL}/product/get_all_inventory/?user_id=${user_id}&page=${page}&page_size=${itemsPerPage}`);
       if (response.status === 200) {
         setData(response.data);
         setIncrementDisable(false);
