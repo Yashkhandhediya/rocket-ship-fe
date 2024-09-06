@@ -21,6 +21,7 @@ const ManageInventory = () => {
   const [downloadPopup, setDownloadPopup] = useState(false);
   const [loading, setLoading] = useState(false);
   const user_email = localStorage.getItem('user_email');
+  const user_id = localStorage.getItem('user_id');
   const [itemsPerPage, setItemsPerPage] = useState(15);
   // const [currentItems, setCurrentItems] = useState([]);
   const [data, setData] = useState([]);
@@ -99,7 +100,7 @@ const ManageInventory = () => {
   const handleCatalogueData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${BACKEND_URL}/product/get_all_inventory/`);
+      const response = await axios.get(`${BACKEND_URL}/product/get_all_inventory/?user_id=${user_id}`);
       if (response.status === 200) {
         setData(response.data);
         setIncrementDisable(false);
