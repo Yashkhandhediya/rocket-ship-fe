@@ -269,7 +269,7 @@ export const All = ({ data, isLoading }) => {
 
   function cancelOrder(orderDetails) {
     axios
-      .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}&user_id=${user_id}`, {
+      .put(`${BACKEND_URL}/return/?id=${orderDetails?.id}&user_id=${user_id}`, {
         ...orderDetails,
         status: 'cancelled',
       })
