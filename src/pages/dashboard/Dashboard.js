@@ -103,7 +103,7 @@ const Dashboard = () => {
   };
 
   const tabs = [
-    'Overview',
+    'Overview'/*,
     'Orders',
     'Shipments',
     'NDR',
@@ -111,7 +111,7 @@ const Dashboard = () => {
     'RTO',
     'Courier',
     'Delays',
-    'Tracking Page',
+    'Tracking Page',*/
   ];
 
   const handleData = () => {

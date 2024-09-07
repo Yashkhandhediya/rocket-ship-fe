@@ -57,7 +57,7 @@ if (access_modules == null || access_modules?.length == 0) {
         icon: dashboard,
         hoverIcon: dashboard,
       },
-      {
+      /*{
         title: 'Truck Booking',
         // path: '/book',
         icon: book,
@@ -80,7 +80,7 @@ if (access_modules == null || access_modules?.length == 0) {
             path: '/User',
           },
         ].filter((option) => option),
-      },
+      },*/
       {
         title: 'Orders',
         path: '/orders',
