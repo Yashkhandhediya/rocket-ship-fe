@@ -24,6 +24,13 @@ export const All = ({ data, isLoading }) => {
   const allOrdersList = useSelector((state) => state?.returnsList) || [];
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   const filteredReturnOrder = useSelector((state) => state?.filteredReturnOrdersList);
+
+  const id_user = localStorage.getItem('user_id');
+  const id_company = localStorage.getItem('company_id');
+  const is_company = localStorage.getItem('is_company');
+
+  const user_id = is_company == 1 ? id_company : id_user;
+
   console.log(data);
   function splitString(string, length) {
     let result = [];
@@ -250,7 +257,9 @@ export const All = ({ data, isLoading }) => {
                 options={moreActionOptions({
                   downloadInvoice: () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row?.original),
-                  cancelOrder: () => cancelOrder(row?.original),
+                  cancelOrder: () => {
+                    cancelOrder(row?.row?.original?.id);
+                  },
                 })}
               />
             </div>
@@ -261,8 +270,9 @@ export const All = ({ data, isLoading }) => {
   };
 
   function cancelOrder(orderDetails) {
+    console.log(orderDetails);
     axios
-      .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}`, {
+      .put(`${BACKEND_URL}/return/?id=${orderDetails?.id}&user_id=${user_id}`, {
         ...orderDetails,
         status: 'cancelled',
       })
