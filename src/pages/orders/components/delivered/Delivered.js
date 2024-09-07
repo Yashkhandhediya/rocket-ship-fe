@@ -442,10 +442,10 @@ const Delivered = ({ data, isLoading }) => {
                 renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                 options={moreActionOptions({
                   downloadShiipingLabel: () => handleShiipingLabel(row?.row?.original?.id),
-                  downloadInvoice: () => handleInvoice(row?.original?.id),
-                  cloneOrder: () => cloneOrder(row?.original),
-                  cancelOrder: () => cancelOrder(row?.original),
-                  editOrder: () => editOrder(row?.original),
+                  downloadInvoice: () => handleInvoice(row?.row?.original?.id),
+                  cloneOrder: () => cloneOrder(row?.row?.original?.id),
+                  cancelOrder: () => cancelOrder(row?.row?.original?.id),
+                  editOrder: () => editOrder(row?.row?.original?.id),
                 })}
               />
             </div>

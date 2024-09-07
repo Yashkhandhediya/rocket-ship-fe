@@ -214,7 +214,9 @@ export const New = ({ data, isLoading }) => {
                   options={moreActionOptions({
                     downloadInvoice: () => handleInvoice(row?.original?.id),
                     cloneOrder: () => cloneOrder(row),
-                    cancelOrder: () => cancelOrder(row?.original?.id),
+                    cancelOrder: () => {
+                      cancelOrder(row?.original?.id);
+                    },
                     editOrder: () => editOrder(row?.original),
                   })}
                 />
@@ -331,12 +333,12 @@ export const New = ({ data, isLoading }) => {
         if (resp?.status === 200) {
           dispatch(setAllReturns(null));
           toast('Return cancelled successfully', { type: 'success' });
+          window.location.reload();
         }
       })
       .catch(() => {
         toast('Unable to cancel Return', { type: 'error' });
       });
-    window.location.reload();
   }
 
   function cloneOrder(orderDetails) {
