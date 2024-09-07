@@ -47,6 +47,9 @@ export const New = ({ data, isLoading }) => {
   const is_cod_verified = localStorage.getItem('is_cod_verified');
   const is_prepaid_verified = localStorage.getItem('is_prepaid_verified');
   console.log('data', data);
+
+  const user_id = is_company == 1 ? id_company : id_user;
+
   // const user_id = is_company == 1 ? id_company : id_user;
 
   // const [itemsPerPage, setItemsPerPage] = useState(15);
@@ -280,7 +283,7 @@ export const New = ({ data, isLoading }) => {
               )}
               {row?.original?.channel_name == null && row?.original?.shop_name == null && <span>Custom</span>}
               {row?.original?.is_verified === 1 && (
-                <div className="flex items-center gap-1 text-xs bg-green-100 text-green-800 w-20 px-2 py-1 rounded-md">
+                <div className="flex w-20 items-center gap-1 rounded-md bg-green-100 px-2 py-1 text-xs text-green-800">
                   <img src={verified} className="h-4 w-4" alt="Verified" />
                   <span>Verified</span>
                 </div>
@@ -504,16 +507,22 @@ export const New = ({ data, isLoading }) => {
               <div className="min-h-[32px] min-w-[32px]">
                 <MoreDropdown
                   renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
-                  options={moreActionOptions({
-                    downloadInvoice: () => {
-                      console.log('jauuuu', row?.original?.id);
-                      handleInvoice(row?.original?.id);
+                  options={moreActionOptions(
+                    {
+                      downloadInvoice: () => {
+                        console.log('jauuuu', row?.original?.id);
+                        handleInvoice(row?.original?.id);
+                      },
+                      cloneOrder: () => cloneOrder(row?.original),
+                      cancelOrder: () => cancelOrder(row?.original?.id),
+                      editOrder: () => editOrder(row?.original),
+                      verifyOrder: () => verifyOrder(row?.original?.id, 1),
                     },
-                    cloneOrder: () => cloneOrder(row?.original),
-                    cancelOrder: () => cancelOrder(row?.original?.id),
-                    editOrder: () => editOrder(row?.original),
-                    verifyOrder: () => verifyOrder(row?.original?.id, 1),
-                  }, is_cod_verified, is_prepaid_verified, row?.original?.is_verified, row?.original?.payment_type_id)}
+                    is_cod_verified,
+                    is_prepaid_verified,
+                    row?.original?.is_verified,
+                    row?.original?.payment_type_id,
+                  )}
                 />
               </div>
             </div>
@@ -531,12 +540,12 @@ export const New = ({ data, isLoading }) => {
         {
           params: {
             order_id: orderId,
-            verification_status: verificationStatus
+            verification_status: verificationStatus,
           },
           headers: {
-            'accept': 'application/json'
-          }
-        }
+            accept: 'application/json',
+          },
+        },
       )
       .then((resp) => {
         if (resp?.status === 200) {
@@ -548,11 +557,11 @@ export const New = ({ data, isLoading }) => {
       .catch(() => {
         toast('Unable to verify Order', { type: 'error' });
       });
-  }  
+  }
 
   function cancelOrder(orderDetails) {
     axios
-      .put(`${BACKEND_URL}/order/?id=${orderDetails}`, {
+      .put(`${BACKEND_URL}/order/?id=${orderDetails}&user_id=${user_id}`, {
         ...orderDetails,
         status: 'cancelled',
         status_name: 'cancelled',
@@ -567,7 +576,7 @@ export const New = ({ data, isLoading }) => {
       .catch(() => {
         toast('Unable to cancel Order', { type: 'error' });
       });
-    window.location.reload();
+    // window.location.reload();
   }
 
   function cloneOrder(orderDetails) {

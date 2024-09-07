@@ -128,7 +128,10 @@ const InTransit = ({ data, isLoading }) => {
 
   const formatDDMMYYYY = (dateString) => {
     const date = new Date(dateString);
-    return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+    return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(
+      2,
+      '0',
+    )}/${date.getFullYear()}`;
   };
 
   function flattenShipmentLabel(obj, id) {
@@ -180,7 +183,7 @@ const InTransit = ({ data, isLoading }) => {
     splitLimit(temp_payload.user_info_complete_address, 45).forEach((line, index) => {
       temp_payload[`user_info_complete_address_${index}`] = line;
     });
-    Object.keys(temp_payload).forEach(key => {
+    Object.keys(temp_payload).forEach((key) => {
       if (key.startsWith('product_info_') && key.endsWith('_name')) {
         splitLimit(temp_payload[key], 52).forEach((line, index) => {
           temp_payload[`${key}_${index}`] = line;
@@ -188,7 +191,7 @@ const InTransit = ({ data, isLoading }) => {
       }
     });
     if (temp_payload.payment_type_name === 'cod') {
-      temp_payload.collect_amount = temp_payload.sub_total
+      temp_payload.collect_amount = temp_payload.sub_total;
     }
 
     const headers = { 'Content-Type': 'application/json' };
@@ -375,8 +378,9 @@ const InTransit = ({ data, isLoading }) => {
               <CustomTooltip
                 text={
                   <>
-                    <div className="text-wrap">{`${row?.original?.user_info?.address_line1 ?? ''} ${row?.original?.user_info?.address_line2 ?? ''
-                      }`}</div>
+                    <div className="text-wrap">{`${row?.original?.user_info?.address_line1 ?? ''} ${
+                      row?.original?.user_info?.address_line2 ?? ''
+                    }`}</div>
                     <div>{row?.original?.user_info?.city ?? ''}</div>
                     <div>
                       {row?.original?.user_info?.state ?? ''}-{row?.original?.user_info?.pincode}
@@ -456,7 +460,7 @@ const InTransit = ({ data, isLoading }) => {
 
   function cancelOrder(orderDetails) {
     axios
-      .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}`, {
+      .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}&user_id=${user_id}`, {
         ...orderDetails,
         status: 'cancelled',
       })

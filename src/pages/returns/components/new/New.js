@@ -34,9 +34,12 @@ export const New = ({ data, isLoading }) => {
     isOpen: false,
     orderDetails: {},
   });
+  const id_user = localStorage.getItem('user_id');
+  const id_company = localStorage.getItem('company_id');
+  const is_company = localStorage.getItem('is_company');
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   const [openEditDrawer, setOpenEditDrawer] = useState(false);
-
+  const user_id = is_company ? id_company : id_user;
   const getColumns = () => {
     const columnHelper = createColumnHelper();
     return [
@@ -319,7 +322,7 @@ export const New = ({ data, isLoading }) => {
 
   function cancelOrder(orderDetails) {
     axios
-      .put(`${BACKEND_URL}/return/?id=${orderDetails}`, {
+      .put(`${BACKEND_URL}/return/?id=${orderDetails}&user_id=${user_id}`, {
         ...orderDetails,
         status: 'cancelled',
         status_name: 'cancelled',
