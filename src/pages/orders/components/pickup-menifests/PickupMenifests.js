@@ -33,12 +33,15 @@ import { Button } from 'flowbite-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { pickupOptions } from '../../duck';
+import MultiSelectDropdown from '../../../rate-card/components/MultiSelectDropdown';
 // import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
-const PickupMenifests = ({ data, isLoading }) => {
+const PickupMenifests = ({ data, isLoading, fetchFilteredData }) => {
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
+  const [selectedStatus, setSelectedStatus] = useState([]);
 
   // const user_id = is_company == 1 ? id_company : id_user;
 
@@ -106,7 +109,7 @@ const PickupMenifests = ({ data, isLoading }) => {
     const keyCounts = {};
     for (let i = 0; i < resData.length; i++) {
       if (resData[i].id == id) {
-        console.log('asdfghjk', resData[i].id)
+        console.log('asdfghjk', resData[i].id);
         obj = resData[i];
         break;
       }
@@ -139,7 +142,7 @@ const PickupMenifests = ({ data, isLoading }) => {
       for (let key in obj) {
         if (Object.prototype.hasOwnProperty.call(obj, key)) {
           let newKey = parentKey ? `${parentKey}_${key}` : key;
-  
+
           if (Array.isArray(obj[key])) {
             obj[key].forEach((item, index) => {
               if (typeof item === 'object' && item !== null) {
@@ -157,7 +160,7 @@ const PickupMenifests = ({ data, isLoading }) => {
       }
       return res;
     }
-  
+
     let flatObj = {};
     for (let i = 0; i < data.length; i++) {
       if (data[i].id == id) {
@@ -165,10 +168,9 @@ const PickupMenifests = ({ data, isLoading }) => {
         break;
       }
     }
-  
+
     return flatObj;
   }
-  
 
   function formatDate(dateString) {
     const options = { day: 'numeric', month: 'short', year: 'numeric' };
@@ -177,7 +179,10 @@ const PickupMenifests = ({ data, isLoading }) => {
 
   const formatDDMMYYYY = (dateString) => {
     const date = new Date(dateString);
-    return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+    return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(
+      2,
+      '0',
+    )}/${date.getFullYear()}`;
   };
 
   function splitString(string, length) {
@@ -192,7 +197,6 @@ const PickupMenifests = ({ data, isLoading }) => {
     if (!text) return [];
     return text.match(new RegExp(`.{1,${maxLength}}`, 'g')) || [];
   };
-  
 
   const handleMenifest = (id) => {
     let temp_payload = flattenObject(data, id);
@@ -257,29 +261,29 @@ const PickupMenifests = ({ data, isLoading }) => {
     temp_payload.buyer_info_city_pincode = `${temp_payload.buyer_info_city}-${temp_payload.buyer_info_pincode}`;
     temp_payload.length_width_height = `${temp_payload.length} × ${temp_payload.width} × ${temp_payload.height}`;
     temp_payload.created_date = formatDDMMYYYY(temp_payload.created_date);
-    // 
+    //
     for (let i = 0; i < data.length; i++) {
       if (data[i].id == id) {
-        temp_payload['data'] = data[i].product_info
+        temp_payload['data'] = data[i].product_info;
         break;
       }
     }
-    console.log('darshannn',data,id)
+    console.log('darshannn', data, id);
     splitLimit(temp_payload.buyer_info_complete_address, 45).forEach((line, index) => {
-        temp_payload[`buyer_info_complete_address_${index}`] = line;
+      temp_payload[`buyer_info_complete_address_${index}`] = line;
     });
     splitLimit(temp_payload.user_info_complete_address, 45).forEach((line, index) => {
       temp_payload[`user_info_complete_address_${index}`] = line;
     });
-    Object.keys(temp_payload).forEach(key => {
+    Object.keys(temp_payload).forEach((key) => {
       if (key.startsWith('product_info_') && key.endsWith('_name')) {
-          splitLimit(temp_payload[key], 52).forEach((line, index) => {
-              temp_payload[`${key}_${index}`] = line;
-          });
+        splitLimit(temp_payload[key], 52).forEach((line, index) => {
+          temp_payload[`${key}_${index}`] = line;
+        });
       }
     });
-    if(temp_payload.payment_type_name==='cod'){
-      temp_payload.collect_amount = temp_payload.sub_total
+    if (temp_payload.payment_type_name === 'cod') {
+      temp_payload.collect_amount = temp_payload.sub_total;
     }
 
     const headers = { 'Content-Type': 'application/json' };
@@ -520,7 +524,7 @@ const PickupMenifests = ({ data, isLoading }) => {
   function editOrder(orderDetails) {
     // let isEdit = true
     // order_id = orderDetails?.id
-    console.log('order_iddddddd', orderDetails)
+    console.log('order_iddddddd', orderDetails);
     let data = {
       isEdit: true,
       order_id: orderDetails?.id,
@@ -580,7 +584,7 @@ const PickupMenifests = ({ data, isLoading }) => {
     <div className="mt-5">
       {isLoading && <Loader />}
 
-      <div className="mb-4 flex w-full">
+      <div className="mb-4 flex w-full items-center gap-5">
         <div>
           <button
             className="inline-flex items-center rounded-sm border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-orange-700"
@@ -588,6 +592,16 @@ const PickupMenifests = ({ data, isLoading }) => {
             <img src={filterIcon} className="mr-2 w-4" />
             {'More Filters'}
           </button>
+        </div>
+        <div>
+          <MultiSelectDropdown
+            options={pickupOptions}
+            selectedOptions={selectedStatus}
+            setSelectedOptions={setSelectedStatus}
+            selectName={`Select Statuses`}
+            type={`manifested`}
+            fetchFilteredData={fetchFilteredData}
+          />
         </div>
       </div>
       {/* <DataTable

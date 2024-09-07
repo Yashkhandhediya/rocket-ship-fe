@@ -258,6 +258,7 @@ export const All = ({ data, isLoading }) => {
                   downloadInvoice: () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row?.original),
                   cancelOrder: () => {
+                    console.log(row);
                     cancelOrder(row?.row?.original?.id);
                   },
                 })}
@@ -270,7 +271,6 @@ export const All = ({ data, isLoading }) => {
   };
 
   function cancelOrder(orderDetails) {
-    console.log(orderDetails);
     axios
       .put(`${BACKEND_URL}/return/?id=${orderDetails?.id}&user_id=${user_id}`, {
         ...orderDetails,

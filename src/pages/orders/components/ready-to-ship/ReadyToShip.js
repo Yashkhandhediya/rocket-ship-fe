@@ -38,14 +38,16 @@ import { Button } from 'flowbite-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { readyToShipOptions } from '../../duck';
+import MultiSelectDropdown from '../../../rate-card/components/MultiSelectDropdown';
 
-export const ReadyToShip = ({ data, isLoading }) => {
+export const ReadyToShip = ({ data, isLoading, fetchFilteredData }) => {
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
 
   const user_id = is_company == 1 ? id_company : id_user;
-
+  const [selectedStatus, setSelectedStatus] = useState([]);
   // const [itemsPerPage, setItemsPerPage] = useState(15);
   // const [page, setPage] = useState(1);
   // const [loading, setLoading] = useState(false);
@@ -464,7 +466,7 @@ export const ReadyToShip = ({ data, isLoading }) => {
     <div className="mt-5">
       {isLoading && <Loader />}
 
-      <div className="mb-4 flex w-full">
+      <div className="mb-4 flex w-full items-center gap-5">
         <div>
           <button
             className="inline-flex items-center rounded-sm border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-orange-700"
@@ -472,6 +474,16 @@ export const ReadyToShip = ({ data, isLoading }) => {
             <img src={filterIcon} className="mr-2 w-4" />
             {'More Filters'}
           </button>
+        </div>
+        <div>
+          <MultiSelectDropdown
+            options={readyToShipOptions}
+            selectedOptions={selectedStatus}
+            setSelectedOptions={setSelectedStatus}
+            selectName={`Select Statuses`}
+            type={`invoiced`}
+            fetchFilteredData={fetchFilteredData}
+          />
         </div>
       </div>
       <CustomDataTable

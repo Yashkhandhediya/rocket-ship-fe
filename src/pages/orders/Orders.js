@@ -32,7 +32,7 @@ const Orders = () => {
   );
 
   let data = {
-    isEdit: false
+    isEdit: false,
   };
 
   console.log(filteredOrderId, searchBy, errorMsg);
@@ -68,25 +68,25 @@ const Orders = () => {
       console.log(response.data);
       setFilteredOrderId(
         (response.data.awb.order_id.length != 0 && response.data.awb.order_id) ||
-        (response.data.email.order_id.length != 0 && response.data.email.order_id) ||
-        (response.data.order_id.order_id.length != 0 && response.data.order_id.order_id) ||
-        (response.data.phone.order_id.length != 0 && response.data.phone.order_id) ||
-        (response.data.sku.order_id.length != 0 && response.data.sku.order_id),
+          (response.data.email.order_id.length != 0 && response.data.email.order_id) ||
+          (response.data.order_id.order_id.length != 0 && response.data.order_id.order_id) ||
+          (response.data.phone.order_id.length != 0 && response.data.phone.order_id) ||
+          (response.data.sku.order_id.length != 0 && response.data.sku.order_id),
       );
       setSearchBy(
         (response.data.awb.order_id.length != 0 && 'AWB') ||
-        (response.data.email.order_id.length != 0 && 'Email') ||
-        (response.data.order_id.order_id.length != 0 && 'Order ID') ||
-        (response.data.phone.order_id.length != 0 && 'Phone') ||
-        (response.data.sku.order_id.length != 0 && 'SKU'),
+          (response.data.email.order_id.length != 0 && 'Email') ||
+          (response.data.order_id.order_id.length != 0 && 'Order ID') ||
+          (response.data.phone.order_id.length != 0 && 'Phone') ||
+          (response.data.sku.order_id.length != 0 && 'SKU'),
       );
       setErrorMsg(
         response.data.awb.order_id.length == 0 &&
-        response.data.email.order_id.length == 0 &&
-        response.data.order_id.order_id.length == 0 &&
-        response.data.phone.order_id.length == 0 &&
-        response.data.sku.order_id.length == 0 &&
-        'No Result Found',
+          response.data.email.order_id.length == 0 &&
+          response.data.order_id.order_id.length == 0 &&
+          response.data.phone.order_id.length == 0 &&
+          response.data.sku.order_id.length == 0 &&
+          'No Result Found',
       );
     } catch (err) {
       setErrorMsg('There is Error while fetching');
@@ -125,7 +125,7 @@ const Orders = () => {
       return;
     }
     axios
-      .get(BACKEND_URL + `/order/get_filtered_orders?created_by=${cuser_id}`)
+      .post(BACKEND_URL + `/order/get_filtered_orders?created_by=${cuser_id}`)
       .then(async (resp) => {
         if (resp.status === 200) {
           dispatch(setAllOrders(resp?.data || []));
@@ -197,8 +197,9 @@ const Orders = () => {
             </form>
             {query.length != 0 && (
               <div
-                className={`absolute w-full cursor-pointer rounded-lg bg-white p-4 text-[12px] shadow-lg hover:bg-gray-200  ${errorMsg ? 'text-red-800' : 'text-gray-400'
-                  } hover:text-red-800`}
+                className={`absolute w-full cursor-pointer rounded-lg bg-white p-4 text-[12px] shadow-lg hover:bg-gray-200  ${
+                  errorMsg ? 'text-red-800' : 'text-gray-400'
+                } hover:text-red-800`}
                 onClick={handlePostFilteredOrder}>
                 {!loading ? (
                   <p className={`text-left`}>{searchBy ? `${searchBy}: ${query}` : `${errorMsg}`}</p>

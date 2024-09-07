@@ -42,24 +42,26 @@ const Tabs = ({ tabs, tabClassNames, activeOrderTab, setOrderActiveTab, onTabCha
 
   const id = JSON.parse(localStorage.getItem('temp_user_id'));
 
-  const fetchOrdersData = async (tid) => {
+  const fetchOrdersData = async (tid, selectedStatus) => {
     const user_id = is_company == 1 ? id_company : id_user;
     // const show_user_id = temp_user_id != undefined ? temp_user_id : user_id;
     const show_user_id = id != undefined ? id : user_id;
 
-    console.log(temp_user_id, show_user_id, user_id);
+    console.log(temp_user_id, show_user_id, user_id, tid, selectedStatus);
 
     try {
       setLoading(true);
-      const response = await axios.get(
+      const response = await axios.post(
         `${BACKEND_URL}/order/get_filtered_orders?created_by=${show_user_id}&${
-          tid.id !== 'all' && `status=${tid.id}`
+          tid !== 'all' && `status=${tid}`
         }&page=${page}&page_size=${itemsPerPage}`,
+        selectedStatus?.map((item) => item.type),
       );
       setData(response.data);
       setLoading(false);
     } catch (err) {
       setLoading(false);
+      console.log(err);
       toast('There is some error while fetching orders.', { type: 'error' });
     }
   };
@@ -71,7 +73,7 @@ const Tabs = ({ tabs, tabClassNames, activeOrderTab, setOrderActiveTab, onTabCha
   };
 
   useEffect(() => {
-    fetchOrdersData(tabID);
+    fetchOrdersData(tabID.id);
   }, [itemsPerPage, page, activeOrderTab]);
 
   return (
@@ -103,13 +105,31 @@ const Tabs = ({ tabs, tabClassNames, activeOrderTab, setOrderActiveTab, onTabCha
       </div>
       <div id="default-tab-content">
         <div className={`rounded-lg`}>
-          {activeOrderTab === 0 && <New data={data} isLoading={loading} />}
-          {activeOrderTab === 1 && <ReadyToShip data={data} isLoading={loading} />}
-          {activeOrderTab === 2 && <PickupMenifests data={data} isLoading={loading} />}
-          {activeOrderTab === 3 && <InTransit data={data} isLoading={loading} />}
-          {activeOrderTab === 4 && <Delivered data={data} isLoading={loading} />}
-          {activeOrderTab === 5 && <Rto data={data} isLoading={loading} />}
-          {activeOrderTab === 6 && <All data={!filteredOrders ? data : filteredOrders} isLoading={loading} />}
+          {activeOrderTab === 0 && (
+            <New data={data} isLoading={loading} fetchFilteredData={fetchOrdersData} />
+          )}
+          {activeOrderTab === 1 && (
+            <ReadyToShip data={data} isLoading={loading} fetchFilteredData={fetchOrdersData} />
+          )}
+          {activeOrderTab === 2 && (
+            <PickupMenifests data={data} isLoading={loading} fetchFilteredData={fetchOrdersData} />
+          )}
+          {activeOrderTab === 3 && (
+            <InTransit data={data} isLoading={loading} fetchFilteredData={fetchOrdersData} />
+          )}
+          {activeOrderTab === 4 && (
+            <Delivered data={data} isLoading={loading} fetchFilteredData={fetchOrdersData} />
+          )}
+          {activeOrderTab === 5 && (
+            <Rto data={data} isLoading={loading} fetchFilteredData={fetchOrdersData} />
+          )}
+          {activeOrderTab === 6 && (
+            <All
+              data={!filteredOrders ? data : filteredOrders}
+              isLoading={loading}
+              fetchFilteredData={fetchOrdersData}
+            />
+          )}
 
           <div className="flex w-full flex-wrap-reverse justify-between gap-2 rounded-lg bg-white px-4 py-2">
             <div className="mr-2 flex items-center">

@@ -33,9 +33,11 @@ import { Button } from 'flowbite-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import MultiSelectDropdown from '../../../rate-card/components/MultiSelectDropdown';
+import { allOptions } from '../../duck';
 // import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
-export const All = ({ data, isLoading }) => {
+export const All = ({ data, isLoading, fetchFilteredData }) => {
   // import { setEditOrder } from '../../../../redux/actions/editOrderActions';
 
   // export let isEdit = false;
@@ -46,7 +48,7 @@ export const All = ({ data, isLoading }) => {
   const is_company = localStorage.getItem('is_company');
 
   const user_id = is_company == 1 ? id_company : id_user;
-
+  const [selectedStatus, setSelectedStatus] = useState([]);
   // const [itemsPerPage, setItemsPerPage] = useState(15);
   // const [page, setPage] = useState(1);
   // const [loading, setLoading] = useState(false);
@@ -436,10 +438,12 @@ export const All = ({ data, isLoading }) => {
     );
   };
 
+  console.log(selectedStatus);
+
   return (
     <div className="mt-5">
       {isLoading && <Loader />}
-      <div className="mb-4 flex w-full">
+      <div className="mb-4 flex w-full items-center gap-5">
         <div>
           <button
             className="inline-flex items-center rounded-sm border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-orange-700"
@@ -447,6 +451,16 @@ export const All = ({ data, isLoading }) => {
             <img src={filterIcon} className="mr-2 w-4" />
             {'More Filters'}
           </button>
+        </div>
+        <div>
+          <MultiSelectDropdown
+            options={allOptions}
+            selectedOptions={selectedStatus}
+            setSelectedOptions={setSelectedStatus}
+            selectName={`Select Statuses`}
+            type={`all`}
+            fetchFilteredData={fetchFilteredData}
+          />
         </div>
       </div>
       {/* <DataTable

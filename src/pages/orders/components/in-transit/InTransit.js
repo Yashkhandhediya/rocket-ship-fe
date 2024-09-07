@@ -33,15 +33,17 @@ import { Button } from 'flowbite-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { inTransitOptions } from '../../duck';
+import MultiSelectDropdown from '../../../rate-card/components/MultiSelectDropdown';
 // import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
-const InTransit = ({ data, isLoading }) => {
+const InTransit = ({ data, isLoading, fetchFilteredData }) => {
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
 
   const user_id = is_company == 1 ? id_company : id_user;
-
+  const [selectedStatus, setSelectedStatus] = useState([]);
   // const [itemsPerPage, setItemsPerPage] = useState(15);
   // const [page, setPage] = useState(1);
   // const [loading, setLoading] = useState(false);
@@ -496,7 +498,7 @@ const InTransit = ({ data, isLoading }) => {
   return (
     <div className="mt-5">
       {isLoading && <Loader />}
-      <div className="mb-4 flex w-full">
+      <div className="mb-4 flex w-full items-center gap-5">
         <div>
           <button
             className="inline-flex items-center rounded-sm border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-orange-700"
@@ -504,6 +506,16 @@ const InTransit = ({ data, isLoading }) => {
             <img src={filterIcon} className="mr-2 w-4" />
             {'More Filters'}
           </button>
+        </div>
+        <div>
+          <MultiSelectDropdown
+            options={inTransitOptions}
+            selectedOptions={selectedStatus}
+            setSelectedOptions={setSelectedStatus}
+            selectName={`Select Statuses`}
+            type={`in transit`}
+            fetchFilteredData={fetchFilteredData}
+          />
         </div>
       </div>
       {/* <DataTable
