@@ -29,6 +29,11 @@ const InTransit = ({ data, isLoading }) => {
   const allOrdersList = useSelector((state) => state?.returnsList);
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   const newOrdersList = allOrdersList?.filter((order) => order?.status_id === 5) || [];
+  const id_user = localStorage.getItem('user_id');
+  const id_company = localStorage.getItem('company_id');
+  const is_company = localStorage.getItem('is_company');
+
+  const user_id = is_company == 1 ? id_company : id_user;
 
   const [selectShipmentDrawer, setSelectShipmentDrawer] = useState({
     isOpen: false,
@@ -207,7 +212,9 @@ const InTransit = ({ data, isLoading }) => {
                 options={moreActionOptions({
                   downloadInvoice: () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row),
-                  cancelOrder: () => cancelOrder(row?.original),
+                  cancelOrder: () => {
+                    cancelOrder(row?.row?.original?.id);
+                  },
                 })}
               />
             </div>
@@ -320,8 +327,10 @@ const InTransit = ({ data, isLoading }) => {
   }
 
   function cancelOrder(orderDetails) {
+    console.log(orderDetails);
+
     axios
-      .put(`${BACKEND_URL}/return/?id=${orderDetails?.id}`, {
+      .put(`${BACKEND_URL}/return/?id=${orderDetails?.id}&user_id=${user_id}`, {
         ...orderDetails,
         status: 'cancelled',
       })

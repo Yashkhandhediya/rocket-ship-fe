@@ -353,7 +353,6 @@ export const All = ({ data, isLoading }) => {
               id={row.id}
               className="min-w-fit rounded bg-red-700 px-4 py-1.5 text-white hover:bg-green-700"
               onClick={(e) => {
-                console.log(row.row.original.id);
                 handleMenifest(row.row.original.id);
               }}>
               {(row?.original?.status_name || '')?.toLowerCase() == 'new' ? 'Ship Now' : 'Download Menifest'}
@@ -362,9 +361,13 @@ export const All = ({ data, isLoading }) => {
               <MoreDropdown
                 renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                 options={moreActionOptions({
-                  downloadInvoice: () => handleInvoice(row?.original?.id),
-                  cloneOrder: () => cloneOrder(row?.original),
-                  cancelOrder: () => cancelOrder(row?.original),
+                  downloadInvoice: () => {
+                    handleInvoice(row?.row?.original?.id);
+                  },
+                  cloneOrder: () => cloneOrder(row?.row?.original?.id),
+                  cancelOrder: () => {
+                    cancelOrder(row?.row?.original?.id);
+                  },
                   editOrder: () => editOrder(row?.original),
                 })}
               />
@@ -399,7 +402,7 @@ export const All = ({ data, isLoading }) => {
 
   function cancelOrder(orderDetails) {
     axios
-      .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}`, {
+      .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}&user_id=${user_id}`, {
         ...orderDetails,
         status: 'cancelled',
       })

@@ -21,6 +21,7 @@ const AllProducts = () => {
   const [downloadPopup, setDownloadPopup] = useState(false);
   const [loading, setLoading] = useState(false);
   const user_email = localStorage.getItem('user_email');
+  const user_id = localStorage.getItem('user_id');
   const [itemsPerPage, setItemsPerPage] = useState(15);
   // const [currentItems, setCurrentItems] = useState([]);
   const [data, setData] = useState([]);
@@ -100,7 +101,7 @@ const AllProducts = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${BACKEND_URL}/product/get_product_details/?page=${page}&page_size=${itemsPerPage}`,
+        `${BACKEND_URL}/product/get_product_details/?user_id=${user_id}&page=${page}&page_size=${itemsPerPage}`,
       );
       if (response.status === 200) {
         setData(response.data);
