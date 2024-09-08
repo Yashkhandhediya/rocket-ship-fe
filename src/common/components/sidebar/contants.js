@@ -93,54 +93,60 @@ if (access_modules == null || access_modules?.length == 0) {
         icon: return1,
         hoverIcon: return1,
       },
-      {
-        title: 'Delivery Boost',
-        path: '/',
-        icon: boost,
-        hoverIcon: boost,
-      },
-      {
-        title: 'Weight Management',
-        icon: weight,
-        hoverIcon: weight,
-        subMenuOptions: [
-          {
-            title: 'Weight Discrepancy',
-            path: '/billing-charge-details?page=1&perPage=15&to=&from=&status=0&search=&courier_id=',
-          },
-          {
-            title: 'Weight Freeze',
-            path: '/request-weight-freeze?freeze_status=Not%20Requested&serach=&per_page=&page=1&from=&to=&channel_code=',
-          },
-        ],
-      },
-      {
-        title: 'Setup & Manage',
-        icon: manage,
-        hoverIcon: manage,
-        subMenuOptions: [
-          {
-            title: 'Channels',
-            path: '/channels',
-          },
-          {
-            title: 'Catalogue',
-            path: '/catalogue',
-          },
-          {
-            title: 'Courier',
-            path: '/user-couriers',
-          },
-          {
-            title: 'Packaging',
+      parseInt(is_company)
+        ? null
+        : {
+            title: 'Delivery Boost',
             path: '/',
+            icon: boost,
+            hoverIcon: boost,
           },
-          {
-            title: 'Customers',
-            path: '/customers',
+      parseInt(is_company)
+        ? null
+        : {
+            title: 'Weight Management',
+            icon: weight,
+            hoverIcon: weight,
+            subMenuOptions: [
+              {
+                title: 'Weight Discrepancy',
+                path: '/billing-charge-details?page=1&perPage=15&to=&from=&status=0&search=&courier_id=',
+              },
+              {
+                title: 'Weight Freeze',
+                path: '/request-weight-freeze?freeze_status=Not%20Requested&serach=&per_page=&page=1&from=&to=&channel_code=',
+              },
+            ],
           },
-        ],
-      },
+      parseInt(is_company)
+        ? null
+        : {
+            title: 'Setup & Manage',
+            icon: manage,
+            hoverIcon: manage,
+            subMenuOptions: [
+              {
+                title: 'Channels',
+                path: '/channels',
+              },
+              {
+                title: 'Catalogue',
+                path: '/catalogue',
+              },
+              {
+                title: 'Courier',
+                path: '/user-couriers',
+              },
+              {
+                title: 'Packaging',
+                path: '/',
+              },
+              {
+                title: 'Customers',
+                path: '/customers',
+              },
+            ],
+          },
       // {
       //   title: 'Buyer Experiance',
       //   icon: user,
@@ -175,26 +181,34 @@ if (access_modules == null || access_modules?.length == 0) {
             title: 'Rate Calculator',
             path: '/rate-calculator',
           },
-          {
-            title: 'Rate Card',
-            path: '/rate-card',
-          },
+          parseInt(is_company)
+            ? null
+            : {
+                title: 'Rate Card',
+                path: '/rate-card',
+              },
           {
             title: 'Pincode Zone Mapping',
             path: '/pincode-zone-mapping',
           },
-          {
-            title: 'Bulk Print Actions',
-            path: '/bulk-actions',
-          },
-          {
-            title: 'Reports',
-            path: '/reports',
-          },
-          {
-            title: 'Activity Logs',
-            path: '/activity-logs',
-          },
+          parseInt(is_company)
+            ? null
+            : {
+                title: 'Bulk Print Actions',
+                path: '/bulk-actions',
+              },
+          parseInt(is_company)
+            ? null
+            : {
+                title: 'Reports',
+                path: '/reports',
+              },
+          parseInt(is_company)
+            ? null
+            : {
+                title: 'Activity Logs',
+                path: '/activity-logs',
+              },
         ],
       },
       {
@@ -203,12 +217,14 @@ if (access_modules == null || access_modules?.length == 0) {
         icon: settings,
         hoverIcon: settings,
       },
-      {
-        title: 'Help & Support',
-        path: '/create-ticket',
-        icon: help,
-        hoverIcon: help,
-      },
+      parseInt(is_company)
+        ? null
+        : {
+            title: 'Help & Support',
+            path: '/create-ticket',
+            icon: help,
+            hoverIcon: help,
+          },
       {
         title: 'Logout',
         icon: home,
