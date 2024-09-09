@@ -430,7 +430,7 @@ const Rto = ({ data, isLoading, fetchFilteredData }) => {
   return (
     <div className="mt-5">
       {isLoading && <Loader />}
-      <div className="mb-4 flex w-full items-center gap-5">
+      <div className="mb-4 flex w-full items-start gap-5">
         <div>
           <button
             className="inline-flex items-center rounded-sm border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-orange-700"

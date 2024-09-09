@@ -55,16 +55,16 @@ export const trip_status_filter = [
 ];
 
 export const readyToShipOptions = [
-  { id: '1', type: 'Out For Pickup' },
-  { id: '2', type: 'Pickup Error' },
-  { id: '3', type: 'Pickup Exception' },
-  { id: '4', type: 'Pickup Queued' },
-  { id: '5', type: 'Pickup Rescheduled' },
-  { id: '6', type: 'Pickup Scheduled' },
+  // { id: '3', type: 'Pickup Exception' },
+  // { id: '4', type: 'Pickup Queued' },
+  // { id: '5', type: 'Pickup Rescheduled' },
+  // { id: '6', type: 'Pickup Scheduled' },
   { id: '7', type: 'Ready to Ship' },
 ];
 
 export const pickupOptions = [
+  { id: '1', type: 'Out For Pickup' },
+  { id: '2', type: 'Pickup Error' },
   { id: '12', type: 'Pickup Scheduled' },
   { id: '13', type: 'Pickup Rescheduled' },
   { id: '14', type: 'Partially Completed' },
