@@ -77,7 +77,9 @@ const MultiSelectDropdown = ({
                 />
 
                 <label htmlFor={option.type}>
-                  {option?.type?.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())}
+                  {typeof option.type != 'number'
+                    ? option?.type?.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
+                    : option.type}
                 </label>
               </div>
             ))}
