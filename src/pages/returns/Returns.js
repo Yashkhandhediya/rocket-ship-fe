@@ -110,7 +110,7 @@ const Returns = () => {
 
   const fetchNewReturns = () => {
     axios
-      .get(BACKEND_URL + `/return/get_filtered_returns?page=1&per_page=100&user_id=${cuser_id}`)
+      .post(BACKEND_URL + `/return/get_filtered_returns?page=1&per_page=100&user_id=${cuser_id}`)
       .then(async (resp) => {
         if (resp.status === 200) {
           dispatch(setAllReturns(resp?.data || []));

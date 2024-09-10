@@ -56,7 +56,7 @@ const MultiSelectDropdown = ({
               : tempSelectedOptions.map((option, index) => {
                   return index <= 1 ? (
                     <span className="h-full" key={option.id}>
-                      {option.type},
+                      {option?.type?.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())},
                     </span>
                   ) : (
                     ''
@@ -102,7 +102,7 @@ const MultiSelectDropdown = ({
               <div
                 key={item.id}
                 className="flex items-center gap-3 rounded-full bg-red-100 px-2 py-1 text-red-800">
-                <span>{item.type}</span>
+                <span>{item?.type?.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())}</span>
                 <span className="cursor-pointer" onClick={() => handleClearOption(item.id)}>{`x`}</span>
               </div>
             );
