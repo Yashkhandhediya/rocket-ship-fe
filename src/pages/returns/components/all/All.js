@@ -16,21 +16,16 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Returns';
 import Loader from '../../../../common/loader/Loader';
+import { allOptions } from '../../duck';
+import MultiSelectDropdown from '../../../rate-card/components/MultiSelectDropdown';
 
-export const All = ({ data, isLoading }) => {
+export const All = ({ data, isLoading, fetchFilteredData }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const flattened = {};
   const allOrdersList = useSelector((state) => state?.returnsList) || [];
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   const filteredReturnOrder = useSelector((state) => state?.filteredReturnOrdersList);
-
-  const id_user = localStorage.getItem('user_id');
-  const id_company = localStorage.getItem('company_id');
-  const is_company = localStorage.getItem('is_company');
-
-  const user_id = is_company == 1 ? id_company : id_user;
-
   console.log(data);
   function splitString(string, length) {
     let result = [];
@@ -39,6 +34,8 @@ export const All = ({ data, isLoading }) => {
     }
     return result;
   }
+
+  const [selectedStatus, setSelectedStatus] = useState([]);
 
   function flattenObject(obj, id) {
     const keyCounts = {};
@@ -257,10 +254,7 @@ export const All = ({ data, isLoading }) => {
                 options={moreActionOptions({
                   downloadInvoice: () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row?.original),
-                  cancelOrder: () => {
-                    console.log(row);
-                    cancelOrder(row?.row?.original?.id);
-                  },
+                  cancelOrder: () => cancelOrder(row?.original),
                 })}
               />
             </div>
@@ -272,7 +266,7 @@ export const All = ({ data, isLoading }) => {
 
   function cancelOrder(orderDetails) {
     axios
-      .put(`${BACKEND_URL}/return/?id=${orderDetails?.id}&user_id=${user_id}`, {
+      .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}`, {
         ...orderDetails,
         status: 'cancelled',
       })
@@ -308,7 +302,7 @@ export const All = ({ data, isLoading }) => {
   return (
     <div className="mt-5">
       {isLoading && <Loader />}
-      <div className="mb-4 flex w-full">
+      <div className="mb-4 flex w-full items-start gap-5">
         <div>
           <button
             className="inline-flex items-center rounded-sm border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-orange-700"
@@ -316,6 +310,16 @@ export const All = ({ data, isLoading }) => {
             <img src={filterIcon} className="mr-2 w-4" />
             {'More Filters'}
           </button>
+        </div>
+        <div>
+          <MultiSelectDropdown
+            options={allOptions}
+            selectedOptions={selectedStatus}
+            setSelectedOptions={setSelectedStatus}
+            selectName={`Select Statuses`}
+            type={`all`}
+            fetchFilteredData={fetchFilteredData}
+          />
         </div>
       </div>
       {/* <DataTable

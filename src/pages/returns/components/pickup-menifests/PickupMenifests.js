@@ -22,8 +22,10 @@ import { toast } from 'react-toastify';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Returns';
 import Loader from '../../../../common/loader/Loader';
+import MultiSelectDropdown from '../../../rate-card/components/MultiSelectDropdown';
+import { pickUpOptions } from '../../duck';
 
-const PickupMenifests = ({ data, isLoading }) => {
+const PickupMenifests = ({ data, isLoading, fetchFilteredData }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const flattened = {};
@@ -35,7 +37,7 @@ const PickupMenifests = ({ data, isLoading }) => {
     orderDetails: {},
   });
   const [scheduleModal, setScheduleModal] = useState({ isOpen: false, pickupDetails: {} });
-
+  const [selectedStatus, setSelectedStatus] = useState([]);
   const getColumns = () => {
     const columnHelper = createColumnHelper();
 
@@ -355,7 +357,7 @@ const PickupMenifests = ({ data, isLoading }) => {
   return (
     <div className="mt-5">
       {isLoading && <Loader />}
-      <div className="mb-4 flex w-full">
+      <div className="mb-4 flex w-full items-start gap-5">
         <div>
           <button
             className="inline-flex items-center rounded-sm border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-orange-700"
@@ -363,6 +365,16 @@ const PickupMenifests = ({ data, isLoading }) => {
             <img src={filterIcon} className="mr-2 w-4" />
             {'More Filters'}
           </button>
+        </div>
+        <div>
+          <MultiSelectDropdown
+            options={pickUpOptions}
+            selectedOptions={selectedStatus}
+            setSelectedOptions={setSelectedStatus}
+            selectName={`Select Statuses`}
+            type={`return scheduled`}
+            fetchFilteredData={fetchFilteredData}
+          />
         </div>
       </div>
 

@@ -22,8 +22,10 @@ import { resData } from '../../Returns';
 import { getEditReturnFields } from '../../../../common/utils/ordersUtils';
 import EditDrawer from '../edit-drawer/EditDrawer';
 import Loader from '../../../../common/loader/Loader';
+import { newRequestOptions } from '../../duck';
+import MultiSelectDropdown from '../../../rate-card/components/MultiSelectDropdown';
 
-export const New = ({ data, isLoading }) => {
+export const New = ({ data, isLoading, fetchFilteredData }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const flattened = {};
@@ -34,6 +36,7 @@ export const New = ({ data, isLoading }) => {
     isOpen: false,
     orderDetails: {},
   });
+  const [selectedStatus, setSelectedStatus] = useState([]);
   const id_user = localStorage.getItem('user_id');
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
@@ -370,7 +373,7 @@ export const New = ({ data, isLoading }) => {
   return (
     <div className="mt-5">
       {isLoading && <Loader />}
-      <div className="mb-4 flex w-full">
+      <div className="mb-4 flex w-full items-start gap-5">
         <div>
           <button
             className="inline-flex items-center rounded-sm border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-orange-700"
@@ -378,6 +381,16 @@ export const New = ({ data, isLoading }) => {
             <img src={filterIcon} className="mr-2 w-4" />
             {'More Filters'}
           </button>
+        </div>
+        <div>
+          <MultiSelectDropdown
+            options={newRequestOptions}
+            selectedOptions={selectedStatus}
+            setSelectedOptions={setSelectedStatus}
+            selectName={`Select Statuses`}
+            type={`return confirmed`}
+            fetchFilteredData={fetchFilteredData}
+          />
         </div>
       </div>
 

@@ -20,8 +20,10 @@ import { toast } from 'react-toastify';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Returns';
 import Loader from '../../../../common/loader/Loader';
+import { returnRequestOptions } from '../../duck';
+import MultiSelectDropdown from '../../../rate-card/components/MultiSelectDropdown';
 
-export const ReadyToShip = ({ data, isLoading }) => {
+export const ReadyToShip = ({ data, isLoading, fetchFilteredData }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const flattened = {};
@@ -31,7 +33,7 @@ export const ReadyToShip = ({ data, isLoading }) => {
   //   (order) => (order?.status_name || '')?.toLowerCase() !== 'new',
   // ) || [];
   const readyShipOrdersList = allOrdersList?.filter((order) => order?.status_id == 2) || [];
-
+  const [selectedStatus, setSelectedStatus] = useState([]);
   const [selectShipmentDrawer, setSelectShipmentDrawer] = useState({
     isOpen: false,
     orderDetails: {},
@@ -375,7 +377,7 @@ export const ReadyToShip = ({ data, isLoading }) => {
   return (
     <div className="mt-5">
       {isLoading && <Loader />}
-      <div className="mb-4 flex w-full">
+      <div className="mb-4 flex w-full items-start gap-4">
         <div>
           <button
             className="inline-flex items-center rounded-sm border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-orange-700"
@@ -383,6 +385,16 @@ export const ReadyToShip = ({ data, isLoading }) => {
             <img src={filterIcon} className="mr-2 w-4" />
             {'More Filters'}
           </button>
+        </div>
+        <div>
+          <MultiSelectDropdown
+            options={returnRequestOptions}
+            selectedOptions={selectedStatus}
+            setSelectedOptions={setSelectedStatus}
+            selectName={`Select Statuses`}
+            type={`return requested`}
+            fetchFilteredData={fetchFilteredData}
+          />
         </div>
       </div>
       <CustomDataTable

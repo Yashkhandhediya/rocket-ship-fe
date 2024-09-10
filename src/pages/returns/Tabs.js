@@ -42,20 +42,20 @@ const Tabs = ({ tabs, tabClassNames, activeReturnTab, setReturnActiveTab, onTabC
 
   const id = JSON.parse(localStorage.getItem('temp_user_id'));
 
-  const fetchReturnsData = async (tid) => {
+  const fetchReturnsData = async (tid, selectedStatus) => {
     const user_id = is_company == 1 ? id_company : id_user;
     // const show_user_id = temp_user_id != undefined ? temp_user_id : user_id;
     const show_user_id = id != undefined ? id : user_id;
 
-    console.log(temp_user_id, show_user_id, user_id);
+    console.log(temp_user_id, show_user_id, user_id, selectedStatus);
 
     try {
       setLoading(true);
-      const response = await axios.get(
+      const response = await axios.post(
         `${BACKEND_URL}/return/get_filtered_returns?page=${page}&per_page=${itemsPerPage}&${
-          tid.id !== 'all' && `status=${tid.id}`
-        }&user_id=${show_user_id}
-        `,
+          tid !== 'all' && `status=${tid}`
+        }&user_id=${show_user_id}`,
+        selectedStatus?.map((item) => item.type),
       );
       setData(response.data);
       setLoading(false);
@@ -72,7 +72,7 @@ const Tabs = ({ tabs, tabClassNames, activeReturnTab, setReturnActiveTab, onTabC
   };
 
   useEffect(() => {
-    fetchReturnsData(tabID);
+    fetchReturnsData(tabID.id);
   }, [itemsPerPage, page, activeReturnTab]);
 
   return (
@@ -104,15 +104,31 @@ const Tabs = ({ tabs, tabClassNames, activeReturnTab, setReturnActiveTab, onTabC
       </div>
       <div id="default-tab-content">
         <div className={`rounded-lg`}>
-          {activeReturnTab === 0 && <ReadyToShip data={data} isLoading={loading} />}
-          {activeReturnTab === 1 && <New data={data} isLoading={loading} />}
-          {activeReturnTab === 2 && <PickupMenifests data={data} isLoading={loading} />}
-          {activeReturnTab === 3 && <InTransit data={data} isLoading={loading} />}
-          {activeReturnTab === 4 && <Delivered data={data} isLoading={loading} />}
-          {activeReturnTab === 5 && (
-            <All data={!filteredOrders ? data : filteredOrders} isLoading={loading} />
+          {activeReturnTab === 0 && (
+            <ReadyToShip data={data} isLoading={loading} fetchFilteredData={fetchReturnsData} />
           )}
-          {activeReturnTab === 6 && <Rto data={data} isLoading={loading} />}
+          {activeReturnTab === 1 && (
+            <New data={data} isLoading={loading} fetchFilteredData={fetchReturnsData} />
+          )}
+          {activeReturnTab === 2 && (
+            <PickupMenifests data={data} isLoading={loading} fetchFilteredData={fetchReturnsData} />
+          )}
+          {activeReturnTab === 3 && (
+            <InTransit data={data} isLoading={loading} fetchFilteredData={fetchReturnsData} />
+          )}
+          {activeReturnTab === 4 && (
+            <Delivered data={data} isLoading={loading} fetchFilteredData={fetchReturnsData} />
+          )}
+          {activeReturnTab === 5 && (
+            <All
+              data={!filteredOrders ? data : filteredOrders}
+              isLoading={loading}
+              fetchFilteredData={fetchReturnsData}
+            />
+          )}
+          {activeReturnTab === 6 && (
+            <Rto data={data} isLoading={loading} fetchFilteredData={fetchReturnsData} />
+          )}
 
           <div className="flex w-full flex-wrap-reverse justify-between gap-2 rounded-lg bg-white px-4 py-2">
             <div className="mr-2 flex items-center">
