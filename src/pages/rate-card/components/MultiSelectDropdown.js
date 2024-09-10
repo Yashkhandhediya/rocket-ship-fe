@@ -76,7 +76,9 @@ const MultiSelectDropdown = ({
                   onChange={() => handleOptionClick(option)}
                 />
 
-                <label htmlFor={option.type}>{option.type}</label>
+                <label htmlFor={option.type}>
+                  {option?.type?.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())}
+                </label>
               </div>
             ))}
             <div className="sticky bottom-0 left-0 z-20 flex justify-end gap-2 border-t bg-white px-2 py-2 text-[13px] font-semibold text-white">

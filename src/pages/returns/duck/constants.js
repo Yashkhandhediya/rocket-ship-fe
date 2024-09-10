@@ -38,18 +38,18 @@ export const returnRequestOptions = [
 ];
 
 export const newRequestOptions = [
-  { id: '1', type: 'Arrived too late' },
-  { id: '2', type: 'Changed my mind' },
-  { id: '3', type: 'Does not fit' },
-  { id: '4', type: 'Item is damaged' },
-  { id: '5', type: 'Missing Item or accessories' },
-  { id: '6', type: 'Not as described' },
-  { id: '7', type: 'Other' },
-  { id: '8', type: 'Parcel damaged on arrival' },
-  { id: '9', type: 'Performance not adequate' },
-  { id: '10', type: 'Quality not as expected' },
-  { id: '11', type: 'Received wrong item' },
-  { id: '12', type: 'Size not as expected' },
+  { id: '1', type: 'arrived_too_late' },
+  { id: '2', type: 'changed_my_mind' },
+  { id: '3', type: 'does_not_fit' },
+  { id: '4', type: 'damaged' },
+  { id: '5', type: 'missing_item' },
+  { id: '6', type: 'not_as_described' },
+  { id: '7', type: 'other' },
+  { id: '8', type: 'parcel_damaged' },
+  { id: '9', type: 'inadequate_performance' },
+  { id: '10', type: 'quality_not_expected' },
+  { id: '11', type: 'wrong_item' },
+  { id: '12', type: 'size_not_expected' },
 ];
 
 export const pickUpOptions = [
