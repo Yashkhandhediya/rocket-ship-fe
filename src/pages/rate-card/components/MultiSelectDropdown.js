@@ -95,7 +95,12 @@ const MultiSelectDropdown = ({
       {tempSelectedOptions.length != 0 && (
         <div className="mt-4 flex items-center gap-2 text-[12px] font-semibold">
           <span>
-            {type !== 'partner_id' && type !== 'weight' && type !== 'mode_type' ? 'Statuses' : type}:
+            {type !== 'partner_id' && type !== 'weight' && type !== 'mode_type'
+              ? type == 'return confirmed'
+                ? 'Reasons'
+                : 'Statuses'
+              : type}
+            :
           </span>
           {tempSelectedOptions.map((item) => {
             return (

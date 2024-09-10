@@ -387,7 +387,7 @@ export const New = ({ data, isLoading, fetchFilteredData }) => {
             options={newRequestOptions}
             selectedOptions={selectedStatus}
             setSelectedOptions={setSelectedStatus}
-            selectName={`Select Statuses`}
+            selectName={`Select Reasons`}
             type={`return confirmed`}
             fetchFilteredData={fetchFilteredData}
           />
