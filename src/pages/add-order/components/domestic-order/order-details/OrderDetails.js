@@ -390,7 +390,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   const fetchSuggestions = async (value) => {
     try {
       const response = await axios.get(`${BACKEND_URL}/product/get_product_suggestion/`, {
-        params: { string: value },
+        params: { string: value, user_id: id_user },
       });
       const filteredSuggestions = response.data.filter(
         (user) => user.name && user.name.toLowerCase().includes(value.toLowerCase()),
