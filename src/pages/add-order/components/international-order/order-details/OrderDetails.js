@@ -8,42 +8,43 @@ import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { cloneDeep, isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
-import { IGSTTypes,incoTypes } from '../data';
+import { IGSTTypes, incoTypes } from '../data';
 import { useLocation } from 'react-router-dom';
 import { CustomMultiSelect } from '../../../../../common/components';
+import apiClient from '../../../../../common/utils/apiClient';
 
 export let package_info = {
   length: 0,
   width: 0,
   height: 0,
   volumatric_weight: '',
-}
+};
 
 export default function OrderDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
-  const location = useLocation()
-  const data = location?.state?.data || {}
-  const id_user = localStorage.getItem('user_id')
-  const [suggestionData,setSuggestionData] = useState([])
+  const location = useLocation();
+  const data = location?.state?.data || {};
+  const id_user = localStorage.getItem('user_id');
+  const [suggestionData, setSuggestionData] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [suggestionProductData,setSuggestionProductData] = useState([])
+  const [suggestionProductData, setSuggestionProductData] = useState([]);
   const [showProductSuggestions, setShowProductSuggestions] = useState(false);
   // const [cashCharge,setCashCharge] = useState(0)
   const [IGSTType, setIGSTType] = useState(data?.IGSTTypes || 'Select IGST Type');
   const [incoType, setIncoType] = useState(data?.incoTypes || 'Select INCO Type');
 
-  const [commodity,setCommodity] = useState({
-    is_3C:'no'
-  })
-  const [meis,setMeis] = useState({
-    is_Meis:'no'
-  })
-  const [fba,setFBA] = useState({
-    is_FBA:'no'
-  })
-  const [mode,setMode] = useState({
-    mode_type:'courier'
-  })
+  const [commodity, setCommodity] = useState({
+    is_3C: 'no',
+  });
+  const [meis, setMeis] = useState({
+    is_Meis: 'no',
+  });
+  const [fba, setFBA] = useState({
+    is_FBA: 'no',
+  });
+  const [mode, setMode] = useState({
+    mode_type: 'courier',
+  });
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order) || {};
 
   const defaultProductField = {
@@ -69,11 +70,11 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     total_amount: 0,
   });
 
-  const [info,setInfo] = useState({
-    payment_tansaction_id:'',
-    website_url:'',
-    signature_type:''
-  })
+  const [info, setInfo] = useState({
+    payment_tansaction_id: '',
+    website_url: '',
+    signature_type: '',
+  });
 
   const [productFields, setProductFields] = useState([defaultProductField]);
 
@@ -82,7 +83,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     shipping_charges: 0,
     gift_wrap: 0,
     transaction_fee: 0,
-    cod_charge:0,
+    cod_charge: 0,
     discount: 0,
   });
 
@@ -95,12 +96,12 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
 
   const otherCharges =
     Number(paymentDetails?.gift_wrap || 0) +
-    Number(paymentDetails?.cod_charge || 0) +
+      Number(paymentDetails?.cod_charge || 0) +
       Number(paymentDetails?.shipping_charges || 0) +
       Number(paymentDetails?.transaction_fee || 0) || 0;
 
   const totalOrderValue =
-    Number(subProductTotal || 0) + Number(otherCharges || 0)  - Number(paymentDetails?.discount || 0) || 0;
+    Number(subProductTotal || 0) + Number(otherCharges || 0) - Number(paymentDetails?.discount || 0) || 0;
 
   const checkIsProductValid = () => {
     const errors = {
@@ -150,20 +151,21 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   const handleSetProductFields = (event, index) => {
     const { id, value } = event.target;
 
-    if(id == 'name'){
-      axios.get(BACKEND_URL + '/product/get_product_details/')
-      .then((res) => {
-        console.log("Suggestion Products",res.data)
-        setSuggestionProductData(res.data)
-        setShowProductSuggestions(true)
-      }).catch((err) => {
-        console.log("Error in Products",err)
-      })
+    if (id == 'name') {
+      apiClient
+        .get(BACKEND_URL + '/product/get_product_details/')
+        .then((res) => {
+          console.log('Suggestion Products', res.data);
+          setSuggestionProductData(res.data);
+          setShowProductSuggestions(true);
+        })
+        .catch((err) => {
+          console.log('Error in Products', err);
+        });
     }
     const allFields = [...productFields];
     allFields[index][id] = value;
     setProductFields(allFields);
-    
   };
 
   const handleQuantityCounter = (value, index) => {
@@ -202,109 +204,107 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
       ...formDirectField,
       [id]: value,
     });
-    if(formDirectField?.channel != ''){
-      axios.get(BACKEND_URL + '/channel/get_channel_suggestions')
-      .then((res) => {
-        console.log("Suggestions",res.data)
-        setSuggestionData(res.data)
-        setShowSuggestions(true)
-      }).catch((err) => {
-        console.log("Error in Suggestion",err)
-      })
-  }
+    if (formDirectField?.channel != '') {
+      apiClient
+        .get(BACKEND_URL + '/channel/get_channel_suggestions')
+        .then((res) => {
+          console.log('Suggestions', res.data);
+          setSuggestionData(res.data);
+          setShowSuggestions(true);
+        })
+        .catch((err) => {
+          console.log('Error in Suggestion', err);
+        });
+    }
   };
 
-    // Handle suggestion selection
-    const handleSuggestionClick = (suggestion) => {
-      setFormDirectField({
-        ...formDirectField,
-        channel:suggestion.name
-      })
-      setShowSuggestions(false);
-    };
-  
-    // Handle hover over suggestion
-    const handleSuggestionHover = (suggestion) => {
-      setFormDirectField({
-        ...formDirectField,
-        channel:suggestion.name
-      })
-    };
+  // Handle suggestion selection
+  const handleSuggestionClick = (suggestion) => {
+    setFormDirectField({
+      ...formDirectField,
+      channel: suggestion.name,
+    });
+    setShowSuggestions(false);
+  };
 
-    const handleCommodity = (event) => {
+  // Handle hover over suggestion
+  const handleSuggestionHover = (suggestion) => {
+    setFormDirectField({
+      ...formDirectField,
+      channel: suggestion.name,
+    });
+  };
 
-      const { name, value } = event.target;
-    
-      console.log("Namamam",name)
-      setCommodity({
-        ...commodity,
-        [name]: value,
-      });
-    };
+  const handleCommodity = (event) => {
+    const { name, value } = event.target;
 
-    const handleMeis = (event) => {
+    console.log('Namamam', name);
+    setCommodity({
+      ...commodity,
+      [name]: value,
+    });
+  };
 
-      const { name, value } = event.target;
-    
-      console.log("Namamam",name)
-      setMeis({
-        ...meis,
-        [name]: value,
-      });
-    };
+  const handleMeis = (event) => {
+    const { name, value } = event.target;
 
-    const handleFBA = (event) => {
+    console.log('Namamam', name);
+    setMeis({
+      ...meis,
+      [name]: value,
+    });
+  };
 
-      const { name, value } = event.target;
-    
-      console.log("Namamam",name)
-      setFBA({
-        ...fba,
-        [name]: value,
-      });
-    };
+  const handleFBA = (event) => {
+    const { name, value } = event.target;
 
-    const handleMode = (event) => {
+    console.log('Namamam', name);
+    setFBA({
+      ...fba,
+      [name]: value,
+    });
+  };
 
-      const { name, value } = event.target;
-    
-      console.log("Namamam",name)
-      setMode({
-        ...mode,
-        [name]: value,
-      });
-    };
+  const handleMode = (event) => {
+    const { name, value } = event.target;
 
-       // Handle product suggestion selection
-       const handleProductSuggestionClick = (suggestion,index) => {
-        const allFields = [...productFields];
-        allFields[index]['name'] = suggestion.name;
-        allFields[index]['unit_price'] = suggestion.unit_price;
-        allFields[index]['sku'] = suggestion.sku;
-        allFields[index]['hsn_code'] = suggestion.hsn_code;
-        allFields[index]['discount'] = suggestion.discount;
-        allFields[index]['cod_charge'] = suggestion.cod_charge;
-        setProductFields(allFields);
-        package_info.length = suggestion.length;
-        package_info.width = suggestion.width;
-        package_info.height = suggestion.height;
-        package_info.volumatric_weight = suggestion.volumatric_weight;
-        // setCashCharge(suggestion.cod_charge)
-        setShowProductSuggestions(false);
-      };
-    
-      // Handle product hover over suggestion
-      const handleProductSuggestionHover = (suggestion,index) => {
-        const allFields = [...productFields];
-        const temp_info = allFields[index]
-        console.log("ALLLLLLLLLL",allFields,index)
-        temp_info.name = suggestion.name;
-        setProductFields(allFields);
-      };
+    console.log('Namamam', name);
+    setMode({
+      ...mode,
+      [name]: value,
+    });
+  };
+
+  // Handle product suggestion selection
+  const handleProductSuggestionClick = (suggestion, index) => {
+    const allFields = [...productFields];
+    allFields[index]['name'] = suggestion.name;
+    allFields[index]['unit_price'] = suggestion.unit_price;
+    allFields[index]['sku'] = suggestion.sku;
+    allFields[index]['hsn_code'] = suggestion.hsn_code;
+    allFields[index]['discount'] = suggestion.discount;
+    allFields[index]['cod_charge'] = suggestion.cod_charge;
+    setProductFields(allFields);
+    package_info.length = suggestion.length;
+    package_info.width = suggestion.width;
+    package_info.height = suggestion.height;
+    package_info.volumatric_weight = suggestion.volumatric_weight;
+    // setCashCharge(suggestion.cod_charge)
+    setShowProductSuggestions(false);
+  };
+
+  // Handle product hover over suggestion
+  const handleProductSuggestionHover = (suggestion, index) => {
+    const allFields = [...productFields];
+    const temp_info = allFields[index];
+    console.log('ALLLLLLLLLL', allFields, index);
+    temp_info.name = suggestion.name;
+    setProductFields(allFields);
+  };
 
   const fetchOrderId = () => {
-    axios
-      .get(BACKEND_URL+`/order/get_order_id/?id=${id_user}`)
+    apiClient
+      .get(BACKEND_URL + `/order/get_order_id/?id=${id_user}`)
       .then((resp) => {
         if (resp?.status == 200 && resp?.data?.order_id) {
           setFormDirectField({
@@ -419,7 +419,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               <p className="mt-1 text-xs text-red-500">Order date is required.</p>
             )}
           </div>
-          <div className="px-2 pb-2 relative md:w-3/12 md:pb-0">
+          <div className="relative px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
               type={'select'}
               id={'channel'}
@@ -434,27 +434,29 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               value={formDirectField?.channel}
               onChange={handleChannel}
             />
-              {showSuggestions && suggestionData.length > 0 && (
-                  <div className="absolute w-[30%] bg-white border border-gray-300 rounded shadow-md z-10">
-                    {suggestionData.map((suggestion, index) => (
-                      <div
-                        key={index}
-                        className="p-2 cursor-pointer hover:bg-gray-200"
-                        onMouseDown={() => handleSuggestionClick(suggestion)}
-                        onMouseEnter={() => handleSuggestionHover(suggestion)}
-                      >
-                        {suggestion.name}
-                      </div>
-                    ))}
+            {showSuggestions && suggestionData.length > 0 && (
+              <div className="absolute z-10 w-[30%] rounded border border-gray-300 bg-white shadow-md">
+                {suggestionData.map((suggestion, index) => (
+                  <div
+                    key={index}
+                    className="cursor-pointer p-2 hover:bg-gray-200"
+                    onMouseDown={() => handleSuggestionClick(suggestion)}
+                    onMouseEnter={() => handleSuggestionHover(suggestion)}>
+                    {suggestion.name}
                   </div>
-              )}
+                ))}
+              </div>
+            )}
             {productValidation && !formDirectField?.channel && (
               <p className="mt-1 text-xs text-red-500">Order Channel is required.</p>
             )}
           </div>
         </div>
         <div className="my-4">
-          <FieldAccordion id={'order-details'} label={"+ Add Order Tag, Channel Invoice No. & Date, Payment ID, URL, Signature, Delivery"} showOptional>
+          <FieldAccordion
+            id={'order-details'}
+            label={'+ Add Order Tag, Channel Invoice No. & Date, Payment ID, URL, Signature, Delivery'}
+            showOptional>
             <div className="mb-5 w-full md:flex">
               <div className="px-2 pb-2 md:w-6/12 md:pb-0">
                 <Field
@@ -471,30 +473,30 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               <div className="px-2 pb-2 md:w-4/12 md:pb-0 xl:w-3/12">
                 <Field
                   id={'reseller_name'}
-                  label={"Channel Invoice No."}
+                  label={'Channel Invoice No.'}
                   showOptional
                   inputClassNames={'text-xs'}
                   labelClassNames={'text-xs'}
-                  placeHolder={"Enter Channel Invoice No."}
+                  placeHolder={'Enter Channel Invoice No.'}
                   // required={true}
                   value={formDirectField?.reseller_name || ''}
                   onChange={setDirectKeysInForm}
                 />
               </div>
               <div className="px-2 pb-2 md:w-2/12 md:pb-0 xl:w-3/12">
-              <Field
-                    type={'date'}
-                    id={'date'}
-                    label={'Channel Invoice Date'}
-                    inputClassNames={'text-xs'}
-                    labelClassNames={'text-xs'}
-                    placeHolder={'Enter Invoice Date'}
-                    required={true}
-                    minDate={moment(new Date()).format('YYYY-MM-DD')}
-                    // maxDate={moment(new Date()).format('YYYY-MM-DD')}
-                    // value={pickUpDate.date}
-                    // onChange={handlePickUpDate}
-                    />
+                <Field
+                  type={'date'}
+                  id={'date'}
+                  label={'Channel Invoice Date'}
+                  inputClassNames={'text-xs'}
+                  labelClassNames={'text-xs'}
+                  placeHolder={'Enter Invoice Date'}
+                  required={true}
+                  minDate={moment(new Date()).format('YYYY-MM-DD')}
+                  // maxDate={moment(new Date()).format('YYYY-MM-DD')}
+                  // value={pickUpDate.date}
+                  // onChange={handlePickUpDate}
+                />
               </div>
             </div>
             <div className="mb-5 w-full md:flex">
@@ -513,11 +515,11 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               <div className="px-2 pb-2 md:w-3/12 md:pb-0 xl:w-3/12">
                 <Field
                   id={'website_url'}
-                  label={"Website URL"}
+                  label={'Website URL'}
                   showOptional
                   inputClassNames={'text-xs'}
                   labelClassNames={'text-xs'}
-                  placeHolder={"Enter Ecom Transaction URL"}
+                  placeHolder={'Enter Ecom Transaction URL'}
                   // required={true}
                   value={info?.website_url || ''}
                   // onChange={setDirectKeysInForm}
@@ -526,11 +528,11 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               <div className="px-2 pb-2 md:w-3/12 md:pb-0 xl:w-3/12">
                 <Field
                   id={'signature_type'}
-                  label={"Signature Type"}
+                  label={'Signature Type'}
                   showOptional
                   inputClassNames={'text-xs'}
                   labelClassNames={'text-xs'}
-                  placeHolder={"Signature Required"}
+                  placeHolder={'Signature Required'}
                   // required={true}
                   value={info?.signature_type || ''}
                   // onChange={setDirectKeysInForm}
@@ -538,119 +540,187 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               </div>
             </div>
           </FieldAccordion>
-       
+
           <div className="my-6 w-full border border-gray-200" />
 
           <div className="mt-2">
-          <FieldAccordion id={'intenational-order-clauses'} label={"International Order Clauses"} showOptional>
-            
-          <div className="flex flex-row w-full">
-          <div className="mb-4 w-3/12">
-              <div className="flex flex-row">
-              <div className="text-xs font-semibold mb-2">Is Commodity Under 3C Applicable?</div>
-              </div>
+            <FieldAccordion
+              id={'intenational-order-clauses'}
+              label={'International Order Clauses'}
+              showOptional>
+              <div className="flex w-full flex-row">
+                <div className="mb-4 w-3/12">
+                  <div className="flex flex-row">
+                    <div className="mb-2 text-xs font-semibold">Is Commodity Under 3C Applicable?</div>
+                  </div>
                   <div className="flex items-center">
-                    <div className="flex items-center mr-4 mb-2">
-                      <input type="radio" name="is_3C" id="yes" value="yes" className="form-radio h-4 w-4 text-purple-600" 
-                        checked={commodity?.is_3C === "yes"} onChange={handleCommodity}
+                    <div className="mb-2 mr-4 flex items-center">
+                      <input
+                        type="radio"
+                        name="is_3C"
+                        id="yes"
+                        value="yes"
+                        className="form-radio h-4 w-4 text-purple-600"
+                        checked={commodity?.is_3C === 'yes'}
+                        onChange={handleCommodity}
                       />
-                      <label htmlFor="yes" className="ml-2">Yes</label>
+                      <label htmlFor="yes" className="ml-2">
+                        Yes
+                      </label>
                     </div>
-                    <div className="flex items-center mb-2">
-                      <input type="radio" name="is_3C" id="no" value="no" className="form-radio h-4 w-4 text-purple-600"
-                      checked={commodity?.is_3C === "no"} onChange={handleCommodity} 
-                       />
-                      <label htmlFor="no" className="ml-2">No</label>
+                    <div className="mb-2 flex items-center">
+                      <input
+                        type="radio"
+                        name="is_3C"
+                        id="no"
+                        value="no"
+                        className="form-radio h-4 w-4 text-purple-600"
+                        checked={commodity?.is_3C === 'no'}
+                        onChange={handleCommodity}
+                      />
+                      <label htmlFor="no" className="ml-2">
+                        No
+                      </label>
                     </div>
                   </div>
-          </div>
-          <div className="mb-4 w-3/12">
-              <div className="flex flex-row">
-              <div className="text-xs font-semibold mb-2">Is Meis Applicable?</div>
-              </div>
+                </div>
+                <div className="mb-4 w-3/12">
+                  <div className="flex flex-row">
+                    <div className="mb-2 text-xs font-semibold">Is Meis Applicable?</div>
+                  </div>
                   <div className="flex items-center">
-                    <div className="flex items-center mr-4 mb-2">
-                      <input type="radio" name="is_Meis" id="yes" value="yes" className="form-radio h-4 w-4 text-purple-600" 
-                        checked={meis?.is_Meis === "yes"} onChange={handleMeis}
+                    <div className="mb-2 mr-4 flex items-center">
+                      <input
+                        type="radio"
+                        name="is_Meis"
+                        id="yes"
+                        value="yes"
+                        className="form-radio h-4 w-4 text-purple-600"
+                        checked={meis?.is_Meis === 'yes'}
+                        onChange={handleMeis}
                       />
-                      <label htmlFor="yes" className="ml-2">Yes</label>
+                      <label htmlFor="yes" className="ml-2">
+                        Yes
+                      </label>
                     </div>
-                    <div className="flex items-center mb-2">
-                      <input type="radio" name="is_Meis" id="no" value="no" className="form-radio h-4 w-4 text-purple-600"
-                      checked={meis?.is_Meis === "no"} onChange={handleMeis} 
-                       />
-                      <label htmlFor="no" className="ml-2">No</label>
+                    <div className="mb-2 flex items-center">
+                      <input
+                        type="radio"
+                        name="is_Meis"
+                        id="no"
+                        value="no"
+                        className="form-radio h-4 w-4 text-purple-600"
+                        checked={meis?.is_Meis === 'no'}
+                        onChange={handleMeis}
+                      />
+                      <label htmlFor="no" className="ml-2">
+                        No
+                      </label>
                     </div>
                   </div>
-          </div>
-          <div className="px-2 pb-2 md:w-3/12 md:pb-0">
-              <CustomMultiSelect
-                  isMulti={false}
-                  label={'IGST Payment Status'}
-                  options={IGSTTypes}
-                  selected={IGSTType}
-                  closeMenuOnSelect={true}
-                  placeholder={IGSTType}
-                  hideSelectedOptions={false}
-                  onChange={(value) => {
-                      setIGSTType(value)
-                  }} />
+                </div>
+                <div className="px-2 pb-2 md:w-3/12 md:pb-0">
+                  <CustomMultiSelect
+                    isMulti={false}
+                    label={'IGST Payment Status'}
+                    options={IGSTTypes}
+                    selected={IGSTType}
+                    closeMenuOnSelect={true}
+                    placeholder={IGSTType}
+                    hideSelectedOptions={false}
+                    onChange={(value) => {
+                      setIGSTType(value);
+                    }}
+                  />
+                </div>
+                <div className="px-2 pb-2 md:w-3/12 md:pb-0">
+                  <CustomMultiSelect
+                    isMulti={false}
+                    label={'Inco Terms'}
+                    options={incoTypes}
+                    selected={incoType}
+                    closeMenuOnSelect={true}
+                    placeholder={incoType}
+                    hideSelectedOptions={false}
+                    onChange={(value) => {
+                      setIncoType(value);
+                    }}
+                  />
+                </div>
               </div>
-              <div className="px-2 pb-2 md:w-3/12 md:pb-0">
-              <CustomMultiSelect
-                  isMulti={false}
-                  label={'Inco Terms'}
-                  options={incoTypes}
-                  selected={incoType}
-                  closeMenuOnSelect={true}
-                  placeholder={incoType}
-                  hideSelectedOptions={false}
-                  onChange={(value) => {
-                      setIncoType(value)
-                  }} />
-              </div>
-          </div>
-          <div className="mt-2 flex flex-row w-full">
-          <div className="mb-4 w-3/12">
-              <div className="flex flex-row">
-              <div className="text-xs font-semibold mb-2">Is this FBA order?</div>
-              </div>
+              <div className="mt-2 flex w-full flex-row">
+                <div className="mb-4 w-3/12">
+                  <div className="flex flex-row">
+                    <div className="mb-2 text-xs font-semibold">Is this FBA order?</div>
+                  </div>
                   <div className="flex items-center">
-                    <div className="flex items-center mr-4 mb-2">
-                      <input type="radio" name="is_FBA" id="yes" value="yes" className="form-radio h-4 w-4 text-purple-600" 
-                        checked={fba?.is_FBA === "yes"} onChange={handleFBA}
+                    <div className="mb-2 mr-4 flex items-center">
+                      <input
+                        type="radio"
+                        name="is_FBA"
+                        id="yes"
+                        value="yes"
+                        className="form-radio h-4 w-4 text-purple-600"
+                        checked={fba?.is_FBA === 'yes'}
+                        onChange={handleFBA}
                       />
-                      <label htmlFor="yes" className="ml-2">Yes</label>
+                      <label htmlFor="yes" className="ml-2">
+                        Yes
+                      </label>
                     </div>
-                    <div className="flex items-center mb-2">
-                      <input type="radio" name="is_FBA" id="no" value="no" className="form-radio h-4 w-4 text-purple-600"
-                      checked={fba?.is_FBA === "no"} onChange={handleFBA} 
-                       />
-                      <label htmlFor="no" className="ml-2">No</label>
+                    <div className="mb-2 flex items-center">
+                      <input
+                        type="radio"
+                        name="is_FBA"
+                        id="no"
+                        value="no"
+                        className="form-radio h-4 w-4 text-purple-600"
+                        checked={fba?.is_FBA === 'no'}
+                        onChange={handleFBA}
+                      />
+                      <label htmlFor="no" className="ml-2">
+                        No
+                      </label>
                     </div>
                   </div>
-          </div>
-          <div className="mb-4 w-3/12">
-              <div className="flex flex-row">
-              <div className="text-xs font-semibold mb-2">Custom Clearance Mode</div>
-              </div>
+                </div>
+                <div className="mb-4 w-3/12">
+                  <div className="flex flex-row">
+                    <div className="mb-2 text-xs font-semibold">Custom Clearance Mode</div>
+                  </div>
                   <div className="flex items-center">
-                    <div className="flex items-center mr-4 mb-2">
-                      <input type="radio" name="mode_type" id="courier" value="courier" className="form-radio h-4 w-4 text-purple-600" 
-                        checked={mode?.mode_type === "courier"} onChange={handleMode}
+                    <div className="mb-2 mr-4 flex items-center">
+                      <input
+                        type="radio"
+                        name="mode_type"
+                        id="courier"
+                        value="courier"
+                        className="form-radio h-4 w-4 text-purple-600"
+                        checked={mode?.mode_type === 'courier'}
+                        onChange={handleMode}
                       />
-                      <label htmlFor="yes" className="ml-2">Yes</label>
+                      <label htmlFor="yes" className="ml-2">
+                        Yes
+                      </label>
                     </div>
-                    <div className="flex items-center mb-2">
-                      <input type="radio" name="mode_type" id="cargo" value="cargo" className="form-radio h-4 w-4 text-purple-600"
-                      checked={mode?.mode_type === "cargo"} onChange={handleMode} 
-                       />
-                      <label htmlFor="no" className="ml-2">No</label>
+                    <div className="mb-2 flex items-center">
+                      <input
+                        type="radio"
+                        name="mode_type"
+                        id="cargo"
+                        value="cargo"
+                        className="form-radio h-4 w-4 text-purple-600"
+                        checked={mode?.mode_type === 'cargo'}
+                        onChange={handleMode}
+                      />
+                      <label htmlFor="no" className="ml-2">
+                        No
+                      </label>
                     </div>
                   </div>
-          </div>
-          </div>
-          </FieldAccordion>
+                </div>
+              </div>
+            </FieldAccordion>
           </div>
         </div>
         <div className="mb-6 mt-4 w-full border border-gray-200" />
@@ -660,7 +730,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
             return (
               <div className="mb-4 border-b border-gray-200" key={index}>
                 <div className="mb-3 w-full md:flex">
-                  <div className="w-full px-2 pb-2 relative xl:w-4/12">
+                  <div className="relative w-full px-2 pb-2 xl:w-4/12">
                     <Field
                       id={'name'}
                       label={`Product ${index + 1} Name`}
@@ -672,19 +742,18 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                       onChange={(e) => handleSetProductFields(e, index)}
                       onBlur={() => setShowProductSuggestions(false)}
                     />
-                      {showProductSuggestions && suggestionProductData.length > 0 && (
-                        <div className="absolute w-[70%] bg-white border border-gray-300 rounded shadow-md z-10 max-h-40 overflow-y-auto">
-                          {suggestionProductData.map((suggestion, i) => (
-                            <div
-                              key={i}
-                              className="p-2 cursor-pointer hover:bg-gray-200"
-                              onMouseDown={() => handleProductSuggestionClick(suggestion,index)}
-                              onMouseEnter={() => handleProductSuggestionHover(suggestion,index)}
-                            >
-                              {suggestion.name}
-                            </div>
-                          ))}
-                        </div>
+                    {showProductSuggestions && suggestionProductData.length > 0 && (
+                      <div className="absolute z-10 max-h-40 w-[70%] overflow-y-auto rounded border border-gray-300 bg-white shadow-md">
+                        {suggestionProductData.map((suggestion, i) => (
+                          <div
+                            key={i}
+                            className="cursor-pointer p-2 hover:bg-gray-200"
+                            onMouseDown={() => handleProductSuggestionClick(suggestion, index)}
+                            onMouseEnter={() => handleProductSuggestionHover(suggestion, index)}>
+                            {suggestion.name}
+                          </div>
+                        ))}
+                      </div>
                     )}
                     {productValidation && !field?.name?.length && (
                       <p className="mt-1 text-xs text-red-500">Product Name is required.</p>
@@ -949,7 +1018,9 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
             <div className="my-5 rounded-md bg-[#ecf2fe99] p-5 text-sm">
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Sub-total for Product'}</p>
-                <p className="w-6/12 text-end">{'₹ ' + (formDirectField?.sub_total ? formDirectField?.sub_total : 0)}</p>
+                <p className="w-6/12 text-end">
+                  {'₹ ' + (formDirectField?.sub_total ? formDirectField?.sub_total : 0)}
+                </p>
               </div>
               {/* <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Other Charges'}</p>
@@ -957,19 +1028,27 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               </div> */}
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Shipping Charges'}</p>
-                <p className="w-6/12 text-end">{'₹ ' + (paymentDetails?.shipping_charges ? paymentDetails?.shipping_charges : 0)}</p>
+                <p className="w-6/12 text-end">
+                  {'₹ ' + (paymentDetails?.shipping_charges ? paymentDetails?.shipping_charges : 0)}
+                </p>
               </div>
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Gift Wrap'}</p>
-                <p className="w-6/12 text-end">{'₹ ' + (paymentDetails?.gift_wrap ? paymentDetails?.gift_wrap : 0)}</p>
+                <p className="w-6/12 text-end">
+                  {'₹ ' + (paymentDetails?.gift_wrap ? paymentDetails?.gift_wrap : 0)}
+                </p>
               </div>
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Transaction Fee'}</p>
-                <p className="w-6/12 text-end">{'₹ ' + (paymentDetails?.transaction_fee ? paymentDetails?.transaction_fee : 0)}</p>
+                <p className="w-6/12 text-end">
+                  {'₹ ' + (paymentDetails?.transaction_fee ? paymentDetails?.transaction_fee : 0)}
+                </p>
               </div>
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Cash On Delivery Charge'}</p>
-                <p className="w-6/12 text-end">{'₹ ' + (paymentDetails?.cod_charge ? paymentDetails?.cod_charge : 0)}</p>
+                <p className="w-6/12 text-end">
+                  {'₹ ' + (paymentDetails?.cod_charge ? paymentDetails?.cod_charge : 0)}
+                </p>
               </div>
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Discounts'}</p>
@@ -979,7 +1058,9 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               </div>
               <div className="mt-4 flex justify-between">
                 <p className="w-6/12 font-medium">{'Total Order Value'}</p>
-                <p className="w-6/12 text-end font-medium">{'₹ ' + (formDirectField?.total_amount ? formDirectField?.total_amount : 0)}</p>
+                <p className="w-6/12 text-end font-medium">
+                  {'₹ ' + (formDirectField?.total_amount ? formDirectField?.total_amount : 0)}
+                </p>
               </div>
             </div>
           </div>

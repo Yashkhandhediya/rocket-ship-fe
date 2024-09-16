@@ -5,6 +5,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import Loader from '../../common/loader/Loader';
+import apiClient from '../../common/utils/apiClient';
 
 function Categories() {
   const [showAdd, setShowAdd] = useState(false);
@@ -16,7 +17,7 @@ function Categories() {
   const getData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/category`);
+      const response = await apiClient.get(`${BACKEND_URL}/category`);
       setData(response.data);
       console.log(response.data);
     } catch (err) {

@@ -11,12 +11,13 @@ import { isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import { useLocation } from 'react-router-dom';
 import { setEditOrder } from '../../../../../redux';
+import apiClient from '../../../../../common/utils/apiClient';
 
 export default function PickupDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
   const location = useLocation();
-  let {isEdit} = location?.state || {}
-  const id_user = localStorage.getItem('user_id')
+  let { isEdit } = location?.state || {};
+  const id_user = localStorage.getItem('user_id');
   const domesticOrderPickupAddress =
     useSelector((state) => state?.addOrder?.domestic_order?.pickup_address) || {};
 
@@ -27,8 +28,8 @@ export default function PickupDetails({ currentStep, handleChangeStep }) {
   const [selectedAddress, setSelectedAddress] = useState(addressList.length ? addressList[0] : null);
 
   const fetchUserAddressList = () => {
-    axios
-      .get(BACKEND_URL+'/address', {
+    apiClient
+      .get(BACKEND_URL + '/address', {
         params: {
           user_id: id_user,
         },
@@ -50,13 +51,13 @@ export default function PickupDetails({ currentStep, handleChangeStep }) {
       if (!selectedAddress) {
         toast('Please select an address to proceed Next', { type: 'error' });
       } else {
-        if(!isEdit){
+        if (!isEdit) {
           dispatch(
             setDomesticOrder({
               pickup_address: selectedAddress,
             }),
           );
-        }else{
+        } else {
           dispatch(
             setEditOrder({
               pickup_address: selectedAddress,

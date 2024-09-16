@@ -9,10 +9,11 @@ import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
+import apiClient from '../../../../../common/utils/apiClient';
 
 export default function PickupDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
-  const id_user = localStorage.getItem('user_id')
+  const id_user = localStorage.getItem('user_id');
   const domesticOrderPickupAddress =
     useSelector((state) => state?.addOrder?.domestic_order?.pickup_address) || {};
 
@@ -23,8 +24,8 @@ export default function PickupDetails({ currentStep, handleChangeStep }) {
   const [selectedAddress, setSelectedAddress] = useState(addressList.length ? addressList[0] : null);
 
   const fetchUserAddressList = () => {
-    axios
-      .get(BACKEND_URL+'/address', {
+    apiClient
+      .get(BACKEND_URL + '/address', {
         params: {
           user_id: id_user,
         },

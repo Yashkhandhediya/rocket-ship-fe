@@ -3,6 +3,7 @@ import { Field } from '../../../../common/components';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import apiClient from '../../../../common/utils/apiClient';
 
 const BuyerAdressFields = ({
   heading,
@@ -18,12 +19,12 @@ const BuyerAdressFields = ({
   const [isValidCity, setIsValidCity] = useState(true);
   const [isValidState, setIsValidState] = useState(true);
   const [isValidCountry, setIsValidCountry] = useState(true);
-  const [isResponseOk,setIsResponseOk] = useState(false)
+  const [isResponseOk, setIsResponseOk] = useState(false);
 
   const fetchPincodeDetails = () => {
-    setIsResponseOk(true)
+    setIsResponseOk(true);
     try {
-      axios
+      apiClient
         .get(`${BACKEND_URL}/pincode/${values?.pincode}`)
         .then((resp) => {
           if (resp.status == 200 && onPincodeVeify) {
@@ -32,15 +33,15 @@ const BuyerAdressFields = ({
               state: resp.data?.State,
               country: resp.data?.Country,
             });
-            setIsResponseOk(false)
+            setIsResponseOk(false);
           } else {
             toast(`City/State not found for this pincode : ${values?.pincode || ''}`, { type: 'error' });
-            setIsResponseOk(false)
+            setIsResponseOk(false);
           }
         })
         .catch(() => {
           toast(`Unable to get location from this pincode: ${values.pincode}`, { type: 'error' });
-          setIsResponseOk(false)
+          setIsResponseOk(false);
         });
     } catch (e) {
       // eslint-disable-next-line no-console
@@ -49,7 +50,7 @@ const BuyerAdressFields = ({
   };
 
   useEffect(() => {
-    if(!isResponseOk){
+    if (!isResponseOk) {
       if (values?.pincode?.length >= 6) {
         fetchPincodeDetails();
       }

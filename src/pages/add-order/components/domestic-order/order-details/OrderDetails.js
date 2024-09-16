@@ -11,6 +11,7 @@ import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import { setEditOrder } from '../../../../../redux';
 import { useLocation } from 'react-router-dom';
 import Autosuggest from 'react-autosuggest';
+import apiClient from '../../../../../common/utils/apiClient';
 
 export let package_info = {
   length: 0,
@@ -49,7 +50,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   const getCategories = async () => {
     // setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/category`);
+      const response = await apiClient.get(`${BACKEND_URL}/category`);
       setCategories(response.data);
       console.log(response.data);
     } catch (err) {
@@ -158,7 +159,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     const { id, value } = event.target ? event.target : event;
     console.log(id, value);
     if (id == 'name') {
-      axios
+      apiClient
         .get(BACKEND_URL + '/product/get_product_details/')
         .then((res) => {
           console.log('Suggestion Products', res.data);
@@ -270,7 +271,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   };
 
   const fetchOrderId = () => {
-    axios
+    apiClient
       .get(BACKEND_URL + `/order/get_order_id/?id=${id_user}`)
       .then((resp) => {
         if (resp?.status == 200 && resp?.data?.order_id) {
@@ -389,7 +390,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
 
   const fetchSuggestions = async (value) => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/product/get_product_suggestion/`, {
+      const response = await apiClient.get(`${BACKEND_URL}/product/get_product_suggestion/`, {
         params: { string: value, user_id: id_user },
       });
       const filteredSuggestions = response.data.filter(
@@ -455,7 +456,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     }
 
     try {
-      const response = await axios.post(`${BACKEND_URL}/category/`, {
+      const response = await apiClient.post(`${BACKEND_URL}/category/`, {
         category: category,
       });
 

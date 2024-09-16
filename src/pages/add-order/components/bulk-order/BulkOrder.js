@@ -5,6 +5,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
 import { toast } from 'react-toastify';
+import apiClient from '../../../../common/utils/apiClient';
 
 const BulkOrder = () => {
   const id_user = localStorage.getItem('user_id');
@@ -19,7 +20,7 @@ const BulkOrder = () => {
     formData.append('file', e.target.files[0]);
     setSelectedFile(formData);
     try {
-      const response = await axios.post(`${BACKEND_URL}/order/bulk_orders?user_id=${user_id}`, formData);
+      const response = await apiClient.post(`${BACKEND_URL}/order/bulk_orders?user_id=${user_id}`, formData);
       if (!response?.data[0]?.success) {
         setSelectedFile(null);
         return toast.error(response?.data[0]?.error);

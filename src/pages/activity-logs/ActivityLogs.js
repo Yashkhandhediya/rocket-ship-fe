@@ -10,6 +10,7 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import Loader from '../../common/loader/Loader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
+import apiClient from '../../common/utils/apiClient';
 
 function ActivityLogs() {
   const [data, setData] = useState([]);
@@ -41,7 +42,7 @@ function ActivityLogs() {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${BACKEND_URL}/bulk_action/get_bulk_action?user_id=${user_id}`, {
+      const response = await apiClient.post(`${BACKEND_URL}/bulk_action/get_bulk_action?user_id=${user_id}`, {
         filter_fields: { action_type: actionType },
         paginate: {
           page_number: 1,
@@ -69,9 +70,12 @@ function ActivityLogs() {
   const handleDownload = async (id) => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/bulk_action/get_error_sheet?bulk_action_id=${id}`, {
-        responseType: 'blob',
-      });
+      const response = await apiClient.get(
+        `${BACKEND_URL}/bulk_action/get_error_sheet?bulk_action_id=${id}`,
+        {
+          responseType: 'blob',
+        },
+      );
       const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.ms-excel' }));
 
       const link = document.createElement('a');
@@ -162,15 +166,15 @@ function ActivityLogs() {
                         <td className="p-3 text-left">{actionData?.error_count}</td>
                         <td className="p-3 text-left">
                           <button
-                            className={`text-red-800 ${actionData?.error_count === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`text-red-800 ${
+                              actionData?.error_count === 0 ? 'cursor-not-allowed opacity-50' : ''
+                            }`}
                             onClick={() => handleDownload(actionData.id)}
-                            disabled={actionData?.error_count === 0}
-                          >
+                            disabled={actionData?.error_count === 0}>
                             <FontAwesomeIcon icon={faDownload} />
                             {` Errors`}
                           </button>
                         </td>
-
                       </tr>
                     );
                   })

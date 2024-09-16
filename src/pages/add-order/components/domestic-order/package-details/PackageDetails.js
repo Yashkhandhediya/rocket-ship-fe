@@ -13,6 +13,7 @@ import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import Loader from '../../../../../common/loader/Loader';
 // import { isEdit, order_id } from '../../../../orders/components/new/New'
 import { package_info } from '../order-details/OrderDetails';
+import apiClient from '../../../../../common/utils/apiClient';
 
 export default function PackageDetails({ currentStep, handleChangeStep }) {
   // console.log("DIMMMMMMMMM",package_info)
@@ -90,7 +91,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
   const placeOrder = async () => {
     setIsLoading(true);
     const date = getFullDateForPayload(domesticOrderFormValues?.date);
-    let resp = await axios.post(BACKEND_URL + `/order?user_id=${id_user}`, {
+    let resp = await apiClient.post(BACKEND_URL + `/order?user_id=${id_user}`, {
       ...domesticOrderFormValues,
       ...formDirectField,
       order_type: 'domestic',
@@ -113,7 +114,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
     const date = getFullDateForPayload(editDetails?.date);
     console.log('lkkkkkkkkkk', editDetails);
     console.log('lkkkkkkkkkk', domesticOrderFormValues);
-    let resp = await axios.put(`${BACKEND_URL}/order?user_id=${id_user}`, {
+    let resp = await apiClient.put(`${BACKEND_URL}/order?user_id=${id_user}`, {
       ...editDetails,
       ...formDirectField,
       order_type: 'domestic',

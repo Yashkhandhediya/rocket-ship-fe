@@ -6,6 +6,7 @@ import { BuyerAddressFields } from '../buyer-address-fields';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import apiClient from '../../../../common/utils/apiClient';
 
 const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress }) => {
   const id_user = localStorage.getItem('user_id');
@@ -84,7 +85,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
       return;
     }
 
-    axios
+    apiClient
       .post(BACKEND_URL + `/address?created_by=${id_user}`, addressInfo)
       .then((resp) => {
         if (resp.status == 200) {
