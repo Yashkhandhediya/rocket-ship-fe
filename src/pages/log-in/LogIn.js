@@ -53,10 +53,15 @@ const LogIn = () => {
       return;
     }
     localStorage.setItem('user_email', loginInput.username);
-    const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+    };
     console.log('username pass', loginInput.username, loginInput.password);
     console.log('backend url', BACKEND_URL);
-    const apiURL = userType === 'user' ? '/login/access-token' : '/company/access-token';
+    // const apiURL = userType === 'user' ? '/login/access-token' : '/company/access-token';
+    const apiURL = '/login/access-token';
+    const client_id = userType === 'user' ? 'user' : 'company';
     const otpURL = userType === 'user' ? '/login' : '/company';
     setLoading(true);
     axios
@@ -65,6 +70,7 @@ const LogIn = () => {
         {
           username: loginInput.username,
           password: loginInput.password,
+          client_id: client_id,
         },
         { headers },
       )
@@ -99,7 +105,7 @@ const LogIn = () => {
                   userType === 'user' ? 'user_id' : 'comp_id'
                 }=${user_id}`,
               otpPayload,
-              { headers },
+              { headers: headers },
             )
             .then((otpResponse) => {
               setLoading(false);

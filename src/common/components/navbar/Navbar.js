@@ -6,6 +6,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../utils/env.config';
 import { toast } from 'react-toastify';
 import RechargeModal from '../../../pages/home/components/rechareModal/RechargeModal';
+import apiClient from '../../utils/apiClient';
 
 const Navbar = () => {
   const is_company = localStorage.getItem('is_company');
@@ -187,7 +188,7 @@ const Navbar = () => {
     const apiURL =
       is_company == 0 ? `${BACKEND_URL}/users/${id_user}` : `${BACKEND_URL}/company/${id_company}`;
     try {
-      const response = await axios.get(apiURL);
+      const response = await apiClient.get(apiURL);
       setUserData(response.data);
       console.log('Hallllllllllllll', userData, response.data);
       if (response.data.wallet_balance == null || response.data.wallet_balance <= 0) {
