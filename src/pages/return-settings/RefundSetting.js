@@ -7,9 +7,9 @@ import { noOrdersFound } from '../../common/images';
 import { autoRefundData, instantRefundDetails, selectRefundDetails } from './constants';
 import RefundMode from './components/RefundMode';
 import { CustomMultiSelect, Loader } from '../../common/components';
-import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
+import apiClient from '../../common/utils/apiClient';
 
 function RefundSetting() {
   const [enableOption, setEnableOption] = useState(false);
@@ -70,7 +70,7 @@ function RefundSetting() {
   const getRefundSetting = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(`${BACKEND_URL}/returnpolicy/refund-settings/${user_id}`);
+      const { data } = await apiClient.get(`${BACKEND_URL}/returnpolicy/refund-settings/${user_id}`);
       console.log(data);
       setEnableOption(data.allow_refund == 1);
       setCheckedModes({
@@ -101,7 +101,7 @@ function RefundSetting() {
   const handleSave = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${BACKEND_URL}/returnpolicy/refund-settings/`, {
+      const response = await apiClient.post(`${BACKEND_URL}/returnpolicy/refund-settings/`, {
         user_id: Number(user_id),
         allow_refund: enableOption ? 1 : 0,
         manual_refund: 1,

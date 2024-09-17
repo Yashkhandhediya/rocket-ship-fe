@@ -6,11 +6,11 @@ import { Button } from 'flowbite-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { temp_user_id } from './User';
 import { useSelector } from 'react-redux';
+import apiClient from '../../common/utils/apiClient';
 
 const Tabs = ({ tabs, tabClassNames, activeOrderTab, setOrderActiveTab, onTabChange = () => {} }) => {
   console.log('Activeeeeeeee', activeOrderTab);
@@ -51,7 +51,7 @@ const Tabs = ({ tabs, tabClassNames, activeOrderTab, setOrderActiveTab, onTabCha
 
     try {
       setLoading(true);
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${BACKEND_URL}/order/get_filtered_orders?created_by=${show_user_id}&${
           tid !== 'all' && `status=${tid}`
         }&page=${page}&page_size=${itemsPerPage}`,

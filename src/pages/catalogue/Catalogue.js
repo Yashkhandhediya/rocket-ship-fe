@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
@@ -12,6 +11,7 @@ import { Button } from 'flowbite-react';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import CatalogueTab from './CatalogueTab';
+import apiClient from '../../common/utils/apiClient';
 
 const Catalogue = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -104,7 +104,9 @@ const Catalogue = () => {
   const handleCatalogueData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${BACKEND_URL}/product/get_inventory_by_channel/?user_id=${user_id}&page=${page}&page_size=${itemsPerPage}`);
+      const response = await apiClient.get(
+        `${BACKEND_URL}/product/get_inventory_by_channel/?user_id=${user_id}&page=${page}&page_size=${itemsPerPage}`,
+      );
       if (response.status === 200) {
         setData(response?.data?.data);
         setIncrementDisable(false);
@@ -171,8 +173,8 @@ const Catalogue = () => {
     // formData.append("excel_file", selectedFileBinaryString, 'sample.xls');
 
     try {
-      // Make the POST request to the server using axios
-      const response = await axios.post(BACKEND_URL + '/product/add_product_catalogue', formData, {
+      // Make the POST request to the server using apiClient
+      const response = await apiClient.post(BACKEND_URL + '/product/add_product_catalogue', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           // "Authorization":ACCESS_TOKEN
@@ -196,7 +198,7 @@ const Catalogue = () => {
 
   const handleSampleFile = () => {
     const headers = { 'Content-Type': 'application/json' };
-    axios
+    apiClient
       .get(
         BACKEND_URL + '/product/get_sample_file/',
         {
@@ -229,7 +231,7 @@ const Catalogue = () => {
       'Content-Type': 'application/json',
       // "Authorization":ACCESS_TOKEN
     };
-    axios
+    apiClient
       .get(BACKEND_URL + '/product/send_product_mail/', { headers })
       .then((res) => {
         setLoading(false);

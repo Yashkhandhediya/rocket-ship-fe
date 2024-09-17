@@ -16,13 +16,13 @@ import { Badge } from 'flowbite-react';
 import { MoreDropdown, CustomTooltip, CommonBadge, CustomDataTable } from '../../../../common/components';
 import { moreActionOptions } from '../utils';
 import DrawerWithSidebar from '../../../../common/components/drawer-with-sidebar/DrawerWithSidebar';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Returns';
 import Loader from '../../../../common/loader/Loader';
 import { inTransitOptions } from '../../duck';
 import MultiSelectDropdown from '../../../rate-card/components/MultiSelectDropdown';
+import apiClient from '../../../../common/utils/apiClient';
 
 const InTransit = ({ data, isLoading, fetchFilteredData }) => {
   const dispatch = useDispatch();
@@ -200,7 +200,7 @@ const InTransit = ({ data, isLoading, fetchFilteredData }) => {
                   isOpen: true,
                   pickupDetails: row?.original,
                 });
-                // const resp = axios.get(BACKEND_URL+'/order/track?order_id=' + row.id);
+                // const resp = apiClient.get(BACKEND_URL+'/order/track?order_id=' + row.id);
                 // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
                 // let newTab = window.open(newURL, '_blank');
                 // if (newTab) {
@@ -235,7 +235,7 @@ const InTransit = ({ data, isLoading, fetchFilteredData }) => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'manifest';
 
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -307,7 +307,7 @@ const InTransit = ({ data, isLoading, fetchFilteredData }) => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'invoice';
 
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -332,7 +332,7 @@ const InTransit = ({ data, isLoading, fetchFilteredData }) => {
   function cancelOrder(orderDetails) {
     console.log(orderDetails);
 
-    axios
+    apiClient
       .put(`${BACKEND_URL}/return/?id=${orderDetails?.id}&user_id=${user_id}`, {
         ...orderDetails,
         status: 'cancelled',

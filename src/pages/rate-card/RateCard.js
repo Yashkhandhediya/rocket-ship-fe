@@ -1,12 +1,12 @@
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { Tabs } from '../../common/components';
 import { rateCardTabs } from './constants';
-import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { setRateCardData } from '../../redux';
 import { useSelector } from 'react-redux';
+import apiClient from '../../common/utils/apiClient';
 
 function RateCard() {
   const id_user = localStorage.getItem('user_id');
@@ -18,7 +18,7 @@ function RateCard() {
 
   const fetchRateCard = async () => {
     try {
-      const response = await axios.post(`${BACKEND_URL}/rate_card/${user_id}`, {
+      const response = await apiClient.post(`${BACKEND_URL}/rate_card/${user_id}`, {
         filter_fields: {},
         paginate: {
           page_number: 1,

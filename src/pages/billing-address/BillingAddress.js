@@ -5,6 +5,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
+import apiClient from '../../common/utils/apiClient';
 
 function BillingAddress() {
   const id_user = localStorage.getItem('user_id');
@@ -47,7 +48,7 @@ function BillingAddress() {
   const getAddress = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/address/?user_id=${user_id}`);
+      const response = await apiClient.get(`${BACKEND_URL}/address/?user_id=${user_id}`);
       const data = response.data.filter((data) => data.type_id === 3)[response.data.length - 1];
       setAddressInfo({
         type_id: 3,
@@ -75,7 +76,7 @@ function BillingAddress() {
     }
     setLoading(true);
     try {
-      const response = await axios.post(`${BACKEND_URL}/address/?created_by=${user_id}`, {
+      const response = await apiClient.post(`${BACKEND_URL}/address/?created_by=${user_id}`, {
         ...addressInfo,
         complete_address: `${addressInfo.complete_address},${addressLine2}`,
       });

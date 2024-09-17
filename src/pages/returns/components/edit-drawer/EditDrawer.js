@@ -3,11 +3,11 @@ import { Checkbox, Field, RightDrawer, CustomMultiSelect } from '../../../../com
 import { fieldDefaultValues } from '../utils';
 import { CustomTooltip } from '../../../../common/components';
 import { infoIcon } from '../../../../common/icons';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
+import apiClient from '../../../../common/utils/apiClient';
 
 const EditDrawer = ({ isOpen, onClose, fieldNames = [], data }) => {
   const [validationTriggered, setValidationTriggered] = useState(false);
@@ -26,8 +26,8 @@ const EditDrawer = ({ isOpen, onClose, fieldNames = [], data }) => {
 
   const fetchUserAddressList = () => {
     const custom_id = is_company == 1 ? id_company : id_user;
-    axios
-      .get(BACKEND_URL + `/address/?user_id=${custom_id}`, )
+    apiClient
+      .get(BACKEND_URL + `/address/?user_id=${custom_id}`)
       .then((resp) => {
         if (resp.status == 200) {
           setAddressList(resp?.data || []);
@@ -330,12 +330,18 @@ const EditDrawer = ({ isOpen, onClose, fieldNames = [], data }) => {
   }, [fieldNames]);
 
   const handleEditOrder = async () => {
-    if(formDirectField.dead_weight == '' || formDirectField.length == 0 || formDirectField.width == 0 || formDirectField.height == 0 || domesticReturnFormValues?.pickup_address?.id == null){
-        toast("Please Fill All Required Field",{type:'error'})
-        return
+    if (
+      formDirectField.dead_weight == '' ||
+      formDirectField.length == 0 ||
+      formDirectField.width == 0 ||
+      formDirectField.height == 0 ||
+      domesticReturnFormValues?.pickup_address?.id == null
+    ) {
+      toast('Please Fill All Required Field', { type: 'error' });
+      return;
     }
     try {
-      const response = await axios.put(
+      const response = await apiClient.put(
         `${BACKEND_URL}/return/update_return_info?return_id=${domesticReturnFormValues?.id}`,
         {
           dead_weight: formDirectField.dead_weight,

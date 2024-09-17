@@ -1,60 +1,62 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
-import axios from 'axios';
 import { toast } from 'react-toastify';
-
+import apiClient from '../../../../../common/utils/apiClient';
 
 const Form = () => {
-    let response = ""
-    const [checked, setChecked] = useState(false);
+  let response = '';
+  const [checked, setChecked] = useState(false);
 
-    const handleToggle = () => {
-        setChecked(!checked);
-    };
+  const handleToggle = () => {
+    setChecked(!checked);
+  };
 
-    const [url, setUrl] = useState('');
-    const [storeName, setStoreName] = useState('');
+  const [url, setUrl] = useState('');
+  const [storeName, setStoreName] = useState('');
 
-    const handleChange = (event) => {
-        setUrl(event.target.value);
-    };
+  const handleChange = (event) => {
+    setUrl(event.target.value);
+  };
 
-    const redirectToShopifyAuth = async () => {
-        toast('Redirecting to Shopify authentication...', { type: 'info' });
-        
-        // console.log(BACKEND_URL+`/shopify/redirect?url=${url}`)
+  const redirectToShopifyAuth = async () => {
+    toast('Redirecting to Shopify authentication...', { type: 'info' });
 
-        axios
-            .get(BACKEND_URL+`/shopify/redirect?url=${url}&user_id=${localStorage.getItem('user_id')}&shop_name=${storeName}`)
+    // console.log(BACKEND_URL+`/shopify/redirect?url=${url}`)
 
-            .then(async (resp) => {
-                if (resp.status === 200) {
-                    response = resp.data.auth_url;
-                    console.log("REsponseeeeeeee", response)
-                    window.location.href = response;
-                } else {
-                    toast('Enter valid url', { type: 'error' });
-                }
-            })
-            .catch(() => {
-                toast('There is some error', { type: 'error' });
-            });
-    };
+    apiClient
+      .get(
+        BACKEND_URL +
+          `/shopify/redirect?url=${url}&user_id=${localStorage.getItem('user_id')}&shop_name=${storeName}`,
+      )
 
+      .then(async (resp) => {
+        if (resp.status === 200) {
+          response = resp.data.auth_url;
+          console.log('REsponseeeeeeee', response);
+          window.location.href = response;
+        } else {
+          toast('Enter valid url', { type: 'error' });
+        }
+      })
+      .catch(() => {
+        toast('There is some error', { type: 'error' });
+      });
+  };
 
-
-    return (
-        <div className="flex w-[68%]  bg-white-100 justify-start flex-col rounded-lg relative  bg-white">
-            <div className="border-0 w-[10rem] flex justify-center items-center rounded-full mt-5 ml-5">
-                <img src="https://app.shiprocket.in/seller//assets/images/channels/shopify.png" alt="My Image" />
-            </div>
-            <div className='flex items-center text-left mt-5'>
-                <span className='ml-9 mr-3 text-[17px] font-semibold text-black'>Custom App Integration</span>
-            </div>
-            <div className='flex items-center text-left mb-3'>
-                <span className='ml-9 mr-3 text-[12px] text-black text-[#999]'>Connect your Shopify store with Cargo Cloud in one click custom app</span>
-            </div>
-            {/* <div className="flex  bg-white-100 justify-start flex-col rounded-lg relative border-2 mr-9 ml-9">
+  return (
+    <div className="bg-white-100 relative  flex w-[68%] flex-col justify-start rounded-lg  bg-white">
+      <div className="ml-5 mt-5 flex w-[10rem] items-center justify-center rounded-full border-0">
+        <img src="https://app.shiprocket.in/seller//assets/images/channels/shopify.png" alt="My Image" />
+      </div>
+      <div className="mt-5 flex items-center text-left">
+        <span className="ml-9 mr-3 text-[17px] font-semibold text-black">Custom App Integration</span>
+      </div>
+      <div className="mb-3 flex items-center text-left">
+        <span className="ml-9 mr-3 text-[12px] text-[#999] text-black">
+          Connect your Shopify store with Cargo Cloud in one click custom app
+        </span>
+      </div>
+      {/* <div className="flex  bg-white-100 justify-start flex-col rounded-lg relative border-2 mr-9 ml-9">
                 <div className='flex items-center text-left mt-5'>
                     <span className='ml-9 mr-3 text-[17px] font-semibold text-black'>General Infomation</span>
                 </div>
@@ -112,37 +114,45 @@ const Form = () => {
 
                 </div>
             </div> */}
-            <div className="flex bg-white-100 justify-start flex-col rounded-lg relative border-2 mr-9 ml-9 mt-4">
-                <div className='flex items-center text-left mt-5'>
-                    <span className='ml-9 mr-3 text-[17px] font-semibold text-black'>Seller Panel</span>
-                </div>
-                <div className='flex items-center text-left mb-3'>
-                    <span className='ml-9 mr-3 text-[12px] text-black'>Please provide below given credentials for your store :</span>
-                </div>
-                <div className='mt-3 mb-5 flex items-center justify-between'>
-                    <label htmlFor="storenameInput" className='ml-9 mr-3 text-[14px] font-semibold text-black text-[#999]'>Store Name</label>
-                    <input
-                        type="text"
-                        id="storenameInput"
-                        placeholder="Enter Store Name"
-                        className='rounded-lg mr-9 h-9 w-40 md:w-48 lg:w-56 xl:w-[70%]'
-                        value={storeName}
-                        onChange={(e) => setStoreName(e.target.value)}
-                    />
-                </div>
+      <div className="bg-white-100 relative ml-9 mr-9 mt-4 flex flex-col justify-start rounded-lg border-2">
+        <div className="mt-5 flex items-center text-left">
+          <span className="ml-9 mr-3 text-[17px] font-semibold text-black">Seller Panel</span>
+        </div>
+        <div className="mb-3 flex items-center text-left">
+          <span className="ml-9 mr-3 text-[12px] text-black">
+            Please provide below given credentials for your store :
+          </span>
+        </div>
+        <div className="mb-5 mt-3 flex items-center justify-between">
+          <label
+            htmlFor="storenameInput"
+            className="ml-9 mr-3 text-[14px] font-semibold text-[#999] text-black">
+            Store Name
+          </label>
+          <input
+            type="text"
+            id="storenameInput"
+            placeholder="Enter Store Name"
+            className="mr-9 h-9 w-40 rounded-lg md:w-48 lg:w-56 xl:w-[70%]"
+            value={storeName}
+            onChange={(e) => setStoreName(e.target.value)}
+          />
+        </div>
 
-                <div className='mt-3 mb-5 flex items-center justify-between'>
-                    <label htmlFor="nameInput" className='ml-9 mr-3 text-[14px] font-semibold text-black text-[#999]'>Store Url</label>
-                    <input
-                        type="text"
-                        id="nameInput"
-                        placeholder="Enter Channel Name https://yourshopname.myshopify.com"
-                        className='rounded-lg mr-9 h-9 w-40 md:w-48 lg:w-56 xl:w-[70%]'
-                        value={url}
-                        onChange={handleChange}
-                    />
-                </div>
-                {/* <div className='flex items-center mt-3 mb-3 flex items-center justify-between'>
+        <div className="mb-5 mt-3 flex items-center justify-between">
+          <label htmlFor="nameInput" className="ml-9 mr-3 text-[14px] font-semibold text-[#999] text-black">
+            Store Url
+          </label>
+          <input
+            type="text"
+            id="nameInput"
+            placeholder="Enter Channel Name https://yourshopname.myshopify.com"
+            className="mr-9 h-9 w-40 rounded-lg md:w-48 lg:w-56 xl:w-[70%]"
+            value={url}
+            onChange={handleChange}
+          />
+        </div>
+        {/* <div className='flex items-center mt-3 mb-3 flex items-center justify-between'>
                     <label htmlFor="nameInput" className='ml-9 mr-3 text-[14px] font-semibold text-black text-[#999]'>API Key</label>
                     <input
                         type="password"
@@ -169,8 +179,8 @@ const Form = () => {
                         className='rounded-lg mr-9 h-9 w-40 md:w-48 lg:w-56 xl:w-64'
                     />
                 </div> */}
-            </div>
-            {/* <div className="flex bg-white-100 justify-start flex-col rounded-lg relative border-2 mr-9 ml-9 mt-4">
+      </div>
+      {/* <div className="flex bg-white-100 justify-start flex-col rounded-lg relative border-2 mr-9 ml-9 mt-4">
                 <div className='flex items-center text-left mt-5'>
                     <span className='ml-9 mr-3 text-[17px] font-semibold text-black'>Pull Order Statuses</span>
                 </div>
@@ -466,7 +476,7 @@ const Form = () => {
                     <span className='ml-9 mr-3 text-[12px] text-black text-[#999]'>Click the sync button to view and map Shopify locations. Once mapped, we will sync SRF inventory to Shopify and sync your location&apos;s inventory into Shiprocket.</span>
                 </div>
             </div> */}
-            {/* <div className="flex bg-white-100 justify-start flex-col rounded-lg relative mr-9 ml-9 mt-4">
+      {/* <div className="flex bg-white-100 justify-start flex-col rounded-lg relative mr-9 ml-9 mt-4">
                 <div className='flex items-center ml-3 mt-3 flex items-center '>
                     <input
                         type="checkbox"
@@ -478,16 +488,17 @@ const Form = () => {
                     </div>
                 </div>
             </div> */}
-            <div className="flex bg-white-100 justify-start flex-col rounded-lg relative mr-9 ml-9 mt-4">
-                <div className='flex items-center ml-3 mt-3 mb-5'>
-                    <button onClick={redirectToShopifyAuth}
-                        className="py-2 px-4 bg-red-500 text-white rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                        Connect to Shopify
-                    </button>
-                </div>
-            </div>
+      <div className="bg-white-100 relative ml-9 mr-9 mt-4 flex flex-col justify-start rounded-lg">
+        <div className="mb-5 ml-3 mt-3 flex items-center">
+          <button
+            onClick={redirectToShopifyAuth}
+            className="rounded-md bg-red-500 px-4 py-2 text-white shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+            Connect to Shopify
+          </button>
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
-export default Form
+export default Form;

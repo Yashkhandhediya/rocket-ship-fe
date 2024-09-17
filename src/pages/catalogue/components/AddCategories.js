@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { CustomMultiSelect, Loader } from '../../../common/components';
 import { BACKEND_URL } from '../../../common/utils/env.config';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { ACCESS_TOKEN } from '../../../common/utils/config';
 import { useNavigate } from 'react-router-dom';
+import apiClient from '../../../common/utils/apiClient';
 
 function AddCategories({ handleClose, getData, editData, handleSetEdit }) {
   const [loading, setLoading] = useState(false);
@@ -39,7 +39,7 @@ function AddCategories({ handleClose, getData, editData, handleSetEdit }) {
     console.log('clicked');
 
     try {
-      const response = await axios.post(`${BACKEND_URL}/category/`, {
+      const response = await apiClient.post(`${BACKEND_URL}/category/`, {
         ...categoryData,
       });
       setCategoryData({
@@ -68,7 +68,7 @@ function AddCategories({ handleClose, getData, editData, handleSetEdit }) {
     handleClose();
 
     try {
-      const response = await axios.put(`${BACKEND_URL}/category/${editData.id}`, {
+      const response = await apiClient.put(`${BACKEND_URL}/category/${editData.id}`, {
         ...categoryData,
       });
       setCategoryData({

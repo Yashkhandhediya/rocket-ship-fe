@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { Fragment, useState } from 'react';
 import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { MoreDropdown, CustomTooltip, CustomDataTable } from '../../../../common/components';
@@ -24,6 +23,7 @@ import EditDrawer from '../edit-drawer/EditDrawer';
 import Loader from '../../../../common/loader/Loader';
 import { newRequestOptions } from '../../duck';
 import MultiSelectDropdown from '../../../rate-card/components/MultiSelectDropdown';
+import apiClient from '../../../../common/utils/apiClient';
 
 export const New = ({ data, isLoading, fetchFilteredData }) => {
   const dispatch = useDispatch();
@@ -199,7 +199,7 @@ export const New = ({ data, isLoading, fetchFilteredData }) => {
                   id={row?.original?.id}
                   className="min-w-fit rounded bg-orange-700 px-4 py-1.5 text-white"
                   onClick={() => {
-                    axios.get(BACKEND_URL + '/return/track?order_id=' + row?.original?.id);
+                    apiClient.get(BACKEND_URL + '/return/track?order_id=' + row?.original?.id);
                     let newURL = `http://${window.location.host}/return-tracking?data=${encodeURIComponent(
                       '15',
                     )}`;
@@ -237,7 +237,7 @@ export const New = ({ data, isLoading, fetchFilteredData }) => {
     //   isEdit:true,
     //   order_id:orderDetails?.id
     // }
-    axios
+    apiClient
       .get(BACKEND_URL + `/return/get_return_detail?id=${orderDetails?.id}`)
       .then((res) => {
         console.log('Response Of Get Order While Edit ', res);
@@ -310,7 +310,7 @@ export const New = ({ data, isLoading, fetchFilteredData }) => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'invoice';
 
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -326,7 +326,7 @@ export const New = ({ data, isLoading, fetchFilteredData }) => {
   };
 
   function cancelOrder(orderDetails) {
-    axios
+    apiClient
       .put(`${BACKEND_URL}/return/?id=${orderDetails}&user_id=${user_id}`, {
         ...orderDetails,
         status: 'cancelled',

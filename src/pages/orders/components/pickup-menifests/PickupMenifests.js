@@ -10,7 +10,6 @@ import {
   wooLogo,
 } from '../../../../common/icons';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
-import axios from 'axios';
 import { Badge } from 'flowbite-react';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,6 +34,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { pickupOptions } from '../../duck';
 import MultiSelectDropdown from '../../../rate-card/components/MultiSelectDropdown';
+import apiClient from '../../../../common/utils/apiClient';
 // import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 const PickupMenifests = ({ data, isLoading, fetchFilteredData }) => {
@@ -67,7 +67,7 @@ const PickupMenifests = ({ data, isLoading, fetchFilteredData }) => {
   // const fetchManifestedOrders = async () => {
   //   try {
   //     setLoading(true);
-  //     const response = await axios.get(
+  //     const response = await apiClient.get(
   //       `${BACKEND_URL}/order/get_filtered_orders?created_by=${user_id}&status=manifested&page=${page}&page_size=${itemsPerPage}`,
   //     );
   //     setManifestedOrders(response.data);
@@ -205,7 +205,7 @@ const PickupMenifests = ({ data, isLoading, fetchFilteredData }) => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'manifest';
 
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -238,7 +238,7 @@ const PickupMenifests = ({ data, isLoading, fetchFilteredData }) => {
     // console.log("llljjjjjj",temp_str)
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'invoice';
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -291,7 +291,7 @@ const PickupMenifests = ({ data, isLoading, fetchFilteredData }) => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'shippinglabel';
 
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -500,7 +500,7 @@ const PickupMenifests = ({ data, isLoading, fetchFilteredData }) => {
     if (orderDetails.partner_id == 1 || orderDetails.partner_id == 2) {
       toast('Cancel Functionality Is Not Providing By This Partner', { type: 'error' });
     } else {
-      axios
+      apiClient
         .post(
           `${BACKEND_URL}/order/${orderDetails?.id}/cancel_shipment`,
           {
@@ -529,7 +529,7 @@ const PickupMenifests = ({ data, isLoading, fetchFilteredData }) => {
       isEdit: true,
       order_id: orderDetails?.id,
     };
-    axios
+    apiClient
       .get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails?.id}`)
       .then((res) => {
         console.log('Response Of Get Order While Edit ', res);
@@ -545,7 +545,7 @@ const PickupMenifests = ({ data, isLoading, fetchFilteredData }) => {
   }
 
   // function cancelOrder(orderDetails) {
-  //   axios
+  //   apiClient
   //     .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}`, {
   //       ...orderDetails,
   //       status: 'cancelled',

@@ -20,7 +20,6 @@ import {
 } from '../../../../common/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllOrders, setClonedOrder } from '../../../../redux';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Fragment, useState, useEffect } from 'react';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
@@ -35,6 +34,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { inTransitOptions } from '../../duck';
 import MultiSelectDropdown from '../../../rate-card/components/MultiSelectDropdown';
+import apiClient from '../../../../common/utils/apiClient';
 // import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 const InTransit = ({ data, isLoading, fetchFilteredData }) => {
@@ -66,7 +66,7 @@ const InTransit = ({ data, isLoading, fetchFilteredData }) => {
   // const fetchManifestedOrders = async () => {
   //   try {
   //     setLoading(true);
-  //     const response = await axios.get(
+  //     const response = await apiClient.get(
   //       `${BACKEND_URL}/order/get_filtered_orders?created_by=${user_id}&status=in%20transit&page=${page}&page_size=${itemsPerPage}`,
   //     );
   //     setInTransitOrderLists(response.data);
@@ -108,7 +108,7 @@ const InTransit = ({ data, isLoading, fetchFilteredData }) => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'manifest';
 
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -201,7 +201,7 @@ const InTransit = ({ data, isLoading, fetchFilteredData }) => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'shippinglabel';
 
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -265,7 +265,7 @@ const InTransit = ({ data, isLoading, fetchFilteredData }) => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'invoice';
 
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -460,7 +460,7 @@ const InTransit = ({ data, isLoading, fetchFilteredData }) => {
   };
 
   function cancelOrder(orderDetails) {
-    axios
+    apiClient
       .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}&user_id=${user_id}`, {
         ...orderDetails,
         status: 'cancelled',

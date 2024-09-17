@@ -6,9 +6,9 @@ import { FutureCod } from '../future-cod';
 import PageWithSidebar from '../../../../common/components/page-with-sidebar/PageWithSidebar';
 import { BillingTabs } from '../billing-tabs';
 import { Field, Loader } from '../../../../common/components';
-import axios from 'axios';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
 import Pagination from '../../../courier/pagination/Pagination';
+import apiClient from '../../../../common/utils/apiClient';
 
 const COD_Remittance = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -95,7 +95,7 @@ const COD_Remittance = () => {
     }
     setisLoading(true);
     try {
-      const response = await axios.post(`${BACKEND_URL}/order/get_cod_remittance?user_id=222`, {
+      const response = await apiClient.post(`${BACKEND_URL}/order/get_cod_remittance?user_id=222`, {
         filter_fields: {},
         paginate: {
           page_number: page,
@@ -118,7 +118,7 @@ const COD_Remittance = () => {
   const handleCODData = async () => {
     setisLoading(true);
     try {
-      const response = await axios.post(`${BACKEND_URL}/order/get_cod_remittance?user_id=222`, {
+      const response = await apiClient.post(`${BACKEND_URL}/order/get_cod_remittance?user_id=222`, {
         filter_fields: {
           waybill_no: waybill_no,
           year: selectedYear == 'Select Year' ? '' : selectedYear,
@@ -130,7 +130,7 @@ const COD_Remittance = () => {
         },
       });
       setData(response?.data[0]);
-      return response?.data[1]
+      return response?.data[1];
     } catch (err) {
       toast.error('There is some error');
     } finally {
@@ -143,7 +143,7 @@ const COD_Remittance = () => {
   };
 
   const handleCOD = () => {
-    axios
+    apiClient
       .post(BACKEND_URL + `/order/create_cod_remittance?user_id=${localStorage.getItem('user_id')}`, {
         order_id: parseInt(remittanceInfo?.order_id),
         cod_to_be_remitted: parseInt(remittanceInfo?.cod_to_be_remitted),
@@ -210,10 +210,11 @@ const COD_Remittance = () => {
       <BillingTabs>
         <div className="my-4 flex w-full flex-row justify-start px-6">
           <button
-            className={`rounded-l-[3px] border border-r-0 px-4 py-1 text-[13px] focus:outline-none ${0 === activeTab
-              ? 'border-[#1D99D9] bg-[#159700] font-semibold text-white'
-              : 'border-[#CFD4D6] bg-[#FAFAFA] font-normal text-[#333333]'
-              }`}
+            className={`rounded-l-[3px] border border-r-0 px-4 py-1 text-[13px] focus:outline-none ${
+              0 === activeTab
+                ? 'border-[#1D99D9] bg-[#159700] font-semibold text-white'
+                : 'border-[#CFD4D6] bg-[#FAFAFA] font-normal text-[#333333]'
+            }`}
             onClick={() => {
               navigate('/remittance-logs');
               setActiveTab(0);
@@ -221,10 +222,11 @@ const COD_Remittance = () => {
             {'COD Reconciliation'}
           </button>
           <button
-            className={`rounded-r-[3px] border border-l-0 px-4 py-1 text-[13px] focus:outline-none ${1 === activeTab
-              ? 'border-[#1D99D9] bg-[#159700] font-semibold text-white'
-              : 'border-[#CFD4D6] bg-[#FAFAFA] font-normal text-[#333333]'
-              }`}
+            className={`rounded-r-[3px] border border-l-0 px-4 py-1 text-[13px] focus:outline-none ${
+              1 === activeTab
+                ? 'border-[#1D99D9] bg-[#159700] font-semibold text-white'
+                : 'border-[#CFD4D6] bg-[#FAFAFA] font-normal text-[#333333]'
+            }`}
             onClick={() => {
               navigate('/future-cod');
               setActiveTab(1);
@@ -339,33 +341,29 @@ const COD_Remittance = () => {
         {activeTab === 0 && (
           <COD_Reconciliation
             charges={charges}
-            data={currentPageData.filter(item =>
-              item.status === 'Transferd' || item.status === 'In Progress'
+            data={currentPageData.filter(
+              (item) => item.status === 'Transferd' || item.status === 'In Progress',
             )}
           />
         )}
-        {activeTab === 1 && (
-          <FutureCod
-            data={currentPageData.filter(item => item.status === 'Pending')}
-          />
-        )}
+        {activeTab === 1 && <FutureCod data={currentPageData.filter((item) => item.status === 'Pending')} />}
 
-        {activeTab === 0 && currentPageData.filter(item =>
-              item.status === 'Transferd' || item.status === 'In Progress'
-            ).length > 0 && (
-          <div>
-            <Pagination
-              page={page}
-              totalData={totalData}
-              setPage={setPage}
-              perPage={per_page}
-              data={data}
-              handlePageChange={handlePageChange}
-              handlePerPageChange={handlePerPageChange}
-            />
-          </div>
-        )}
-        {activeTab === 1 && currentPageData.filter(item => item.status === 'Pending').length > 0 && (
+        {activeTab === 0 &&
+          currentPageData.filter((item) => item.status === 'Transferd' || item.status === 'In Progress')
+            .length > 0 && (
+            <div>
+              <Pagination
+                page={page}
+                totalData={totalData}
+                setPage={setPage}
+                perPage={per_page}
+                data={data}
+                handlePageChange={handlePageChange}
+                handlePerPageChange={handlePerPageChange}
+              />
+            </div>
+          )}
+        {activeTab === 1 && currentPageData.filter((item) => item.status === 'Pending').length > 0 && (
           <div>
             <Pagination
               page={page}

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CatalogueTab from './CatalogueTab';
 import AddCategories from './components/AddCategories';
-import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import Loader from '../../common/loader/Loader';
@@ -30,7 +29,7 @@ function Categories() {
   const handleDelete = async (id) => {
     setLoading(true);
     try {
-      await axios.delete(`${BACKEND_URL}/category/${id}`);
+      await apiClient.delete(`${BACKEND_URL}/category/${id}`);
       toast('Delete Successfully', { type: 'success' });
       getData();
     } catch (err) {

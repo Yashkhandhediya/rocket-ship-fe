@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../common/utils/env.config';
+import apiClient from '../../common/utils/apiClient';
 
 const Change_password = () => {
   // This is a dummy data, you can replace it with your own data
@@ -22,15 +22,16 @@ const Change_password = () => {
   // This function is used to handle the form submit
   const handleSumbit = async () => {
     // You can use this data to send to the server
-    if(password.currentPassword == password.newPassword){
-      toast.error("New password cannot be the same as current password");
+    if (password.currentPassword == password.newPassword) {
+      toast.error('New password cannot be the same as current password');
       return;
     }
-    const temp_url = is_company == 0 ? `${BACKEND_URL}/login/password_change?old_password=${password.currentPassword}&user_id=${user_id}&new_password=${password.newPassword}`
-    : `${BACKEND_URL}/login/password_change?old_password=${password.currentPassword}&company_id=${user_id}&new_password=${password.newPassword}`
+    const temp_url =
+      is_company == 0
+        ? `${BACKEND_URL}/login/password_change?old_password=${password.currentPassword}&user_id=${user_id}&new_password=${password.newPassword}`
+        : `${BACKEND_URL}/login/password_change?old_password=${password.currentPassword}&company_id=${user_id}&new_password=${password.newPassword}`;
     try {
-      const response = await axios.get(`${temp_url}`,
-      );
+      const response = await apiClient.get(`${temp_url}`);
       if (response.data.massage === 'entered password is incorrect') {
         toast(response.data.massage, { type: 'error' });
       } else {

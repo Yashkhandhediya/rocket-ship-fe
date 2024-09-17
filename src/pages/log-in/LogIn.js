@@ -6,6 +6,7 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import OtpPopup from './OtpPopup';
 import { homelogo, LogoRCSL } from '../../common/images';
 import { Loader } from '../../common/components';
+import apiClient from '../../common/utils/apiClient';
 // import { GoogleLogin } from 'react-google-login';
 // import {gapi} from 'gapi-script'
 
@@ -98,14 +99,13 @@ const LogIn = () => {
             email_id: String(loginInput.username),
             [userType === 'user' ? 'user_id' : 'comp_id']: String(user_id),
           };
-          axios
+          apiClient
             .post(
               BACKEND_URL +
                 `${otpURL}/generate_otp?email_id=${loginInput.username}&${
                   userType === 'user' ? 'user_id' : 'comp_id'
                 }=${user_id}`,
               otpPayload,
-              { headers: headers },
             )
             .then((otpResponse) => {
               setLoading(false);

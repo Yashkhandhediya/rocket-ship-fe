@@ -20,7 +20,6 @@ import {
 } from '../../../../common/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllOrders, setClonedOrder, setEditOrder } from '../../../../redux';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Fragment, useState, useEffect } from 'react';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
@@ -31,6 +30,7 @@ import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Orders';
 import { rtoOptions } from '../../duck';
 import MultiSelectDropdown from '../../../rate-card/components/MultiSelectDropdown';
+import apiClient from '../../../../common/utils/apiClient';
 
 // import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
@@ -69,7 +69,7 @@ const Rto = ({ data, isLoading, fetchFilteredData }) => {
   // const fetchRTOList = async () => {
   //   try {
   //     setLoading(true);
-  //     const response = await axios.get(
+  //     const response = await apiClient.get(
   //       `${BACKEND_URL}/order/get_filtered_orders?created_by=${user_id}&status=manifested&page=${page}&page_size=${itemsPerPage}`,
   //     );
   //     setRtoList(response.data);
@@ -111,7 +111,7 @@ const Rto = ({ data, isLoading, fetchFilteredData }) => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'manifest';
 
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -175,7 +175,7 @@ const Rto = ({ data, isLoading, fetchFilteredData }) => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'invoice';
 
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -197,7 +197,7 @@ const Rto = ({ data, isLoading, fetchFilteredData }) => {
       isEdit: true,
       order_id: orderDetails?.id,
     };
-    axios
+    apiClient
       .get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails?.id}`)
       .then((res) => {
         console.log('Response Of Get Order While Edit ', res);
@@ -393,7 +393,7 @@ const Rto = ({ data, isLoading, fetchFilteredData }) => {
   };
 
   function cancelOrder(orderDetails) {
-    axios
+    apiClient
       .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}`, {
         ...orderDetails,
         status: 'cancelled',

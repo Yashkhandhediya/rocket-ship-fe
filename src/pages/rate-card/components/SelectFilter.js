@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import MultiSelectDropdown from './MultiSelectDropdown';
-import axios from 'axios';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import { toast } from 'react-toastify';
+import apiClient from '../../../common/utils/apiClient';
 
 function SelectFilter({ dataFiltered }) {
   const data = useSelector((state) => state?.rateCardData) || {};
@@ -40,7 +40,7 @@ function SelectFilter({ dataFiltered }) {
 
   const fetchFilteredData = async (filterType, options) => {
     try {
-      const response = await axios.post(`${BACKEND_URL}/rate_card/${user_id}`, {
+      const response = await apiClient.post(`${BACKEND_URL}/rate_card/${user_id}`, {
         filter_fields: {
           partner_id:
             filterType === 'partner_id'

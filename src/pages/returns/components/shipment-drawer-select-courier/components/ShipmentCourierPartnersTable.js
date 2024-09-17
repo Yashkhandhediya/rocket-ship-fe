@@ -1,7 +1,6 @@
 import DataTable from 'react-data-table-component';
 import { infoIcon } from '../../../../../common/icons';
 import { CustomTooltip, RatingProgressBar } from '../../../../../common/components';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { setAllReturns } from '../../../../../redux';
 import { useDispatch } from 'react-redux';
@@ -10,10 +9,10 @@ import './ShipmentCourierPartnersTable.css';
 import { SchedulePickupModal } from '../../schedule-pickup-modal';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import { setAllOrders } from '../../../../../redux';
-
+import apiClient from '../../../../../common/utils/apiClient';
 
 const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentDrawer }) => {
-  console.log("SHIPPPPPPPPPPPP", shipmentDetails)
+  console.log('SHIPPPPPPPPPPPP', shipmentDetails);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [scheduleModal, setScheduleModal] = useState({ isOpen: false, pickupDetails: {} });
@@ -29,7 +28,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
       setInfo({
         partner_id: 2,
         amount: data?.total_charge,
-        waybill_no: ''
+        waybill_no: '',
       });
       return;
     }
@@ -37,32 +36,31 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
       requestData = {
         partner_id: 1,
         amount: data?.total_charge,
-        waybill_no: ''
+        waybill_no: '',
       };
-    }
-    else if (data?.partner_name === 'Xpressbees') {
+    } else if (data?.partner_name === 'Xpressbees') {
       requestData = {
         partner_id: 3,
         amount: data?.total_charge,
-        waybill_no: ''
+        waybill_no: '',
       };
     } else if (data?.partner_name === 'ECOM EXPRESS') {
       requestData = {
         partner_id: 4,
         amount: data?.total_charge,
-        waybill_no: ''
+        waybill_no: '',
       };
     } else if (data?.partner_name === 'Maruti') {
       requestData = {
         partner_id: 5,
         amount: data?.total_charge,
-        waybill_no: ''
+        waybill_no: '',
       };
     }
     // setIsLoading(true);
     if (orderId && data?.partner_name != 'dtdc') {
       console.log('JTTTTTTTTTT', requestData);
-      axios
+      apiClient
         .post(`${BACKEND_URL}/return/${orderId}/shipment`, requestData)
         .then((resp) => {
           if (resp?.status === 200) {
@@ -108,7 +106,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
     setShowPopup(false);
     let requestData = info;
     requestData.waybill_no = wayBill;
-    axios
+    apiClient
       .post(`${BACKEND_URL}/return/${orderId}/shipment`, requestData)
       .then((resp) => {
         if (resp?.status === 200) {
@@ -256,16 +254,17 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           <div className="loader"></div>
         </div>
       )}
-      <div className="text-xs text-[rgb(136,136,136)]">{`${shipmentDetails?.length || 0
-        } Couriers Found`}</div>
-      
+      <div className="text-xs text-[rgb(136,136,136)]">{`${
+        shipmentDetails?.length || 0
+      } Couriers Found`}</div>
+
       <div className="mt-4 h-full w-full">
         <DataTable
           columns={columns}
           data={shipmentDetails || []}
           sortActive={false}
           fixedHeader={true}
-          fixedHeaderScrollHeight={"calc(100vh - 10rem)"}
+          fixedHeaderScrollHeight={'calc(100vh - 10rem)'}
         />
       </div>
       <SchedulePickupModal
@@ -284,7 +283,12 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           <div className="rounded-lg bg-white p-6 ">
             <div className="flex justify-between">
               <h2 className="mb-4 text-lg font-semibold">Enter Way Bill No.</h2>
-              <span onClick={() => { setShowPopup(false) }}><i className="fa-solid fa-xmark"></i></span>
+              <span
+                onClick={() => {
+                  setShowPopup(false);
+                }}>
+                <i className="fa-solid fa-xmark"></i>
+              </span>
             </div>
             <input
               type="text"
@@ -301,7 +305,6 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           </div>
         </div>
       )}
-
     </div>
   );
 };

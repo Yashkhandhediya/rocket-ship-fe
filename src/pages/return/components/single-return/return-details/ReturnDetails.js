@@ -1,6 +1,5 @@
 import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import axios from 'axios';
 import { FileInput, Label } from 'flowbite-react';
 import { cloneDeep, isEmpty } from 'lodash';
 import moment from 'moment';
@@ -11,6 +10,7 @@ import { CustomMultiSelect, Field, FieldAccordion, FieldTextArea } from '../../.
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
 import { setSingleReturn } from '../../../../../redux/actions/addReturnAction';
 import { deleteIcon } from '../../../../../common/icons';
+import apiClient from '../../../../../common/utils/apiClient';
 
 const ReturnDetails = ({ currentStep, handleChangeStep }) => {
   const dispatch = useDispatch();
@@ -75,8 +75,8 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
 
   const otherCharges =
     Number(paymentDetails?.gift_wrap || 0) +
-    Number(paymentDetails?.shipping_charges || 0) +
-    Number(paymentDetails?.transaction_fee || 0) || 0;
+      Number(paymentDetails?.shipping_charges || 0) +
+      Number(paymentDetails?.transaction_fee || 0) || 0;
 
   const totalOrderValue =
     Number(subProductTotal || 0) + Number(otherCharges || 0) - Number(paymentDetails?.discount || 0);
@@ -168,8 +168,11 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
   };
 
   const fetchReturnId = () => {
-    const id = localStorage.getItem('is_company') == 1 ? localStorage.getItem('company_id') : localStorage.getItem('user_id')
-    axios
+    const id =
+      localStorage.getItem('is_company') == 1
+        ? localStorage.getItem('company_id')
+        : localStorage.getItem('user_id');
+    apiClient
       .get(BACKEND_URL + `/return/get_return_id?user_id=${id}`)
       .then((resp) => {
         if (resp?.status == 200 && resp?.data?.return_id) {
@@ -195,7 +198,13 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
 
       const isQualityCheckSelected = checkboxValues?.qualityCheck !== '';
 
-      if (!productFields?.length ||!isValidProducts || !formDirectField?.channel || !formDirectField?.date || !isQualityCheckSelected) {
+      if (
+        !productFields?.length ||
+        !isValidProducts ||
+        !formDirectField?.channel ||
+        !formDirectField?.date ||
+        !isQualityCheckSelected
+      ) {
         toast('Please enter all required fields', { type: 'error' });
       } else {
         dispatch(
@@ -251,13 +260,12 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
   }, [domesticReturnFormValues]);
 
   const [checkboxValues, setCheckBoxValues] = useState({
-    qualityCheck: '', 
-    
+    qualityCheck: '',
   });
-  
+
   const handleQualityCheckChange = (event) => {
     const { value, checked } = event.target;
-  
+
     // Ensure only one checkbox can be selected at a time
     if (checked) {
       setCheckBoxValues({
@@ -286,7 +294,10 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
               id={'return_id'}
               label={
                 <span>
-                  Return ID <span className="text-gray-400 ml-2" style={{ fontSize: '10px' }}>(Auto Generated)</span>
+                  Return ID{' '}
+                  <span className="ml-2 text-gray-400" style={{ fontSize: '10px' }}>
+                    (Auto Generated)
+                  </span>
                 </span>
               }
               inputClassNames={'text-xs'}
@@ -340,9 +351,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
               id={'channel'}
               label={'Channel'}
               placeholder="Enter Channel"
-              options={[
-                { label: 'CUSTOM', value: 'custom' },
-              ]}
+              options={[{ label: 'CUSTOM', value: 'custom' }]}
               tooltip={
                 'can select your connected store (Shopify/WooCommerce etc.) or mark the order as "Custom" (used for adding manual orders)'
               }
@@ -383,9 +392,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
               { label: 'Changed my mind', value: 'changed_my_mind' },
               { label: 'Other', value: 'other' },
             ]}
-            tooltip={
-              'Select the reason why your buyer is returning the product(s)'
-            }
+            tooltip={'Select the reason why your buyer is returning the product(s)'}
             withCheckbox={false}
             displayValuesAsStrings
             closeMenuOnSelect={true}
@@ -440,8 +447,10 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
         <div className="mb-6 mt-4 w-full border border-gray-200" />
         <div>
           <div className="mb-3 text-sm font-medium">{'Return Product Details'}</div>
-          <div className='mb-8'>
-            <div className="mb-3 text-xs font-normal">{'Will this order be applicable for Quality Check?'}</div>
+          <div className="mb-8">
+            <div className="mb-3 text-xs font-normal">
+              {'Will this order be applicable for Quality Check?'}
+            </div>
             <div className="flex items-center">
               <label className="inline-flex items-center">
                 <input
@@ -450,7 +459,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
                   value="yes"
                   checked={checkboxValues?.qualityCheck === 'yes'}
                   onChange={handleQualityCheckChange}
-                  className="form-checkbox appearance-none checked:bg-blue-600 cursor-pointer"
+                  className="form-checkbox cursor-pointer appearance-none checked:bg-blue-600"
                   style={{
                     width: '10px',
                     height: '10px',
@@ -466,7 +475,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
                   value="no"
                   checked={checkboxValues?.qualityCheck === 'no'}
                   onChange={handleQualityCheckChange}
-                  className="form-checkbox appearance-none checked:bg-blue-600 cursor-pointer"
+                  className="form-checkbox cursor-pointer appearance-none checked:bg-blue-600"
                   style={{
                     width: '10px',
                     height: '10px',
@@ -561,8 +570,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
                     <button
                       disabled={productFields.length === 1}
                       className="mt-4 px-2 py-1 disabled:opacity-50"
-                      onClick={() => handleDeleteProductField(index)}
-                    >
+                      onClick={() => handleDeleteProductField(index)}>
                       <img src={deleteIcon} className="w-4" />
                     </button>
                   </div>
@@ -635,8 +643,7 @@ const ReturnDetails = ({ currentStep, handleChangeStep }) => {
           <div>
             <button
               className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-xs text-orange-700'}
-              onClick={handleAddProductField}
-            >
+              onClick={handleAddProductField}>
               + Add Another Product
             </button>
           </div>

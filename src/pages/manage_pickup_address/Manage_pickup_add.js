@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
 import { Address_Modal } from './address_modal';
+import apiClient from '../../common/utils/apiClient';
 
 const Manage_pickup_add = () => {
   const [pickupAddress, setPickupAddress] = useState([]); //eslint-disable-line
@@ -27,7 +27,7 @@ const Manage_pickup_add = () => {
   const fetchUserAddressList = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/address/?user_id=${user_id}`);
+      const response = await apiClient.get(`${BACKEND_URL}/address/?user_id=${user_id}`);
       if (response.status === 200) {
         const sortedAddresses = response.data.sort((a, b) => b.is_primary - a.is_primary);
         setPickupAddress(sortedAddresses);
@@ -44,7 +44,7 @@ const Manage_pickup_add = () => {
   const handleSetPrimary = async (id) => {
     setLoading(true);
     try {
-      const response = await axios.put(`${BACKEND_URL}/address/${user_id}?address_id=${id}`);
+      const response = await apiClient.put(`${BACKEND_URL}/address/${user_id}?address_id=${id}`);
       if (response.status === 200) {
         toast(response.data.msg, { type: 'success' });
         fetchUserAddressList();
@@ -198,269 +198,271 @@ const Manage_pickup_add = () => {
             </div>
             {pickupAddress &&
               pickupAddress
-              .sort((a, b) => b.id - a.id) 
-              .map((address, i) => {
-                return (
-                  <div key={address.id} className="flex flex-col pr-4">
-                    <div
-                      className={`transition-shadow duration-700 ${
-                        openAddress == 1 ? 'rounded-lg shadow' : 'shadow-none'
-                      }`}>
+                .sort((a, b) => b.id - a.id)
+                .map((address, i) => {
+                  return (
+                    <div key={address.id} className="flex flex-col pr-4">
                       <div
-                        className={`flex flex-row items-center justify-between border bg-white transition-all  duration-700 ${
-                          openAddress == 1 ? 'rounded rounded-b-none border-[#99999928]' : 'rounded-lg shadow'
-                        } w-full border-[#99999928] border-b-[#eee] px-3 py-2 text-[14px] text-[#444] `}>
-                        {/* Address tag */}
-                        <div className='w-[10%]'>{address?.tag || 'Primary'}</div>
-                        {/* middle column */}
-                        <div className="flex flex-row items-center gap-4">
-                          <div>
-                            <svg
-                              className="h-5 w-5 cursor-pointer text-[#555] hover:text-blue-500"
-                              aria-hidden="true"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              onClick={() => {
-                                setShowAddressModal(true);
-                                setAddressId(address.id);
-                              }}>
-                              <path
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="m14.3 4.8 2.9 2.9M7 7H4a1 1 0 0 0-1 1v10c0 .6.4 1 1 1h11c.6 0 1-.4 1-1v-4.5m2.4-10a2 2 0 0 1 0 3l-6.8 6.8L8 14l.7-3.6 6.9-6.8a2 2 0 0 1 2.8 0Z"
+                        className={`transition-shadow duration-700 ${
+                          openAddress == 1 ? 'rounded-lg shadow' : 'shadow-none'
+                        }`}>
+                        <div
+                          className={`flex flex-row items-center justify-between border bg-white transition-all  duration-700 ${
+                            openAddress == 1
+                              ? 'rounded rounded-b-none border-[#99999928]'
+                              : 'rounded-lg shadow'
+                          } w-full border-[#99999928] border-b-[#eee] px-3 py-2 text-[14px] text-[#444] `}>
+                          {/* Address tag */}
+                          <div className="w-[10%]">{address?.tag || 'Primary'}</div>
+                          {/* middle column */}
+                          <div className="flex flex-row items-center gap-4">
+                            <div>
+                              <svg
+                                className="h-5 w-5 cursor-pointer text-[#555] hover:text-blue-500"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                onClick={() => {
+                                  setShowAddressModal(true);
+                                  setAddressId(address.id);
+                                }}>
+                                <path
+                                  stroke="currentColor"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="m14.3 4.8 2.9 2.9M7 7H4a1 1 0 0 0-1 1v10c0 .6.4 1 1 1h11c.6 0 1-.4 1-1v-4.5m2.4-10a2 2 0 0 1 0 3l-6.8 6.8L8 14l.7-3.6 6.9-6.8a2 2 0 0 1 2.8 0Z"
+                                />
+                              </svg>
+                            </div>
+                            <div className="rounded-md bg-[#27C24C] px-4 text-[11px] text-white">Active</div>
+                            <div>
+                              <span className="font-normal">Location ID: </span>
+                              {address.id}
+                            </div>
+                          </div>
+                          {/* end column */}
+                          <div className="flex flex-row items-center gap-8 text-[12px] font-normal">
+                            <div className="flex flex-row items-center">
+                              <input
+                                id="primary_address"
+                                type="checkbox"
+                                checked={address.is_primary === 1}
+                                onChange={() => handleSetPrimary(address.id)}
+                                className="h-4 w-4 rounded-full bg-gray-100 text-green-600 focus:outline-none focus:ring-0 focus:ring-transparent"
                               />
-                            </svg>
-                          </div>
-                          <div className="rounded-md bg-[#27C24C] px-4 text-[11px] text-white">Active</div>
-                          <div>
-                            <span className="font-normal">Location ID: </span>
-                            {address.id}
-                          </div>
-                        </div>
-                        {/* end column */}
-                        <div className="flex flex-row items-center gap-8 text-[12px] font-normal">
-                          <div className="flex flex-row items-center">
-                            <input
-                              id="primary_address"
-                              type="checkbox"
-                              checked={address.is_primary === 1}
-                              onChange={() => handleSetPrimary(address.id)}
-                              className="h-4 w-4 rounded-full bg-gray-100 text-green-600 focus:outline-none focus:ring-0 focus:ring-transparent"
-                            />
-                            <label
-                              htmlFor="primary_address"
-                              className="dark:text-gray-300 ms-2 text-sm font-medium text-gray-900">
-                              Primary Address
-                            </label>
-                          </div>
-                          <div className="flex flex-row items-center">
-                            <label className="relative inline-flex cursor-pointer items-center">
-                              <input type="checkbox" value="" className="peer sr-only" />
-                              <div className="dark:border-gray-600 peer h-4 w-7 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-0.5 after:h-3 after:w-3 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-0 rtl:peer-checked:after:-translate-x-full"></div>
-                            </label>
-                          </div>
-                          <div
-                            className="flex h-full w-8 cursor-pointer select-none flex-row items-center justify-center pr-4 text-[24px] font-extrabold text-[#979898]"
-                            onClick={() => handleAddressToggle(i)}>
-                            {openIndex == i ? (
-                              <span
-                                className={`transition-opacity duration-500 ${
-                                  openIndex == i ? 'opacity-100' : 'opacity-0'
-                                } `}>
-                                -
-                              </span>
-                            ) : (
-                              <span
-                                className={`transition-opacity ${
-                                  openIndex == i ? 'opacity-0' : 'opacity-100'
-                                } duration-500`}>
-                                +
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        id={`accordion-open-body-1`}
-                        className={`transition-max-height flex flex-col gap-0 overflow-hidden pt-2 duration-700 ease-in-out ${
-                          openIndex === i ? 'max-h-96 rounded-b-lg border border-t-0' : 'max-h-0'
-                        }`}
-                        aria-labelledby={`accordion-open-heading-1`}>
-                        {/* top row */}
-                        <div className="flex flex-row justify-start px-8 py-2">
-                          <div className="w-1/3">
-                            Name:{' '}
-                            <span className="font-normal">
-                              {address.first_name} {address.last_name}
-                            </span>
-                          </div>
-                          <div className="flex w-1/3 flex-row gap-2">
-                            Phone: <span className="font-normal">{address.contact_no}</span>
-                            {address.address_verification && (
-                              <span className="flex h-4 flex-row items-center gap-1 rounded bg-[#27C24C] px-2 text-white">
-                                <svg
-                                  className="dark:text-white h-4 w-4 text-white"
-                                  aria-hidden="true"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="none"
-                                  viewBox="0 0 24 24">
-                                  <path
-                                    stroke="currentColor"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="m5 12 4.7 4.5 9.3-9"
-                                  />
-                                </svg>
-                                verified
-                              </span>
-                            )}
-                          </div>
-                          <div className="w-1/3">
-                            Email: <span className="font-normal">{address.email_address}</span>
-                          </div>
-                        </div>
-                        {/* middle row */}
-                        <div className="flex flex-row justify-start px-8 py-2">
-                          <div className="w-1/3">
-                            Address:
-                            <span className="font-normal">{address.complete_address}</span>
-                          </div>
-                          <div className="w-1/3">
-                            Address2: <span className="font-normal">{address.complete_address}</span>
-                          </div>
-                          <div className="w-1/3">
-                            City:: <span className="font-normal">{address.city}</span>
-                          </div>
-                        </div>
-                        {/* bottom row */}
-                        <div className="flex flex-row justify-start px-8 py-2">
-                          <div className="w-1/3">
-                            State: <span className="font-normal">{address.state}</span>
-                          </div>
-                          <div className="w-1/3">
-                            Country: <span className="font-normal">{address.country}</span>
-                          </div>
-                          <div className="w-1/3">
-                            Pin Code: <span className="font-normal">{address.pincode}</span>
-                          </div>
-                        </div>
-                        {/* Associated RTO Address */}
-                        <div>
-                          <div className="flex flex-row justify-start px-8 py-2 pb-4">
+                              <label
+                                htmlFor="primary_address"
+                                className="dark:text-gray-300 ms-2 text-sm font-medium text-gray-900">
+                                Primary Address
+                              </label>
+                            </div>
+                            <div className="flex flex-row items-center">
+                              <label className="relative inline-flex cursor-pointer items-center">
+                                <input type="checkbox" value="" className="peer sr-only" />
+                                <div className="dark:border-gray-600 peer h-4 w-7 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-0.5 after:h-3 after:w-3 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-green-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-0 rtl:peer-checked:after:-translate-x-full"></div>
+                              </label>
+                            </div>
                             <div
-                              className="flex cursor-pointer select-none flex-row items-center justify-center gap-2 pt-4 font-normal text-[#895D20]"
-                              onClick={() => handleRTOAddressToggle(i)}>
-                              <span>Associated RTO Address</span>
-                              {openRTOAddress ? (
-                                <svg
-                                  className="dark:text-white h-4 w-4 rotate-180 text-[#895D20] transition-all duration-500"
-                                  aria-hidden="true"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="none"
-                                  viewBox="0 0 24 24">
-                                  <path
-                                    stroke="currentColor"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="m5 15 7-7 7 7"
-                                  />
-                                </svg>
+                              className="flex h-full w-8 cursor-pointer select-none flex-row items-center justify-center pr-4 text-[24px] font-extrabold text-[#979898]"
+                              onClick={() => handleAddressToggle(i)}>
+                              {openIndex == i ? (
+                                <span
+                                  className={`transition-opacity duration-500 ${
+                                    openIndex == i ? 'opacity-100' : 'opacity-0'
+                                  } `}>
+                                  -
+                                </span>
                               ) : (
-                                <svg
-                                  className="h-4 w-4 text-[#895D20] transition-all duration-500"
-                                  aria-hidden="true"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="none"
-                                  viewBox="0 0 24 24">
-                                  <path
-                                    stroke="currentColor"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="m5 15 7-7 7 7"
-                                  />
-                                </svg>
+                                <span
+                                  className={`transition-opacity ${
+                                    openIndex == i ? 'opacity-0' : 'opacity-100'
+                                  } duration-500`}>
+                                  +
+                                </span>
                               )}
                             </div>
                           </div>
-                          <div
-                            id={`accordion-open-body-1`}
-                            className={`transition-max-height flex flex-col gap-0 overflow-hidden pb-2 duration-700 ease-in-out ${
-                              openRTOIndex === i ? 'max-h-96 rounded-b-lg border border-t-0' : 'max-h-0'
-                            }`}
-                            aria-labelledby={`accordion-open-heading-1`}>
-                            {/* top row for Associated RTO Address*/}
-                            <div className="flex flex-row justify-start px-8 py-2">
-                              <div className="w-1/3">
-                                Name:{' '}
-                                <span className="font-normal">
-                                  {' '}
-                                  {address.first_name} {address.last_name}
+                        </div>
+                        <div
+                          id={`accordion-open-body-1`}
+                          className={`transition-max-height flex flex-col gap-0 overflow-hidden pt-2 duration-700 ease-in-out ${
+                            openIndex === i ? 'max-h-96 rounded-b-lg border border-t-0' : 'max-h-0'
+                          }`}
+                          aria-labelledby={`accordion-open-heading-1`}>
+                          {/* top row */}
+                          <div className="flex flex-row justify-start px-8 py-2">
+                            <div className="w-1/3">
+                              Name:{' '}
+                              <span className="font-normal">
+                                {address.first_name} {address.last_name}
+                              </span>
+                            </div>
+                            <div className="flex w-1/3 flex-row gap-2">
+                              Phone: <span className="font-normal">{address.contact_no}</span>
+                              {address.address_verification && (
+                                <span className="flex h-4 flex-row items-center gap-1 rounded bg-[#27C24C] px-2 text-white">
+                                  <svg
+                                    className="dark:text-white h-4 w-4 text-white"
+                                    aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                      stroke="currentColor"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="2"
+                                      d="m5 12 4.7 4.5 9.3-9"
+                                    />
+                                  </svg>
+                                  verified
                                 </span>
-                              </div>
-                              <div className="flex w-1/3 flex-row gap-2">
-                                Phone: <span className="font-normal">{address.contact_no}</span>
-                                {address.address_verification && (
-                                  <span className="flex h-4 flex-row items-center gap-1 rounded bg-[#27C24C] px-2 text-white">
-                                    <svg
-                                      className="dark:text-white h-4 w-4 text-white"
-                                      aria-hidden="true"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      fill="none"
-                                      viewBox="0 0 24 24">
-                                      <path
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="m5 12 4.7 4.5 9.3-9"
-                                      />
-                                    </svg>
-                                    verified
-                                  </span>
+                              )}
+                            </div>
+                            <div className="w-1/3">
+                              Email: <span className="font-normal">{address.email_address}</span>
+                            </div>
+                          </div>
+                          {/* middle row */}
+                          <div className="flex flex-row justify-start px-8 py-2">
+                            <div className="w-1/3">
+                              Address:
+                              <span className="font-normal">{address.complete_address}</span>
+                            </div>
+                            <div className="w-1/3">
+                              Address2: <span className="font-normal">{address.complete_address}</span>
+                            </div>
+                            <div className="w-1/3">
+                              City:: <span className="font-normal">{address.city}</span>
+                            </div>
+                          </div>
+                          {/* bottom row */}
+                          <div className="flex flex-row justify-start px-8 py-2">
+                            <div className="w-1/3">
+                              State: <span className="font-normal">{address.state}</span>
+                            </div>
+                            <div className="w-1/3">
+                              Country: <span className="font-normal">{address.country}</span>
+                            </div>
+                            <div className="w-1/3">
+                              Pin Code: <span className="font-normal">{address.pincode}</span>
+                            </div>
+                          </div>
+                          {/* Associated RTO Address */}
+                          <div>
+                            <div className="flex flex-row justify-start px-8 py-2 pb-4">
+                              <div
+                                className="flex cursor-pointer select-none flex-row items-center justify-center gap-2 pt-4 font-normal text-[#895D20]"
+                                onClick={() => handleRTOAddressToggle(i)}>
+                                <span>Associated RTO Address</span>
+                                {openRTOAddress ? (
+                                  <svg
+                                    className="dark:text-white h-4 w-4 rotate-180 text-[#895D20] transition-all duration-500"
+                                    aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                      stroke="currentColor"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="2"
+                                      d="m5 15 7-7 7 7"
+                                    />
+                                  </svg>
+                                ) : (
+                                  <svg
+                                    className="h-4 w-4 text-[#895D20] transition-all duration-500"
+                                    aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                      stroke="currentColor"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="2"
+                                      d="m5 15 7-7 7 7"
+                                    />
+                                  </svg>
                                 )}
                               </div>
-                              <div className="w-1/3">
-                                Email: <span className="font-normal">{address.email_address}</span>
-                              </div>
                             </div>
-                            {/* middle row for Associated RTO Address*/}
-                            <div className="flex flex-row justify-start px-8 py-2">
-                              <div className="w-1/3">
-                                Address:
-                                <span className="font-normal">{address.complete_address}</span>
+                            <div
+                              id={`accordion-open-body-1`}
+                              className={`transition-max-height flex flex-col gap-0 overflow-hidden pb-2 duration-700 ease-in-out ${
+                                openRTOIndex === i ? 'max-h-96 rounded-b-lg border border-t-0' : 'max-h-0'
+                              }`}
+                              aria-labelledby={`accordion-open-heading-1`}>
+                              {/* top row for Associated RTO Address*/}
+                              <div className="flex flex-row justify-start px-8 py-2">
+                                <div className="w-1/3">
+                                  Name:{' '}
+                                  <span className="font-normal">
+                                    {' '}
+                                    {address.first_name} {address.last_name}
+                                  </span>
+                                </div>
+                                <div className="flex w-1/3 flex-row gap-2">
+                                  Phone: <span className="font-normal">{address.contact_no}</span>
+                                  {address.address_verification && (
+                                    <span className="flex h-4 flex-row items-center gap-1 rounded bg-[#27C24C] px-2 text-white">
+                                      <svg
+                                        className="dark:text-white h-4 w-4 text-white"
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                          stroke="currentColor"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth="2"
+                                          d="m5 12 4.7 4.5 9.3-9"
+                                        />
+                                      </svg>
+                                      verified
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="w-1/3">
+                                  Email: <span className="font-normal">{address.email_address}</span>
+                                </div>
                               </div>
-                              <div className="w-1/3">
-                                Address2: <span className="font-normal">{address.complete_address}</span>
+                              {/* middle row for Associated RTO Address*/}
+                              <div className="flex flex-row justify-start px-8 py-2">
+                                <div className="w-1/3">
+                                  Address:
+                                  <span className="font-normal">{address.complete_address}</span>
+                                </div>
+                                <div className="w-1/3">
+                                  Address2: <span className="font-normal">{address.complete_address}</span>
+                                </div>
+                                <div className="w-1/3">
+                                  City: <span className="font-normal">{address.city}</span>
+                                </div>
                               </div>
-                              <div className="w-1/3">
-                                City: <span className="font-normal">{address.city}</span>
-                              </div>
-                            </div>
-                            {/* bottom row for Associated RTO Address*/}
-                            <div className="flex flex-row justify-start px-8 py-2">
-                              <div className="w-1/3">
-                                State: <span className="font-normal">{address.state}</span>
-                              </div>
-                              <div className="w-1/3">
-                                Country: <span className="font-normal">{address.country}</span>
-                              </div>
-                              <div className="w-1/3">
-                                Pin Code: <span className="font-normal">{address.pincode}</span>
+                              {/* bottom row for Associated RTO Address*/}
+                              <div className="flex flex-row justify-start px-8 py-2">
+                                <div className="w-1/3">
+                                  State: <span className="font-normal">{address.state}</span>
+                                </div>
+                                <div className="w-1/3">
+                                  Country: <span className="font-normal">{address.country}</span>
+                                </div>
+                                <div className="w-1/3">
+                                  Pin Code: <span className="font-normal">{address.pincode}</span>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
           </div>
         </div>
       </div>

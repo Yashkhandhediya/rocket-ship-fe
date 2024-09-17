@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import PageWithSidebar from '../../../common/components/page-with-sidebar/PageWithSidebar';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import { FaSearch } from 'react-icons/fa';
 import { CustomMultiSelect } from '../../../common/components';
@@ -10,6 +9,7 @@ import { modes, regions, sorts } from '../constants';
 import { FiPhoneCall, FiUser, FiMapPin } from 'react-icons/fi';
 import { FaUserTie } from 'react-icons/fa';
 import { Bike } from '../../../common/icons';
+import apiClient from '../../../common/utils/apiClient';
 
 function Courier_Selection() {
   const [activeTab, setActiveTab] = useState('All');
@@ -22,7 +22,7 @@ function Courier_Selection() {
   const tabs = ['Activated', 'Deactivated', 'All'];
 
   const handleData = () => {
-    axios
+    apiClient
       .get(BACKEND_URL + `/userpartner/get_user_partner?user_id=${localStorage.getItem('user_id')}`)
       .then((res) => {
         console.log('Courier Data', res.data);
@@ -59,7 +59,7 @@ function Courier_Selection() {
 
   const handleActive = (id, status) => {
     const newStatus = status === 1 ? 0 : 1;
-    axios
+    apiClient
       .put(BACKEND_URL + `/userpartner/update_status?id=${id}&status=${newStatus}`)
       .then((res) => {
         console.log('Response Data', res.data);

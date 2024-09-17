@@ -1,12 +1,12 @@
 import { faCalendarDays } from '@fortawesome/free-regular-svg-icons';
 import { faCircleCheck, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import axios from 'axios';
 import { Modal } from 'flowbite-react';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import apiClient from '../../../../common/utils/apiClient';
 
 const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
   const [datesToMap, seDatesToMap] = useState([]);
@@ -26,7 +26,7 @@ const SchedulePickupModal = ({ isOpen, onClose, pickupDetails }) => {
 
   const schedulePickup = () => {
     const formattedDate = moment(scheduleDetails.pickup_date).format('YYYY-MM-DD');
-    axios
+    apiClient
       .post(`${BACKEND_URL}/order/${pickupDetails?.id}/pickup`, {
         pickup_date: formattedDate,
         pickup_time: scheduleDetails.pickup_time,

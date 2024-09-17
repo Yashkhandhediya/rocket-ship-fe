@@ -1,4 +1,3 @@
-import axios from 'axios';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { useState, useEffect, useRef } from 'react';
@@ -11,6 +10,7 @@ import ShipmentDetailCard from './components/shipment-card/ShipmentDetailCard';
 import { ShipmentOverview } from './components/shipment-overview';
 import GeoChart from './components/GeoChart';
 import ShipmentZone from './components/ShipmentZone';
+import apiClient from '../../common/utils/apiClient';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -103,7 +103,7 @@ const Dashboard = () => {
   };
 
   const tabs = [
-    'Overview'/*,
+    'Overview' /*,
     'Orders',
     'Shipments',
     'NDR',
@@ -111,11 +111,11 @@ const Dashboard = () => {
     'RTO',
     'Courier',
     'Delays',
-    'Tracking Page',*/
+    'Tracking Page',*/,
   ];
 
   const handleData = () => {
-    axios
+    apiClient
       .post(
         BACKEND_URL +
           `/dashboard/user_order_analysis/?user_id=${id_user}&start_date=${fromDate}&end_date=${toDate}`,

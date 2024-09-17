@@ -11,7 +11,6 @@ import ProductDetailsCard from './components/ProductDetailsCard';
 import AppChangesCard from './components/AppChangesCard';
 import OrderTrackRightContainer from './components/OrderTrackRightContainer';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { ShipmentDrawerOrderDetails } from '../orders/components/shipment-drawer-order-details';
 import ShipmentDrawerSelectCourier from '../orders/components/shipment-drawer-select-courier/ShipmentDrawerSelectCourier';
 import { BACKEND_URL } from '../../common/utils/env.config';
@@ -23,6 +22,7 @@ import { setDomesticOrder } from '../../redux/actions/addOrderActions';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setAllOrders } from '../../redux';
+import apiClient from '../../common/utils/apiClient';
 // import { ACCESS_TOKEN } from '../../common/utils/config';
 
 const OrderTrackDetails = () => {
@@ -49,7 +49,7 @@ const OrderTrackDetails = () => {
 
   const fetchOrderDetails = async () => {
     const apiURL = flag == 1 ? '/return/get_return_detail' : '/order/get_order_detail';
-    await axios
+    await apiClient
       .get(BACKEND_URL + apiURL, {
         params: {
           id: orderId,
@@ -122,7 +122,7 @@ const OrderTrackDetails = () => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'invoice';
 
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -144,7 +144,7 @@ const OrderTrackDetails = () => {
       isEdit: true,
       order_id: orderDetails?.id,
     };
-    axios
+    apiClient
       .get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails}`)
       .then((res) => {
         console.log('Response Of Get Order While Edit ', res);
@@ -160,7 +160,7 @@ const OrderTrackDetails = () => {
   }
 
   function cancelOrder(orderDetails) {
-    axios
+    apiClient
       .put(`${BACKEND_URL}/order/?id=${orderDetails}`, {
         ...orderDetails,
         status: 'cancelled',

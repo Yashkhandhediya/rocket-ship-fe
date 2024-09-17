@@ -2,7 +2,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Tabs from './Tabs';
 import { returnsTabs } from './duck';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllReturns } from '../../redux';
 import { toast } from 'react-toastify';
@@ -13,6 +12,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { setFilteredReturnOrders } from '../../redux';
+import apiClient from '../../common/utils/apiClient';
 // updated code
 export let resData = [];
 const Returns = () => {
@@ -52,7 +52,7 @@ const Returns = () => {
   const fetchFilteredOrders = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/return/filter?user_id=${userId}&string=${query}`);
+      const response = await apiClient.get(`${BACKEND_URL}/return/filter?user_id=${userId}&string=${query}`);
       console.log(response.data);
       setFilteredOrderId(
         (response.data.awb.return_ids.length != 0 && response.data.awb.return_ids) ||
@@ -86,7 +86,7 @@ const Returns = () => {
   const handlePostFilteredOrder = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${BACKEND_URL}/return/filter_returns`, filteredOrderId);
+      const response = await apiClient.post(`${BACKEND_URL}/return/filter_returns`, filteredOrderId);
       dispatch(setFilteredReturnOrders(response?.data || []));
       setReturnActiveTab(5);
       clearSearch();
@@ -109,7 +109,7 @@ const Returns = () => {
   let cuser_id = location?.state?.data?.id !== undefined ? location.state.data.id : id_user;
 
   const fetchNewReturns = () => {
-    axios
+    apiClient
       .post(BACKEND_URL + `/return/get_filtered_returns?page=1&per_page=100&user_id=${cuser_id}`)
       .then(async (resp) => {
         if (resp.status === 200) {

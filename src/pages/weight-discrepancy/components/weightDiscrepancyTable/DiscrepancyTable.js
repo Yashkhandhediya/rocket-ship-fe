@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 // import { FreezeModal } from '../weightFreezeModal';
 import { useSearchParams } from 'react-router-dom';
 import { DiscrepancyModal } from '../weightDiscrepancyModal';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
 import { ACCESS_TOKEN } from '../../../../common/utils/config';
+import apiClient from '../../../../common/utils/apiClient';
 // import { noData } from '../../../../common/images';
 
 const DiscrepancyTable = ({ data, setLoading }) => {
@@ -20,7 +20,7 @@ const DiscrepancyTable = ({ data, setLoading }) => {
     const fetchImages = async () => {
       const imagePromises = data.map(async (item) => {
         try {
-          const response = await axios.get(
+          const response = await apiClient.get(
             BACKEND_URL +
               `/weight_discrepancy/get_weight_discrepancy_courier_image?weight_discrepancy_id=${item.weight_discrepancy.id}&image_type=courier_image`,
             { responseType: 'blob' },
@@ -62,7 +62,7 @@ const DiscrepancyTable = ({ data, setLoading }) => {
   };
 
   const updateStatus = (id) => {
-    axios
+    apiClient
       .put(
         `${BACKEND_URL}/weight_discrepancy/update?id=${id}&user_id=${localStorage.getItem('user_id')}`,
         { status_name: 'Discrepancy Accepted' },

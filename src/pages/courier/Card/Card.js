@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
 import { BACKEND_URL } from '../../../common/utils/env.config';
+import apiClient from '../../../common/utils/apiClient';
 
 const Card = ({ cards, setCards, initialCards, onCardsUpdate }) => {
   const [data, setData] = useState([]);
 
   const handleData = () => {
-    axios
+    apiClient
       .get(BACKEND_URL + `/userpartner/custom_courier_priority?user_id=${localStorage.getItem('user_id')}`)
       .then((res) => {
         console.log('Data Courier', res.data);
@@ -53,40 +53,39 @@ const Card = ({ cards, setCards, initialCards, onCardsUpdate }) => {
   };
 
   return (
-    <div className="container mx-auto p-4 bg-gray-200 rounded-md">
-      <h1 className="text-base text-center mb-4">
+    <div className="container mx-auto rounded-md bg-gray-200 p-4">
+      <h1 className="mb-4 text-center text-base">
         <i className="fa-solid fa-up-down-left-right mr-2"></i>Drag to Set Your Priority
       </h1>
       <div className="flex flex-wrap space-x-4 p-4">
         {cards.map((card, index) => (
           <div
             key={card.id}
-            className="bg-white rounded-lg shadow-md p-4 w-60 h-96 cursor-move mb-4 ml-4"
+            className="mb-4 ml-4 h-96 w-60 cursor-move rounded-lg bg-white p-4 shadow-md"
             draggable
             onDragStart={(e) => handleDragStart(e, index)}
             onDragEnter={(e) => handleDragEnter(e, index)}
             onDragEnd={handleDragEnd}
-            onDragOver={(e) => e.preventDefault()}
-          >
-            <div className="flex items-center justify-center mb-2">
-              <img src={card.img_name} alt={card.name} className="w-20 h-20" />
+            onDragOver={(e) => e.preventDefault()}>
+            <div className="mb-2 flex items-center justify-center">
+              <img src={card.img_name} alt={card.name} className="h-20 w-20" />
             </div>
             <div className="flex flex-col items-center justify-center">
-              <h3 className="text-sm mb-1">{card.name}</h3>
-              <p className="text-gray-500 text-sm mb-2">Min. Weight: {card.minWeight}</p>
+              <h3 className="mb-1 text-sm">{card.name}</h3>
+              <p className="mb-2 text-sm text-gray-500">Min. Weight: {card.minWeight}</p>
             </div>
-            <div className="border-t border-gray-300 mt-2 mb-2"></div>
-            <p className="text-sm mb-6 mt-4">
-              <span className="text-gray-500 text-xs">Call Before Delivery:</span> {card.callBeforeDelivery}
+            <div className="mb-2 mt-2 border-t border-gray-300"></div>
+            <p className="mb-6 mt-4 text-sm">
+              <span className="text-xs text-gray-500">Call Before Delivery:</span> {card.callBeforeDelivery}
             </p>
-            <p className="text-sm mb-6">
-              <span className="text-gray-500 text-xs">POD:</span> {card.pod}
+            <p className="mb-6 text-sm">
+              <span className="text-xs text-gray-500">POD:</span> {card.pod}
             </p>
-            <p className="text-sm mb-6">
-              <span className="text-gray-500 text-xs">Delivery Boy Number:</span> {card.deliveryBoyNumber}
+            <p className="mb-6 text-sm">
+              <span className="text-xs text-gray-500">Delivery Boy Number:</span> {card.deliveryBoyNumber}
             </p>
-            <p className="text-sm mb-6">
-              <span className="text-gray-500 text-xs">Tracking Services:</span> {card.trackingServices}
+            <p className="mb-6 text-sm">
+              <span className="text-xs text-gray-500">Tracking Services:</span> {card.trackingServices}
             </p>
           </div>
         ))}

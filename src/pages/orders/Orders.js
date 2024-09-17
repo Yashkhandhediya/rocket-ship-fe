@@ -1,7 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ordersTabs } from './duck';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllOrders } from '../../redux';
 import { toast } from 'react-toastify';
@@ -14,6 +13,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { setFilteredOrders } from '../../redux';
+import apiClient from '../../common/utils/apiClient';
 
 export let resData = [];
 const Orders = () => {
@@ -64,7 +64,7 @@ const Orders = () => {
   const fetchFilteredOrders = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/order/filter?user_id=${userId}&string=${query}`);
+      const response = await apiClient.get(`${BACKEND_URL}/order/filter?user_id=${userId}&string=${query}`);
       console.log(response.data);
       setFilteredOrderId(
         (response.data.awb.order_id.length != 0 && response.data.awb.order_id) ||
@@ -98,7 +98,7 @@ const Orders = () => {
   const handlePostFilteredOrder = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${BACKEND_URL}/order/filter_orders`, filteredOrderId);
+      const response = await apiClient.post(`${BACKEND_URL}/order/filter_orders`, filteredOrderId);
       dispatch(setFilteredOrders(response?.data || []));
       setOrderActiveTab(6);
       clearSearch();
@@ -124,7 +124,7 @@ const Orders = () => {
       navigate('/all-user');
       return;
     }
-    axios
+    apiClient
       .post(BACKEND_URL + `/order/get_filtered_orders?created_by=${cuser_id}`)
       .then(async (resp) => {
         if (resp.status === 200) {

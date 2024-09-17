@@ -1,10 +1,10 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../../common/components';
 import moment from 'moment';
+import apiClient from '../../../common/utils/apiClient';
 
 function TrackingInfo() {
   const [trackOrderData, setTrackOrderData] = useState([]);
@@ -12,13 +12,13 @@ function TrackingInfo() {
   const { orderId } = useParams();
   const [loading, setLoading] = useState(false);
   const flag = searchParam.get('flag');
-  const status_name = searchParam.get('status')
+  const status_name = searchParam.get('status');
 
   const fetchOrderDetails = async () => {
     setLoading(true);
     const apiURL = flag == 1 ? `/return/${orderId}/track` : `/order/${orderId}/track`;
     try {
-      const response = await axios.get(`${BACKEND_URL}${apiURL}`);
+      const response = await apiClient.get(`${BACKEND_URL}${apiURL}`);
       if (response.status === 200) {
         //   const data = resp?.data?.ShipmentData?.[0]?.Shipment;
         setTrackOrderData(response.data);
@@ -33,7 +33,7 @@ function TrackingInfo() {
   };
 
   useEffect(() => {
-    if(status_name != 'new'){
+    if (status_name != 'new') {
       fetchOrderDetails();
     }
   }, []);

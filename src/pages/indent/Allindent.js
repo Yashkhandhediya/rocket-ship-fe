@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { info } from './Indent';
-import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Field } from '../../common/components';
@@ -10,6 +9,7 @@ import { trip_status_filter } from '../orders/duck';
 import { toast } from 'react-toastify';
 import Loader from '../../common/loader/Loader';
 import { ACCESS_TOKEN } from '../../common/utils/config';
+import apiClient from '../../common/utils/apiClient';
 
 export let modifyFlag = 0;
 export let modifyId;
@@ -56,7 +56,7 @@ const Allindent = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(BACKEND_URL + `/indent/get_indents?created_by=${url_user_id}`);
+      const response = await apiClient.get(BACKEND_URL + `/indent/get_indents?created_by=${url_user_id}`);
       console.log('RESPONSE', response, response.data.length);
       if (response.data.length > 0 && info.length == 0) {
         for (let i = 0; i < response.data.length; i++) {
@@ -96,7 +96,7 @@ const Allindent = () => {
     console.log('Idddddddddddd', id);
     modifyId = id;
     modifyFlag = 1;
-    axios
+    apiClient
       .get(BACKEND_URL + `/indent/get_indents_by_id?id=${id}`)
       .then((res) => {
         console.log('TTTTTTTTT', res);
@@ -116,7 +116,7 @@ const Allindent = () => {
     setLoading(true);
     const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
     console.log('Price', price);
-    axios
+    apiClient
       .post(
         BACKEND_URL + '/indent/admin_price',
         {
@@ -139,7 +139,7 @@ const Allindent = () => {
   const handleConfirmation = (id, status) => {
     setLoading(true);
     const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
-    axios
+    apiClient
       .post(
         BACKEND_URL + '/indent/booking_confirmation',
         {

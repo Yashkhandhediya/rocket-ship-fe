@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { CustomTooltip, Field } from '../../../../common/components';
-import axios from 'axios';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
 import Loader from '../../../../common/loader/Loader';
 import { toast } from 'react-toastify';
 import { infoIcon } from '../../../../common/icons';
+import apiClient from '../../../../common/utils/apiClient';
 // import { ACCESS_TOKEN } from '../../../../common/utils/config'
 
 const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
@@ -104,7 +104,7 @@ const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
 
   const fetchPincodeDetails = () => {
     try {
-      axios
+      apiClient
         .get(`${BACKEND_URL}/pincode/${isPickPinCode}`)
         .then((resp) => {
           if (resp.status == 200) {
@@ -129,7 +129,7 @@ const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
 
   const fetchDestinationPincodeDetails = () => {
     try {
-      axios
+      apiClient
         .get(`${BACKEND_URL}/pincode/${isDeliveryPinCode}`)
         .then((resp) => {
           if (resp.status == 200) {
@@ -206,7 +206,7 @@ const Order = ({ onDetailChange, onCityChange, onDestinationChange }) => {
     //   return;
     // }
     const headers = { 'Content-Type': 'application/json' };
-    axios
+    apiClient
       .post(
         BACKEND_URL + '/order/rate_calculation',
         {

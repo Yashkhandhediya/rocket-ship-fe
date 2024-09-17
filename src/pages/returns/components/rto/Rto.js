@@ -16,11 +16,11 @@ import { Badge } from 'flowbite-react';
 import { MoreDropdown, CustomTooltip, CommonBadge, CustomDataTable } from '../../../../common/components';
 import { moreActionOptions } from '../utils';
 import DrawerWithSidebar from '../../../../common/components/drawer-with-sidebar/DrawerWithSidebar';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Returns';
 import Loader from '../../../../common/loader/Loader';
+import apiClient from '../../../../common/utils/apiClient';
 
 const Rto = ({ data, isLoading }) => {
   const dispatch = useDispatch();
@@ -191,7 +191,7 @@ const Rto = ({ data, isLoading }) => {
                 //   pickupDetails: row?.original,
                 // });
                 handleUpdateStatus(row?.original?.id);
-                // const resp = axios.get(BACKEND_URL+'/order/track?order_id=' + row.id);
+                // const resp = apiClient.get(BACKEND_URL+'/order/track?order_id=' + row.id);
                 // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
                 // let newTab = window.open(newURL, '_blank');
                 // if (newTab) {
@@ -273,7 +273,7 @@ const Rto = ({ data, isLoading }) => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'invoice';
 
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -290,7 +290,7 @@ const Rto = ({ data, isLoading }) => {
 
   const handleUpdateStatus = async (id) => {
     try {
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${BACKEND_URL}/return/update_status?return_id=${id}&status_to_update=manual%20transfer`,
       );
       console.log(response.data);
@@ -308,7 +308,7 @@ const Rto = ({ data, isLoading }) => {
   }
 
   function cancelOrder(orderDetails) {
-    axios
+    apiClient
       .put(`${BACKEND_URL}/return/?id=${orderDetails?.id}`, {
         ...orderDetails,
         status: 'cancelled',

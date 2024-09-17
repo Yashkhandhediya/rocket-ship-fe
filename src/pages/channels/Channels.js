@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
@@ -11,6 +10,7 @@ import shopifyImage from '../../common/icons/shopify.png';
 import woocommerceImage from '../../common/icons/woocommerce.png';
 import bigcommerceImage from '../../common/icons/bigcommerce.png';
 import ChannelRow from './ChannelRow';
+import apiClient from '../../common/utils/apiClient';
 
 // Map of channel names/IDs to their corresponding image paths
 const channelImages = {
@@ -34,7 +34,7 @@ const Channels = () => {
   const fetchActiveChannels = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/shopchannel/get_active_channel`);
+      const response = await apiClient.get(`${BACKEND_URL}/shopchannel/get_active_channel`);
       // Ensure the response data is an array
       if (Array.isArray(response.data)) {
         setActiveChannels(response.data);
@@ -53,7 +53,9 @@ const Channels = () => {
   const id_user = localStorage.getItem('user_id');
   const fetchApiChannels = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/shopchannel/get_store_by_user_id?user_id=${id_user}`);
+      const response = await apiClient.get(
+        `${BACKEND_URL}/shopchannel/get_store_by_user_id?user_id=${id_user}`,
+      );
       if (Array.isArray(response.data)) {
         setApiChannels(response.data);
       } else {

@@ -20,7 +20,6 @@ import {
 } from '../../../../common/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllOrders, setClonedOrder, setEditOrder } from '../../../../redux';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Fragment, useState, useEffect } from 'react';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
@@ -33,6 +32,7 @@ import { Button } from 'flowbite-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import apiClient from '../../../../common/utils/apiClient';
 // import { ACCESS_TOKEN } from '../../../../common/utils/config';
 
 const Delivered = ({ data, isLoading }) => {
@@ -64,7 +64,7 @@ const Delivered = ({ data, isLoading }) => {
   // const fetchManifestedOrders = async () => {
   //   try {
   //     setLoading(true);
-  //     const response = await axios.get(
+  //     const response = await apiClient.get(
   //       `${BACKEND_URL}/order/get_filtered_orders?created_by=${user_id}&status=manifested&page=${page}&page_size=${itemsPerPage}`,
   //     );
   //     setDeliverOrderList(response.data);
@@ -152,7 +152,7 @@ const Delivered = ({ data, isLoading }) => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'invoice';
 
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -244,7 +244,7 @@ const Delivered = ({ data, isLoading }) => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'shippinglabel';
 
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -261,7 +261,7 @@ const Delivered = ({ data, isLoading }) => {
 
   const handleReturn = (id) => {
     console.log('IDDDDDDDDd', id);
-    axios
+    apiClient
       .post(BACKEND_URL + `/return/initiate_return?order_id=${id}&user_id=${localStorage.getItem('user_id')}`)
       .then((res) => {
         console.log('Repsonse Of Initiate Return', res.data);
@@ -462,7 +462,7 @@ const Delivered = ({ data, isLoading }) => {
       isEdit: true,
       order_id: orderDetails?.id,
     };
-    axios
+    apiClient
       .get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails?.id}`)
       .then((res) => {
         console.log('Response Of Get Order While Edit ', res);
@@ -478,7 +478,7 @@ const Delivered = ({ data, isLoading }) => {
   }
 
   function cancelOrder(orderDetails) {
-    axios
+    apiClient
       .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}&user_id=${user_id}`, {
         ...orderDetails,
         status: 'cancelled',

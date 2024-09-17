@@ -7,6 +7,7 @@ import { noData } from '../../../../common/images';
 import { CustomTooltip, Loader } from '../../../../common/components';
 import axios from 'axios';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import apiClient from '../../../../common/utils/apiClient';
 
 const Passbook = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -77,7 +78,7 @@ const Passbook = () => {
     setIsLoading(true);
     const temp_id = is_company == 1 ? id_company : id_user;
     try {
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${BACKEND_URL}/account_transaction/account_report?page_number=1&page_size=${itemsPerPage}`,
         { date_from: fromDate, date_to: toDate, user_id: temp_id },
       );

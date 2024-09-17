@@ -1,6 +1,5 @@
 import { infoIcon } from '../../../../common/icons';
 import { CustomDataTable, CustomTooltip, RatingProgressBar } from '../../../../common/components';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { setAllOrders } from '../../../../redux';
 import { useDispatch } from 'react-redux';
@@ -10,6 +9,7 @@ import { SchedulePickupModal } from '../../../orders/components/schedule-pickup-
 import { createColumnHelper } from '@tanstack/react-table';
 import { Button } from 'flowbite-react';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import apiClient from '../../../../common/utils/apiClient';
 
 const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentDrawer }) => {
   const dispatch = useDispatch();
@@ -20,38 +20,34 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
     let requestData;
     if (data?.partner_name === 'Delhivery') {
       requestData = {
-        "partner_id": 1,
-        "amount": data?.total_charge,
-      }
-    }
-    else if (data?.partner_name === 'DTDC') {
+        partner_id: 1,
+        amount: data?.total_charge,
+      };
+    } else if (data?.partner_name === 'DTDC') {
       requestData = {
-        "partner_id": 2,
-        "amount": data?.total_charge,
-      }
-    }
-    else if (data?.partner_name === 'Xpressbees') {
+        partner_id: 2,
+        amount: data?.total_charge,
+      };
+    } else if (data?.partner_name === 'Xpressbees') {
       requestData = {
-        "partner_id": 3,
-        "amount": data?.total_charge,
-      }
-    }
-    else if (data?.partner_name === 'ECOM EXPRESS') {
+        partner_id: 3,
+        amount: data?.total_charge,
+      };
+    } else if (data?.partner_name === 'ECOM EXPRESS') {
       requestData = {
-        "partner_id": 4,
-        "amount": data?.total_charge,
-      }
-    }
-    else if (data?.partner_name === 'Maruti') {
+        partner_id: 4,
+        amount: data?.total_charge,
+      };
+    } else if (data?.partner_name === 'Maruti') {
       requestData = {
-        "partner_id": 5,
-        "amount": data?.total_charge,
-      }
+        partner_id: 5,
+        amount: data?.total_charge,
+      };
     }
     setIsLoading(true);
     if (orderId) {
-      console.log("JTTTTTTTTTT", requestData)
-      axios
+      console.log('JTTTTTTTTTT', requestData);
+      apiClient
         .post(`${BACKEND_URL}/order/${orderId}/shipment`, requestData)
         .then((resp) => {
           if (resp?.status === 200) {
@@ -69,10 +65,11 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
                 type: resp?.data?.success ? 'success' : 'error',
               },
             );
-            requestData.partner_id === 1 && setScheduleModal({
-              isOpen: true,
-              pickupDetails: { id: orderId },
-            });
+            requestData.partner_id === 1 &&
+              setScheduleModal({
+                isOpen: true,
+                pickupDetails: { id: orderId },
+              });
             dispatch(setAllOrders(null));
             if (resp?.data?.success) {
               closeShipmentDrawer();
@@ -89,7 +86,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
   };
 
   const getColumns = () => {
-    const columnHelper = createColumnHelper()
+    const columnHelper = createColumnHelper();
     return [
       columnHelper.accessor('courierPartner', {
         header: 'Courier Partner',
@@ -97,11 +94,15 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           <div className="flex gap-1 text-left">
             <div>{/* <img src={''} className="h-10 w-10 rounded-full bg-gray-400" /> */}</div>
             <div>
-              <h4 className="pb-1.5 text-xs font-medium text-[#555]">{row?.original?.partner_name || 'Delhivery'}</h4>
+              <h4 className="pb-1.5 text-xs font-medium text-[#555]">
+                {row?.original?.partner_name || 'Delhivery'}
+              </h4>
               <div className="pb-1.5 text-xs text-[#555]">
                 {`${row?.original?.charge_type} | Min-weight: `}
                 <span className="font-medium">
-                  {Number(row?.original?.surface_max_weight || 0) ? row?.original?.surface_max_weight : row?.original?.air_max_weight || 0}
+                  {Number(row?.original?.surface_max_weight || 0)
+                    ? row?.original?.surface_max_weight
+                    : row?.original?.air_max_weight || 0}
                 </span>
               </div>
               <div className="pb-1.5 text-xs text-[#555]">
@@ -141,7 +142,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
       columnHelper.accessor('chargebleWeight', {
         header: 'Chargeable Weight',
         cell: ({ row }) => (
-          <div className="flex flex-col gap-1 text-center justify-center">
+          <div className="flex flex-col justify-center gap-1 text-center">
             <div className="text-xs text-[#555]">{`${row?.original?.chargable_weight || ''} Kg`}</div>
           </div>
         ),
@@ -188,16 +189,26 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
       //   ),
       // }),
     ];
-  }
+  };
 
   const rowSubComponent = () => {
-    const services = []
+    const services = [];
     return (
-      <div className='flex text-[10px] p-1'>
-        <div className='text-black'>{"Availale Services:"}</div>
-        {["Call before delivery", "Instant POD", "Delivery personn contact no.", "Real Time Tracking"].map((service, i) => {
-          return (<div key={i} className={`px-3 text-[#888] ${i + 1 !== services?.length ? 'border-r-2 border-[#dbdbdb]' : ''}`}>{service}</div>)
-        })}
+      <div className="flex p-1 text-[10px]">
+        <div className="text-black">{'Availale Services:'}</div>
+        {['Call before delivery', 'Instant POD', 'Delivery personn contact no.', 'Real Time Tracking'].map(
+          (service, i) => {
+            return (
+              <div
+                key={i}
+                className={`px-3 text-[#888] ${
+                  i + 1 !== services?.length ? 'border-r-2 border-[#dbdbdb]' : ''
+                }`}>
+                {service}
+              </div>
+            );
+          },
+        )}
       </div>
     );
   };
@@ -209,12 +220,13 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           <div className="loader"></div>
         </div>
       )}
-      <div className="text-xs mb-4 text-[rgb(136,136,136)]">{`${shipmentDetails?.length || 0
-        } Couriers Found`}</div>
-        <div className=" mt-2 mb-3 w-[98%] text-red-700 p-2 ">
+      <div className="mb-4 text-xs text-[rgb(136,136,136)]">{`${
+        shipmentDetails?.length || 0
+      } Couriers Found`}</div>
+      <div className=" mb-3 mt-2 w-[98%] p-2 text-red-700 ">
         If your pincode is serviceable by our partners, the applicable shipping charges will be displayed.
       </div>
-      
+
       <CustomDataTable
         columns={getColumns()}
         rowData={shipmentDetails}
@@ -229,10 +241,9 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           setScheduleModal({
             isOpen: false,
             pickupDetails: {},
-          })
-          closeShipmentDrawer()
-        }
-        }
+          });
+          closeShipmentDrawer();
+        }}
         pickupDetails={scheduleModal.pickupDetails}
       />
     </div>

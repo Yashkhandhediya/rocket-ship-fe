@@ -6,7 +6,6 @@ import { filterIcon, moreAction } from '../../../../common/icons';
 import { filterAllOrders, moreActionOptions } from '../utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllReturns, setClonedOrder } from '../../../../redux';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Fragment, useState } from 'react';
 import { MoreFiltersDrawer } from '../more-filters-drawer';
@@ -18,6 +17,7 @@ import { resData } from '../../Returns';
 import Loader from '../../../../common/loader/Loader';
 import { allOptions } from '../../duck';
 import MultiSelectDropdown from '../../../rate-card/components/MultiSelectDropdown';
+import apiClient from '../../../../common/utils/apiClient';
 
 export const All = ({ data, isLoading, fetchFilteredData }) => {
   const dispatch = useDispatch();
@@ -87,7 +87,7 @@ export const All = ({ data, isLoading, fetchFilteredData }) => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'invoice';
 
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -265,7 +265,7 @@ export const All = ({ data, isLoading, fetchFilteredData }) => {
   };
 
   function cancelOrder(orderDetails) {
-    axios
+    apiClient
       .put(`${BACKEND_URL}/order/?id=${orderDetails?.id}`, {
         ...orderDetails,
         status: 'cancelled',

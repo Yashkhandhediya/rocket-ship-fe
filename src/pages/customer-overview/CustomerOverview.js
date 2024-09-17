@@ -7,11 +7,11 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import OrdersOverview from './components/OrdersOverview';
 import Details from './components/Details';
 import ShipmentTable from './components/ShipmentTable';
-import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
 import Customer from './Customer';
+import apiClient from '../../common/utils/apiClient';
 
 function CustomerOverview() {
   const [viewData, setViewData] = useState([]);
@@ -29,7 +29,7 @@ function CustomerOverview() {
   const fetchCustomerViewDetails = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
+      const response = await apiClient.get(
         `${BACKEND_URL}/users/get_customer_view_details/${buyerId}/detail?user_id=${user_id}`,
       );
       console.log(response);

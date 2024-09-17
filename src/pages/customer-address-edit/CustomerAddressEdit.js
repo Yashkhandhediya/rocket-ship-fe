@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Field, Loader } from '../../common/components';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
+import apiClient from '../../common/utils/apiClient';
 
 function CustomerAddressEdit() {
   const { buyerId, addressId } = useParams();
@@ -35,7 +35,7 @@ function CustomerAddressEdit() {
   const fetchCustomerViewDetails = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
+      const response = await apiClient.get(
         `${BACKEND_URL}/users/get_customer_view_details/${buyerId}/detail?user_id=${user_id}`,
       );
       setAddressInfo({
@@ -66,7 +66,7 @@ function CustomerAddressEdit() {
       addressInfo.pincode
     ) {
       try {
-        const response = await axios.put(
+        const response = await apiClient.put(
           `${BACKEND_URL}/users/update_customers_address/${addressId}?buyer_id=${buyerId}`,
           {
             id: addressId,

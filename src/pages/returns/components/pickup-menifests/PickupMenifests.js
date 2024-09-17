@@ -17,13 +17,13 @@ import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { setClonedOrder } from '../../../../redux';
 import { moreAction } from '../../../../common/icons';
 import { moreActionOptions } from '../utils';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
 import { resData } from '../../Returns';
 import Loader from '../../../../common/loader/Loader';
 import MultiSelectDropdown from '../../../rate-card/components/MultiSelectDropdown';
 import { pickUpOptions } from '../../duck';
+import apiClient from '../../../../common/utils/apiClient';
 
 const PickupMenifests = ({ data, isLoading, fetchFilteredData }) => {
   const dispatch = useDispatch();
@@ -217,7 +217,7 @@ const PickupMenifests = ({ data, isLoading, fetchFilteredData }) => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'manifest';
 
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -287,7 +287,7 @@ const PickupMenifests = ({ data, isLoading, fetchFilteredData }) => {
     // console.log("llljjjjjj",temp_str)
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'invoice';
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -315,7 +315,7 @@ const PickupMenifests = ({ data, isLoading, fetchFilteredData }) => {
     if (orderDetails.partner_id == 1 || orderDetails.partner_id == 2) {
       toast('Cancel Functionality Is Not Providing By This Partner', { type: 'error' });
     } else {
-      axios
+      apiClient
         .post(
           `${BACKEND_URL}/return/${orderDetails?.id}/cancel_shipment`,
           {

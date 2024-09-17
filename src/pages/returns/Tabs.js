@@ -6,11 +6,11 @@ import { Button } from 'flowbite-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { temp_user_id } from './Users';
+import apiClient from '../../common/utils/apiClient';
 
 const Tabs = ({ tabs, tabClassNames, activeReturnTab, setReturnActiveTab, onTabChange = () => {} }) => {
   console.log('Activeeeeeeee', activeReturnTab);
@@ -51,7 +51,7 @@ const Tabs = ({ tabs, tabClassNames, activeReturnTab, setReturnActiveTab, onTabC
 
     try {
       setLoading(true);
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${BACKEND_URL}/return/get_filtered_returns?page=${page}&per_page=${itemsPerPage}&${
           tid !== 'all' && `status=${tid}`
         }&user_id=${show_user_id}`,

@@ -1,8 +1,8 @@
 import { toast } from 'react-toastify';
 import { Field } from '../../../../common/components';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import apiClient from '../../../../common/utils/apiClient';
 
 const BuyerAdressFields = ({
   heading,
@@ -21,7 +21,7 @@ const BuyerAdressFields = ({
 
   const fetchPincodeDetails = () => {
     try {
-      axios
+      apiClient
         .get(`${BACKEND_URL}/pincode/${values?.pincode}`)
         .then((resp) => {
           if (resp.status == 200 && onPincodeVeify) {

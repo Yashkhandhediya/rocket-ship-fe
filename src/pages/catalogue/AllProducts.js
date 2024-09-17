@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
@@ -13,6 +12,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import CatalogueTab from './CatalogueTab';
 import { format, parseISO } from 'date-fns';
+import apiClient from '../../common/utils/apiClient';
 
 const AllProducts = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -100,7 +100,7 @@ const AllProducts = () => {
   const handleCatalogueData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
+      const response = await apiClient.get(
         `${BACKEND_URL}/product/get_product_details/?user_id=${user_id}&page=${page}&page_size=${itemsPerPage}`,
       );
       if (response.status === 200) {
@@ -169,13 +169,8 @@ const AllProducts = () => {
     // formData.append("excel_file", selectedFileBinaryString, 'sample.xls');
 
     try {
-      // Make the POST request to the server using axios
-      const response = await axios.post(BACKEND_URL + '/product/add_product_catalogue', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          // "Authorization":ACCESS_TOKEN
-        },
-      });
+      // Make the POST request to the server using apiClient
+      const response = await apiClient.post(BACKEND_URL + '/product/add_product_catalogue', formData);
 
       // Handle the response
       if (response.status === 200) {
@@ -193,15 +188,10 @@ const AllProducts = () => {
   };
 
   const handleSampleFile = () => {
-    const headers = { 'Content-Type': 'application/json' };
-    axios
-      .get(
-        BACKEND_URL + '/product/get_sample_file/',
-        {
-          responseType: 'blob',
-        },
-        { headers },
-      )
+    apiClient
+      .get(BACKEND_URL + '/product/get_sample_file/', {
+        responseType: 'blob',
+      })
       .then((res) => {
         const url = URL.createObjectURL(res.data);
 
@@ -223,12 +213,9 @@ const AllProducts = () => {
 
   const handleDownload = () => {
     setLoading(true);
-    const headers = {
-      'Content-Type': 'application/json',
-      // "Authorization":ACCESS_TOKEN
-    };
-    axios
-      .get(BACKEND_URL + '/product/send_product_mail/', { headers })
+
+    apiClient
+      .get(BACKEND_URL + '/product/send_product_mail/')
       .then((res) => {
         setLoading(false);
         setDownloadPopup(true);

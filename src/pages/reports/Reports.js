@@ -1,24 +1,23 @@
 import React from 'react';
 import ReportsTab from './ReportsTab';
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { BACKEND_URL } from '../../common/utils/env.config';
-import axios from 'axios';
 import { toast } from 'react-toastify';
+import apiClient from '../../common/utils/apiClient';
 
 function Reports() {
-  
   const [data, setData] = useState([]);
   const usersId = localStorage.getItem('user_id');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/report/get_report_history?users_id=${usersId}`);
-        console.log("COD DATA", response.data);
+        const response = await apiClient.get(`${BACKEND_URL}/report/get_report_history?users_id=${usersId}`);
+        console.log('COD DATA', response.data);
         setData(response.data);
       } catch (error) {
-        toast("Error", { type: 'error' });
-        console.log("Error COD DATA", error);
+        toast('Error', { type: 'error' });
+        console.log('Error COD DATA', error);
       }
     };
 
@@ -46,7 +45,8 @@ function Reports() {
               <td className="border px-4 py-2 text-left">{item.title}</td>
               <td className="border px-4 py-2 text-left">{item.user_name}</td>
               <td className="border px-4 py-2 text-left">
-                {new Date(item.from_date).toLocaleDateString()} - {new Date(item.to_date).toLocaleDateString()}
+                {new Date(item.from_date).toLocaleDateString()} -{' '}
+                {new Date(item.to_date).toLocaleDateString()}
               </td>
               {/* <td className="border px-4 py-2 text-left">
                 <button className="rounded bg-green-500 px-2 py-1 text-white">Download</button>

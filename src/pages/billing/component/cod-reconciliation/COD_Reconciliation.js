@@ -4,6 +4,7 @@ import { CustomTooltip } from '../../../../common/components';
 import { remitance } from '../../../../common/images';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
 import { toast } from 'react-toastify';
+import apiClient from '../../../../common/utils/apiClient';
 
 const COD_Reconciliation = ({ charges, data }) => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -14,7 +15,7 @@ const COD_Reconciliation = ({ charges, data }) => {
   }, []);
 
   const updateStatus = (id, status_name) => {
-    axios
+    apiClient
       .put(`${BACKEND_URL}/order/cod_remittance_update_status/${id}?status_name=${status_name}`)
       .then((res) => {
         console.log('Response Of Update Status', res.data);
@@ -75,58 +76,63 @@ const COD_Reconciliation = ({ charges, data }) => {
               </div>
               <div className="flex flex-col items-center justify-center">
                 {Array.isArray(data) && data.length > 0 ? (
-                  data.filter(item => item.status === 'Transferd' || item.status === 'In Progress').map((item, key) => (
-                    <div
-                      className="flex h-12 w-full flex-row items-center border border-b-[#E5E7EB] text-center"
-                      key={key}>
-                      <div className="flex h-full w-[11.11%] items-center justify-center border-r-2 font-normal">
-                        {item.user_name}
-                      </div>
-                      <div className="flex h-full w-[11.11%] items-center justify-center border-r-2 font-normal">
-                        {item.order_id}
-                      </div>
-                      <div className="flex h-full w-[11.11%] flex-col justify-center border-r-2 font-normal">
-                        <div>{item.partner_name}</div>
-                      </div>
-                      <div className="flex h-full w-[11.11%] flex-col justify-center gap-4 border-r-2 text-center">
-                        <div>{item.waybill_no}</div>
-                      </div>
-                      <div className="flex h-full w-[11.11%] flex-col justify-center border-r-2 font-normal">
-                        <div>{item.created_date}</div>
-                      </div>
-                      <div className="flex h-full w-[11.11%] flex-col justify-center border-r-2 font-normal">
-                        <div>{item.bank_transaction_id ? item.bank_transaction_id : '-'}</div>
-                      </div>
-                      <div className="item-center flex h-full w-[11.11%] items-center justify-center border-r-2 px-2 font-normal">
-                        <div
-                          className={`basis-full rounded text-center font-semibold ${item.status === 'Transferd' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  data
+                    .filter((item) => item.status === 'Transferd' || item.status === 'In Progress')
+                    .map((item, key) => (
+                      <div
+                        className="flex h-12 w-full flex-row items-center border border-b-[#E5E7EB] text-center"
+                        key={key}>
+                        <div className="flex h-full w-[11.11%] items-center justify-center border-r-2 font-normal">
+                          {item.user_name}
+                        </div>
+                        <div className="flex h-full w-[11.11%] items-center justify-center border-r-2 font-normal">
+                          {item.order_id}
+                        </div>
+                        <div className="flex h-full w-[11.11%] flex-col justify-center border-r-2 font-normal">
+                          <div>{item.partner_name}</div>
+                        </div>
+                        <div className="flex h-full w-[11.11%] flex-col justify-center gap-4 border-r-2 text-center">
+                          <div>{item.waybill_no}</div>
+                        </div>
+                        <div className="flex h-full w-[11.11%] flex-col justify-center border-r-2 font-normal">
+                          <div>{item.created_date}</div>
+                        </div>
+                        <div className="flex h-full w-[11.11%] flex-col justify-center border-r-2 font-normal">
+                          <div>{item.bank_transaction_id ? item.bank_transaction_id : '-'}</div>
+                        </div>
+                        <div className="item-center flex h-full w-[11.11%] items-center justify-center border-r-2 px-2 font-normal">
+                          <div
+                            className={`basis-full rounded text-center font-semibold ${
+                              item.status === 'Transferd'
+                                ? 'bg-green-100 text-green-700'
+                                : 'bg-red-100 text-red-700'
                             }`}>
-                          {item.status}
+                            {item.status}
+                          </div>
+                        </div>
+                        <div className="flex h-full w-[11.11%] flex-col justify-center border-r-2 font-normal">
+                          <div>{item.cod_to_be_remitted}</div>
+                        </div>
+                        <div className="item-center flex h-full w-[17.77%] items-center justify-center border-r-2 px-2 font-normal">
+                          <button
+                            className={`mr-1 w-48 rounded-md py-1.5 text-[14px] text-white ${
+                              item.button_flag ? 'bg-red-600' : 'cursor-not-allowed bg-gray-400'
+                            }`}
+                            onClick={() => updateStatus(item.id, 'In Progress')}
+                            disabled={!item.button_flag}>
+                            Initiated COD
+                          </button>
+                          <button
+                            className={`w-48 rounded-md py-1.5 text-[14px] text-white ${
+                              item.button_flag ? 'bg-red-600' : 'cursor-not-allowed bg-gray-400'
+                            }`}
+                            onClick={() => updateStatus(item.id, 'Transferd')}
+                            disabled={!item.button_flag}>
+                            Manual Transfer
+                          </button>
                         </div>
                       </div>
-                      <div className="flex h-full w-[11.11%] flex-col justify-center border-r-2 font-normal">
-                        <div>{item.cod_to_be_remitted}</div>
-                      </div>
-                      <div className="item-center flex h-full w-[17.77%] items-center justify-center border-r-2 px-2 font-normal">
-                      <button
-                          className={`mr-1 w-48 rounded-md py-1.5 text-[14px] text-white ${item.button_flag ? 'bg-red-600' : 'bg-gray-400 cursor-not-allowed'
-                            }`}
-                          onClick={() => updateStatus(item.id, 'In Progress')}
-                          disabled={!item.button_flag}
-                        >
-                          Initiated COD
-                        </button>
-                        <button
-                          className={`w-48 rounded-md py-1.5 text-[14px] text-white ${item.button_flag ? 'bg-red-600' : 'bg-gray-400 cursor-not-allowed'
-                            }`}
-                          onClick={() => updateStatus(item.id, 'Transferd')}
-                          disabled={!item.button_flag}
-                        >
-                          Manual Transfer
-                        </button>
-                      </div>
-                    </div>
-                  ))
+                    ))
                 ) : (
                   <div className="mb-12 flex w-full flex-col items-center justify-center pt-16">
                     <img src="remitance.png" alt="Remittance" width={'200px'} />
@@ -159,38 +165,43 @@ const COD_Reconciliation = ({ charges, data }) => {
               </div>
               <div className="flex flex-col items-center justify-center">
                 {Array.isArray(data) && data.length > 0 ? (
-                  data.filter(item => item.status === 'Transferd' || item.status === 'In Progress').map((item, key) => (
-                    <div
-                      className="flex h-12 w-full flex-row items-center border border-b-[#E5E7EB] text-center"
-                      key={key}>
-                      <div className="flex h-full w-[14.29%] items-center justify-center border-r-2 font-normal">
-                        {item.order_id}
-                      </div>
-                      <div className="flex h-full w-[14.29%] flex-col justify-center border-r-2 font-normal">
-                        <div>{item.partner_name}</div>
-                      </div>
-                      <div className="flex h-full w-[14.29%] flex-col justify-center gap-4 border-r-2 text-center">
-                        <div>{item.waybill_no}</div>
-                      </div>
-                      <div className="flex h-full w-[14.29%] flex-col justify-center border-r-2 font-normal">
-                        <div>{item.created_date}</div>
-                      </div>
-                      <div className="flex h-full w-[14.29%] flex-col justify-center border-r-2 font-normal">
-                        <div>{item.bank_transaction_id ? item.bank_transaction_id : '-'}</div>
-                      </div>
-                      <div className="item-center flex h-full w-[14.29%] items-center justify-center border-r-2 px-2 font-normal">
-                        <div
-                          className={`basis-full rounded text-center font-semibold
-                            ${item.status === 'Transferd' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  data
+                    .filter((item) => item.status === 'Transferd' || item.status === 'In Progress')
+                    .map((item, key) => (
+                      <div
+                        className="flex h-12 w-full flex-row items-center border border-b-[#E5E7EB] text-center"
+                        key={key}>
+                        <div className="flex h-full w-[14.29%] items-center justify-center border-r-2 font-normal">
+                          {item.order_id}
+                        </div>
+                        <div className="flex h-full w-[14.29%] flex-col justify-center border-r-2 font-normal">
+                          <div>{item.partner_name}</div>
+                        </div>
+                        <div className="flex h-full w-[14.29%] flex-col justify-center gap-4 border-r-2 text-center">
+                          <div>{item.waybill_no}</div>
+                        </div>
+                        <div className="flex h-full w-[14.29%] flex-col justify-center border-r-2 font-normal">
+                          <div>{item.created_date}</div>
+                        </div>
+                        <div className="flex h-full w-[14.29%] flex-col justify-center border-r-2 font-normal">
+                          <div>{item.bank_transaction_id ? item.bank_transaction_id : '-'}</div>
+                        </div>
+                        <div className="item-center flex h-full w-[14.29%] items-center justify-center border-r-2 px-2 font-normal">
+                          <div
+                            className={`basis-full rounded text-center font-semibold
+                            ${
+                              item.status === 'Transferd'
+                                ? 'bg-green-100 text-green-700'
+                                : 'bg-red-100 text-red-700'
                             }`}>
-                          {item.status}
+                            {item.status}
+                          </div>
+                        </div>
+                        <div className="flex h-full w-[14.29%] flex-col justify-center border-r-2 font-normal">
+                          <div>{item.cod_to_be_remitted}</div>
                         </div>
                       </div>
-                      <div className="flex h-full w-[14.29%] flex-col justify-center border-r-2 font-normal">
-                        <div>{item.cod_to_be_remitted}</div>
-                      </div>
-                    </div>
-                  ))
+                    ))
                 ) : (
                   <div className="mb-12 flex w-full flex-col items-center justify-center pt-16">
                     <img src="remitance.png" alt="Remittance" width={'200px'} />

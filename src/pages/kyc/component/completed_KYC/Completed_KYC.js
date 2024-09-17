@@ -1,12 +1,12 @@
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import apiClient from '../../../../common/utils/apiClient';
 
 const Completed_KYC = () => {
   const [userImg, setUserImg] = useState(null);
   const id_user = localStorage.getItem('user_id');
   const handleImage = () => {
-    axios
+    apiClient
       .get(BACKEND_URL + `/kyc/?id=${id_user}&type=selfie`, { responseType: 'blob' })
       .then((res) => {
         console.log('Recharge Responsee', res);

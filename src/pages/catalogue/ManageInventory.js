@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
@@ -13,6 +12,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import CatalogueTab from './CatalogueTab';
 import { format, parseISO } from 'date-fns';
+import apiClient from '../../common/utils/apiClient';
 
 const ManageInventory = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -100,7 +100,9 @@ const ManageInventory = () => {
   const handleCatalogueData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${BACKEND_URL}/product/get_all_inventory/?user_id=${user_id}&page=${page}&page_size=${itemsPerPage}`);
+      const response = await apiClient.get(
+        `${BACKEND_URL}/product/get_all_inventory/?user_id=${user_id}&page=${page}&page_size=${itemsPerPage}`,
+      );
       if (response.status === 200) {
         setData(response.data);
         setIncrementDisable(false);
@@ -168,8 +170,8 @@ const ManageInventory = () => {
     // // formData.append("excel_file", selectedFileBinaryString, 'sample.xls');
 
     // try {
-    //   // Make the POST request to the server using axios
-    //   const response = await axios.post(BACKEND_URL + '/product/add_product_catalogue', formData, {
+    //   // Make the POST request to the server using apiClient
+    //   const response = await apiClient.post(BACKEND_URL + '/product/add_product_catalogue', formData, {
     //     headers: {
     //       'Content-Type': 'multipart/form-data',
     //       // "Authorization":ACCESS_TOKEN
@@ -194,7 +196,7 @@ const ManageInventory = () => {
   const handleSampleFile = () => {
     console.log('file');
     // const headers = { 'Content-Type': 'application/json' };
-    // axios
+    // apiClient
     //   .get(
     //     BACKEND_URL + '/product/get_sample_file/',
     //     {
@@ -228,7 +230,7 @@ const ManageInventory = () => {
     //   'Content-Type': 'application/json',
     //   // "Authorization":ACCESS_TOKEN
     // };
-    // axios
+    // apiClient
     //   .get(BACKEND_URL + '/product/send_product_mail/', { headers })
     //   .then((res) => {
     //     setLoading(false);

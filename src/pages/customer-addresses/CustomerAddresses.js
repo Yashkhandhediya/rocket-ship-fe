@@ -3,10 +3,10 @@ import Customer from '../customer-overview/Customer';
 import Address from './components/Address';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { Loader } from '../../common/components';
+import apiClient from '../../common/utils/apiClient';
 
 function CustomerAddresses() {
   const { addressId, buyerId } = useParams();
@@ -16,7 +16,7 @@ function CustomerAddresses() {
   const fetchCustomerAddresses = async () => {
     setLoading(true);
     try {
-      const response = await axios.put(
+      const response = await apiClient.put(
         `${BACKEND_URL}/users/update_customers_address/${addressId}?buyer_id=${buyerId}`,
         {},
       );

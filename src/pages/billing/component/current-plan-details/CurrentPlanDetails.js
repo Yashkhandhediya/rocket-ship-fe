@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import PageWithSidebar from '../../../../common/components/page-with-sidebar/PageWithSidebar';
 import { BillingTabs } from '../billing-tabs';
 import ActivateModal from './ActivateModal';
-import { BACKEND_URL } from "../../../../common/utils/env.config";
-import { toast } from "react-toastify";
+import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { toast } from 'react-toastify';
+import apiClient from '../../../../common/utils/apiClient';
 
 function CurrentPlanDetails() {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,9 +26,10 @@ function CurrentPlanDetails() {
 
   const fetchPlans = async () => {
     try {
-      const response = await fetch(`${BACKEND_URL}/current_plan_details/?time_interval=${selectedPeriodIndex}`);
-      const data = await response.json();
-      setPlans(data);
+      const response = await apiClient.get(
+        `${BACKEND_URL}/current_plan_details/?time_interval=${selectedPeriodIndex}`,
+      );
+      setPlans(response.data);
     } catch (error) {
       console.error('Error fetching the data:', error);
     }
@@ -35,9 +37,10 @@ function CurrentPlanDetails() {
 
   const fetchActivatedPlan = async () => {
     try {
-      const response = await fetch(`${BACKEND_URL}/current_plan_details/get_activated_plan/?user_id=${userId}`);
-      const data = await response.json();
-      setActivatedPlan(data.plan_type);
+      const response = await apiClient.get(
+        `${BACKEND_URL}/current_plan_details/get_activated_plan/?user_id=${userId}`,
+      );
+      setActivatedPlan(response.data.plan_type);
     } catch (error) {
       console.error('Error fetching the activated plan:', error);
     }
@@ -50,13 +53,12 @@ function CurrentPlanDetails() {
     }
 
     try {
-      const response = await fetch(`${BACKEND_URL}/current_plan_details/activate_plan?user_id=${userId}&plan_id=${planId}`, {
-        method: 'POST',
-      });
-      const data = await response.json();
-      if (data) {
+      const response = await apiClient.post(
+        `${BACKEND_URL}/current_plan_details/activate_plan?user_id=${userId}&plan_id=${planId}`,
+      );
+      if (response.data) {
         setActivatedPlan(planId);
-        toast.success(data.message + '!');
+        toast.success(response.data.message + '!');
       } else {
         toast.error('Error activating the plan');
       }
@@ -71,13 +73,12 @@ function CurrentPlanDetails() {
 
   const handlePeriodClick = (index) => {
     setSelectedPeriodIndex(index + 1); // Update index to be 1-based
-
   };
 
   const renderPlanRows = (key, valueExtractor) => (
     <tr className="border text-sm">
       <td className="bg-red-50 px-4 py-2 text-left font-bold text-gray-400">{key}</td>
-      {plans.map(plan => (
+      {plans.map((plan) => (
         <td key={plan.id}>{valueExtractor(plan)}</td>
       ))}
     </tr>
@@ -99,7 +100,9 @@ function CurrentPlanDetails() {
                 <button
                   key={period}
                   onClick={() => handlePeriodClick(index)} // Handle click to set state
-                  className={` bg-transparent ${selectedPeriodIndex === index + 1 ? 'border-b-2 border-red-500' : ''}`} // Apply underline if selected
+                  className={` bg-transparent ${
+                    selectedPeriodIndex === index + 1 ? 'border-b-2 border-red-500' : ''
+                  }`} // Apply underline if selected
                 >
                   {period}
                 </button>
@@ -110,17 +113,15 @@ function CurrentPlanDetails() {
             <thead>
               <tr>
                 <th className="w-[28%] text-left">
-                  <div className="flex flex-col items-start pl-4 py-2">
-                    <h2 className='text-[25px]'>Select a plan</h2>
+                  <div className="flex flex-col items-start py-2 pl-4">
+                    <h2 className="text-[25px]">Select a plan</h2>
                     <p className="text-[12px] font-normal">
                       Whether you&apos;re a new business or a well-known brand,
                     </p>
-                    <p className="text-[12px] font-normal">
-                      we&apos;ve got you covered!
-                    </p>
+                    <p className="text-[12px] font-normal">we&apos;ve got you covered!</p>
                   </div>
                 </th>
-                {plans.map(plan => (
+                {plans.map((plan) => (
                   <th key={plan.id} className="w-[18%] border bg-zinc-100">
                     <div className="ml-8 flex w-3/4 flex-col items-center gap-4 py-4">
                       <p className="text-red-800">{plan.plan_type}</p>
@@ -132,10 +133,11 @@ function CurrentPlanDetails() {
                         For sellers who ship up to {plan.shipments} shipments/month
                       </p>
                       <button
-                        className={`w-full rounded-xl py-3 text-sm font-normal text-white ${plan.id === activatedPlan ? 'bg-green-500' : 'bg-red-800'}`}
+                        className={`w-full rounded-xl py-3 text-sm font-normal text-white ${
+                          plan.id === activatedPlan ? 'bg-green-500' : 'bg-red-800'
+                        }`}
                         onClick={() => handleActivate(plan.id)}
-                        disabled={plan.id === activatedPlan}
-                      >
+                        disabled={plan.id === activatedPlan}>
                         {plan.id === activatedPlan ? 'Activated' : 'Activate'}
                       </button>
                     </div>
@@ -144,9 +146,9 @@ function CurrentPlanDetails() {
               </tr>
             </thead>
             <tbody>
-              {renderPlanRows('Shipping Rates', plan => `₹${plan.shipping_rate}/0.5 kg`)}
+              {renderPlanRows('Shipping Rates', (plan) => `₹${plan.shipping_rate}/0.5 kg`)}
               {renderPlanRows('Minimum Signup Periods', () => '1 month')}
-              {renderPlanRows('Courier Partners', plan => `${plan.courier_partners}+`)}
+              {renderPlanRows('Courier Partners', (plan) => `${plan.courier_partners}+`)}
               <tr className="border text-sm">
                 <td className="bg-red-50 px-4 py-2 text-left font-bold text-gray-400"> </td>
                 <td className="bg-zinc-100 text-[10px]" colSpan="2">

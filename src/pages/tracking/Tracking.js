@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import './Tracking.css';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import moment from 'moment';
 import { BACKEND_URL } from '../../common/utils/env.config';
+import apiClient from '../../common/utils/apiClient';
 
 export default function Tracking() {
   const [shipmentData, setShipmentData] = useState();
@@ -19,7 +19,7 @@ export default function Tracking() {
     // const stringValue = queryParams.get('data');
 
     // Set the received string value in the component state
-    axios
+    apiClient
       .get(BACKEND_URL + `/order/${orderId}/track`)
       .then(async (resp) => {
         if (resp.status === 200) {

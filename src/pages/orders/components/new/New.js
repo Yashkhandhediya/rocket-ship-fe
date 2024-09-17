@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { Fragment, useEffect, useState } from 'react';
 import { Link, generatePath, useNavigate } from 'react-router-dom';
 import { MoreDropdown, CustomTooltip, CustomDataTable } from '../../../../common/components';
@@ -35,6 +34,7 @@ import { Button } from 'flowbite-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import apiClient from '../../../../common/utils/apiClient';
 // import { setEditOrder } from '../../../../redux/actions/editOrderActions';
 
 // export let isEdit = false;
@@ -73,7 +73,7 @@ export const New = ({ data, isLoading }) => {
   // const fetchNewOrders = async () => {
   //   try {
   //     setLoading(true);
-  //     const response = await axios.get(
+  //     const response = await apiClient.get(
   //       `${BACKEND_URL}/order/get_filtered_orders?created_by=${user_id}&status=new&page=${page}&page_size=${itemsPerPage}`,
   //     );
   //     setNewOrdersList(response.data);
@@ -149,7 +149,7 @@ export const New = ({ data, isLoading }) => {
   // const handleRequestShipment = (id) => {
   //   debugger
   //   const headers={'Content-Type': 'application/json'};
-  //   axios.post(BACKEND_URL + `/order/${id}/request_shipment`,{headers})
+  //   apiClient.post(BACKEND_URL + `/order/${id}/request_shipment`,{headers})
   //   .then((res) => {
   //     console.log("Shipmentttttttt",res)
   //     setFlag(res?.data?.flag)
@@ -178,7 +178,7 @@ export const New = ({ data, isLoading }) => {
     temp_payload['client_name'] = 'cloud_cargo';
     temp_payload['file_name'] = 'invoice';
 
-    axios
+    apiClient
       .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -206,7 +206,7 @@ export const New = ({ data, isLoading }) => {
       return;
     }
     setLoading(true);
-    axios
+    apiClient
       .post(BACKEND_URL + '/order/bulk_shipment/', temp_list, { headers })
       .then((res) => {
         console.log('Response Bulk Order', res);
@@ -494,7 +494,7 @@ export const New = ({ data, isLoading }) => {
                   id={row?.original?.id}
                   className="min-w-fit rounded bg-red-600 px-4 py-1.5 text-white hover:bg-green-600"
                   onClick={() => {
-                    axios.get(BACKEND_URL + '/order/track?order_id=' + row?.original?.id);
+                    apiClient.get(BACKEND_URL + '/order/track?order_id=' + row?.original?.id);
                     let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent('15')}`;
                     let newTab = window.open(newURL, '_blank');
                     if (newTab) {
@@ -533,7 +533,7 @@ export const New = ({ data, isLoading }) => {
   };
 
   function verifyOrder(orderId, verificationStatus) {
-    axios
+    apiClient
       .post(
         `${BACKEND_URL}/order/update_order_verification`,
         {},
@@ -560,7 +560,7 @@ export const New = ({ data, isLoading }) => {
   }
 
   function cancelOrder(orderDetails) {
-    axios
+    apiClient
       .put(`${BACKEND_URL}/order/?id=${orderDetails}&user_id=${user_id}`, {
         ...orderDetails,
         status: 'cancelled',
@@ -593,7 +593,7 @@ export const New = ({ data, isLoading }) => {
       isEdit: true,
       order_id: orderDetails?.id,
     };
-    axios
+    apiClient
       .get(BACKEND_URL + `/order/get_order_detail?id=${orderDetails?.id}`)
       .then((res) => {
         console.log('Response Of Get Order While Edit ', res);

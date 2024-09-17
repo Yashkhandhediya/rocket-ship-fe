@@ -4,13 +4,13 @@ import { cityList } from '../book-truck/cities';
 import { CustomMultiSelect, Field, Loader } from '../../common/components';
 import { materialTypes, truckTypes, weights, weightTypes } from './data';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import moment from 'moment';
 import { modifyFlag, modifyId } from './Allindent';
 import { id_user } from '../log-in/LogIn';
 import { ACCESS_TOKEN } from '../../common/utils/config';
+import apiClient from '../../common/utils/apiClient';
 
 export let info = [];
 
@@ -197,7 +197,7 @@ const Indent = () => {
     setIsLoading(true);
     const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
     console.log('Jayyyyyyy', selectedCity, materialType);
-    axios
+    apiClient
       .post(
         BACKEND_URL + '/indent/create_indent',
         {
@@ -242,7 +242,7 @@ const Indent = () => {
         console.log('General', response);
         toast('Indent Created Successfully', { type: 'success' });
         navigate('/all-indent/' + id_user);
-        //   axios.get(BACKEND_URL + `/indent/get_indents?created_by=${id_user}`).then((response)=>{
+        //   apiClient.get(BACKEND_URL + `/indent/get_indents?created_by=${id_user}`).then((response)=>{
         //     console.log("RESPONSE",response,response.data.length);
         //     if(response.data.length > 0){
         //         for(let i=0;i<response.data.length;i++){
@@ -286,7 +286,7 @@ const Indent = () => {
     setIsLoading(true);
     const headers = { 'Content-Type': 'application/json', Authorization: ACCESS_TOKEN };
     console.log('Jayyyyyyy', selectedCity, materialType);
-    axios
+    apiClient
       .put(
         BACKEND_URL + '/indent/modify_indent',
         {
@@ -330,7 +330,7 @@ const Indent = () => {
         setIsLoading(false);
         console.log('General', response);
         toast('Indent Updated Successfully', { type: 'success' });
-        axios
+        apiClient
           .get(BACKEND_URL + `/indent/get_indents?created_by=${id_user}`)
           .then((response) => {
             console.log('RESPONSE', response);
@@ -353,7 +353,7 @@ const Indent = () => {
 
   const fetchPincodeDetails = (pincode, type) => {
     try {
-      axios
+      apiClient
         .get(`${BACKEND_URL}/pincode/${pincode}`)
         .then((resp) => {
           if (resp.status === 200) {

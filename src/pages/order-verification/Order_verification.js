@@ -11,23 +11,26 @@ const Order_verification = () => {
 
   const user_id = is_company == 1 ? id_company : id_user;
 
-  const [codEnabled, setCodEnabled] = useState(is_cod_verified  );
+  const [codEnabled, setCodEnabled] = useState(is_cod_verified);
   const [prepaidEnabled, setPrepaidEnabled] = useState(is_prepaid_verified);
 
   useEffect(() => {
     const verificationStatus = codEnabled ? 1 : 0;
 
-    fetch(`${BACKEND_URL}/users/update_cod_verification?user_id=${user_id}&verification_status=${verificationStatus}`, {
-      method: 'POST',
-      headers: {
-        'accept': 'application/json',
+    fetch(
+      `${BACKEND_URL}/users/update_cod_verification?user_id=${user_id}&verification_status=${verificationStatus}`,
+      {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+        },
       },
-    })
-      .then(response => response.json())
-      .then(data => {
+    )
+      .then((response) => response.json())
+      .then((data) => {
         console.log('COD Verification updated:', data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error updating COD verification:', error);
       });
   }, [codEnabled, user_id]);
@@ -35,17 +38,20 @@ const Order_verification = () => {
   useEffect(() => {
     const verificationStatus = prepaidEnabled ? 1 : 0;
 
-    fetch(`${BACKEND_URL}/users/update_prepaid_verification?user_id=${user_id}&verification_status=${verificationStatus}`, {
-      method: 'POST',
-      headers: {
-        'accept': 'application/json',
+    fetch(
+      `${BACKEND_URL}/users/update_prepaid_verification?user_id=${user_id}&verification_status=${verificationStatus}`,
+      {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+        },
       },
-    })
-      .then(response => response.json())
-      .then(data => {
+    )
+      .then((response) => response.json())
+      .then((data) => {
         console.log('Prepaid Verification updated:', data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error updating Prepaid verification:', error);
       });
   }, [prepaidEnabled, user_id]);
@@ -70,7 +76,7 @@ const Order_verification = () => {
     border: '1px solid #000',
   };
 
-  const sliderBeforeStyle = isEnabled => ({
+  const sliderBeforeStyle = (isEnabled) => ({
     position: 'absolute',
     content: '""',
     height: '14px',
@@ -84,20 +90,18 @@ const Order_verification = () => {
 
   return (
     <PageWithSidebar>
-      <div className="header mx-2 border-b border-[#b3b3b3] bg-[#FAFBFC] p-2 text-xl">
-        Order Verification
-      </div>
+      <div className="header mx-2 border-b border-[#b3b3b3] bg-[#FAFBFC] p-2 text-xl">Order Verification</div>
       <div className="mx-2 w-full bg-[#EDEDED] px-2 pb-16 pt-2">
         <div className="my-4">
           <input
             type="text"
-            className="w-full border border-[#ccc] p-2 bg-[#95c7df] rounded-md"
+            className="w-full rounded-md border border-[#ccc] bg-[#95c7df] p-2"
             placeholder="Enable Order Verification"
             disabled
           />
         </div>
 
-        <div className="flex justify-between items-center px-2 my-4">
+        <div className="my-4 flex items-center justify-between px-2">
           <span>Verify COD orders</span>
           <label style={switchStyle}>
             <input
@@ -111,7 +115,7 @@ const Order_verification = () => {
             </span>
           </label>
         </div>
-        <div className="flex justify-between items-center px-2 my-4">
+        <div className="my-4 flex items-center justify-between px-2">
           <span>Verify Prepaid orders</span>
           <label style={switchStyle}>
             <input

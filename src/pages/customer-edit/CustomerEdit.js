@@ -3,8 +3,8 @@ import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithS
 import { Field, Loader } from '../../common/components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BACKEND_URL } from '../../common/utils/env.config';
-import axios from 'axios';
 import { toast } from 'react-toastify';
+import apiClient from '../../common/utils/apiClient';
 
 function CustomerEdit() {
   const [loading, setLoading] = useState(false);
@@ -13,7 +13,7 @@ function CustomerEdit() {
   const id_company = localStorage.getItem('company_id');
   const is_company = localStorage.getItem('is_company');
   const user_id = is_company == 1 ? id_company : id_user;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [customerInfo, setCustomerInfo] = useState({
     firstName: '',
@@ -42,7 +42,7 @@ function CustomerEdit() {
   const fetchCustomerViewDetails = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
+      const response = await apiClient.get(
         `${BACKEND_URL}/users/get_customer_view_details/${buyerId}/detail?user_id=${user_id}`,
       );
       console.log(response);
@@ -64,18 +64,18 @@ function CustomerEdit() {
   //    // Check if all required fields are available
   //   if (customerInfo.firstName && customerInfo.lastName && customerInfo.email && customerInfo.phone) {
   //     try {
-  //       const response = await axios.put(`${BACKEND_URL}/users/update_customers/${buyerId}`, {
+  //       const response = await apiClient.put(`${BACKEND_URL}/users/update_customers/${buyerId}`, {
   //         first_name: customerInfo.firstName,
   //         last_name: customerInfo.lastName,
   //         email: customerInfo.email,
   //         phone: customerInfo.phone,
   //       });
-        
+
   //       console.log(response);
   //       // toast(`${response.data.message}`, { type: 'success' });
   //       setLoading(false);
   //       // setShowSuccess(true)
-        
+
   //       navigate(`/customer-overview/${buyerId}?success=true`);
 
   //     } catch (err) {
@@ -91,17 +91,17 @@ function CustomerEdit() {
 
   const updateDetails = async () => {
     setLoading(true);
-    
+
     // Check if all required fields are available
     if (customerInfo.firstName && customerInfo.lastName && customerInfo.email && customerInfo.phone) {
       try {
-        const response = await axios.put(`${BACKEND_URL}/users/update_customers/${buyerId}`, {
+        const response = await apiClient.put(`${BACKEND_URL}/users/update_customers/${buyerId}`, {
           first_name: customerInfo.firstName,
           last_name: customerInfo.lastName,
           email: customerInfo.email,
           phone: customerInfo.phone,
         });
-  
+
         console.log(response);
 
         if (response.status === 200) {
@@ -110,7 +110,7 @@ function CustomerEdit() {
           // If not successful, display an error message
           toast('There was an error while updating customer details', { type: 'error' });
         }
-        
+
         setLoading(false);
       } catch (err) {
         // Handle any errors from the API request
@@ -123,7 +123,6 @@ function CustomerEdit() {
       setLoading(false);
     }
   };
-  
 
   useEffect(() => {
     fetchCustomerViewDetails();

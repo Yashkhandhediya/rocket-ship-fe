@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 import { CustomTooltip } from '../../../../common/components';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import apiClient from '../../../../common/utils/apiClient';
 
-const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTotalData }) => { // eslint-disable-line
+const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTotalData }) => {
+  // eslint-disable-line
   const [searchParams, setSearchParams] = useSearchParams();
   const oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().slice(0, 10);
   const todayDate = new Date().toISOString().slice(0, 10);
@@ -20,18 +21,28 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
   const toDateURL = searchParams.get('to') || null;
   const search = searchParams.get('search');
 
-  const dataGet = () => { //eslint-disable-line
+  const dataGet = () => {
+    //eslint-disable-line
     setData([]);
     //API to get data
     setLoading(true);
-    const url = fromDateURL && toDateURL && freezeStatus != 5 && freezeStatus != 0
-      ? `${BACKEND_URL}/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&from=${fromDateURL}&to=${toDateURL}&status_name=${freezeStatus}&user_id=${localStorage.getItem('user_id')}`
+    const url =
+      fromDateURL && toDateURL && freezeStatus != 5 && freezeStatus != 0
+        ? `${BACKEND_URL}/weight_freeze/get_weight_freeze?${
+            search !== '' && search !== null && `search=${search}`
+          }&per_page=${perPage}&page=${page}&from=${fromDateURL}&to=${toDateURL}&status_name=${freezeStatus}&user_id=${localStorage.getItem(
+            'user_id',
+          )}`
+        : `${BACKEND_URL}/weight_freeze/get_weight_freeze?${
+            search !== '' && search !== null && `search=${search}`
+          }&per_page=${perPage}&page=${page}&status_name=${freezeStatus}&user_id=${localStorage.getItem(
+            'user_id',
+          )}`;
 
-      : `${BACKEND_URL}/weight_freeze/get_weight_freeze?${search !== '' && search !== null && `search=${search}`}&per_page=${perPage}&page=${page}&status_name=${freezeStatus}&user_id=${localStorage.getItem('user_id')}`;
-
-    axios.get(url, {})
+    apiClient
+      .get(url, {})
       .then((response) => {
-        console.log("asdkjfhsdkjfgbdasfjhyg", response.data); //eslint-disable-line
+        console.log('asdkjfhsdkjfgbdasfjhyg', response.data); //eslint-disable-line
         setData(response.data.data);
         setTotalData(response.data.total_rows);
         setLoading(false);
@@ -39,10 +50,11 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
       .catch((error) => {
         console.log(error); //eslint-disable-line
         setLoading(false);
-      })
+      });
 
     //get status count
-    axios.get(`${BACKEND_URL}/weight_freeze/get_status_counts`, {})
+    apiClient
+      .get(`${BACKEND_URL}/weight_freeze/get_status_counts`, {})
       .then((res) => {
         console.log(res.data); //eslint-disable-line
         const newTabs = [...tabs];
@@ -56,7 +68,7 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
       })
       .catch((err) => {
         console.log(err); //eslint-disable-line
-      })
+      });
   };
 
   //get freeze_status from url
@@ -96,12 +108,12 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
     setSRSuggested(ev.target.checked);
     const currentSearchParams = new URLSearchParams(searchParams);
     if (!ev.target.checked) {
-      const set = freezeStatus == 1 ? '6' : '7'
+      const set = freezeStatus == 1 ? '6' : '7';
       currentSearchParams.set('freeze_status', set);
       setSearchParams(currentSearchParams);
     }
     if (ev.target.checked) {
-      const set = freezeStatus == 6 ? '1' : '3'
+      const set = freezeStatus == 6 ? '1' : '3';
       currentSearchParams.set('freeze_status', set);
       setSearchParams(currentSearchParams);
     }
@@ -111,7 +123,7 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
     const currentSearchParams = new URLSearchParams(searchParams);
     currentSearchParams.set('search', e.target.value);
     setSearchParams(currentSearchParams);
-  }
+  };
 
   useEffect(() => {
     if (freezeStatus == 5 || freezeStatus == 0) {
@@ -131,7 +143,6 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
     dataGet();
   }, [searchParams]);
 
-
   return (
     <>
       <div className="flex w-full flex-col items-center justify-between text-[#656565] lg:flex-row">
@@ -139,12 +150,13 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
           return (
             <div
               key={item.freezeStatus}
-              className={`mb-2 flex w-full flex-row items-center justify-center gap-3 rounded-lg border px-4 py-4 text-[16px] font-[400] hover:cursor-pointer hover:bg-[#e1e1e122] lg:mb-0 lg:w-auto lg:rounded-none lg:border-0 lg:border-b-8 lg:px-6 lg:py-2 ${freezeStatus == item.title
-                ? 'w-full border-b-8 border-[#B07828] font-bold text-[#B07828] lg:border-b-8'
-                : 'font-[400] lg:border-transparent'
-                }`}
+              className={`mb-2 flex w-full flex-row items-center justify-center gap-3 rounded-lg border px-4 py-4 text-[16px] font-[400] hover:cursor-pointer hover:bg-[#e1e1e122] lg:mb-0 lg:w-auto lg:rounded-none lg:border-0 lg:border-b-8 lg:px-6 lg:py-2 ${
+                freezeStatus == item.title
+                  ? 'w-full border-b-8 border-[#B07828] font-bold text-[#B07828] lg:border-b-8'
+                  : 'font-[400] lg:border-transparent'
+              }`}
               onClick={() => {
-                handleTabChange(item.title)
+                handleTabChange(item.title);
                 window.location.reload();
               }}>
               <div className={``}>{item.title}</div>
@@ -162,8 +174,8 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
       </div>
 
       {/* filter section */}
-      <div className="mt-4 flex flex-row gap-4 lg:flex-nowrap flex-wrap">
-        <div className="w-3/4 gap-2 flex flex-row lg:flex-nowrap flex-wrap">
+      <div className="mt-4 flex flex-row flex-wrap gap-4 lg:flex-nowrap">
+        <div className="flex w-3/4 flex-row flex-wrap gap-2 lg:flex-nowrap">
           {/* Search */}
           <div>
             <div className="relative">
@@ -184,15 +196,18 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
                 </svg>
               </div>
 
-              <CustomTooltip text="Enter to search" placement="top" style='dark'>
+              <CustomTooltip text="Enter to search" placement="top" style="dark">
                 <input
                   type="search"
                   id="default-search"
                   className="dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-red-500 dark:focus:border-red-500 block w-full rounded-lg border border-gray-300 bg-gray-50 px-10 py-1 ps-10 text-[12px] text-gray-900 focus:border-red-500 focus:ring-red-500"
                   placeholder="Name or SKU"
-                  onKeyDown={(ev) => { ev.key === 'Enter' && handleSearchInput(ev) }}
+                  onKeyDown={(ev) => {
+                    ev.key === 'Enter' && handleSearchInput(ev);
+                  }}
                   required
-                /></CustomTooltip>
+                />
+              </CustomTooltip>
             </div>
           </div>
           {/* From Date */}
@@ -250,10 +265,11 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
           <div>
             {/* Apply button for dates */}
             <button
-              className={`border-1 h-[33px] w-[100px] rounded-[4px] border-[#B07828] bg-[#B07828] text-[12px] leading-[30px] text-white hover:bg-[#B07828] hover:text-white ${enableDate
-                ? ''
-                : 'cursor-not-allowed border-[#e1e1e1] bg-[#e1e1e1] hover:bg-[#e1e1e1] hover:text-black'
-                }'}}`}
+              className={`border-1 h-[33px] w-[100px] rounded-[4px] border-[#B07828] bg-[#B07828] text-[12px] leading-[30px] text-white hover:bg-[#B07828] hover:text-white ${
+                enableDate
+                  ? ''
+                  : 'cursor-not-allowed border-[#e1e1e1] bg-[#e1e1e1] hover:bg-[#e1e1e1] hover:text-black'
+              }'}}`}
               onClick={() => {
                 handleDateChange();
               }}
@@ -282,14 +298,18 @@ const FreezeTabs = ({ tabs, setData, setLoading, setTabs, page, perPage, setTota
             </div>
           )}
         </div>
-        <div className="flex justify-end w-1/2 items-center">
-          <button className='border text-[14px] flex justify-center items-center gap-2 text-[#B02828] hover:text-black lg:h-8 h-auto px-[5px] w-[150px] border-[#B02828] rounded-[4px]'>
+        <div className="flex w-1/2 items-center justify-end">
+          <button className="flex h-auto w-[150px] items-center justify-center gap-2 rounded-[4px] border border-[#B02828] px-[5px] text-[14px] text-[#B02828] hover:text-black lg:h-8">
             {/* <img src={} alt="" width={'14px'} /> */}
             {/* Todo: Upload image add */}
             Import Products
           </button>
-          <button className='border text-[14px] text-[#B02828] hover:text-black lg:h-8 h-auto px-[5px] w-[150px] border-[#B02828] rounded-[4px]'>Export products</button>
-          <button className='border text-[14px] text-[#B02828] hover:text-black lg:h-8 h-auto px-[5px] w-[150px] border-[#B02828] rounded-[4px]'>Export Order List</button>
+          <button className="h-auto w-[150px] rounded-[4px] border border-[#B02828] px-[5px] text-[14px] text-[#B02828] hover:text-black lg:h-8">
+            Export products
+          </button>
+          <button className="h-auto w-[150px] rounded-[4px] border border-[#B02828] px-[5px] text-[14px] text-[#B02828] hover:text-black lg:h-8">
+            Export Order List
+          </button>
         </div>
       </div>
     </>

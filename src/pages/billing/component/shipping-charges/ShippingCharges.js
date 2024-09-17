@@ -7,6 +7,7 @@ import { BACKEND_URL } from '../../../../common/utils/env.config';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Loader } from '../../../../common/components';
+import apiClient from '../../../../common/utils/apiClient';
 const ShippingCharges = () => {
   const [data, setData] = useState([]); //eslint-disable-line
   const [isLoading, setIsLoading] = useState(false);
@@ -19,7 +20,7 @@ const ShippingCharges = () => {
   const fetchShippingChargesData = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(`${BACKEND_URL}/ordershipping_charges?user_id=${user_id}`);
+      const response = await apiClient.get(`${BACKEND_URL}/ordershipping_charges?user_id=${user_id}`);
       if (response.status === 200) {
         setData(response.data);
         setIsLoading(false);

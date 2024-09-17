@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React from 'react';
 import { createColumnHelper } from '@tanstack/react-table';
 import { useState, useEffect } from 'react';
@@ -9,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { user } from '../../common/icons/sidebar-icons';
+import apiClient from '../../common/utils/apiClient';
 
 export let temp_user_id;
 const User = () => {
@@ -27,7 +27,7 @@ const User = () => {
   const navigate = useNavigate();
 
   //   const fetchUsers = () => {
-  //     axios
+  //     apiClient
   //     .get(BACKEND_URL+`/company/get_company_users?companyId=8`)
   //     .then(async (resp) => {
   //       if (resp.status === 200) {
@@ -47,7 +47,7 @@ const User = () => {
   //   }
 
   useEffect(() => {
-    axios
+    apiClient
       .get(BACKEND_URL + `/company/get_company_users/?companyId=${company_id}`)
       .then((res) => {
         console.log('RESSSSSSSSSSSSS', res);
@@ -83,7 +83,7 @@ const User = () => {
     setIdUser(row?.original?.id);
     setShowKyc(true);
     const headers = { 'Content-Type': 'application/json' };
-    axios
+    apiClient
       .get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=user_aadhar`, { responseType: 'blob' })
       .then((res) => {
         console.log('Recharge Responsee', res);
@@ -98,7 +98,7 @@ const User = () => {
         console.log('Error In Rechargeee', err);
       });
 
-    axios
+    apiClient
       .get(BACKEND_URL + `/kyc/?id=${row?.original?.id}&type=selfie`, { responseType: 'blob' })
       .then((res) => {
         console.log('Recharge Responsee', res);
@@ -117,7 +117,7 @@ const User = () => {
   const handleAcceptKYC = () => {
     setKyc_status(1);
     const headers = { 'Content-Type': 'application/json' };
-    axios
+    apiClient
       .post(BACKEND_URL + `/kyc/kyc_status/?client_type=user&status=${3}&id=${idUser}`, { headers })
       .then((res) => {
         console.log('Response ', res);
@@ -132,7 +132,7 @@ const User = () => {
 
   // const checkKYC = ) => {
   //   const headers={'Content-Type': 'application/json'};
-  //   axios.post(BACKEND_URL + `/kyc/?id=${idUser}&type=user_aadhar`).
+  //   apiClient.post(BACKEND_URL + `/kyc/?id=${idUser}&type=user_aadhar`).
   //   then((res) => {
   //       console.log("Recharge Responsee",res)
   //       // let newVal = localStorage.getItem('balance') - rechargeAmount
@@ -146,7 +146,7 @@ const User = () => {
 
   const handleRecharge = () => {
     const headers = { 'Content-Type': 'application/json' };
-    axios
+    apiClient
       .post(
         BACKEND_URL +
           `/company/update_wallet_balance?companyId=${parseInt(company_id)}&user_id=${parseInt(
@@ -159,7 +159,7 @@ const User = () => {
           toast('Insufficient Balance', { type: 'error' });
         } else {
           toast('Recharge Successfully', { type: 'success' });
-          axios
+          apiClient
             .get(BACKEND_URL + `/company/get_company_users/?companyId=${company_id}`)
             .then((res) => {
               console.log('RESSSSSSSSSSSSS', res);

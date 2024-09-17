@@ -1,6 +1,5 @@
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import { toast } from 'react-toastify';
@@ -8,6 +7,7 @@ import { Loader } from '../../../common/components';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from 'flowbite-react';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import apiClient from '../../../common/utils/apiClient';
 
 function CustomerTable() {
   const [searchText, setSearchText] = useState('');
@@ -43,7 +43,7 @@ function CustomerTable() {
   const fetchCustomersData = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${BACKEND_URL}/users/get_customer_details?user_id=${user_id}&page=${page}&page_size=${itemsPerPage}`,
       );
       if (response.status === 200 && Array.isArray(response.data)) {

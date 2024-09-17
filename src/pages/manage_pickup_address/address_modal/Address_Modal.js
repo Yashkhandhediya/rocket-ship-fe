@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { CustomTooltip, Loader } from '../../../common/components';
 import { BACKEND_URL } from '../../../common/utils/env.config';
 import OTP_Modal from '../otp_modal/OTP_Modal';
 import DifferentRTOAddress from '../different_rto_address/Different_RTO_Address';
 import { useNavigate } from 'react-router-dom';
+import apiClient from '../../../common/utils/apiClient';
 
 const Address_Modal = ({ setShow, addressId, addressData, fetchUserAddressList }) => {
   const [showOTP, setShowOTP] = useState(false);
@@ -30,7 +30,7 @@ const Address_Modal = ({ setShow, addressId, addressData, fetchUserAddressList }
     alternatePhone: '',
     email: addressId ? dataAddress?.email_address : '',
     addressLine1: addressId ? dataAddress?.complete_address : '',
-    addressLine2: addressId ? dataAddress?.line2 :'',
+    addressLine2: addressId ? dataAddress?.line2 : '',
     pincode: addressId ? dataAddress?.pincode : '',
     city: addressId ? dataAddress?.city : '',
     state: addressId ? dataAddress?.state : '',
@@ -101,7 +101,7 @@ const Address_Modal = ({ setShow, addressId, addressData, fetchUserAddressList }
   const handlePostAddress = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${BACKEND_URL}/address/?created_by=${user_id}`, {
+      const response = await apiClient.post(`${BACKEND_URL}/address/?created_by=${user_id}`, {
         contact_no: address.phone,
         first_name: address.contactName,
         email_address: address.email,
@@ -128,7 +128,7 @@ const Address_Modal = ({ setShow, addressId, addressData, fetchUserAddressList }
   const fetchPinCodeDetails = async (pincode, isRTO) => {
     const url = `${BACKEND_URL}/pincode/${pincode}`;
     try {
-      const response = await axios.get(url);
+      const response = await apiClient.get(url);
       const { data } = response;
       if (response.status === 200) {
         toast.success('Pincode details fetched successfully');

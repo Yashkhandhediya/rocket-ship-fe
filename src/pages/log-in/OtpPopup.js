@@ -5,6 +5,7 @@ import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import ResetPassword from './ResetPassword';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import apiClient from '../../common/utils/apiClient';
 
 const OtpPopup = ({
   userType = 'user',
@@ -52,10 +53,9 @@ const OtpPopup = ({
   };
 
   const handleSendOTP = () => {
-    const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     if (upDatePassWord) {
-      axios
-        .post(BACKEND_URL + `/users/generate_otp?email_id=${username}`, { headers })
+      apiClient
+        .post(BACKEND_URL + `/users/generate_otp?email_id=${username}`)
         .then((otpResponse) => {
           console.log(otpResponse);
         })
@@ -63,12 +63,11 @@ const OtpPopup = ({
           console.error('Error fetching OTP:', otpError);
         });
     } else {
-      axios
-        .post(
-          BACKEND_URL + `/login/generate_otp?email_id=${username}&user_id=${userId}`,
-          { email_id: String(username), user_id: String(userId) },
-          { headers },
-        )
+      apiClient
+        .post(BACKEND_URL + `/login/generate_otp?email_id=${username}&user_id=${userId}`, {
+          email_id: String(username),
+          user_id: String(userId),
+        })
         .then((otpResponse) => {
           console.log(otpResponse);
         })
@@ -125,8 +124,8 @@ const OtpPopup = ({
         ? `/login/verify_otp/?otp=${joinOTP}&user_id=${tempId}`
         : `/company/verify_otp/?otp=${joinOTP}&id=${tempId}`;
 
-    axios
-      .get(BACKEND_URL + otpURL, { otp: OTP, user_id: tempId }, { headers })
+    apiClient
+      .get(BACKEND_URL + otpURL, { otp: OTP, user_id: tempId })
       .then((response) => {
         localStorage.setItem('is_otpVerified', JSON.stringify(true));
         console.log(response);
@@ -171,8 +170,8 @@ const OtpPopup = ({
       toast('Enter your OTP', { type: 'error' });
       return;
     }
-    axios
-      .get(BACKEND_URL + verifyURL, { headers })
+    apiClient
+      .get(BACKEND_URL + verifyURL)
       .then((response) => {
         console.log(response);
         if (response.data.flag == 1) {

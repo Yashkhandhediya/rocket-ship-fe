@@ -3,7 +3,6 @@ import { useRef } from 'react';
 import { Tabs } from '../../common/components/tabs';
 import { returnsTabs } from './duck';
 import PageWithSidebar from '../../common/components/page-with-sidebar/PageWithSidebar';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllReturns, setAllWeightDiscrepancies } from '../../redux';
 import { toast } from 'react-toastify';
@@ -14,6 +13,7 @@ import { DiscrepancyTable } from './components';
 import { DiscrepancyModal } from './components';
 import { Field } from '../../common/components';
 import { upload } from '../../common/icons';
+import apiClient from '../../common/utils/apiClient';
 
 const WeightDiscrepancy = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -95,7 +95,7 @@ const WeightDiscrepancy = () => {
   });
 
   const fetchWeightDiscrepancies = () => {
-    axios
+    apiClient
       .get(
         BACKEND_URL + `/weight_discrepancy/get_weight_discrepancy?user_id=${localStorage.getItem('user_id')}`,
       )
@@ -124,7 +124,7 @@ const WeightDiscrepancy = () => {
   };
 
   // const fetchImg = (id) => {
-  //   axios.get(BACKEND_URL + `/weight_discrepancy/get_weight_discrepancy_courier_image?weight_discrepancy_id=${id}`,{ responseType: 'blob' })
+  //   apiClient.get(BACKEND_URL + `/weight_discrepancy/get_weight_discrepancy_courier_image?weight_discrepancy_id=${id}`,{ responseType: 'blob' })
   //   .then((res) => {
   //     console.log("Imageeeeee",res.data)
   //     const imgUrl = URL.createObjectURL(res.data)
@@ -172,7 +172,7 @@ const WeightDiscrepancy = () => {
     setSelectedFile(formData);
     const headers = { 'Content-Type': 'multipart/form-data' };
     try {
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${BACKEND_URL}/weight_discrepancy/import/?user_id=${localStorage.getItem('user_id')}`,
         formData,
         { headers },
@@ -211,7 +211,7 @@ const WeightDiscrepancy = () => {
   const fetchFilteredWeightDiscrepancy = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
+      const response = await apiClient.get(
         `${BACKEND_URL}/weight_discrepancy/filter?user_id=${userId}&string=${query}`,
       );
       console.log(response.data);
@@ -246,7 +246,7 @@ const WeightDiscrepancy = () => {
   const handlePostWeightDiscrepancy = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${BACKEND_URL}/weight_discrepancy/filter_weight_discrepancy?user_id=${userId}`,
         filteredWDId,
       );
@@ -271,7 +271,7 @@ const WeightDiscrepancy = () => {
       const headers = { 'Content-Type': 'application/json' };
 
       try {
-        const response = await axios.post(
+        const response = await apiClient.post(
           `${BACKEND_URL}/weight_discrepancy/?user_id=${localStorage.getItem('user_id')}`,
           discrepancyData,
           { headers },
@@ -283,7 +283,7 @@ const WeightDiscrepancy = () => {
 
         const imageUploadHeaders = { 'Content-Type': 'multipart/form-data' };
 
-        const imageResponse = await axios.post(
+        const imageResponse = await apiClient.post(
           `${BACKEND_URL}/weight_discrepancy/add_image?weight_discrepancy_id=${discrepancyId}&image_type=courier_image`,
           formData,
           { headers: imageUploadHeaders },
@@ -560,11 +560,9 @@ const WeightDiscrepancy = () => {
             {/* </div> */}
           </div>
           <div className="flex items-center gap-2">
-            <button className='py-1 px-2 bg-red-700 border rounded-md' title='create' onClick={handleShow}>
-             <span className="text-white text-base">
-              Create
-             </span> 
-          </button>
+            <button className="rounded-md border bg-red-700 px-2 py-1" title="create" onClick={handleShow}>
+              <span className="text-base text-white">Create</span>
+            </button>
             <button className="bg-gray-700 px-2 py-1" title="export">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
