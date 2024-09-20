@@ -8,12 +8,35 @@ import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { cloneDeep, isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
+import { setEditOrder } from '../../../../../redux';
+import { useLocation } from 'react-router-dom';
+import Autosuggest from 'react-autosuggest';
+import apiClient from '../../../../../common/utils/apiClient';
+
+export let package_info = {
+  length: 0,
+  width: 0,
+  height: 0,
+  volumatric_weight: '',
+};
 
 export default function OrderDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
-
+  const location = useLocation();
+  let { isEdit } = location?.state || {};
+  const id_user = localStorage.getItem('user_id');
+  const [suggestions, setSuggestions] = useState([]);
+  const [suggestionData, setSuggestionData] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestionProductData, setSuggestionProductData] = useState([]);
+  const [showProductSuggestions, setShowProductSuggestions] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [focusedProductIndex, setFocusedProductIndex] = useState(-1);
+  // const [cashCharge,setCashCharge] = useState(0)
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order) || {};
-
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState('');
+  const [showCategories, setShowCategories] = useState(false);
   const defaultProductField = {
     name: '',
     unit_price: '',
@@ -24,27 +47,46 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     discount: 0,
   };
 
+  const getCategories = async () => {
+    // setLoading(true);
+    try {
+      const response = await apiClient.get(`${BACKEND_URL}/category`);
+      setCategories(response.data);
+      console.log(response.data);
+    } catch (err) {
+      toast('There is some error while fetching data', { type: 'error' });
+    }
+  };
+
+  const handleCategories = () => {
+    setShowCategories(true);
+    getCategories();
+  };
+
   const [productValidation, setProductValidation] = useState(false);
   const [isOrderIdValid, setIsOrderIdValid] = useState(true);
 
   const [formDirectField, setFormDirectField] = useState({
-    channel: '',
+    channel: domesticOrderFormValues?.channel_name || 'custom',
     date: moment(new Date()).format('YYYY-MM-DD'),
-    tag: '',
-    reseller_name: '',
-    sub_total: 0,
-    other_charges: 0,
-    total_amount: 0,
+    tag: domesticOrderFormValues?.tag || '',
+    reseller_name: domesticOrderFormValues?.reseller_name || '',
+    sub_total: domesticOrderFormValues?.sub_total || 0,
+    other_charges: domesticOrderFormValues?.other_charges || 0,
+    total_amount: domesticOrderFormValues?.total_amount || 0,
   });
 
   const [productFields, setProductFields] = useState([defaultProductField]);
+
+  console.log(productFields);
 
   const [paymentDetails, setPaymentDetails] = useState({
     type: 'cod',
     shipping_charges: 0,
     gift_wrap: 0,
     transaction_fee: 0,
-    discount: 0,
+    cod_charge: 0,
+    discount: '',
   });
 
   const subProductTotal =
@@ -54,13 +96,19 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
         : 0);
     }, 0) || 0;
 
+  const discountValue =
+    productFields?.reduce((total, product) => {
+      return (total += product ? Number(product?.discount || 0) * Number(product?.quantity || 0) : 0);
+    }, 0) || 0;
+
   const otherCharges =
     Number(paymentDetails?.gift_wrap || 0) +
+      Number(paymentDetails?.cod_charge || 0) +
       Number(paymentDetails?.shipping_charges || 0) +
       Number(paymentDetails?.transaction_fee || 0) || 0;
 
   const totalOrderValue =
-    Number(subProductTotal || 0) + Number(otherCharges || 0) - Number(paymentDetails?.discount || 0);
+    Number(subProductTotal || 0) + Number(otherCharges || 0) - Number(paymentDetails?.discount || 0) || 0;
 
   const checkIsProductValid = () => {
     const errors = {
@@ -108,8 +156,20 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   };
 
   const handleSetProductFields = (event, index) => {
-    const { id, value } = event.target;
-
+    const { id, value } = event.target ? event.target : event;
+    console.log(id, value);
+    if (id == 'name') {
+      apiClient
+        .get(BACKEND_URL + '/product/get_product_details/')
+        .then((res) => {
+          console.log('Suggestion Products', res.data);
+          setSuggestionProductData(res.data);
+          setShowProductSuggestions(true);
+        })
+        .catch((err) => {
+          console.log('Error in Products', err);
+        });
+    }
     const allFields = [...productFields];
     allFields[index][id] = value;
     setProductFields(allFields);
@@ -145,9 +205,74 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
     });
   };
 
+  const handleChannel = (event) => {
+    const { id, value } = event.target;
+    setFormDirectField({
+      ...formDirectField,
+      [id]: value,
+    });
+    //   if(formDirectField?.channel != ''){
+    //     axios.get(BACKEND_URL + '/channel/get_channel_suggestions')
+    //     .then((res) => {
+    //       console.log("Suggestions",res.data)
+    //       setSuggestionData(res.data)
+    //       setShowSuggestions(true)
+    //     }).catch((err) => {
+    //       console.log("Error in Suggestion",err)
+    //     })
+    // }
+  };
+
+  // Handle suggestion selection
+  const handleSuggestionClick = (suggestion) => {
+    setFormDirectField({
+      ...formDirectField,
+      channel: suggestion.name,
+    });
+    setShowSuggestions(false);
+  };
+
+  // Handle hover over suggestion
+  const handleSuggestionHover = (index, suggestion) => {
+    setFocusedIndex(index);
+    setFormDirectField({
+      ...formDirectField,
+      channel: suggestion.name,
+    });
+  };
+
+  // Handle product suggestion selection
+  const handleProductSuggestionClick = (suggestion, index) => {
+    console.log('Suggestion Valueeeeee', suggestion);
+    const allFields = [...productFields];
+    allFields[index]['name'] = suggestion.name;
+    allFields[index]['unit_price'] = suggestion.unit_price;
+    allFields[index]['sku'] = suggestion.sku;
+    allFields[index]['hsn_code'] = suggestion.hsn_code;
+    allFields[index]['discount'] = suggestion.discount;
+    allFields[index]['cod_charge'] = suggestion.cod_charge;
+    setProductFields(allFields);
+    package_info.length = suggestion.length;
+    package_info.width = suggestion.width;
+    package_info.height = suggestion.height;
+    package_info.volumatric_weight = suggestion.volumatric_weight;
+    // setCashCharge(suggestion.cod_charge)
+    setShowProductSuggestions(false);
+  };
+
+  // Handle product hover over suggestion
+  const handleProductSuggestionHover = (suggestion, index, i) => {
+    setFocusedProductIndex(i);
+    const allFields = [...productFields];
+    const temp_info = allFields[index];
+    console.log('ALLLLLLLLLL', allFields, index);
+    temp_info.name = suggestion.name;
+    setProductFields(allFields);
+  };
+
   const fetchOrderId = () => {
-    axios
-      .get(BACKEND_URL+'/order/get_order_id')
+    apiClient
+      .get(BACKEND_URL + `/order/get_order_id/?id=${id_user}`)
       .then((resp) => {
         if (resp?.status == 200 && resp?.data?.order_id) {
           setFormDirectField({
@@ -172,13 +297,23 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
       if (!productFields?.length || !isValidProducts || !formDirectField?.channel || !formDirectField?.date) {
         toast('Please enter all required fields', { type: 'error' });
       } else {
-        dispatch(
-          setDomesticOrder({
-            product_info: productFields,
-            payment_details: paymentDetails,
-            ...formDirectField,
-          }),
-        );
+        if (!isEdit) {
+          dispatch(
+            setDomesticOrder({
+              product_info: productFields,
+              payment_details: paymentDetails,
+              ...formDirectField,
+            }),
+          );
+        } else {
+          dispatch(
+            setEditOrder({
+              product_info: productFields,
+              payment_details: paymentDetails,
+              ...formDirectField,
+            }),
+          );
+        }
         handleChangeStep(currentStep + 1);
       }
     } else if (currentStep > 0) {
@@ -187,10 +322,10 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
   };
 
   useEffect(() => {
-    if (!formDirectField?.order_id) {
+    if (!formDirectField?.order_id && !isEdit) {
       fetchOrderId();
     }
-  }, []);
+  }, [formDirectField]);
 
   useEffect(() => {
     setFormDirectField({
@@ -209,11 +344,13 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
             ? domesticOrderFormValues?.product_info
             : [defaultProductField],
         ),
+        [domesticOrderFormValues],
       );
       setPaymentDetails({ type: 'cod', ...(domesticOrderFormValues?.payment_details || {}) });
       setFormDirectField({
         ...formDirectField,
-        channel: domesticOrderFormValues?.channel,
+        order_id: domesticOrderFormValues?.order_id,
+        channel: domesticOrderFormValues?.channel_name || 'custom',
         date: moment(new Date()).format('YYYY-MM-DD'),
         tag: domesticOrderFormValues?.tag,
         reseller_name: domesticOrderFormValues?.reseller_name,
@@ -223,6 +360,118 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
       });
     }
   }, [domesticOrderFormValues]);
+
+  const handleKeyDown = (event) => {
+    if (showSuggestions) {
+      if (event.key === 'ArrowDown') {
+        setFocusedIndex((prevIndex) => (prevIndex + 1) % suggestionData.length);
+      } else if (event.key === 'ArrowUp') {
+        setFocusedIndex((prevIndex) => (prevIndex - 1 + suggestionData.length) % suggestionData.length);
+      } else if (event.key === 'Enter') {
+        if (focusedIndex >= 0 && focusedIndex < suggestionData.length) {
+          handleSuggestionClick(suggestionData[focusedIndex]);
+        }
+      }
+    }
+    if (showProductSuggestions) {
+      if (event.key === 'ArrowDown') {
+        setFocusedProductIndex((prevIndex) => (prevIndex + 1) % suggestionProductData.length);
+      } else if (event.key === 'ArrowUp') {
+        setFocusedProductIndex(
+          (prevIndex) => (prevIndex - 1 + suggestionProductData.length) % suggestionProductData.length,
+        );
+      } else if (event.key === 'Enter') {
+        if (focusedProductIndex >= 0 && focusedProductIndex < suggestionProductData.length) {
+          handleProductSuggestionClick(suggestionProductData[focusedProductIndex], focusedIndex);
+        }
+      }
+    }
+  };
+
+  const fetchSuggestions = async (value) => {
+    try {
+      const response = await apiClient.get(`${BACKEND_URL}/product/get_product_suggestion/`, {
+        params: { string: value, user_id: id_user },
+      });
+      const filteredSuggestions = response.data.filter(
+        (user) => user.name && user.name.toLowerCase().includes(value.toLowerCase()),
+      );
+      console.log('REEEEEEEE', filteredSuggestions);
+      setSuggestions(filteredSuggestions);
+    } catch (error) {
+      console.error('Error fetching suggestions:', error);
+    }
+  };
+
+  const onSuggestionsFetchRequested = ({ value }) => {
+    console.log(value);
+    if (value) {
+      fetchSuggestions(value);
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([]);
+  };
+
+  const getSuggestionValue = (suggestion) => suggestion.name;
+
+  const renderSuggestion = (suggestion) => <div>{suggestion.name}</div>;
+
+  const inputProps = {
+    placeholder: 'Search Product',
+    value: '',
+    onChange: (e, { newValue }) => {
+      const newProductFields = [...productFields];
+      if (focusedProductIndex >= 0 && focusedProductIndex < newProductFields.length) {
+        newProductFields[focusedProductIndex].name = newValue;
+        setProductFields(newProductFields);
+      }
+      setShowProductSuggestions(true);
+    },
+    id: 'user',
+    className:
+      'block min-h-[36px] w-full rounded-md border border-gray-300 px-2.5 text-sm text-gray-900 focus:border-[#3181e8] focus:ring-[#3181e8] disabled:bg-neutral-300',
+  };
+
+  const theme = {
+    container: 'relative w-full',
+    input: 'w-full p-2 text-lg',
+    suggestionsContainer: 'absolute z-20 bg-white max-h-52 overflow-y-auto w-full shadow-md',
+    suggestionsList: 'list-none  m-0 p-0',
+    suggestion: 'p-2 cursor-pointer',
+    suggestionHighlighted: 'bg-gray-300',
+  };
+
+  const handleAddCatgory = async (category) => {
+    console.log('clicked');
+    const isCategoryExists = categories.some(
+      (item) => item.category.toLowerCase() === category.toLowerCase(),
+    );
+
+    if (isCategoryExists) {
+      return;
+    }
+
+    try {
+      const response = await apiClient.post(`${BACKEND_URL}/category/`, {
+        category: category,
+      });
+
+      console.log(response);
+      getCategories();
+    } catch (err) {
+      toast('There is some error while Adding Category', { type: 'error' });
+    }
+  };
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+
+  console.log(formDirectField, domesticOrderFormValues, showCategories, productFields);
 
   return (
     <div>
@@ -262,7 +511,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               <p className="mt-1 text-xs text-red-500">Order date is required.</p>
             )}
           </div>
-          <div className="px-2 pb-2 md:w-3/12 md:pb-0">
+          <div className="relative px-2 pb-2 md:w-3/12 md:pb-0">
             <Field
               type={'select'}
               id={'channel'}
@@ -275,8 +524,22 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               }
               required={true}
               value={formDirectField?.channel}
-              onChange={setDirectKeysInForm}
+              onChange={handleChannel}
             />
+            {/* {showSuggestions && suggestionData.length > 0 && (
+                  <div className="absolute w-[60%] bg-white border border-gray-300 rounded shadow-md z-10">
+                    {suggestionData.map((suggestion, index) => (
+                      <div
+                        key={index}
+                        className={`p-2 cursor-pointer ${focusedIndex === index ? 'bg-gray-200' : 'hover:bg-gray-100'}`}
+                        onMouseDown={() => handleSuggestionClick(suggestion)}
+                        onMouseEnter={() => handleSuggestionHover(index,suggestion)}
+                      >
+                        {suggestion.name}
+                      </div>
+                    ))}
+                  </div>
+              )} */}
             {productValidation && !formDirectField?.channel && (
               <p className="mt-1 text-xs text-red-500">Order Channel is required.</p>
             )}
@@ -320,16 +583,48 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
             return (
               <div className="mb-4 border-b border-gray-200" key={index}>
                 <div className="mb-3 w-full md:flex">
-                  <div className="w-full px-2 pb-2 xl:w-4/12">
-                    <Field
-                      id={'name'}
-                      label={`Product ${index + 1} Name`}
-                      inputClassNames={'text-xs'}
-                      labelClassNames={'text-xs'}
-                      placeHolder={'Enter or search your product name'}
-                      required={true}
-                      value={field?.name || ''}
-                      onChange={(e) => handleSetProductFields(e, index)}
+                  <div className="relative w-full px-2 pb-2 xl:w-4/12">
+                    <label className={`mb-2 flex items-center text-xs font-medium text-gray-600`}>{`Product ${
+                      index + 1
+                    } Name`}</label>
+                    <Autosuggest
+                      suggestions={suggestions}
+                      onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                      onSuggestionsClearRequested={onSuggestionsClearRequested}
+                      getSuggestionValue={getSuggestionValue}
+                      renderSuggestion={renderSuggestion}
+                      inputProps={{
+                        ...inputProps,
+                        value: field.name,
+                        onChange: (e, { newValue }) => {
+                          const newProductFields = [...productFields];
+                          newProductFields[index].name = newValue;
+                          setProductFields(newProductFields);
+                          setShowProductSuggestions(true);
+                        },
+                      }}
+                      onSuggestionSelected={(event, { suggestion }) => {
+                        // console.log("GHDDDDDDDDDD",suggestion.volumetric_weight)
+                        const newProductFields = [...productFields];
+                        const responseSchema = {
+                          name: suggestion.name,
+                          hsn_code: suggestion.hsn_code,
+                          sku: suggestion.sku,
+                          unit_price: suggestion.unit_price,
+                          category: suggestion.category,
+                          discount: suggestion.discount,
+                        };
+                        newProductFields[index] = {
+                          ...newProductFields[index],
+                          ...responseSchema,
+                        };
+                        setProductFields(newProductFields);
+                        package_info.length = suggestion.length;
+                        package_info.width = suggestion.width;
+                        package_info.height = suggestion.height;
+                        package_info.volumatric_weight = String(suggestion.volumetric_weight);
+                      }}
+                      theme={theme}
                     />
                     {productValidation && !field?.name?.length && (
                       <p className="mt-1 text-xs text-red-500">Product Name is required.</p>
@@ -349,14 +644,14 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
                     {productValidation && (!field?.unit_price || field?.unit_price < 1) && (
-                      <p className="mt-1 text-xs text-red-500">Unit price should be greter than 0.</p>
+                      <p className="mt-1 text-xs text-red-500">Unit price should be greater than 0.</p>
                     )}
                   </div>
-                  <div className="w-full px-2  pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
+                  <div className="w-full px-2 pb-2 sm:w-6/12 md:pb-0 xl:w-2/12">
                     <Field
                       type={'number'}
                       id={'quantity'}
-                      label={'Quatity'}
+                      label={'Quantity'}
                       inputClassNames={'text-xs'}
                       labelClassNames={'text-xs'}
                       placeHolder={'0'}
@@ -368,21 +663,52 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
                     {productValidation && (!field?.quantity || field?.quantity < 1) && (
-                      <p className="mt-1 text-xs text-red-500">Quantity should be greter than 0.</p>
+                      <p className="mt-1 text-xs text-red-500">Quantity should be greater than 0.</p>
                     )}
                   </div>
-                  <div className="w-10/12 px-2 pb-2 md:w-4/12 md:pb-0 xl:w-3/12">
+                  <div
+                    className="relative w-10/12 px-2 pb-2 md:w-4/12 md:pb-0 xl:w-3/12"
+                    onFocus={() => setShowCategories(true)}
+                    onBlur={() => {
+                      setTimeout(() => setShowCategories(false), 150);
+                    }}>
                     <Field
                       id={'category'}
                       label={'Product Category'}
                       showOptional
-                      inputClassNames={'text-xs'}
-                      labelClassNames={'text-xs'}
+                      inputClassNames={'text-xs '}
+                      labelClassNames={'text-xs '}
                       placeHolder={'Edit Product Category'}
                       required={true}
+                      onBlur={(e) => handleAddCatgory(e.target.value)}
                       value={field?.category || ''}
                       onChange={(e) => handleSetProductFields(e, index)}
                     />
+
+                    {showCategories && (
+                      <div className="absolute mt-1 max-h-40 w-[95%] overflow-hidden overflow-y-auto rounded border bg-white px-4 py-2 text-sm">
+                        {categories.length != 0 &&
+                          categories
+                            .filter((item) =>
+                              item.category.toLowerCase().includes(field?.category?.toLowerCase() || ''),
+                            )
+                            .map((item) => {
+                              return (
+                                item.category.length != 0 && (
+                                  <p
+                                    key={item.id}
+                                    className="cursor-pointer py-1"
+                                    onClick={() => {
+                                      handleSetProductFields({ id: 'category', value: item.category }, index);
+                                      setShowCategories(false);
+                                    }}>
+                                    {item.category}
+                                  </p>
+                                )
+                              );
+                            })}
+                      </div>
+                    )}
                   </div>
                   <div className="self-center">
                     <button
@@ -427,7 +753,6 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                         />
                       </div>
                       <div className="w-full px-2 pb-2 lg:w-2/12">
-                        {/* missing field in API */}
                         <Field
                           type={'number'}
                           id={'tax_rate'}
@@ -446,9 +771,9 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                           label={'Product Discount'}
                           inputClassNames={'text-xs'}
                           labelClassNames={'text-xs'}
-                          placeHolder={'0.00'}
+                          placeHolder={'0'}
                           tooltip={'Discount given to the buyer on this product'}
-                          value={field?.discount || 0}
+                          value={field?.discount}
                           onChange={(e) => handleSetProductFields(e, index)}
                         />
                       </div>
@@ -458,6 +783,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
               </div>
             );
           })}
+
           <div>
             <button
               className={'rounded-sm bg-[#eeebff] px-2.5 py-1.5 text-xs text-orange-700'}
@@ -533,6 +859,19 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                   <div className="w-full px-2 pb-2 md:w-4/12 lg:w-3/12 xl:w-2/12">
                     <Field
                       type={'number'}
+                      id={'cod_charge'}
+                      label={'COD Charge'}
+                      inputClassNames={'text-xs'}
+                      labelClassNames={'text-xs'}
+                      placeHolder={'0.00'}
+                      leftAddOn="₹"
+                      value={paymentDetails?.cod_charge || 0}
+                      onChange={handleSetPaymentDetails}
+                    />
+                  </div>
+                  <div className="w-full px-2 pb-2 md:w-4/12 lg:w-3/12 xl:w-2/12">
+                    <Field
+                      type={'number'}
                       id={'gift_wrap'}
                       label={'Gift Wrap'}
                       inputClassNames={'text-xs'}
@@ -571,7 +910,7 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
                         'In case of discounts offered, the discount amount can be added here and will be deduced in your total order amount'
                       }
                       leftAddOn="₹"
-                      value={paymentDetails?.discount || 0}
+                      value={paymentDetails?.discount}
                       onChange={handleSetPaymentDetails}
                     />
                   </div>
@@ -581,21 +920,51 @@ export default function OrderDetails({ currentStep, handleChangeStep }) {
             <div className="my-5 rounded-md bg-[#ecf2fe99] p-5 text-sm">
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Sub-total for Product'}</p>
-                <p className="w-6/12 text-end">{'₹ ' + formDirectField?.sub_total || 0}</p>
+                <p className="w-6/12 text-end">
+                  {'₹ ' +
+                    (isEdit == 1 && domesticOrderFormValues?.sub_total != null
+                      ? domesticOrderFormValues?.sub_total
+                      : formDirectField.sub_total || 0)}
+                </p>
               </div>
-              <div className="mb-1 flex justify-between">
+              {/* <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Other Charges'}</p>
                 <p className="w-6/12 text-end">{'₹ ' + formDirectField?.other_charges || 0}</p>
+              </div> */}
+              <div className="mb-1 flex justify-between">
+                <p className="w-6/12 text-gray-600">{'Shipping Charges'}</p>
+                <p className="w-6/12 text-end">
+                  {'₹ ' + (paymentDetails?.shipping_charges ? paymentDetails?.shipping_charges : 0)}
+                </p>
+              </div>
+              <div className="mb-1 flex justify-between">
+                <p className="w-6/12 text-gray-600">{'Gift Wrap'}</p>
+                <p className="w-6/12 text-end">
+                  {'₹ ' + (paymentDetails?.gift_wrap ? paymentDetails?.gift_wrap : 0)}
+                </p>
+              </div>
+              <div className="mb-1 flex justify-between">
+                <p className="w-6/12 text-gray-600">{'Transaction Fee'}</p>
+                <p className="w-6/12 text-end">
+                  {'₹ ' + (paymentDetails?.transaction_fee ? paymentDetails?.transaction_fee : 0)}
+                </p>
+              </div>
+              <div className="mb-1 flex justify-between">
+                <p className="w-6/12 text-gray-600">{'Cash On Delivery Charge'}</p>
+                <p className="w-6/12 text-end">
+                  {'₹ ' + (paymentDetails?.cod_charge ? paymentDetails?.cod_charge : 0)}
+                </p>
               </div>
               <div className="mb-1 flex justify-between">
                 <p className="w-6/12 text-gray-600">{'Discounts'}</p>
-                <p className="w-6/12 text-end">
-                  {'₹ ' + (paymentDetails?.discount ? Number(paymentDetails?.discount) : 0)}
-                </p>
+                <p className="w-6/12 text-end">{'₹ ' + discountValue}</p>
               </div>
               <div className="mt-4 flex justify-between">
                 <p className="w-6/12 font-medium">{'Total Order Value'}</p>
-                <p className="w-6/12 text-end font-medium">{'₹ ' + formDirectField?.total_amount || 0}</p>
+                <p className="w-6/12 text-end font-medium">
+                  {'₹ ' +
+                    (isEdit == 1 ? domesticOrderFormValues.total_amount : formDirectField?.total_amount || 0)}
+                </p>
               </div>
             </div>
           </div>

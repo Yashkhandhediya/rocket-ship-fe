@@ -2,6 +2,13 @@ import { ProductDetailsIcon } from '../../../common/icons/order-details';
 import DetailsCard from './DetailsCard';
 
 const ProductDetailsCard = ({ productDetails = {} }) => {
+  const orderTotal =
+    productDetails?.total_amount +
+    productDetails?.shipping_charges +
+    productDetails?.gift_wrap +
+    productDetails?.transaction_fees -
+    productDetails?.discount;
+
   return (
     <DetailsCard heading={'Product Details'} headingIcon={ProductDetailsIcon} headingClassNames="mb-[1px]">
       <div className="min-w-[600px] pr-3">
@@ -44,27 +51,37 @@ const ProductDetailsCard = ({ productDetails = {} }) => {
             <div className="text-start">
               <div className="flex justify-between text-xs">
                 <div className="mb-1.5 min-w-[9rem] text-[#7f7f7f]">{`Product Total (${productDetails?.product_info?.length} Items)`}</div>
-                <span className="pr-2 font-medium text-[#4c4c4c]">{`₹${productDetails?.total_amount}`}</span>
+                <span className="pr-2 font-medium text-[#4c4c4c]">{`₹${
+                  productDetails?.total_amount === null ? '0' : productDetails?.total_amount
+                }`}</span>
               </div>
               <div className="flex justify-between text-xs">
                 <div className="mb-1.5 min-w-[9rem] text-[#7f7f7f]">{`Shipping charges)`}</div>
-                <span className="pr-2 font-medium text-[#4c4c4c]">{`₹${productDetails?.shipping_charges}`}</span>
+                <span className="pr-2 font-medium text-[#4c4c4c]">{`₹${
+                  productDetails?.shipping_charges === null ? '0' : productDetails?.shipping_charges
+                }`}</span>
               </div>
               <div className="flex justify-between text-xs">
                 <div className="mb-1.5 min-w-[9rem] text-[#7f7f7f]">{`Gift Wrap`}</div>
-                <span className="pr-2 font-medium text-[#4c4c4c]">{`₹${productDetails?.gift_wrap}`}</span>
+                <span className="pr-2 font-medium text-[#4c4c4c]">{`₹${
+                  productDetails?.gift_wrap === null ? '0' : productDetails?.gift_wrap
+                }`}</span>
               </div>
               <div className="flex justify-between text-xs">
                 <div className="mb-1.5 min-w-[9rem] text-[#7f7f7f]">{`Transaction`}</div>
-                <span className="pr-2 font-medium text-[#4c4c4c]">{`₹${productDetails?.transaction_fees}`}</span>
+                <span className="pr-2 font-medium text-[#4c4c4c]">{`₹${
+                  productDetails?.transaction_fees === null ? '0' : productDetails?.transaction_fees
+                }`}</span>
               </div>
               <div className="flex justify-between text-xs">
                 <div className="mb-1.5 min-w-[9rem] text-[#7f7f7f]">{`Discount`}</div>
-                <span className="pr-2 font-medium text-[#4c4c4c]">{`₹${productDetails?.total_amount}`}</span>
+                <span className="pr-2 font-medium text-[#4c4c4c]">{`${
+                  productDetails?.discount === null ? '₹0' : `- ₹${productDetails?.discount}`
+                }`}</span>
               </div>
               <div className="mb-2 flex justify-between border-t border-t-[#e2e2e2] pt-2 text-xs">
                 <div className="min-w-[9rem] font-medium text-[#191919]">{`Order Total`}</div>
-                <span className="pr-2 font-medium text-[#191919]">{`₹${'3150.00'}`}</span>
+                <span className="pr-2 font-medium text-[#191919]">{`₹${orderTotal}`}</span>
               </div>
             </div>
           </div>

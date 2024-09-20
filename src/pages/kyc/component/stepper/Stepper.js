@@ -1,11 +1,23 @@
 import { stepperTickmark } from '../../../../common/icons';
 
 const Stepper = ({ step }) => {
-  const labels = {
-    1: 'Bussiness Type',
-    2: 'Photo Identification',
-    3: 'Document Verification',
-  };
+  const is_company = localStorage.getItem('is_company')
+  let labels = {};
+
+  if (is_company == 0) {
+    
+    labels = {
+      1: 'Bussiness Type',
+      2: 'Photo Identification',
+      3: 'Document Verification',
+    };
+  } else {
+    
+    labels = {
+      1: 'Bussiness Type',
+      2: 'Document Verification',
+    };
+  }
 
   const renderStepperCount = (count) => {
     const isDisabled = count > step + 1;
@@ -43,7 +55,7 @@ const Stepper = ({ step }) => {
         {/* Pickup Details
         </li> */}
         {/* <li className="mb-4 flex text-center text-sm font-medium text-gray-800"> */}
-        {renderStepperCount(3)}
+        {is_company == 0 && renderStepperCount(3)}
         {/* Order Details
         </li> */}
         {/* <li className={"mb-4 flex text-center text-sm font-medium text-gray-800"}> */}

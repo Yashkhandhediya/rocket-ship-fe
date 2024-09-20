@@ -8,13 +8,17 @@ const Sidebar = () => {
   const [openAccordion, setOpenAccordion] = useState(0);
   const handleAccordionToggle = (index) => {
     setOpenAccordion((prev) => (prev === index ? 0 : index));
-    return index;
+  };
+  const handleMouseLeave = () => {
+    setOpenAccordion(0);
   };
 
   return (
     <div
       id="mySidebar"
-      className="group/sidebar hover:z-100 fixed left-0 top-0 z-10 h-full w-[70px] overflow-x-hidden overflow-y-hidden bg-[#912517] text-white transition-all duration-500 hover:w-[218px] hover:overflow-y-auto [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar]:w-1">
+      className="group/sidebar hover:z-100 fixed left-0 top-0 z-50 h-full w-[70px] overflow-x-hidden overflow-y-hidden bg-[#912517] text-white transition-all duration-500 hover:w-[218px] hover:overflow-y-auto [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar]:w-1"
+      onMouseLeave={handleMouseLeave}
+    >
       <div className="z-100 sticky top-0 h-[62px] w-full translate-y-0 bg-[#912517] pb-4 pl-5 pr-3.5 pt-2.5">
         <img src={logo_main} className="h-[34px] object-contain group-hover/sidebar:hidden" />
         <img
@@ -51,7 +55,7 @@ const Sidebar = () => {
                     <span className="w-full flex justify-end">
                       <svg
                         data-accordion-icon
-                        className={`w-5 h-5 truncate group-hover/sidebarItem:text-[#980909] shrink-0 rotate-${() => handleAccordionToggle(i)} === ${i} ? '0' : '180'} transform origin-center transition-transform duration-300 ease-in-out shrink-0`}
+                        className={`w-5 h-5 truncate group-hover/sidebarItem:text-[#980909] shrink-0 ${openAccordion === i ? 'rotate-180' : 'rotate-0'} transform origin-center transition-transform duration-300 ease-in-out shrink-0`}
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         strokeWidth="1.5"

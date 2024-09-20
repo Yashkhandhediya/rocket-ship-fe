@@ -28,7 +28,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
       panel: (
         <ShipmentCourierPartnersTable
           orderId={orderDetails?.id}
-          shipmentDetails={shipmentsDetails || []}
+          shipmentDetails={shipmentsDetails ? shipmentsDetails.filter((detail) => detail.charge_type === "Air") : []}
           closeShipmentDrawer={onClose}
         />
       ),
@@ -39,7 +39,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
       panel: (
         <ShipmentCourierPartnersTable
           orderId={orderDetails?.id}
-          shipmentDetails={shipmentsDetails || []}
+          shipmentDetails={shipmentsDetails ? shipmentsDetails.filter((detail) => detail.charge_type === "Surface") : []}
           closeShipmentDrawer={onClose}
         />
       ),
@@ -64,7 +64,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
   const fetchShipmentDetails = () => {
     setIsLoading(true);
     axios
-      .get(`${BACKEND_URL}/order/${orderDetails?.id}/estimate`)
+      .get(`${BACKEND_URL}/order/${orderDetails?.id}/estimate?user_id=${localStorage.getItem('user_id')}`)
       .then((resp) => {
         if (resp.status === 200) {
           setShipmentDetails(resp?.data);
@@ -89,6 +89,9 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
   return (
     <div className="mt-3 h-full">
       {isLoading && <Loader/>}
+      <div className="w-[98%] text-red-600 p-2 text-left mb-1">
+        If your pincode is serviceable by our partners, the applicable shipping charges will be displayed.
+      </div>
       <Tabs tabs={tabsData} tabClassNames={'px-6 text-[#888]'} />
     </div>
   );

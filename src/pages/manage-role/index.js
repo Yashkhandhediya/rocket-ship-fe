@@ -1,0 +1,1 @@
+export {default as Manage_user} from './Manage_user'

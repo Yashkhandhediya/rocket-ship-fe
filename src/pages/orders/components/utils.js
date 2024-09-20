@@ -1,45 +1,67 @@
-export const moreActionOptions = (actions) => [
+export const moreActionOptions = (actions, is_cod_verified, is_prepaid_verified, is_verified, payment_type_id) => {
+  const activeOrderTab = localStorage.getItem('activeOrderTab');
+
+  return [
+    {
+      label: 'Download Invoice',
+      key: 'downloadInvoice',
+      onClick: actions?.downloadInvoice,
+    },
+    ...(activeOrderTab === '2' || activeOrderTab === '3' || activeOrderTab === '4' ? [{
+      label: 'Shipping Label',
+      key: 'downloadShiipingLabel',
+      onClick: actions?.downloadShiipingLabel,
+    }] : []),
+    {
+      label: 'Edit Order',
+      key: 'editOrder',
+      onClick: actions?.editOrder,
+    },
+    ...(activeOrderTab === '0' && payment_type_id == '1' ? [{
+      label: 'Verify Order',
+      key: 'verifyOrder',
+      disabled: is_cod_verified == 0 || is_verified === 1,
+      onClick: actions?.verifyOrder,
+    }] : []),
+    ...(activeOrderTab === '0' && payment_type_id == '2' ? [{
+      label: 'Verify Order',
+      key: 'verifyOrder',
+      disabled: is_prepaid_verified == 0 || is_verified === 1,
+      onClick: actions?.verifyOrder,
+    }] : []),
+    { type: 'divider' },
+    {
+      label: 'Clone Order',
+      key: 'cloneOrder',
+      onClick: actions?.cloneOrder,
+    },
+    {
+      label: 'Cancel Order',
+      key: 'cancelOrder',
+      onClick: actions?.cancelOrder,
+    },
+  ];
+};
+
+
+
+export const moreActionRtoOptions = (actions) => [
   {
-    label: 'Download Invoice',
+    label: 'Deferred Delivery',
     key: 'downloadInvoice',
     onClick: () => {},
   },
+  { type: 'divider' },
   {
-    label: 'Edit Order',
+    label: 'Edit Details',
     key: 'editOrder',
-    onClick: () => {},
+    onClick: actions?.editOrder,
   },
   { type: 'divider' },
   {
-    label: 'Verify Order',
-    key: 'verifyOrder',
-    onClick: () => {},
-  },
-  {
-    label: 'Call Buyer',
-    key: 'callBuyer',
-    onClick: () => {},
-  },
-  {
-    label: 'Mark as verified',
-    key: 'markAsVerified',
-    onClick: () => {},
-  },
-  { type: 'divider' },
-  {
-    label: 'Add Order Tag',
+    label: 'Re-attempt',
     key: 'addOrderTag',
     onClick: () => {},
-  },
-  {
-    label: 'Clone Order',
-    key: 'cloneOrder',
-    onClick: actions?.cloneOrder,
-  },
-  {
-    label: 'Cancel Order',
-    key: 'cancelOrder',
-    onClick: actions?.cancelOrder,
   },
 ];
 

@@ -8,6 +8,7 @@ const RechargeModal = ({ setShowRechargeModal }) => {
   const [amount, setAmount] = useState(500);
   const [couponCode, setCouponCode] = useState(''); // eslint-disable-line
   const [couponCodeAmount, setCouponCodeAmount] = useState(0); // eslint-disable-line
+  const balance = localStorage.getItem('balance') == 0 ? "0.00" : localStorage.getItem('balance')
 
   const formData = new FormData();
   formData.append('amount', amount * 100);
@@ -36,6 +37,12 @@ const RechargeModal = ({ setShowRechargeModal }) => {
   };
 
   const handleCreatePayment = async () => {
+    // const id_user = localStorage.getItem('user_id')
+    const id_company = localStorage.getItem('company_id')
+    // console.log("USERRRRRRRRRRR",id_user)
+
+    // formData.append("user_id",id_user)
+    formData.append("company_id",id_company)
     try {
       const response = await axios.post(`${BACKEND_URL}/payment/razorpay`, formData);
       const options = {
@@ -73,11 +80,11 @@ const RechargeModal = ({ setShowRechargeModal }) => {
             <div className="border-blueGray-200 flex w-full items-start text-black justify-between rounded-t p-5 py-3">
               <div className="text-xl font-bold">
                 <div>Recharge Your Wallet</div>
-                <div className="text-[12px] font-normal ">Current Wallet Amount <span className="text-green-600 font-semibold">₹0.00</span></div>
+                <div className="text-[12px] font-normal ">Current Wallet Amount <span className="text-green-600 font-semibold">₹{balance}</span></div>
               </div>
               <button
                 className="border-0 bg-transparent p-1 pt-0 text-2xl font-semibold leading-none text-black opacity-100 outline-none focus:outline-none"
-                onClick={() => setShowRechargeModal(false)}>
+                onClick={() => {setShowRechargeModal(false);window.location.reload()}}>
                 <span className="block h-6 w-6 bg-transparent text-black opacity-50 outline-none focus:outline-none">
                   ×
                 </span>

@@ -9,10 +9,15 @@ import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
+import { useLocation } from 'react-router-dom';
+import { setEditOrder } from '../../../../../redux';
+import apiClient from '../../../../../common/utils/apiClient';
 
 export default function PickupDetails({ currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
-
+  const location = useLocation();
+  let { isEdit } = location?.state || {};
+  const id_user = localStorage.getItem('user_id');
   const domesticOrderPickupAddress =
     useSelector((state) => state?.addOrder?.domestic_order?.pickup_address) || {};
 
@@ -23,10 +28,10 @@ export default function PickupDetails({ currentStep, handleChangeStep }) {
   const [selectedAddress, setSelectedAddress] = useState(addressList.length ? addressList[0] : null);
 
   const fetchUserAddressList = () => {
-    axios
-      .get(BACKEND_URL+'/address', {
+    apiClient
+      .get(BACKEND_URL + '/address', {
         params: {
-          user_id: 1,
+          user_id: id_user,
         },
       })
       .then((resp) => {
@@ -46,11 +51,19 @@ export default function PickupDetails({ currentStep, handleChangeStep }) {
       if (!selectedAddress) {
         toast('Please select an address to proceed Next', { type: 'error' });
       } else {
-        dispatch(
-          setDomesticOrder({
-            pickup_address: selectedAddress,
-          }),
-        );
+        if (!isEdit) {
+          dispatch(
+            setDomesticOrder({
+              pickup_address: selectedAddress,
+            }),
+          );
+        } else {
+          dispatch(
+            setEditOrder({
+              pickup_address: selectedAddress,
+            }),
+          );
+        }
         handleChangeStep(currentStep + 1);
       }
     } else if (currentStep > 0) {
@@ -115,7 +128,7 @@ export default function PickupDetails({ currentStep, handleChangeStep }) {
             {/* card with Address */}
             {addressList?.map((address, index) => {
               const isSelectedAddress = address?.id == selectedAddress?.id;
-
+              const landmark = address?.landmark ? `${address.landmark}, ` : '';
               return (
                 <div
                   key={index}
@@ -139,7 +152,7 @@ export default function PickupDetails({ currentStep, handleChangeStep }) {
                     </div>
                     <div className="border-b  border-gray-200">
                       <div className="mb-2 line-clamp-2 min-h-[30px] min-w-[30px] overflow-hidden align-middle text-[11px] font-medium leading-4 text-gray-500">
-                        {`${address?.complete_address}, ${address?.landmark}, ${address?.city}, ${address?.state}-${address?.pincode}`}
+                        {`${address?.complete_address}, ${landmark} ${address?.city}, ${address?.state}-${address?.pincode}`}
                       </div>
                       <div className="mb-1 text-[11px] font-medium leading-6 text-gray-500">
                         {'Mobile : ' + address?.contact_no}

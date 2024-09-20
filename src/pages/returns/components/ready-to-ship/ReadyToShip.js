@@ -15,16 +15,25 @@ import { MoreFiltersDrawer } from '../more-filters-drawer';
 import { getClonedOrderFields } from '../../../../common/utils/ordersUtils';
 import { setDomesticOrder } from '../../../../redux/actions/addOrderActions';
 import { createColumnHelper } from '@tanstack/react-table';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { BACKEND_URL, MENIFEST_URL } from '../../../../common/utils/env.config';
+import { resData } from '../../Returns';
+import Loader from '../../../../common/loader/Loader';
+import { returnRequestOptions } from '../../duck';
+import MultiSelectDropdown from '../../../rate-card/components/MultiSelectDropdown';
 
-export const ReadyToShip = () => {
+export const ReadyToShip = ({ data, isLoading, fetchFilteredData }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const flattened = {};
   const allOrdersList = useSelector((state) => state?.returnsList);
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
-  const readyShipOrdersList = allOrdersList?.filter(
-    (order) => (order?.status_name || '')?.toLowerCase() !== 'new',
-  ) || [];
-
+  // const readyShipOrdersList = allOrdersList?.filter(
+  //   (order) => (order?.status_name || '')?.toLowerCase() !== 'new',
+  // ) || [];
+  const readyShipOrdersList = allOrdersList?.filter((order) => order?.status_id == 2) || [];
+  const [selectedStatus, setSelectedStatus] = useState([]);
   const [selectShipmentDrawer, setSelectShipmentDrawer] = useState({
     isOpen: false,
     orderDetails: {},
@@ -45,7 +54,7 @@ export const ReadyToShip = () => {
             <div className="flex flex-col gap-2 text-left text-xs">
               <div className="pb-0.5">
                 <Link
-                  to={generatePath(`/track-order/:orderId`, { orderId: row?.original?.id || 1})}
+                  to={generatePath(`/track-order/:orderId`, { orderId: row?.original?.id || 1 }) + `?flag=1`}
                   className="border-b-2 border-b-red-700 text-red-700">
                   {row?.original?.id}
                 </Link>
@@ -132,7 +141,7 @@ export const ReadyToShip = () => {
       }),
       columnHelper.accessor('shippingDetails', {
         header: 'Shipping Details',
-        cell: ({row}) => {
+        cell: ({ row }) => {
           return (
             <div className="flex flex-col gap-1 text-left text-xs">
               <div>{row?.courier_name}</div>
@@ -141,7 +150,7 @@ export const ReadyToShip = () => {
                 {(row?.status_name || '')?.toLowerCase() === 'new' ? (
                   'Not Assigned'
                 ) : (
-                    <Link
+                  <Link
                     to={generatePath(`/return-tracking/:orderId`, { orderId: row?.original?.id || 1 })}
                     className="border-b-2 border-b-red-700 text-red-700">
                     {'Track order'}
@@ -171,19 +180,20 @@ export const ReadyToShip = () => {
             </div>
           );
         },
-      }), 
+      }),
       columnHelper.accessor('action', {
         header: 'Action',
-        cell: ({row}) => (
+        cell: ({ row }) => (
           <div className="flex gap-2 text-left text-xs">
             <button
               id={row?.original?.id}
               className="min-w-fit rounded bg-orange-700 px-4 py-1.5 text-white"
               onClick={() => {
-                setScheduleModal({
-                  isOpen: true,
-                  pickupDetails: row?.original,
-                });
+                // setScheduleModal({
+                //   isOpen: true,
+                //   pickupDetails: row?.original,
+                // });
+                handleUpdateStatus(row?.original?.id, 'return accepted');
                 // const resp = axios.get(BACKEND_URL+'/order/track?order_id=' + row.id);
                 // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
                 // let newTab = window.open(newURL, '_blank');
@@ -191,21 +201,153 @@ export const ReadyToShip = () => {
                 //   newTab.focus();
                 // }
               }}>
-              {'Schedule Pickup'}
+              {'Accept'}
             </button>
-            <div className="min-h-[32px] min-w-[32px]">
+            <button
+              id={row?.original?.id}
+              className="min-w-fit rounded bg-orange-700 px-4 py-1.5 text-white"
+              onClick={() => {
+                // setScheduleModal({
+                //   isOpen: true,
+                //   pickupDetails: row?.original,
+                // });
+                handleUpdateStatus(row?.original?.id, 'return decline');
+
+                // const resp = axios.get(BACKEND_URL+'/order/track?order_id=' + row.id);
+                // let newURL = `http://${window.location.host}/tracking?data=${encodeURIComponent(row.id)}`;
+                // let newTab = window.open(newURL, '_blank');
+                // if (newTab) {
+                //   newTab.focus();
+                // }
+              }}>
+              {'Decline'}
+            </button>
+            {/* <div className="min-h-[32px] min-w-[32px]">
               <MoreDropdown
                 renderTrigger={() => <img src={moreAction} className="cursor-pointer" />}
                 options={moreActionOptions({
+                  downloadInvoice: () => handleInvoice(row?.original?.id),
                   cloneOrder: () => cloneOrder(row),
+                  cancelOrder: () => cancelOrder(row?.original),
                 })}
               />
-            </div>
+            </div> */}
           </div>
         ),
       }),
     ];
   };
+
+  const handleUpdateStatus = async (id, status) => {
+    try {
+      const response = await axios.post(
+        `${BACKEND_URL}/return/update_status?return_id=${id}&status_to_update=${status}`,
+      );
+      console.log(response.data);
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  function splitString(string, length) {
+    let result = [];
+    for (let i = 0; i < string.length; i += length) {
+      result.push(string.substr(i, length));
+    }
+    return result;
+  }
+
+  function flattenObject(obj, id) {
+    const keyCounts = {};
+    for (let i = 0; i < resData.length; i++) {
+      if (resData[i].id == id) {
+        obj = resData[i];
+        break;
+      }
+    }
+
+    function flatten(obj, parentKey = '') {
+      for (let key in obj) {
+        let propName = parentKey ? `${key}` : key;
+
+        // Check if the key already exists, if yes, increment count
+        if (flattened[propName] !== undefined) {
+          keyCounts[propName] = (keyCounts[propName] || 0) + 1;
+          propName = `${propName}${keyCounts[propName]}`;
+        }
+
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
+          flatten(obj[key], propName);
+        } else {
+          flattened[propName] = obj[key];
+        }
+      }
+    }
+    flatten(obj);
+    return flattened;
+  }
+
+  const handleInvoice = (id) => {
+    let temp_payload = flattenObject(resData, id);
+    console.log('kkkkkkkkkk', temp_payload);
+    const headers = { 'Content-Type': 'application/json' };
+
+    let temp_str = splitString(temp_payload['complete_address1'], 35);
+    let temp1 = splitString(temp_payload['complete_address'], 35);
+
+    for (let i = 0; i < temp1.length; i++) {
+      temp_payload[`${i + 1}_complete_address_`] = temp1[i];
+    }
+
+    for (let i = 0; i < temp_str.length; i++) {
+      temp_payload[`complete_address1_${i + 1}`] = temp_str[i];
+    }
+
+    temp_payload['client_name'] = 'cloud_cargo';
+    temp_payload['file_name'] = 'invoice';
+
+    axios
+      .post(MENIFEST_URL + '/bilty/print/', temp_payload, { headers })
+      .then((response) => {
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+        console.log('General', response);
+        toast('Invoice Download Successfully', { type: 'success' });
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        toast('Error in Invoice Download', { type: 'error' });
+      });
+  };
+
+  function cancelOrder(orderDetails) {
+    const headers = { 'Content-Type': 'application/json' };
+    console.log('ORDER DETAILSSSSSSSS', orderDetails);
+    if (orderDetails.partner_id == 1 || orderDetails.partner_id == 2) {
+      toast('Cancel Functionality Is Not Providing By This Partner', { type: 'error' });
+    } else {
+      axios
+        .post(
+          `${BACKEND_URL}/return/${orderDetails?.id}/cancel_shipment`,
+          {
+            partner_id: orderDetails?.partner_id,
+          },
+          { headers },
+        )
+        .then((resp) => {
+          if (resp?.status === 200) {
+            // dispatch(setAllOrders(null));
+            toast('Order cancelled successfully', { type: 'success' });
+            window.location.reload();
+          }
+        })
+        .catch(() => {
+          toast('Unable to cancel Order', { type: 'error' });
+        });
+    }
+  }
 
   function cloneOrder(orderDetails) {
     const clonedOrder = getClonedOrderFields(orderDetails);
@@ -234,7 +376,8 @@ export const ReadyToShip = () => {
 
   return (
     <div className="mt-5">
-      <div className="mb-4 flex w-full">
+      {isLoading && <Loader />}
+      <div className="mb-4 flex w-full items-start gap-4">
         <div>
           <button
             className="inline-flex items-center rounded-sm border border-[#e6e6e6] bg-white px-2.5 py-2 text-xs font-medium hover:border-orange-700"
@@ -243,15 +386,25 @@ export const ReadyToShip = () => {
             {'More Filters'}
           </button>
         </div>
+        <div>
+          <MultiSelectDropdown
+            options={returnRequestOptions}
+            selectedOptions={selectedStatus}
+            setSelectedOptions={setSelectedStatus}
+            selectName={`Select Statuses`}
+            type={`return requested`}
+            fetchFilteredData={fetchFilteredData}
+          />
+        </div>
       </div>
       <CustomDataTable
         columns={getColumns()}
-        rowData={readyShipOrdersList}
+        rowData={data}
         enableRowSelection={true}
         shouldRenderRowSubComponent={() => Boolean(Math.ceil(Math.random() * 10) % 2)}
         onRowSelectStateChange={(selected) => console.log('selected-=-', selected)}
         rowSubComponent={rowSubComponent}
-        enablePagination={true}
+        enablePagination={false}
         tableWrapperStyles={{ height: '78vh' }}
       />
       {/* <DataTable

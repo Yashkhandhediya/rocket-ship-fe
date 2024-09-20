@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 
+export let KYC_type = 'company'
 const BussinessType = ({ currentStep, handleChangeStep }) => {
+    const is_company = localStorage.getItem('is_company')
     const [bussinessData, setBussinessData] = useState({
         bussinessType: '',
         companyType: ''
@@ -23,6 +25,10 @@ const BussinessType = ({ currentStep, handleChangeStep }) => {
         }));
     };
 
+    if(is_company == 0){
+        KYC_type = 'user'
+    }
+
     const changeNextStep = (type) => {
         if (type === 'NEXT') {
             if (bussinessData.bussinessType === 'individual' || bussinessData.bussinessType === 'sole' || bussinessData.bussinessType === 'company') {
@@ -31,6 +37,13 @@ const BussinessType = ({ currentStep, handleChangeStep }) => {
                 }
                 else {
                     handleChangeStep(currentStep + 1);
+                    if(bussinessData.bussinessType === 'company'){
+                        
+                        KYC_type = 'company'
+                    }else{
+                        
+                        KYC_type = 'user'
+                    }
                 }
             }
             else {
@@ -47,7 +60,7 @@ const BussinessType = ({ currentStep, handleChangeStep }) => {
                 Please Confirm Your Bussiness Type
             </div>
             <div className="mb-3 w-full">
-                <div className={`w-[85%] flex shadow-sm rounded-lg py-8 px-8 mb-6 ${bussinessData.bussinessType === 'individual' ? 'bg-[#F4F8FF] border-[1px] border-[#B4D2FE]' : 'bg-white'}`}>
+                {KYC_type === "user" && (<div className={`w-[85%] flex shadow-sm rounded-lg py-8 px-8 mb-6 ${bussinessData.bussinessType === 'individual' ? 'bg-[#F4F8FF] border-[1px] border-[#B4D2FE]' : 'bg-white'}`}>
                     <label
                         htmlFor="individualRadio"
                         className="mb-2 items-center text-sm font-bold text-gray-900 cursor-pointer">
@@ -65,8 +78,8 @@ const BussinessType = ({ currentStep, handleChangeStep }) => {
                             A seller who is selling through online selling platforms, and has not registered his/her firm under Companies Act 2013
                         </div>
                     </label>
-                </div>
-                <div className={`w-[85%] flex shadow-sm rounded-lg py-8 px-8 mb-6 ${bussinessData.bussinessType === 'sole' ? 'bg-[#F4F8FF] border-[1px] border-[#B4D2FE]' : 'bg-white'}`}>
+                </div>)}
+                {/* <div className={`w-[85%] flex shadow-sm rounded-lg py-8 px-8 mb-6 ${bussinessData.bussinessType === 'sole' ? 'bg-[#F4F8FF] border-[1px] border-[#B4D2FE]' : 'bg-white'}`}>
                     <label
                         htmlFor="soleRadio"
                         className="mb-2 items-center text-sm font-bold text-gray-900 cursor-pointer">
@@ -85,10 +98,10 @@ const BussinessType = ({ currentStep, handleChangeStep }) => {
                         </div>
                         {/* <CustomTooltip text="COD will be remitted to your account as per your selected payment cycle.">
                     <img src={infoIcon} className="ms-2" />
-                  </CustomTooltip> */}
+                  </CustomTooltip> 
                     </label>
-                </div>
-                <div className={`w-[85%] flex shadow-sm rounded-lg py-8 px-8 mb-6 ${bussinessData.bussinessType === 'company' ? 'bg-[#F4F8FF] border-[1px] border-[#B4D2FE]' : 'bg-white'}`}>
+                </div> */}
+                {KYC_type === "company" && <div className={`w-[85%] flex shadow-sm rounded-lg py-8 px-8 mb-6 ${bussinessData.bussinessType === 'company' ? 'bg-[#F4F8FF] border-[1px] border-[#B4D2FE]' : 'bg-white'}`}>
                     <label
                         htmlFor="companyRadio"
                         className="mb-2 items-center text-sm font-bold text-gray-900 cursor-pointer">
@@ -109,7 +122,7 @@ const BussinessType = ({ currentStep, handleChangeStep }) => {
                     <img src={infoIcon} className="ms-2" />
                   </CustomTooltip> */}
                     </label>
-                </div>
+                </div>}
                 {bussinessData.bussinessType === 'company' &&
                     <select name="companyType" id="company-type" className="rounded-lg" onChange={handleCompanyTypeChange} value={bussinessData.companyType}>
                         <option value="" hidden>Select Company Type</option>

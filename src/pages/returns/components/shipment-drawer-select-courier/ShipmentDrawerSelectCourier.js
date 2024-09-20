@@ -17,7 +17,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
       panel: (
         <ShipmentCourierPartnersTable
           orderId={orderDetails?.id}
-          shipmentDetails={shipmentsDetails}
+          shipmentDetails={shipmentsDetails || []}
           closeShipmentDrawer={onClose}
         />
       ),
@@ -28,7 +28,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
       panel: (
         <ShipmentCourierPartnersTable
           orderId={orderDetails?.id}
-          shipmentDetails={shipmentsDetails}
+          shipmentDetails={shipmentsDetails ? shipmentsDetails.filter((detail) => detail.charge_type === "Air") : []}
           closeShipmentDrawer={onClose}
         />
       ),
@@ -39,7 +39,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
       panel: (
         <ShipmentCourierPartnersTable
           orderId={orderDetails?.id}
-          shipmentDetails={shipmentsDetails}
+          shipmentDetails={shipmentsDetails ? shipmentsDetails.filter((detail) => detail.charge_type === "Surface") : []}
           closeShipmentDrawer={onClose}
         />
       ),
@@ -63,7 +63,7 @@ const ShipmentDrawerSelectCourier = ({ orderDetails, isOpen, onClose }) => {
   ];
   const fetchShipmentDetails = () => {
     axios
-      .get(`${BACKEND_URL}/return/${orderDetails?.id}/estimate`)
+      .get(`${BACKEND_URL}/return/${orderDetails?.id}/estimate?user_id=${localStorage.getItem('user_id')}`)
       .then((resp) => {
         if (resp.status === 200) {
           setShipmentDetails(resp?.data);

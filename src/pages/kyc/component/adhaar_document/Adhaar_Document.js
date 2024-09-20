@@ -2,11 +2,14 @@ import { useState } from 'react'
 import { Field } from '../../../../common/components'
 import { OTP_Input } from '../otp_Input';
 import { toast } from 'react-toastify';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
+import axios from 'axios';
 
 const Adhaar_Document = ({ triggerValidation,setTriggerValidations,setIsKYCCompleted}) => {
     const [isValidAdhaar, setIsValidAdhaar] = useState(true);
     const [adhaarNumber, setAdhaarNumber] = useState('')
     const [showOTPBox, setShowOTPBox] = useState(false)
+    const [id,setId] = useState(null)
     const [disableInput, setDisableInput] = useState(false)
     const handleSetAdhaarNumber = (event) => {
         const inputAdhaarNumber = event.target.value;
@@ -30,6 +33,13 @@ const Adhaar_Document = ({ triggerValidation,setTriggerValidations,setIsKYCCompl
             setTriggerValidations(true)
             setDisableInput(true)
             // API call to send OTP
+            let temp_number = adhaarNumber.replace(/-/g,'')
+            axios.post(BACKEND_URL + `/kyc/adhaar_generate_otp?id_number=${temp_number}`)
+            .then((res) => {
+                console.log("Response OTP",res.data)
+                setId(res.data.reference_id)
+                toast.success('otp send successfully')
+            })
         } catch (error) {
             // Show error message
             toast.error('Please enter a valid Adhaar number', { type: 'error' })
@@ -72,7 +82,7 @@ const Adhaar_Document = ({ triggerValidation,setTriggerValidations,setIsKYCCompl
                 <div className="flex justify-start gap-4 mt-6">
                     <button
                         type="button"
-                        className={`dark:focus:ring-red-900 rounded-lg ${isValidAdhaar && adhaarNumber.length ? "bg-red-600" : "bg-[#FAFAFA] border text-[#c6c6c6] border-[#e5e5e5]"} transition-colors duration-300 px-8 py-2 text-[0.8rem] font-medium text-white focus:outline-none focus:ring-4 focus:ring-red-300`}
+                        className={`dark:focus:ring-red-900 rounded-lg ${isValidAdhaar && adhaarNumber.length ? "bg-red-600" : "bg-red-600 border text-[#c6c6c6] border-[#e5e5e5]"} transition-colors duration-300 px-8 py-2 text-[0.8rem] font-medium text-white focus:outline-none focus:ring-4 focus:ring-red-300`}
                         disabled={!isValidAdhaar}
                         onClick={() => handleSendOTP()}
                     >
@@ -83,6 +93,7 @@ const Adhaar_Document = ({ triggerValidation,setTriggerValidations,setIsKYCCompl
             {showOTPBox && <OTP_Input handleSendOTP={handleSendOTP}
                 timer={30}
                 setIsKYCCompleted={setIsKYCCompleted}
+                id={id}
             />}
         </div>
     )

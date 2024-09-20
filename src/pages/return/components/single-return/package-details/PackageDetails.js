@@ -66,7 +66,7 @@ export default function PackageDetails({ currentStep, handleChangeStep }) {
 
     const placeOrder = async () => {
         const date = getFullDateForPayload(domesticReturnFormValues?.date);
-        let resp = await axios.post(BACKEND_URL + '/return', {
+        let resp = await axios.post(BACKEND_URL + `/return/?user_id=${localStorage.getItem('user_id')}`, {
             ...domesticReturnFormValues,
             ...formDirectField,
             date: date,

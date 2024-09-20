@@ -9,25 +9,73 @@ import { useState } from 'react';
 import './ShipmentCourierPartnersTable.css';
 import { SchedulePickupModal } from '../../schedule-pickup-modal';
 import { BACKEND_URL } from '../../../../../common/utils/env.config';
+import { setAllOrders } from '../../../../../redux';
+
 
 const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentDrawer }) => {
+  console.log("SHIPPPPPPPPPPPP", shipmentDetails)
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [scheduleModal, setScheduleModal] = useState({ isOpen: false, pickupDetails: {} });
+  const [info, setInfo] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [wayBill, setWayBill] = useState(null);
 
-  const handleShipOrder = () => {
-    setIsLoading(true);
-    if (orderId) {
+  const handleShipOrder = (data) => {
+    let requestData;
+    console.log('CVVVVVV', data);
+    if (data?.partner_name === 'DTDC') {
+      setShowPopup(true);
+      setInfo({
+        partner_id: 2,
+        amount: data?.total_charge,
+        waybill_no: ''
+      });
+      return;
+    }
+    if (data?.partner_name === 'Delhivery') {
+      requestData = {
+        partner_id: 1,
+        amount: data?.total_charge,
+        waybill_no: ''
+      };
+    }
+    else if (data?.partner_name === 'Xpressbees') {
+      requestData = {
+        partner_id: 3,
+        amount: data?.total_charge,
+        waybill_no: ''
+      };
+    } else if (data?.partner_name === 'ECOM EXPRESS') {
+      requestData = {
+        partner_id: 4,
+        amount: data?.total_charge,
+        waybill_no: ''
+      };
+    } else if (data?.partner_name === 'Maruti') {
+      requestData = {
+        partner_id: 5,
+        amount: data?.total_charge,
+        waybill_no: ''
+      };
+    }
+    // setIsLoading(true);
+    if (orderId && data?.partner_name != 'dtdc') {
+      console.log('JTTTTTTTTTT', requestData);
       axios
-        .post(`${BACKEND_URL}/return/${orderId}/shipment`)
+        .post(`${BACKEND_URL}/return/${orderId}/shipment`, requestData)
         .then((resp) => {
           if (resp?.status === 200) {
             setIsLoading(false);
+            if (resp?.data?.status_code == 401) {
+              toast('insufficient balance', { type: 'error' });
+              return;
+            }
             toast(
               resp?.data?.success ? (
                 <div>
                   <div className="font-medium">{'Success'}</div>
-                  <div>{'AWB assignedsuccessfully'}</div>
+                  <div>{'AWB assigned successfully'}</div>
                 </div>
               ) : (
                 resp?.data?.error
@@ -36,10 +84,11 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
                 type: resp?.data?.success ? 'success' : 'error',
               },
             );
-            setScheduleModal({
-              isOpen: true,
-              pickupDetails: { id: orderId },
-            });
+            requestData.partner_id === 1 &&
+              setScheduleModal({
+                isOpen: true,
+                pickupDetails: { id: orderId },
+              });
             dispatch(setAllReturns(null));
             if (resp?.data?.success) {
               closeShipmentDrawer();
@@ -55,6 +104,52 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
     }
   };
 
+  const handleDtdc = () => {
+    setShowPopup(false);
+    let requestData = info;
+    requestData.waybill_no = wayBill;
+    axios
+      .post(`${BACKEND_URL}/return/${orderId}/shipment`, requestData)
+      .then((resp) => {
+        if (resp?.status === 200) {
+          setIsLoading(false);
+          if (resp?.data?.status_code == 401) {
+            toast('insufficient balance', { type: 'error' });
+            return;
+          }
+          toast(
+            resp?.data?.success ? (
+              <div>
+                <div className="font-medium">{'Success'}</div>
+                <div>{'AWB assigned successfully'}</div>
+              </div>
+            ) : (
+              resp?.data?.error
+            ),
+            {
+              type: resp?.data?.success ? 'success' : 'error',
+            },
+          );
+          requestData.partner_id === 1 &&
+            setScheduleModal({
+              isOpen: true,
+              pickupDetails: { id: orderId },
+            });
+          dispatch(setAllReturns(null));
+          if (resp?.data?.success) {
+            closeShipmentDrawer();
+          }
+        }
+      })
+      .catch((e) => {
+        // eslint-disable-next-line no-console
+        console.error(e);
+        setIsLoading(false);
+        toast('Unable to ship order', { type: 'error' });
+      });
+    setWayBill(null);
+  };
+
   const columns = [
     {
       name: 'Courier Partner',
@@ -64,7 +159,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           <div>
             <h4 className="pb-1.5 text-xs font-medium text-[#555]">{row?.partner_name || 'Delhivery'}</h4>
             <div className="pb-1.5 text-xs text-[#555]">
-              {`${Number(row?.surface_max_weight || 0) ? 'Surface ' : 'Air'} | Min-weight: `}
+              {` ${row?.charge_type} | Min-weight: `}
               <span className="font-medium">
                 {Number(row?.surface_max_weight || 0) ? row?.surface_max_weight : row?.air_max_weight || 0}
               </span>
@@ -107,7 +202,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
       name: 'Chargeable Weight',
       selector: (row) => (
         <div className="flex h-full w-full flex-col gap-1 py-2 text-center">
-          <div className="text-xs text-[#555]">{`${row?.charged_weight || ''} Kg`}</div>
+          <div className="text-xs text-[#555]">{`${row?.chargable_weight || ''} Kg`}</div>
         </div>
       ),
     },
@@ -116,7 +211,7 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
       selector: (row) => (
         <div className="flex flex-col gap-1 py-2 text-left">
           <div className="flex items-center">
-            <div className="text-base font-bold text-[gray]">{`₹${row?.total_amount || ''}`}</div>
+            <div className="text-base font-bold text-[gray]">{`₹${row?.total_charge || ''}`}</div>
             <CustomTooltip
               text={
                 <>
@@ -143,7 +238,10 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           <button
             id={row.id}
             className="min-w-fit rounded bg-orange-600 px-5 py-2 text-white"
-            onClick={handleShipOrder}>
+            onClick={() => {
+              console.log('PARTNER NAME', row?.partner_name);
+              handleShipOrder(row);
+            }}>
             {'Ship Now'}
           </button>
         </div>
@@ -158,9 +256,9 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
           <div className="loader"></div>
         </div>
       )}
-      <div className="text-xs text-[rgb(136,136,136)]">{`${
-        shipmentDetails?.length || 0
-      } Couriers Found`}</div>
+      <div className="text-xs text-[rgb(136,136,136)]">{`${shipmentDetails?.length || 0
+        } Couriers Found`}</div>
+      
       <div className="mt-4 h-full w-full">
         <DataTable
           columns={columns}
@@ -180,6 +278,30 @@ const ShipmentCourierPartnersTable = ({ orderId, shipmentDetails, closeShipmentD
         }
         pickupDetails={scheduleModal.pickupDetails}
       />
+
+      {showPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden bg-gray-400 bg-opacity-50 outline-none focus:outline-none">
+          <div className="rounded-lg bg-white p-6 ">
+            <div className="flex justify-between">
+              <h2 className="mb-4 text-lg font-semibold">Enter Way Bill No.</h2>
+              <span onClick={() => { setShowPopup(false) }}><i className="fa-solid fa-xmark"></i></span>
+            </div>
+            <input
+              type="text"
+              value={wayBill}
+              onChange={(e) => setWayBill(e.target.value)}
+              placeholder="Enter Way Bill No."
+              className="mb-4 rounded-lg border border-gray-400 px-3 py-2"
+            />
+            <div className="flex justify-end">
+              <button className="rounded-lg bg-blue-500 px-4 py-2 text-white" onClick={() => handleDtdc()}>
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

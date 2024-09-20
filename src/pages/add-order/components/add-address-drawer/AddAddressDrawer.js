@@ -6,8 +6,10 @@ import { BuyerAddressFields } from '../buyer-address-fields';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { BACKEND_URL } from '../../../../common/utils/env.config';
+import apiClient from '../../../../common/utils/apiClient';
 
 const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress }) => {
+  const id_user = localStorage.getItem('user_id');
   const [isAddSupplier, setIsAddSupplier] = useState(false);
   const [isAddRTOAddress, setIsAddRTOAddress] = useState(false);
   const [addressInfo, setAddressInfo] = useState({
@@ -65,6 +67,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
   };
 
   const handleSaveAddressInRedux = () => {
+    console.log('PAYLOADDDDDDDD', addressInfo);
     if (
       !addressInfo?.contact_no ||
       !addressInfo?.first_name ||
@@ -74,15 +77,16 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
       !addressInfo?.city ||
       !addressInfo?.state ||
       !addressInfo?.country ||
-      !isValidEmailAddress || 
-      !isValidFirstName||
+      !isValidEmailAddress ||
+      !isValidFirstName ||
       !isValidNumber
     ) {
       setTriggerValidations(true);
       return;
     }
-    axios
-      .post(BACKEND_URL+'/address', addressInfo)
+
+    apiClient
+      .post(BACKEND_URL + `/address?created_by=${id_user}`, addressInfo)
       .then((resp) => {
         if (resp.status == 200) {
           toast('Pickup details saved successfully', { type: 'success' });
@@ -226,7 +230,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
               placeHolder={'Name of the person to be contacted'}
               tooltip={'Please include the phone number of the person who will be present at this location.'}
               required={true}
-              isDisabled={isEdit}
+              // isDisabled={isEdit}
               value={addressInfo?.first_name || ''}
               onChange={handleSetAddressInfo}
               onBlur={() => setIsValidFirstName(addressInfo?.first_name)}
@@ -254,7 +258,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
               }
               placeHolder={'Enter 10 digit mobile number'}
               required={true}
-              isDisabled={contactDisabled}
+              // isDisabled={contactDisabled}
               value={addressInfo?.contact_no || ''}
               onChange={handleSetAddressInfo}
               onBlur={() => setIsValidNumber(/^\d{10}$/.test(addressInfo?.contact_no))}
@@ -273,7 +277,7 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
               labelClassNames={'text-xs'}
               placeHolder={'i.e acd@gmail.com'}
               required={true}
-              isDisabled={isEdit}
+              // isDisabled={isEdit}
               value={addressInfo?.email_address || ''}
               onChange={handleSetAddressInfo}
               onBlur={() =>
@@ -315,23 +319,25 @@ const AddAddressDrawer = ({ isOpen, onClose, formValues, isEdit, refetchAddress 
           onChange={handleSetAddressInfo}
           values={addressInfo}
           triggerValidation={triggerValidations}
-          onPincodeVeify={!isEdit ? onaddressPincodeVerify : null}
-          disabledFields={
-            isEdit
-              ? {
-                  complete_address: true,
-                  landmark: true,
-                  pincode: true,
-                  city: true,
-                  state: true,
-                  country: true,
-                }
-              : {
-                  city: disabledLocationFields,
-                  state: disabledLocationFields,
-                  country: disabledLocationFields,
-                }
-          }
+          // onPincodeVeify={!isEdit ? onaddressPincodeVerify : null}
+          onPincodeVeify={onaddressPincodeVerify}
+          isEdit={isEdit}
+          // disabledFields={
+          //   isEdit
+          //     ? {
+          //         complete_address: true,
+          //         landmark: true,
+          //         pincode: true,
+          //         city: true,
+          //         state: true,
+          //         country: true,
+          //       }
+          //     : {
+          //         city: disabledLocationFields,
+          //         state: disabledLocationFields,
+          //         country: disabledLocationFields,
+          //       }
+          // }
         />
       </div>
       <div className="mb-4 mt-5 w-full border border-gray-100" />

@@ -16,7 +16,7 @@ const Freeze_Header = () => {
                     <p className="text-[#707070] text-[16px] text-left font-normal">
                         {`Experience weight discrepancy free shipping with our 'Weight Freeze' feature. You can freeze the weight of your products' shipments by sharing`}
                         <br />
-                        {`data and sample images or by giving consent on the freezing recommendations made by Shiprocket based on your shipment history.`}
+                        {`data and sample images or by giving consent on the freezing recommendations made by Cloud Cargo based on your shipment history.`}
                     </p>
                 </div>
             </div>

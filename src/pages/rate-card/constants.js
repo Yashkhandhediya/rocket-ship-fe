@@ -1,0 +1,227 @@
+import Forward from './components/forward/Forward';
+import Reverse from './components/Reverse';
+import Document from './components/Document';
+
+export const rateCardTabs = [
+  {
+    title: 'Forward',
+    id: 'forward',
+    panel: <Forward />,
+  },
+  {
+    title: 'Document',
+    id: 'document',
+    panel: <Document />,
+  },
+  {
+    title: 'Reverse',
+    id: 'reverse',
+    panel: <Reverse />,
+  },
+];
+
+export const tableHeadData = [
+  {
+    headerName: 'Couriers',
+  },
+  {
+    headerName: 'Modes',
+  },
+  {
+    headerName: 'Weight',
+  },
+  {
+    headerName: {
+      name: 'Zone A',
+      area: 'Within City',
+    },
+  },
+  {
+    headerName: {
+      name: 'Zone B',
+      area: 'Within State',
+    },
+  },
+  {
+    headerName: {
+      name: 'Zone C',
+      area: 'Metro to Metro',
+    },
+  },
+  {
+    headerName: {
+      name: 'Zone D',
+      area: 'Rest of india',
+    },
+  },
+  {
+    headerName: {
+      name: 'Zone E',
+      area: 'North East J&K',
+    },
+  },
+  {
+    headerName: 'COD Charges/COD%',
+  },
+  {
+    headerName: 'Other Charges',
+  },
+];
+
+export const tableData = [
+  {
+    id: 1,
+    couriers: 'Srx Premium Plus',
+    mode: 'bus',
+    minWeight: '0.01kg',
+    zoneA: {
+      forward: 'NA',
+      rto: '105.0',
+    },
+    zoneB: {
+      forward: 'NA',
+      rto: '119.0',
+    },
+    zoneC: {
+      forward: 'NA',
+      rto: '168.0',
+    },
+    zoneD: {
+      forward: 'NA',
+      rto: '205.0',
+    },
+    zoneE: {
+      forward: 'NA',
+      rto: '256.0',
+    },
+    codCharges: {
+      inRupess: '0.0',
+      inPercentage: '0.0',
+    },
+    otherCharges: 'NA',
+  },
+  {
+    id: 2,
+    couriers: 'Srx Economy',
+    mode: 'bus',
+    minWeight: '0.01kg',
+    zoneA: {
+      forward: 'NA',
+      rto: '105.0',
+    },
+    zoneB: {
+      forward: 'NA',
+      rto: '119.0',
+    },
+    zoneC: {
+      forward: 'NA',
+      rto: '168.0',
+    },
+    zoneD: {
+      forward: 'NA',
+      rto: '205.0',
+    },
+    zoneE: {
+      forward: 'NA',
+      rto: '256.0',
+    },
+    codCharges: {
+      inRupess: '0.0',
+      inPercentage: '0.0',
+    },
+    otherCharges: 'NA',
+  },
+  {
+    id: 3,
+    couriers: 'Srx Priority',
+    mode: 'bus',
+    minWeight: '0.01kg',
+    zoneA: {
+      forward: 'NA',
+      rto: '105.0',
+    },
+    zoneB: {
+      forward: 'NA',
+      rto: '119.0',
+    },
+    zoneC: {
+      forward: 'NA',
+      rto: '168.0',
+    },
+    zoneD: {
+      forward: 'NA',
+      rto: '205.0',
+    },
+    zoneE: {
+      forward: 'NA',
+      rto: '256.0',
+    },
+    codCharges: {
+      inRupess: '0.0',
+      inPercentage: '0.0',
+    },
+    otherCharges: 'NA',
+  },
+  {
+    id: 4,
+    couriers: 'Srx Premium Books',
+    mode: 'bus',
+    minWeight: '0.01kg',
+    zoneA: {
+      forward: 'NA',
+      rto: '105.0',
+    },
+    zoneB: {
+      forward: 'NA',
+      rto: '119.0',
+    },
+    zoneC: {
+      forward: 'NA',
+      rto: '168.0',
+    },
+    zoneD: {
+      forward: 'NA',
+      rto: '205.0',
+    },
+    zoneE: {
+      forward: 'NA',
+      rto: '256.0',
+    },
+    codCharges: {
+      inRupess: '0.0',
+      inPercentage: '0.0',
+    },
+    otherCharges: 'NA',
+  },
+  {
+    id: 5,
+    couriers: 'Srx Premium',
+    mode: 'bus',
+    minWeight: '0.01kg',
+    zoneA: {
+      forward: 'NA',
+      rto: '105.0',
+    },
+    zoneB: {
+      forward: 'NA',
+      rto: '119.0',
+    },
+    zoneC: {
+      forward: 'NA',
+      rto: '168.0',
+    },
+    zoneD: {
+      forward: 'NA',
+      rto: '205.0',
+    },
+    zoneE: {
+      forward: 'NA',
+      rto: '256.0',
+    },
+    codCharges: {
+      inRupess: '0.0',
+      inPercentage: '0.0',
+    },
+    otherCharges: 'NA',
+  },
+];

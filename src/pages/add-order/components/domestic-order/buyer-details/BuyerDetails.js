@@ -3,37 +3,59 @@ import { BuyerAddressFields } from '../../buyer-address-fields';
 import { Checkbox, Field, FieldAccordion } from '../../../../../common/components';
 import { useEffect, useState } from 'react';
 import { setDomesticOrder } from '../../../../../redux/actions/addOrderActions';
+import { setEditOrder } from '../../../../../redux';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
+import { useLocation } from 'react-router-dom';
 
 export default function BuyerDetails({ handleFormData, formData, currentStep, handleChangeStep }) {
   const dispatch = useDispatch();
-
+  const location = useLocation()
+  let {isEdit,order_id} = location?.state || {}
   const domesticOrderFormValues = useSelector((state) => state?.addOrder?.domestic_order) || {};
+  const queryParams = new URLSearchParams(location.search); 
 
   const [isSameBilingAddress, setIsSameBilingAddress] = useState(true);
   const [triggerBuyerValidations, setTriggerBuyerValidations] = useState(false);
   const [disableAddressLocationField, setDisableAddressLocationField] = useState(false);
   const [disableBillingLocationField, setDisableBillingLocationField] = useState(false);
 
+  // const [buyerInfo, setBuyerInfo] = useState({
+  //   contact_no: formData?.buyer_info?.contact_no || '',
+  //   first_name: formData?.buyer_info?.first_name || '',
+  //   email_address: formData?.buyer_info?.email_address || '',
+  // });
+
   const [buyerInfo, setBuyerInfo] = useState({
-    contact_no: formData?.buyer_info?.contact_no || '',
-    first_name: formData?.buyer_info?.first_name || '',
-    email_address: formData?.buyer_info?.email_address || '',
+    contact_no: queryParams.get('buyerPhone') || '',
+    first_name: queryParams.get('buyerName') || '',
+    email_address: queryParams.get('buyerEmail') || '',
   });
+
   const [companyInfo, setCompanyInfo] = useState({
     name: formData?.company_info?.name || '',
     gst: formData?.company_info?.gst || '',
   });
+
+  // const [addressInfo, setAddressInfo] = useState({
+  //   complete_address: formData?.address_info?.complete_address || '',
+  //   landmark: formData?.address_info?.complete_address || '',
+  //   pincode: formData?.address_info?.pincode || '',
+  //   city: formData?.address_info?.city || '',
+  //   state: formData?.address_info?.state || '',
+  //   country: 'India',
+  // });
+
   const [addressInfo, setAddressInfo] = useState({
-    complete_address: formData?.address_info?.complete_address || '',
-    landmark: formData?.address_info?.complete_address || '',
-    pincode: formData?.address_info?.pincode || '',
-    city: formData?.address_info?.city || '',
-    state: formData?.address_info?.state || '',
+    complete_address: queryParams.get('buyerAddress') || '',
+    landmark: '', // You may adjust this if you have landmark info in URL parameters
+    pincode: queryParams.get('buyerPincode') || '',
+    city: queryParams.get('buyerCity') || '',
+    state: queryParams.get('buyerState') || '',
     country: 'India',
   });
+
   const [billingInfo, setBillingInfo] = useState({
     contact_no: formData?.address_info?.contact_no || '',
     first_name: formData?.address_info?.first_name || '',
@@ -108,20 +130,39 @@ export default function BuyerDetails({ handleFormData, formData, currentStep, ha
       ) {
         toast('Please enter all required fields', { type: 'error' });
       } else {
-        dispatch(
-          setDomesticOrder({
-            buyer_info: buyerInfo,
-            company_info: companyInfo,
-            address_info: addressInfo,
-            billing_info: billingInfo,
-          }),
-        );
+        if(!isEdit){
+          dispatch(
+            setDomesticOrder({
+              buyer_info: buyerInfo,
+              company_info: companyInfo,
+              address_info: addressInfo,
+              billing_info: billingInfo,
+            }),
+          );
+        }else{
+          dispatch(
+            setEditOrder({
+              buyer_info: buyerInfo,
+              company_info: companyInfo,
+              address_info: addressInfo,
+              billing_info: buyerInfo,
+            }),
+          );
+        }
         handleChangeStep(currentStep + 1);
       }
     } else if (currentStep > 0) {
       handleChangeStep(currentStep - 1);
     }
   };
+
+  useEffect(() => {
+    if (!isEmpty(addressInfo) && !isEmpty(buyerInfo)) {
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, newUrl);
+    }
+  }, [addressInfo, buyerInfo]);
+  
 
   useEffect(() => {
     if (addressInfo?.city || addressInfo?.state) {
@@ -132,7 +173,7 @@ export default function BuyerDetails({ handleFormData, formData, currentStep, ha
       });
       setDisableAddressLocationField(false);
     }
-  }, [addressInfo.pincode]);
+  }, [addressInfo?.pincode]);
 
   useEffect(() => {
     if (billingInfo?.city || billingInfo?.state) {
@@ -143,7 +184,7 @@ export default function BuyerDetails({ handleFormData, formData, currentStep, ha
       });
       setDisableBillingLocationField(false);
     }
-  }, [billingInfo.pincode]);
+  }, [billingInfo?.pincode]);
 
   useEffect(() => {
     if (!isEmpty(domesticOrderFormValues)) {
@@ -207,7 +248,7 @@ export default function BuyerDetails({ handleFormData, formData, currentStep, ha
                 labelClassNames={'text-xs'}
                 placeHolder={"Enter Buyer's GSTIN"}
                 required={true}
-                value={companyInfo.gst}
+                value={companyInfo?.gst}
                 onChange={handleSetCompanyInfo}
               />
             </div>

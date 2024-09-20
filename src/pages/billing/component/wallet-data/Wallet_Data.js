@@ -1,68 +1,133 @@
-import { useState } from "react";
-import { CustomTooltip } from "../../../../common/components"
-import { noData } from "../../../../common/images";
+import { useEffect, useState } from 'react';
+import { CustomTooltip } from '../../../../common/components';
+import { noData } from '../../../../common/images';
+import axios from 'axios';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
+import { toast } from 'react-toastify';
+import { format } from 'date-fns';
 
 const Wallet_Data = () => {
-    const [data, setData] = useState([]); //eslint-disable-line
-    const charges = [
-        {
-            label: 'Successfull Recharge',
-            value: '₹ 0.00'
-        },
-        {
-            label: 'Total Credit',
-            value: '₹ 0.00',
-            tooltip: 'Total Credit is inclusive of successful recharge sum.'
-        },
-        {
-            label: 'Total Debit',
-            value: '₹ 0.00'
-        }
-    ]
+  const [data, setData] = useState([]); //eslint-disable-line
+  const [loading, setLoading] = useState(false);
+  const [walletHistoryData, setWalletHistoryData] = useState([]);
+  const id_user = localStorage.getItem('user_id');
+  const id_company = localStorage.getItem('company_id');
+  const is_company = localStorage.getItem('is_company');
 
-    return (
-        <div>
-            <div className="flex flex-row w-full justify-evenly my-4 px-6">
-                {charges.map((charge, index) => (
-                    <div key={index} className="flex flex-col mx-1 font-semibold bg-[#159700] text-white justify-between text-center w-full py-1">
-                        <div className="text-[14px] flex flex-row justify-center items-center gap-3">
-                            {charge.label}
-                            {charge.tooltip &&
-                                <CustomTooltip text={charge.tooltip} style="dark" placement="right">
-                                    {/* info svg */}
-                                    <svg className="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="#ffffff" viewBox="0 0 24 24">
-                                        <path fillRule="evenodd" d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm11-4a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0V8Zm-1 7a1 1 0 1 0 0 2 1 1 0 1 0 0-2Z" clipRule="evenodd" />
-                                    </svg>
-                                </CustomTooltip>
-                            }
-                        </div>
-                        <div className="text-[14px]">{charge.value}</div>
-                    </div>
-                ))}
+  const charges = [
+    {
+      label: 'Successfull Recharge',
+      value: '₹ 0.00',
+    },
+    {
+      label: 'Total Credit',
+      value: '₹ 0.00',
+      tooltip: 'Total Credit is inclusive of successful recharge sum.',
+    },
+    {
+      label: 'Total Debit',
+      value: '₹ 0.00',
+    },
+  ];
+
+  const fetchWalletHistory = async () => {
+    setLoading(true);
+    const url =
+      is_company == 1
+        ? `paymentwallet_history?user_id=${id_company}`
+        : `users/wallet_history/?user_id=${id_user}`;
+    try {
+      const response = await axios.get(`${BACKEND_URL}/${url}`);
+      setWalletHistoryData(response.data);
+    } catch (err) {
+      console.log(err);
+      toast(`There is some error while fetching data`, { type: 'error' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchWalletHistory();
+  }, []);
+
+  return (
+    <div>
+      <div className="my-4 flex w-full flex-row justify-evenly px-6">
+        {charges.map((charge, index) => (
+          <div
+            key={index}
+            className="mx-1 flex w-full flex-col justify-between bg-[#159700] py-1 text-center font-semibold text-white">
+            <div className="flex flex-row items-center justify-center gap-3 text-[14px]">
+              {charge.label}
+              {charge.tooltip && (
+                <CustomTooltip text={charge.tooltip} style="dark" placement="right">
+                  {/* info svg */}
+                  <svg
+                    className="dark:text-white h-4 w-4 text-gray-800"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="#ffffff"
+                    viewBox="0 0 24 24">
+                    <path
+                      fillRule="evenodd"
+                      d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm11-4a1 1 0 1 0-2 0v5a1 1 0 1 0 2 0V8Zm-1 7a1 1 0 1 0 0 2 1 1 0 1 0 0-2Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </CustomTooltip>
+              )}
             </div>
-            <div className='ml-4 text-[12px] font-bold text-[#333333] border'>
-                <div className='flex flex-row w-full border border-collapse bg-[#FAFAFA]'>
-                    <div className='pl-2 border-r-2 pr-2 w-full py-2'>Date</div>
-                    <div className='pl-2 border-r-2 pr-2 w-full py-2'>SR Transaction ID</div>
-                    <div className='pl-2 border-r-2 pr-2 w-full py-2'>Amount</div>
-                    <div className='pl-2 border-r-2 pr-2 w-full py-2'>Description</div>
-                </div>
-                <div className='w-full flex flex-col justify-center items-center bg-[#FFFFFF]'>
-                    {/* Table Data */}
-                    {data.length === 0 ? (
-                        <div className='pt-16 mb-12 w-full flex justify-center items-center flex-col'>
-                            <img src={noData} alt="" width={'200px'} />
-                            <div className='text-[1.7rem] mt-10 text-[#b54040] font-bold'>We could not find any data for the applied filters.</div>
-                            <div className='text-[14px] mt-2 font-normal opacity-80'>Please change filters and retry.</div>
-                        </div>
-                    ) : (
-                        'Wallet Data'
-                    )}
-                </div>
+            <div className="text-[14px]">{charge.value}</div>
+          </div>
+        ))}
+      </div>
+      <div className="ml-4 w-full border text-[12px] font-bold text-[#333333]">
+        <table className="w-full">
+          <thead className="w-full border bg-[#FAFAFA]">
+            <tr>
+              <th className=" border-r-2 py-2 pl-2 pr-2">Date</th>
+              <th className=" border-r-2 py-2 pl-2 pr-2">SR Transaction ID</th>
+              <th className=" border-r-2 py-2 pl-2 pr-2">Amount</th>
+              <th className=" border-r-2 py-2 pl-2 pr-2">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {walletHistoryData.length != 0 &&
+              walletHistoryData.map((data, index) => {
+                return (
+                  <tr key={index} className="font-normal">
+                    <td className="border py-2 pl-2 pr-2 text-center">{format(data.Date, 'dd-MMM-yyyy')}</td>
+
+                    <td className="border py-2 pl-2 pr-2 text-center">{data['SR Transaction ID'] | '-'}</td>
+                    <td className="border py-2 pl-2 pr-2 text-center">{data.Amount}</td>
+                    <td className="border py-2 pl-2 pr-2 text-center">
+                      <div>
+                        <p>Bank ReferenceNo : {data.Description.Bank_ReferenceNo}</p>
+                        {/* <p>Order_ID : {data.Description.Order_ID}</p> */}
+                        <p>Payment Gateway : {data.Description.Payment_Gateway}</p>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
+        <div className="flex w-full flex-col items-center justify-center bg-[#FFFFFF]">
+          {/* Table Data */}
+          {walletHistoryData.length === 0 && (
+            <div className="mb-12 flex w-full flex-col items-center justify-center pt-16">
+              <img src={noData} alt="" width={'200px'} />
+              <div className="mt-10 text-[1.7rem] font-bold text-[#b54040]">
+                We could not find any data for the applied filters.
+              </div>
+              <div className="mt-2 text-[14px] font-normal opacity-80">Please change filters and retry.</div>
             </div>
+          )}
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
-
-export default Wallet_Data
+export default Wallet_Data;

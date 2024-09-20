@@ -1,17 +1,20 @@
 import { Link } from "react-router-dom";
 import PageWithSidebar from "../../common/components/page-with-sidebar/PageWithSidebar"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { toast } from "react-toastify";
+import axios from "axios";
+import { BACKEND_URL } from "../../common/utils/env.config";
 
 
 
 const Company_profile = () => {
-  
+  const [data,setData] = useState(null)
   // This is a dummy data, you can replace it with your own data
   const [companyDetails, setCompanyDetails] = useState({
-    companyId: '12345678',
-    companyName: localStorage.getItem('user_name'),
+    companyId: localStorage.getItem('company_id') != 'undefined' ? localStorage.getItem('company_id') : '12345678',
+    companyName: '',
     website: '',
     email: '',
     logo: ''
@@ -32,8 +35,46 @@ const Company_profile = () => {
   // This function is used to handle the form submit
   const handleSumbit = () => {
     // You can use this data to send to the server
+    // if(localStorage.getItem('is_company') == 0){
+    //   toast("User Can't See Company Data",{type:'error'})
+    //   return;
+    // }
+
     console.log(companyDetails); //eslint-disable-line
+    axios.put(BACKEND_URL + `/company/update_company?company_id=${companyDetails?.companyId}&company_name=${companyDetails?.companyName.toString()}`
+    ).then((res) => {
+      console.log("Info",res.data)
+      toast("Company Info Saved",{type:'success'})
+    }).catch((err) => {
+      toast("Error in Saving Info",{type:'error'})
+    })
   }
+
+  const handleData = () => {
+    // if(localStorage.getItem('is_company') == 0){
+    //   toast("User Can't See Company Data",{type:'error'})
+    //   return;
+    // }
+
+    axios.get(BACKEND_URL + `/company/${localStorage.getItem('company_id')}`)
+    .then((res) => {
+      console.log("Company Data ",res.data)
+      // setData(res.data)
+      setCompanyDetails({
+        ...companyDetails,
+        companyName: res.data.name,
+        // website: res.data.website,
+        email: res.data.email,
+        // logo: res.data.logo
+      })
+    }).catch((err) => {
+      toast("error in fetching data",{type:'error'})
+    })
+  }
+
+  useEffect(() => {
+    handleData()
+  },[])
 
   return (
     <PageWithSidebar>

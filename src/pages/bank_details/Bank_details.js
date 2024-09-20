@@ -1,14 +1,20 @@
 import { Link } from "react-router-dom";
 import PageWithSidebar from "../../common/components/page-with-sidebar/PageWithSidebar"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { faSave } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IFSC_modal } from "./components";
+import axios from "axios";
+import { BACKEND_URL } from "../../common/utils/env.config";
+import { toast } from "react-toastify";
+import Save_Detail from "./components/Save_Detail";
 
 
 const Bank_details = () => {
 
   const [showOptional, setShowOptional] = useState(false);
+  const [show,setShow] = useState(false)
+  const [info,setInfo] = useState([])
   // This is a dummy data, you can replace it with your own data
   const [bankDetails, setBankDetails] = useState({
     accountHolderName: '',
@@ -19,18 +25,52 @@ const Bank_details = () => {
   });
 
 
+  const handleData = () => {
+    axios.get(BACKEND_URL + `/bankdetails/bank_details_get?user_id=${localStorage.getItem('user_id')}`)
+    .then((res) => {
+      console.log("Response Bank Detail",res)
+      if(res.data.length > 0){
+        setShow(true)
+      }
+      setInfo(res.data)
+    }).catch((err) => {
+      console.log("Error In Bank Details",err)
+      toast("Error In Fetching Bank Details",{type:'error'})
+    })
+  }
+
+  useEffect(() => {
+    handleData()
+  },[])
+
   // This function is used to handle the form submit
   const handleSumbit = () => {
     // You can use this data to send to the server
+    axios.post(BACKEND_URL + `/bankdetails/bank_details_post`,{
+      user_id: localStorage.getItem('user_id'),
+      account_holder_name: bankDetails.accountHolderName,
+      account_number: bankDetails.accountNo,
+      account_type_id: parseInt(bankDetails.accountType == 'savings' ? 0 : 1),
+      ifsc_code: bankDetails.ifscCode,
+      re_enter_account_number: bankDetails.reEnterAccountNo
+    })
+    .then((res) => {
+      console.log("Response Bank Detail",res)
+      toast("Back Details Saved Successfully.",{type:'success'})
+      setShow(true)
+    }).catch((err) => {
+      console.log("Error In Bank Details",err)
+      toast("Error In Saving Bank Details",{type:'error'})
+    })
     console.log(bankDetails); //eslint-disable-line
   }
 
 
   return (
     <PageWithSidebar>
-      {showOptional && <IFSC_modal setShowOptional={setShowOptional} setDetails={setBankDetails} details={bankDetails}/>}
-      <div className="header bg-[#FAFBFC] border-b border-[#b3b3b3] p-2 text-xl mx-2">Settings-Bank Details</div>
-      <div className="bg-[#EDEDED] w-full px-6 pb-16 mx-2">
+      {!show && showOptional && <IFSC_modal setShowOptional={setShowOptional} setDetails={setBankDetails} details={bankDetails}/>}
+      {!show && <div className="header bg-[#FAFBFC] border-b border-[#b3b3b3] p-2 text-xl mx-2">Settings-Bank Details</div>}
+      {!show && <div className="bg-[#EDEDED] w-full px-6 pb-16 mx-2">
         <div className="pt-2 pb-5 text-[#656565] font-bold">
           <Link to={'/settings'} className="text-green-500 font-semibold">Settings</Link> &gt; COD Payments &gt; Bank Details
         </div>
@@ -136,7 +176,8 @@ const Bank_details = () => {
             </button>
           </div>
         </div>
-      </div>
+      </div>}
+      {show && <Save_Detail info={info} />}
     </PageWithSidebar>
   )
 }

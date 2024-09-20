@@ -1,7 +1,9 @@
+import axios from 'axios';
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify';
+import { BACKEND_URL } from '../../../../common/utils/env.config';
 
-const OTP_Input = ({ handleSendOTP, timer, setIsKYCCompleted }) => {
+const OTP_Input = ({ handleSendOTP, timer, setIsKYCCompleted,id=null }) => {
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
     const [seconds, setSeconds] = useState(timer);
     const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null), useRef(null), useRef(null)];
@@ -34,8 +36,14 @@ const OTP_Input = ({ handleSendOTP, timer, setIsKYCCompleted }) => {
     const completeKYC = () => {
         if (isOtpEntered) {
             // API call to verify OTP
-            toast.success('KYC completed successfully', { type: 'success' })
-            setIsKYCCompleted(true)
+            let temp_otp = otp.join('')
+            axios.post(BACKEND_URL + `/kyc/adhaar_submit_otp?reference_id=${id}&otp=${temp_otp}`)
+            .then((res) => {
+                toast.success('KYC completed successfully', { type: 'success' })
+                setIsKYCCompleted(true)
+            }).catch((err) => {
+                toast("Mismatch OTP",{type:'error'})
+            })
         }
         else {
             // Show error message
@@ -72,7 +80,7 @@ const OTP_Input = ({ handleSendOTP, timer, setIsKYCCompleted }) => {
                 ))}
             </div>
             <div className="flex justify-start mt-2 gap-4 items-center text-[12px] font-medium">
-                <button className={`px-12 py-2 text-white ${isOtpEntered ? "bg-red-600" : "bg-[#FAFAFA] border text-[#c6c6c6] border-[#e5e5e5]"} transition-colors duration-200 rounded-md`}
+                <button className={`px-12 py-2 text-white ${isOtpEntered ? "bg-red-600" : "bg-red-600 border text-[#c6c6c6] border-[#e5e5e5]"} transition-colors duration-200 rounded-md`}
                     disabled={!isOtpEntered}
                     onClick={() => { completeKYC() }}
                 >

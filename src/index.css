@@ -18,3 +18,18 @@ code {
   margin: 0;
   padding: 0;
 }
+
+.active {
+  color: #9b1c1c;
+  font-weight: 500;
+  border-bottom: 2px solid #9b1c1c;
+  padding: 6px 8px;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

@@ -17,3 +17,23 @@ export { default as selectPlanIcon} from './select-plan.svg';
 export {default as KYC_adhaar} from './KYC_adhaar.svg';
 export {default as KYC_Document} from './KYC_Document.svg';
 export {default as upload} from './upload.svg';
+export {default as map } from './map.svg'
+export {default as shopify } from './shopify-logo.svg'
+export {default as Woocommerce} from './Woocommerce.svg'
+export {default as woocommerce} from './woocommerce.png'
+export {default as bigcommerce} from './bigcommerce.png'
+export {default as bigLogo} from './BigCommerceLogo.png'
+export {default as verified} from './verified.jpeg'
+export {default as wooLogo} from './woologo.png'
+export {default as cheap} from './cheap.png'
+export {default as custom} from './custom.png'
+export {default as rated} from './rated.png'
+export {default as recommand} from './recommand.png'
+export {default as truck} from './truck.png'
+export {default as Delivery} from './Delhivery.png'
+export {default as kerry} from './kerry_indev.png'
+export {default as Ecom} from './EcomEx.png'
+export {default as Bike} from './bike.png'
+export {default as Dtdc} from './Dtdc.png'
+export {default as Express} from './ExpressBees.png'
+export {default as Maruti} from './Maruti.png'

@@ -28,7 +28,7 @@ const CustomDataTable = ({
         header: ({ table }) => (
           <FlowbiteCheckbox
             color={'red'}
-            className="px-0"
+            className="px-0 opacity-50"
             checked={table.getIsAllRowsSelected()}
             onChange={table.getToggleAllRowsSelectedHandler()}
           />
@@ -96,12 +96,12 @@ const CustomDataTable = ({
       style={{ ...tableWrapperStyles, scrollbarGutter: 'stable' }}>
       <Table className="mb-3 w-full">
         <Table.Head
-          className={`h-[2.875rem] text-xs font-medium ${isHeaderSticky ? 'sticky top-0 z-[1]' : ''}`}>
+          className={`h-[2.875rem] text-xs font-medium ${isHeaderSticky ? 'sticky top-0 z-[1]' : 'sticky top-0 z-[10]'}`}>
           {table.getFlatHeaders().map((header, headerInd) => {
             return (
               <Table.HeadCell
                 key={`${header.id}-${headerInd}`}
-                className={`items-center bg-transparent bg-white p-3 font-medium normal-case leading-4 
+                className={`top-0 items-center bg-white p-3 font-medium normal-case leading-4 
                 ${headerCellStyle[headerInd]} ${getCellwidth(header?.id)}`}>
                 {flexRender(header.column.columnDef.header, header.getContext())}
               </Table.HeadCell>

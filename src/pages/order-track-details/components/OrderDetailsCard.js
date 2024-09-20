@@ -6,6 +6,7 @@ import { CustomTooltip } from '../../../common/components';
 import moment from 'moment';
 
 const OrderDetailsCard = ({ orderDetails }) => {
+  console.log("ORDER DETAILSSSSSSSSS",orderDetails)
   return (
     <DetailsCard heading={'Order Details'} headingIcon={OrderDetailsIcon}>
       <div className="flex w-full flex-wrap">
@@ -17,30 +18,31 @@ const OrderDetailsCard = ({ orderDetails }) => {
               : 'N/A'
           }
         />
-        <DetailsLabelValue label="Channel" value={orderDetails?.channel} />
+        <DetailsLabelValue label="Channel" value={orderDetails?.channel ? orderDetails?.channel : 'Custom'} />
         <DetailsLabelValue
           label="Pickup Address"
           value={
-            <CustomTooltip
-              text={
-                <>
-                  {orderDetails?.user_info?.address_type && (
-                    <div>{orderDetails?.user_info?.address_type}</div>
-                  )}
-                  {orderDetails?.user_info?.complete_address && (
-                    <div className='text-wrap'>{orderDetails?.user_info?.complete_address}</div>
-                  )}
-                  {orderDetails?.user_info?.city && <div>{orderDetails?.user_info?.city}</div>}
-                  <div>{`${orderDetails?.user_info?.state || ''}-${
-                    orderDetails?.user_info?.pincode || ''
-                  }`}</div>
-                  {orderDetails?.user_info?.contact_no && <div>{orderDetails?.user_info?.contact_no}</div>}
-                </>
-              }>
-              <p className="relative mb-3 w-fit cursor-pointer text-xs font-medium before:absolute before:bottom-[-2px] before:w-full before:border before:border-dashed before:border-[#555]">
-                {orderDetails?.user_info?.address_type}
-              </p>
-            </CustomTooltip>
+            // <CustomTooltip
+            //   text={
+            //     <>
+            //       {orderDetails?.user_info?.address_type && (
+            //         <div>{orderDetails?.user_info?.address_type}</div>
+            //       )}
+            //       {orderDetails?.user_info?.complete_address && (
+            //         <div>{orderDetails?.user_info?.complete_address}</div>
+            //       )}
+            //       {orderDetails?.user_info?.city && <div>{orderDetails?.user_info?.city}</div>}
+            //       <div>{`${orderDetails?.user_info?.state || ''}-${
+            //         orderDetails?.user_info?.pincode || ''
+            //       }`}</div>
+            //       {orderDetails?.user_info?.contact_no && <div>{orderDetails?.user_info?.contact_no}</div>}
+            //     </>
+            //   }>
+            // </CustomTooltip>
+              // <p className="relative mb-3 w-fit cursor-pointer text-xs font-medium before:absolute before:bottom-[-2px] before:w-full before:border before:border-dashed before:border-[#555]">
+              //   {orderDetails?.user_info?.address_type}
+              // </p>
+              orderDetails?.user_info?.complete_address ? orderDetails?.user_info?.complete_address  : ''
           }
         />
         <DetailsLabelValue

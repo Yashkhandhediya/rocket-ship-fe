@@ -1,9 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { infoIcon } from '../../icons';
 import { CustomTooltip } from '../custom-tooltip';
 
-const Tabs = ({ tabs, tabClassNames, panelClassNames }) => {
-  const [activeTab, setActiveTab] = useState(0);
+const Tabs = ({ tabs, tabClassNames, panelClassNames, onTabChange = () => {} }) => {
+  const [activeTab, setActiveTab] = useState(JSON.parse(localStorage.getItem('activeTab')) || 0);
+  console.log('Activeeeeeeee', activeTab);
+
+  const handleClick = (index) => {
+    setActiveTab(index);
+    onTabChange(index);
+    localStorage.setItem('activeTab', JSON.stringify(index));
+  };
+
+  useEffect(() => {
+    localStorage.setItem('activeTab', JSON.stringify(activeTab));
+  }, []);
+
   return (
     <div className="mb-4">
       <div
@@ -15,11 +27,11 @@ const Tabs = ({ tabs, tabClassNames, panelClassNames }) => {
             <button
               key={tab.id}
               className={`me-2 inline-flex items-center rounded-t-lg border-b-4 p-2 ${
-                i === activeTab ? 'border-red-600 text-rose-500' : 'text-[#9CA3AF] border-transparent'
+                i === activeTab ? 'border-red-600 text-rose-500' : 'border-transparent text-[#9CA3AF]'
               } ${tabClassNames}`}
               id={`${tab.id}-tab`}
               type="button"
-              onClick={() => setActiveTab(i)}>
+              onClick={() => handleClick(i)}>
               {tab.title}
               {tab?.tooltip && (
                 <CustomTooltip text={tab.tooltip}>

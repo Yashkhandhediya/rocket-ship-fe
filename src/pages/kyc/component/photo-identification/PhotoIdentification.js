@@ -1,6 +1,8 @@
 // import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
+import { BACKEND_URL } from "../../../../common/utils/env.config";
 
 const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
 
@@ -11,6 +13,8 @@ const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
     const [selfieText, setSelfieText] = useState('Take Selfie');
     const [type, setType] = useState('open'); // open, capture, retake
     const [capturedImage, setCapturedImage] = useState(null);
+    const user_name = localStorage.getItem('user_name')
+    const id_user = localStorage.getItem("user_id")
 
     const handleCamera = async (type) => {
         if (type === 'open') {
@@ -40,8 +44,11 @@ const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
         }
     }
     const handleCaptureImage = () => {
+        const headers={'Content-Type': 'application/json'};
+        // debugger
         try {
             if (videoRef.current && canvasRef.current) {
+                // debugger
                 const video = videoRef.current;
                 const canvas = canvasRef.current;
                 const context = canvas.getContext('2d');
@@ -53,8 +60,44 @@ const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
                 context.scale(-1, 1);
                 context.drawImage(video, 0, 0, -canvas.width, canvas.height);
                 context.restore();
-                const imageDataURL = canvas.toDataURL('image/png');
-                setCapturedImage(imageDataURL);
+               
+                // let upLoadImg = capturedImage
+                // upLoadImg = new File([
+                //     new Blob([upLoadImg])
+                //   ], "jt.jpeg")
+                // console.log("UPLOAD IMAGE ",upLoadImg)
+                // const formData = new FormData();
+                // formData.append("file", upLoadImg);
+                // // const binaryImage = atob(imageDataURL.split(',')[1]);
+                // console.log("IMAJJJJJJJJJ",capturedImage,formData)
+                // axios.post(BACKEND_URL + `/kyc/upload_selfie?image_id=${id_user}&type="selfie"&username=${user_name}`,{
+                //     file:imageDataURL
+                // },{headers}).then((res) => {
+                //     console.log("Image KYC Response",res)
+                // }).catch((err) => {
+                //     console.log("Error in KYC",err)
+                // })
+
+                canvas.toBlob((blob) => {
+                    const imageDataURL = canvas.toDataURL('image/png');
+                    setCapturedImage(imageDataURL);
+                    const formData = new FormData();
+                    formData.append('file', blob, 'selfie.png');
+                    const headers = { 'Content-Type': 'multipart/form-data' };
+                    axios.post(
+                        BACKEND_URL + `/kyc/upload_selfie?image_id=${id_user}&type=selfie&user_name=${user_name}`,
+                        formData,
+                        { headers }
+                    )
+                    .then((res) => {
+                        console.log("Image KYC Response", res);
+                        toast('Your selfie has been successfully verified', { type: 'success' });
+                    })
+                    .catch((err) => {
+                        console.log("Error in KYC", err);
+                        toast('Error while verifying selfie', { type: 'error' });
+                    });
+                }, 'image/png');
 
                 const stream = videoRef.current.srcObject;
                 if (stream) {
@@ -64,7 +107,7 @@ const PhotoIndentification = ({ currentStep, handleChangeStep }) => {
             }
             setSelfieText('Change Image');
             setType('retake');
-            toast('Your selfie has been successfully verified', { type: 'success' });
+            // toast('Your selfie has been successfully verified', { type: 'success' });
         } catch (error) {
             toast('Error while capturing image', { type: 'error' });
         }
