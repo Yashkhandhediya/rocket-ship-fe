@@ -23,11 +23,14 @@ apiClient.interceptors.response.use(
   },
   (err) => {
     if (err.response && err.response.status === 401) {
-      toast.error('Session expired. Please login again.');
       localStorage.clear();
-      setTimeout(() => {
-        window.location.href = '/login';
-      }, 500);
+      localStorage.setItem('authError', 'Session expired. Please login again.');
+
+      // setTimeout(() => {
+      //   window.location.href = '/login';
+      // }, 100);
+      window.location.href = '/login';
+      toast.error('Session expired. Please login again.');
     } else {
       console.log('Error fetching data', err);
     }

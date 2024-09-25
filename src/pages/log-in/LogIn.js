@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -138,6 +138,15 @@ const LogIn = () => {
   //   console.log('Login Failed:', response);
   //   // Handle the failed login here
   // };
+
+  useEffect(() => {
+    // Check if there's an error message in local storage
+    const errorMessage = localStorage.getItem('authError');
+    if (errorMessage) {
+      toast.error(errorMessage); // Show the toast message
+      localStorage.removeItem('authError'); // Remove it from local storage after displaying
+    }
+  }, []);
 
   return (
     <>
