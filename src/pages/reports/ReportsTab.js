@@ -5,6 +5,7 @@ import RangeDatePicker from './components/RangeDatePicker';
 import { BACKEND_URL } from '../../common/utils/env.config';
 import { toast } from 'react-toastify';
 import { format, startOfDay, endOfDay } from 'date-fns';
+import apiClient from '../../common/utils/apiClient';
 
 function ReportsTab({ children }) {
   const [type, setType] = useState('1');
@@ -36,32 +37,36 @@ function ReportsTab({ children }) {
     };
 
     try {
-      const response = await fetch(`${BACKEND_URL}/report/get_reports?type=${type}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-      if (response.ok) {
-        // Assuming the response is a file (e.g., CSV, PDF)
-        const blob = await response.blob(); // Convert response to a blob
-        const url = window.URL.createObjectURL(blob); // Create a URL for the blob
-        const link = document.createElement('a'); // Create a link element
-        link.href = url; // Set link href to the blob URL
-        link.setAttribute('download', 'report_file.xlsx'); // Set the default file name
-        document.body.appendChild(link); // Append link to the body
-        link.click(); // Trigger a click on the link to start the download
-        link.parentNode.removeChild(link); // Remove the link element from the body
-        window.URL.revokeObjectURL(url); // Clean up the blob URL
+      const response = await apiClient.post(
+        `${BACKEND_URL}/report/get_reports?type=${type}`,
+        payload, 
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          responseType: 'blob', 
+        }
+      );
+    
+      if (response.status === 200) { 
+        const blob = response.data; 
+        const url = window.URL.createObjectURL(blob); 
+        const link = document.createElement('a');
+        link.href = url; 
+        link.setAttribute('download', 'report_file.xlsx'); 
+        document.body.appendChild(link); 
+        link.click(); 
+        link.parentNode.removeChild(link); 
+        window.URL.revokeObjectURL(url); 
         console.log('Report downloaded successfully');
       } else {
-        console.error('Failed to download report');
+        console.error('Failed to download report: ', response.statusText);
       }
     } catch (error) {
       toast('Error fetching report', { type: 'error' });
       console.error('Error fetching report:', error);
     }
+    
   };
 
   return (
