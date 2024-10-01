@@ -37,7 +37,12 @@ const Wallet_Data = () => {
         ? `paymentwallet_history?user_id=${id_company}`
         : `users/wallet_history/?user_id=${id_user}`;
     try {
-      const response = await axios.get(`${BACKEND_URL}/${url}`);
+      const token = localStorage.getItem('access_token');
+      const response = await axios.get(`${BACKEND_URL}/${url}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, 
+        },
+      });
       setWalletHistoryData(response.data);
     } catch (err) {
       console.log(err);
